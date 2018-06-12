@@ -1,3 +1,6 @@
 .idea
 var
 .env
+supervisord.log
+supervisord.pid
+vendor
