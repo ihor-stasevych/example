@@ -1,8 +1,8 @@
 <?php
 
-namespace AddHash\System\GlobalContext\Identity;
+namespace App\AddHash\System\GlobalContext\Identity;
 
-use AddHash\System\Lib\Uuid\Uuid;
+use App\AddHash\System\Lib\Uuid;
 
 class CustomerId
 {

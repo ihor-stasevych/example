@@ -1,6 +1,6 @@
 <?php
 
-namespace AddHash\System\Lib\Uuid;
+namespace App\AddHash\System\Lib;
 
 class Uuid
 {
