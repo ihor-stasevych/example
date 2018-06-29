@@ -84,6 +84,4 @@ class Customer
 	{
 		$this->phone = $phoneNumber;
 	}
-
-
 }
