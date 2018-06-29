@@ -4,7 +4,7 @@ namespace App\AddHash\System\GlobalContext\Identity;
 
 use App\AddHash\System\Lib\Uuid;
 
-class CustomerId
+class UserId
 {
 	/** @var string */
 	protected $id;

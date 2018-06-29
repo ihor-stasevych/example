@@ -2,13 +2,13 @@
 
 namespace App\AddHash\Authentication\Authorization\CustomerContext\Domain\Model;
 
-use App\AddHash\System\GlobalContext\Identity\CustomerId;
+use App\AddHash\System\GlobalContext\Identity\UserId;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
 
 class Customer
 {
 	/**
-	 * @var CustomerId
+	 * @var UserId
 	 */
 	private $id;
 
@@ -18,7 +18,7 @@ class Customer
 
 	private $name;
 
-	public function __construct(CustomerId $id, Email $email, $password, $name)
+	public function __construct(UserId $id, Email $email, $password, $name)
 	{
 		$this->id = $id;
 		$this->email = $email;
@@ -26,7 +26,7 @@ class Customer
 		$this->name = $name;
 	}
 
-	public function getId(): CustomerId
+	public function getId(): UserId
 	{
 		return $this->id;
 	}

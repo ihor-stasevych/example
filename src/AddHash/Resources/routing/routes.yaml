@@ -1,0 +1,4 @@
+app.get:
+    path: "/api/v1/app.get"
+    methods: GET
+    controller: App\AddHash\AdminPanel\Application\Controller\AppController:index

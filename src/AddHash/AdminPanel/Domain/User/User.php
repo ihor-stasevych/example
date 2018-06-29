@@ -1,14 +1,14 @@
 <?php
 
-namespace App\AddHash\AdminPanel\Customer\CustomerContext\Domain\Model\Customer;
+namespace App\AddHash\AdminPanel\Domain\User;
 
-use App\AddHash\System\GlobalContext\Identity\CustomerId;
+use App\AddHash\System\GlobalContext\Identity\UserId;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
 use App\AddHash\System\GlobalContext\ValueObject\Phone;
 
-class Customer
+class User
 {
-	/** @var CustomerId */
+	/** @var UserId */
 	private $id;
 
 	/** @var string */
@@ -31,7 +31,7 @@ class Customer
 
 
 	public function __construct(
-		CustomerId $id,
+		UserId $id,
 		string $userName,
 		Email $email,
 		Email $backupEmail,
@@ -48,7 +48,7 @@ class Customer
 		$this->setPhoneNumber($phoneNumber);
 	}
 
-	private function setId(CustomerId $id)
+	private function setId(UserId $id)
 	{
 		$this->id = $id;
 	}
