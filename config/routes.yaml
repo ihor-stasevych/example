@@ -1,10 +1,10 @@
-#index:
-#    path: /
+index:
+    path: /api/doc
 #    controller: App\Controller\DefaultController::index
 
 NelmioApiDocBundle:
     resource: "@NelmioApiDocBundle/Resources/config/routing/swaggerui.xml"
-    prefix:   /api/doc/
+    prefix:   /
 
 addhash:
     resource: '../src/AddHash/Resources/routing'

@@ -1,0 +1,20 @@
+App\AddHash\AdminPanel\Domain\Store\Category\Model\StoreCategory:
+    type: entity
+    table: Store_Category
+    repositoryClass: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Category\StoreCategoryDQLRepository
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        title:
+            type: string
+            length: 100
+
+        createdAt:
+            type: integer
+            length: 12
+
+        position:
+            type: integer
+            length: 5

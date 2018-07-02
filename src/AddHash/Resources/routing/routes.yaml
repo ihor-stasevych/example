@@ -1,4 +1,4 @@
-app.get:
-    path: "/api/v1/app.get"
+store.category.list:
+    path: "/api/v1/store.category.list"
     methods: GET
-    controller: App\AddHash\AdminPanel\Application\Controller\AppController:index
+    controller: App\AddHash\AdminPanel\Application\Controller\CategoryController:index

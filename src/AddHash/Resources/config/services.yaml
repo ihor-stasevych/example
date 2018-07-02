@@ -1,0 +1,19 @@
+services:
+
+  ##AddHash Store Category
+  addhash.store.category.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Category\StoreCategoryDQLRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\Store\Category\StoreCategoryDQLRepository: '@addhash.store.category.repository'
+
+  App\AddHash\AdminPanel\Domain\Store\Category\Model\Store_Category\CategoryRepositoryInterface: '@addhash.store.category.repository'
+
+  addhash.store.category.list.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Category\ListService
+    public: true
+    arguments: ['@addhash.store.category.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Category\ListService: '@addhash.store.category.list.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Category\Services\ListServiceInterface: '@addhash.store.category.list.service'
+
