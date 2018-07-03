@@ -6,6 +6,9 @@ NelmioApiDocBundle:
     resource: "@NelmioApiDocBundle/Resources/config/routing/swaggerui.xml"
     prefix:   /
 
+api_login_check:
+    path: /api/login_check
+
 addhash:
     resource: '../src/AddHash/Resources/routing'
     type: directory

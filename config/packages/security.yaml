@@ -1,11 +1,50 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory: { memory: ~ }
+        in_memory:
+            memory:
+               users:
+                   igor:
+                       password: test
+                       roles: 'ROLE_USER'
+                   admin:
+                       password: test
+                       roles: 'ROLE_ADMIN'
+        addhash.user_provider:
+          id: addhash.user_provider
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        login:
+            pattern:  ^/api/login
+            stateless: true
+            anonymous: true
+            provider: addhash.user_provider
+            guard:
+                authenticators:
+                    - addhash.user_authentificator
+            json_login:
+                check_path:               /api/login_check
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+
+        api_store:
+              pattern: ^/api/v2/store
+              anonymous: true
+              stateless: true
+              security: false
+
+        api:
+            pattern:   ^/api
+            stateless: true
+            provider: addhash.user_provider
+            guard:
+                authenticators:
+                     - addhash.user_authentificator
+                    #- lexik_jwt_authentication.jwt_token_authenticator
+
         main:
             anonymous: true
 
@@ -19,6 +58,12 @@ security:
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
+    encoders:
+      Symfony\Component\Security\Core\User\User: plaintext
+      App\AddHash\AdminPanel\Domain\User\User: plaintext
+
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }

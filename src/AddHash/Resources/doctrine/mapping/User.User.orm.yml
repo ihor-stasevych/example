@@ -1,0 +1,56 @@
+App\AddHash\AdminPanel\Domain\User\User:
+    type: entity
+    table: User
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: NONE
+    fields:
+        userName:
+            type: string
+            length: 255
+            options:
+                default: ''
+        email:
+            type: string
+            length: 255
+            options:
+                default: ''
+        backupEmail:
+            type: string
+            length: 255
+            options:
+                default: ''
+        firstName:
+            type: string
+            length: 255
+            options:
+                default: ''
+        lastName:
+            type: string
+            length: 255
+            options:
+                default: ''
+        password:
+            type: string
+            length: 255
+        phone:
+            type: string
+            length: 255
+
+        createdAt:
+            type: datetime
+            column: created_at
+            nullable: false
+            options:
+                default: CURRENT_TIMESTAMP
+        updatedAt:
+            type: datetime
+            column: updated_at
+            nullable: false
+            options:
+                default: CURRENT_TIMESTAMP
+        token:
+            type: guid

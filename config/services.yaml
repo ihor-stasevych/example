@@ -27,5 +27,25 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+    ##Authentification
+    addhash.user.repository:
+      class: App\AddHash\AdminPanel\Infrastructure\Repository\User\UserRepository
+      arguments: ['@doctrine.orm.entity_manager']
+    App\AddHash\AdminPanel\Infrastructure\Repository\UserRepository: '@addhash.user.repository'
+
+    App\AddHash\AdminPanel\Infrastructure\Repository\UserRepositoryInterface: '@addhash.user.repository'
+
+    ##User Authentication (ADMIN PANEL CONTEXT TEMPORARY)
+    addhash.user_authentificator:
+      class: App\AddHash\AdminPanel\Infrastructure\Auth\UserAuthenticator
+      arguments: ['@addhash.user.repository', '@lexik_jwt_authentication.encoder.lcobucci']
+    App\AddHash\AdminPanel\Infrastructure\Auth\UserAuthenticator: '@addhash.user_authentificator'
+
+    ##User Provider2
+    addhash.user_provider:
+      class: App\AddHash\AdminPanel\Infrastructure\Auth\UserAuthProvider
+      arguments: ['@addhash.user.repository']
+    App\AddHash\AdminPanel\Infrastructure\Auth\UserAuthProvider: '@addhash.user_provider'
+
 imports:
   - { resource: "../src/AddHash/Resources/config/services.yaml"}

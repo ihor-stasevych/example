@@ -1,11 +1,11 @@
 <?php
 
-namespace App\AddHash\Authentication\Authorization\CustomerContext\Domain\Model;
+namespace App\AddHash\Authentication\Domain\Model;
 
 use App\AddHash\System\GlobalContext\Identity\UserId;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
 
-class Customer
+class User
 {
 	/**
 	 * @var UserId

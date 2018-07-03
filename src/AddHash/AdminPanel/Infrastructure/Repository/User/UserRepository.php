@@ -1,11 +1,12 @@
 <?php
-namespace App\AddHash\AdminPanel\Customer\CustomerContext\Infrastructure\Repository;
+namespace App\AddHash\AdminPanel\Infrastructure\Repository\User;
 
-use App\AddHash\AdminPanel\Customer\CustomerContext\Domain\Model\Customer\User;
-use App\AddHash\AdminPanel\Customer\CustomerContext\Domain\Model\Customer\UserRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\User\User;
+use App\AddHash\AdminPanel\Domain\User\UserRepositoryInterface;
 use App\AddHash\System\GlobalContext\Identity\UserId;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -31,7 +32,16 @@ class UserRepository implements UserRepositoryInterface
 	 */
 	public function getByEmail(Email $email): ?User
 	{
-		// TODO: Implement getByEmail() method.
+
+		$user = $this->entityManager->getRepository(User::class);
+
+		$res = $user->createQueryBuilder('u')
+			->select('u')
+			->where('u.email = :email')
+			->setParameter('email', $email->getEmail())
+			->getQuery();
+
+		return $res->getOneOrNullResult();
 	}
 
 	/**
