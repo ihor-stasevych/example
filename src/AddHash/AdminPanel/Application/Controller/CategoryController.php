@@ -7,6 +7,8 @@ use App\AddHash\AdminPanel\Domain\Store\Category\Services\ListServiceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+use Nelmio\ApiDocBundle\Annotation;
+
 class CategoryController
 {
 	protected $storeCategoryListService;
@@ -16,6 +18,11 @@ class CategoryController
 		$this->storeCategoryListService = $storeCategoryListService;
 	}
 
+	/**
+	 *
+	 * @param Request $request
+	 * @return JsonResponse
+	 */
 	public function index(Request $request)
 	{
 		$result =  $this->storeCategoryListService->execute();

@@ -77,8 +77,23 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
+    "lcobucci/jwt": {
+        "version": "3.2.2"
+    },
+    "lexik/jwt-authentication-bundle": {
+        "version": "2.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.5",
+            "ref": "509b1542f3180a1cfe248ade8b7bf5092c2d4127"
+        }
+    },
     "monolog/monolog": {
         "version": "1.23.0"
+    },
+    "namshi/jose": {
+        "version": "7.2.3"
     },
     "nelmio/api-doc-bundle": {
         "version": "3.0",
@@ -94,6 +109,9 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.2.0"
+    },
+    "pagerfanta/pagerfanta": {
+        "version": "v2.0.1"
     },
     "paragonie/random_compat": {
         "version": "v2.0.15"

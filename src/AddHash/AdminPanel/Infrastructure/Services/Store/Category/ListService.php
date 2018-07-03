@@ -16,7 +16,6 @@ class ListService implements ListServiceInterface
 
 	public function execute()
 	{
-		//var_dump($this->storeCategoryRepository);
-		return ['ok'];
+		return $this->storeCategoryRepository->list();
 	}
 }
