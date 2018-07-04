@@ -17,3 +17,12 @@ services:
 
   App\AddHash\AdminPanel\Domain\Store\Category\Services\ListServiceInterface: '@addhash.store.category.list.service'
 
+  ##AddHash User Service
+  addhash.user.register.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\UserRegisterService
+    public: true
+    arguments: ['@addhash.user.repository', '@security.encoder_factory']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\UserRegisterService: '@addhash.user.register.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface: '@addhash.user.register.service'
+

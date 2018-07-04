@@ -15,15 +15,23 @@ class StoreCategoryDQLRepository implements CategoryRepositoryInterface
 {
 	protected $entityManager;
 
-	public function __construct(EntityManagerInterface $entityManager)
+	public function __construct(EntityManager $entityManager)
 	{
 		$this->entityManager = $entityManager;
 	}
 
 	public function findById($id): ?StoreCategory
 	{
-		//$this->entityManager->getRepository(StoreCategory::class)->findById($id);
-		//return null;
+
+		$res =  $this->entityManager->getRepository(StoreCategory::class)
+			->createQueryBuilder('e')
+			->select('e')
+			->where('e.id = :id')
+			->setParameter('id', $id)
+			->getQuery();
+
+
+		return $res->getOneOrNullResult();
 	}
 
 	public function create(StoreCategory $category)

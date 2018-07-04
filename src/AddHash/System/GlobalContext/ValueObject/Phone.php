@@ -33,4 +33,9 @@ class Phone
 	{
 		$this->phone = $phone;
 	}
+
+	public function __toString()
+	{
+		return $this->getPhone();
+	}
 }

@@ -31,9 +31,14 @@ security:
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
 
         api_store:
-              pattern: ^/api/v2/store
+              pattern: ^/api/v1/store
               anonymous: true
               stateless: true
+              security: false
+
+        api_user_register:
+              pattern: ^/api/v1/user.register
+              anonymous: true
               security: false
 
         api:
@@ -60,7 +65,9 @@ security:
     # Note: Only the *first* access control that matches will be used
     encoders:
       Symfony\Component\Security\Core\User\User: plaintext
-      App\AddHash\AdminPanel\Domain\User\User: plaintext
+      App\AddHash\AdminPanel\Domain\User\User:
+         algorithm: bcrypt
+         cost: 12
 
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }

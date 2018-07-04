@@ -2,7 +2,6 @@
 
 namespace App\AddHash\AdminPanel\Domain\User;
 
-use App\AddHash\System\GlobalContext\Identity\UserId;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
 use App\AddHash\System\GlobalContext\ValueObject\Phone;
 use App\AddHash\System\Lib\Uuid;
@@ -10,8 +9,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class User implements UserInterface
 {
-	/** @var UserId */
-	private $id;
+	/** @var integer */
+	private $id = null;
 
 	/** @var string */
 	private $userName;
@@ -45,7 +44,7 @@ class User implements UserInterface
 
 
 	public function __construct(
-		UserId $id,
+		int $id = null,
 		string $userName,
 		Email $email,
 		string $password,
@@ -77,9 +76,11 @@ class User implements UserInterface
 		return $this->password;
 	}
 
-	private function setId(UserId $id)
+	private function setId($id = null)
 	{
-		$this->id = $id;
+		if ($id != null) {
+			$this->id = $id;
+		}
 	}
 
 	private function setUserName(string $userName)

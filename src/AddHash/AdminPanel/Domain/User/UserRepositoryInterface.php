@@ -20,14 +20,14 @@ interface UserRepositoryInterface
 	public function getByEmail(Email $email): ?User;
 
 	/**
-	 * @param User $customer
+	 * @param User $user
 	 * @return mixed
 	 */
-	public function create(User $customer);
+	public function create(User $user);
 
 	/**
-	 * @param User $customer
+	 * @param User $user
 	 * @return mixed
 	 */
-	public function update(User $customer);
+	public function update(User $user);
 }

@@ -18,4 +18,9 @@ class ListService implements ListServiceInterface
 	{
 		return $this->storeCategoryRepository->list();
 	}
+
+	public function getOne($id)
+	{
+		return $this->storeCategoryRepository->findById($id);
+	}
 }

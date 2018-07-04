@@ -6,7 +6,9 @@ use App\AddHash\AdminPanel\Domain\User\UserRepositoryInterface;
 use App\AddHash\System\GlobalContext\Identity\UserId;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\ORMInvalidArgumentException;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -28,11 +30,11 @@ class UserRepository implements UserRepositoryInterface
 
 	/**
 	 * @param Email $email
+	 * @throws NonUniqueResultException
 	 * @return User|null
 	 */
 	public function getByEmail(Email $email): ?User
 	{
-
 		$user = $this->entityManager->getRepository(User::class);
 
 		$res = $user->createQueryBuilder('u')
@@ -45,19 +47,21 @@ class UserRepository implements UserRepositoryInterface
 	}
 
 	/**
-	 * @param User $customer
-	 * @return mixed
+	 * @param User $user
+	 * @throws ORMInvalidArgumentException
+	 * @throws ORMException
 	 */
-	public function create(User $customer)
+	public function create(User $user)
 	{
-		// TODO: Implement create() method.
+		$this->entityManager->persist($user);
+		$this->entityManager->flush();
 	}
 
 	/**
-	 * @param User $customer
+	 * @param User $user
 	 * @return mixed
 	 */
-	public function update(User $customer)
+	public function update(User $user)
 	{
 		// TODO: Implement update() method.
 	}

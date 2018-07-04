@@ -1,4 +1,14 @@
+user.register:
+  path: "/api/v1/user.register"
+  methods: POST
+  controller: App\AddHash\AdminPanel\Application\Controller\UserController:register
+
 store.category.list:
     path: "/api/v1/store.category.list"
     methods: GET
     controller: App\AddHash\AdminPanel\Application\Controller\CategoryController:index
+
+store.category.get:
+    path: "/api/v1/store.category.get/{id}"
+    methods: GET
+    controller: App\AddHash\AdminPanel\Application\Controller\CategoryController:get

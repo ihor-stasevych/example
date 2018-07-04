@@ -4,9 +4,8 @@ App\AddHash\AdminPanel\Domain\User\User:
     id:
         id:
             type: integer
-            id: true
             generator:
-                strategy: NONE
+                { strategy: AUTO }
     fields:
         userName:
             type: string
