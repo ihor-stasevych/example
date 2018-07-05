@@ -1,6 +1,7 @@
 <?php
 namespace App\AddHash\AdminPanel\Infrastructure\Repository\User;
 
+use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterException;
 use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Domain\User\UserRepositoryInterface;
 use App\AddHash\System\GlobalContext\Identity\UserId;

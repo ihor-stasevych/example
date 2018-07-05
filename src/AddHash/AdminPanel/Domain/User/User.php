@@ -83,6 +83,11 @@ class User implements UserInterface
 		}
 	}
 
+	public function getEmail()
+	{
+		return $this->email;
+	}
+
 	private function setUserName(string $userName)
 	{
 		$this->userName = $userName;

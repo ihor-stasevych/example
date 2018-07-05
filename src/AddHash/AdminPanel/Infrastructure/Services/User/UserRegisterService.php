@@ -3,10 +3,11 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User;
 
 
+use App\AddHash\AdminPanel\Domain\User\Command\UserRegisterCommandInterface;
+use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterException;
 use App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Domain\User\UserRepositoryInterface;
-use App\AddHash\System\GlobalContext\Identity\UserId;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
 use App\AddHash\System\GlobalContext\ValueObject\Phone;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
@@ -26,20 +27,31 @@ class UserRegisterService implements UserRegisterServiceInterface
 	}
 
 
-	public function execute(array $data = [])
+	/**
+	 * @param UserRegisterCommandInterface $command
+	 * @return User
+	 * @throws UserRegisterException
+	 */
+	public function execute(UserRegisterCommandInterface $command)
 	{
-		$password = $data['password'];
+		$email = new Email($command->getEmail());
+
+		if ($this->userRepository->getByEmail($email)) {
+			throw new UserRegisterException('Such user already exists');
+		}
+
+		$password = $command->getPassword();
 		$encodedPassword = $this->encoderFactory->getEncoder(User::class)->encodePassword($password, '');
 
 		$user = new User(
 			null,
-			$data['userName'],
-			new Email($data['email']),
+			$command->getUserName(),
+			$email,
 			$encodedPassword,
-			new Email($data['backupEmail']),
-			$data['firstName'],
-			$data['lastName'],
-			new Phone($data['phone'])
+			$command->getBackupEmail(),
+			$command->getFirstName(),
+			$command->getLastName(),
+			$command->getPhone()
 		);
 
 		$this->userRepository->create($user);
