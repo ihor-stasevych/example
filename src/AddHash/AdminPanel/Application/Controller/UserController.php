@@ -49,6 +49,13 @@ class UserController extends BaseServiceController
 	 *     type="string",
 	 *     description="User password"
 	 * )
+	 *
+	 * @SWG\Parameter(
+	 *     name="confirmPassword",
+	 *     in="query",
+	 *     type="string",
+	 *     description="Confirm user password"
+	 * )
 	 * @SWG\Parameter(
 	 *     name="firstName",
 	 *     in="query",
@@ -88,7 +95,7 @@ class UserController extends BaseServiceController
 			$request->get('email'),
 			$request->get('backupEmail'),
 			$request->get('password'),
-			$request->get('password'),
+			$request->get('confirmPassword'),
 			$request->get('firstName'),
 			$request->get('lastName'),
 			$request->get('phone')
