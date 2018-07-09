@@ -19,12 +19,12 @@ services:
           arguments: ["@service_container"]
 
     addhash.service_controller:
-        #abstract: true
+        abstract: true
         public: true
         class: App\AddHash\System\GlobalContext\Common\BaseServiceController
         calls:
           - [setSerializer, ['@serializer']]
-          - [setValidator, ['@addhash.validator']]
+          - [setValidator, ['addhash.validator']]
 
 
     # makes classes in src/ available to be used as services

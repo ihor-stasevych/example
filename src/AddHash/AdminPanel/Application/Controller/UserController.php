@@ -110,7 +110,7 @@ class UserController extends BaseServiceController
 		try {
 			$this->userRegisterService->execute($userRegisterCommand);
 		} catch (\Exception $e) {
-			return $this->json(['message' =>'Such user already exists'], Response::HTTP_BAD_REQUEST);
+			return $this->json(['message' =>$e->getMessage()], Response::HTTP_BAD_REQUEST);
 		}
 
 		return $this->json([]);

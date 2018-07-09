@@ -30,7 +30,7 @@ class UserAuthProvider implements UserProviderInterface
 	public function loadUserByUsername($username)
 	{
 		$email = new Email($username);
-		return $user = $this->userRepository->getByEmail($email);
+		return $this->userRepository->getByEmail($email);
 
 	}
 

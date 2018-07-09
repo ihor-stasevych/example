@@ -20,6 +20,12 @@ interface UserRepositoryInterface
 	public function getByEmail(Email $email): ?User;
 
 	/**
+	 * @param string $username
+	 * @return User|null
+	 */
+	public function getByUserName(string $username): ?User;
+
+	/**
 	 * @param User $user
 	 * @return mixed
 	 */

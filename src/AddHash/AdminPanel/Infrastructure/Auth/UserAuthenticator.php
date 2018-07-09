@@ -38,7 +38,7 @@ class UserAuthenticator extends JwtAuthenticator
 
 		$username = $data['username'];
 
-		$user = $this->userRepository->getByEmail(new Email($username));
+		$user = $this->userRepository->getByUserName($username);
 
 		if (!$user) {
 			throw new AuthenticationException('Unauthorized', 401);
@@ -50,6 +50,6 @@ class UserAuthenticator extends JwtAuthenticator
 
 	public function supports(Request $request)
 	{
-		return false;
+		return $request->headers->has('Authorization');
 	}
 }

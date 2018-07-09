@@ -66,4 +66,23 @@ class UserRepository implements UserRepositoryInterface
 	{
 		// TODO: Implement update() method.
 	}
+
+	/**
+	 * @param string $username
+	 * @return User|null
+	 * @throws NonUniqueResultException
+	 */
+	public function getByUserName(string $username): ?User
+	{
+		$user = $this->entityManager->getRepository(User::class);
+
+		$res = $user->createQueryBuilder('u')
+			->select('u')
+			->where('u.userName = :userName')
+			->setParameter('userName', $username)
+			->getQuery();
+
+		return $res->getOneOrNullResult();
+
+	}
 }

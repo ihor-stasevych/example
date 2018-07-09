@@ -33,6 +33,9 @@ class User implements UserInterface
 	/** @var Phone */
 	private $phone;
 
+	/** @var array */
+	private $roles;
+
 	/** @var string */
 	private $token;
 

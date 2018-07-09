@@ -3,11 +3,12 @@
 namespace App\AddHash\AdminPanel\Application\Controller;
 
 use App\AddHash\AdminPanel\Domain\Store\Category\Services\ListServiceInterface;
+use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Swagger\Annotations as SWG;
 
-class CategoryController
+class CategoryController extends BaseServiceController
 {
 	protected $storeCategoryListService;
 
