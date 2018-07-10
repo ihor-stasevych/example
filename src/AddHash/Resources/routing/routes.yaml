@@ -13,6 +13,11 @@ store.category.get:
     methods: GET
     controller: App\AddHash\AdminPanel\Application\Controller\StoreCategoryController:get
 
+store.product.get:
+    path: "/api/v1/store.product.get"
+    methods: GET
+    controller: App\AddHash\AdminPanel\Application\Controller\StoreProductController:index
+
 admin.store.category.create:
     path: "/api/v1/admin.store.category.create"
     methods: POST

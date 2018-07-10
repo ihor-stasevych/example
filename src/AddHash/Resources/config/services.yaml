@@ -7,6 +7,12 @@ services:
     arguments: ['@doctrine.orm.entity_manager']
   App\AddHash\AdminPanel\Infrastructure\Repository\Store\Category\StoreCategoryDQLRepository: '@addhash.store.category.repository'
 
+  addhash.store.product.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product\StoreProductRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product\StoreProductRepository: '@addhash.store.product.repository'
+
   App\AddHash\AdminPanel\Domain\Store\Category\Model\Store_Category\CategoryRepositoryInterface: '@addhash.store.category.repository'
 
   addhash.store.category.list.service:

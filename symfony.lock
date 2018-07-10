@@ -80,6 +80,9 @@
     "lcobucci/jwt": {
         "version": "3.2.2"
     },
+    "league/fractal": {
+        "version": "0.17.0"
+    },
     "lexik/jwt-authentication-bundle": {
         "version": "2.5",
         "recipe": {

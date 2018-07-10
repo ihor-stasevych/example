@@ -98,7 +98,7 @@ class StoreCategoryController extends BaseServiceController
 
 		$this->storeCategoryCreateService->execute($createCommand);
 
-		return $this->json(['']);
+		return $this->json([]);
 	}
 
 

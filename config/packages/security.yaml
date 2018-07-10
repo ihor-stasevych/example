@@ -36,6 +36,11 @@ security:
               anonymous: true
               security: false
 
+        api_public_store:
+              pattern: ^/api/v1/store
+              anonymous: true
+              security: false
+
         api:
             pattern:   ^/api
             stateless: true

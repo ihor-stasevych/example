@@ -3,10 +3,11 @@
 namespace App\AddHash\AdminPanel\Application\Controller;
 
 
+use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-class AppController
+class AppController extends BaseServiceController
 {
 
 	/**
