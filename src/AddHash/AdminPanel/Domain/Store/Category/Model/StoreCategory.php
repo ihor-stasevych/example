@@ -1,7 +1,6 @@
 <?php
 
 namespace App\AddHash\AdminPanel\Domain\Store\Category\Model;
-#App\AddHash\AdminPanel\Domain\Store\Category\Model\Store_Category
 
 class StoreCategory
 {
@@ -12,4 +11,27 @@ class StoreCategory
 	private $createdAt;
 
 	private $position;
+
+
+	public function __construct($title, $position)
+	{
+		$this->title = $title;
+		$this->position = $position;
+		$this->createdAt = time();
+	}
+
+	public function getId()
+	{
+		return $this->id;
+	}
+
+	public function getTitle()
+	{
+		return $this->title;
+	}
+
+	public function getPosition()
+	{
+		return $this->position;
+	}
 }

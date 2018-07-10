@@ -54,7 +54,9 @@ class User implements UserInterface
 		Email $backupEmail,
 		string $firstName,
 		string $lastName,
-		Phone $phoneNumber)
+		Phone $phoneNumber,
+		array $roles
+	)
 	{
 		$this->setId($id);
 		$this->setUserName($userName);
@@ -64,6 +66,7 @@ class User implements UserInterface
 		$this->setFirstName($firstName);
 		$this->setLastName($lastName);
 		$this->setPhoneNumber($phoneNumber);
+		$this->setRoles($roles);
 		$this->token = Uuid::generate();
 		$this->createdAt = new \DateTime();
 		$this->updatedAt = new \DateTime();
@@ -126,9 +129,14 @@ class User implements UserInterface
 		$this->phone = $phoneNumber;
 	}
 
+	private function setRoles(array $roles)
+	{
+		$this->roles = array_unique($roles);
+	}
+
 	public function getRoles()
 	{
-		return ['ROLE_USER'];
+		return $this->roles;
 	}
 
 	public function getSalt()
@@ -153,6 +161,6 @@ class User implements UserInterface
 	 */
 	public function eraseCredentials()
 	{
-		// TODO: Implement eraseCredentials() method.
+		$this->password = null;
 	}
 }

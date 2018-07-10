@@ -98,7 +98,8 @@ class UserController extends BaseServiceController
 			$request->get('confirmPassword'),
 			$request->get('firstName'),
 			$request->get('lastName'),
-			$request->get('phone')
+			$request->get('phone'),
+			$request->get('roles', ['ROLE_USER'])
 		);
 
 		if (!$this->commandIsValid($userRegisterCommand)) {

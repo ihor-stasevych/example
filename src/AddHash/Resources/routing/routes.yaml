@@ -6,9 +6,14 @@ user.register:
 store.category.list:
     path: "/api/v1/store.category.list"
     methods: GET
-    controller: App\AddHash\AdminPanel\Application\Controller\CategoryController:index
+    controller: App\AddHash\AdminPanel\Application\Controller\StoreCategoryController:index
 
 store.category.get:
     path: "/api/v1/store.category.get/{id}"
     methods: GET
-    controller: App\AddHash\AdminPanel\Application\Controller\CategoryController:get
+    controller: App\AddHash\AdminPanel\Application\Controller\StoreCategoryController:get
+
+admin.store.category.create:
+    path: "/api/v1/admin.store.category.create"
+    methods: POST
+    controller: App\AddHash\AdminPanel\Application\Controller\StoreCategoryController:create

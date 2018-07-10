@@ -35,6 +35,13 @@ App\AddHash\AdminPanel\Domain\User\User:
         password:
             type: string
             length: 255
+
+        roles:
+            column: roles
+            type: json
+            nullable: true
+            options:
+                default: null
         phone:
             type: string
             length: 255

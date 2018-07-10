@@ -50,6 +50,7 @@ class UserAuthenticator extends JwtAuthenticator
 
 	public function supports(Request $request)
 	{
+		//return true;
 		return $request->headers->has('Authorization');
 	}
 }

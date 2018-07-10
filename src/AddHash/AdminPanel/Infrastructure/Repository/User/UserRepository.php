@@ -55,7 +55,7 @@ class UserRepository implements UserRepositoryInterface
 	public function create(User $user)
 	{
 		$this->entityManager->persist($user);
-		$this->entityManager->flush();
+		$this->entityManager->flush($user);
 	}
 
 	/**

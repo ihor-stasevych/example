@@ -1,0 +1,19 @@
+App\AddHash\AdminPanel\Domain\Role\Role:
+    type: entity
+    table: Roles
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string
+            length: 64
+            unique: true
+        locked:
+            type: boolean
+        weight:
+            type: integer
+        permissions:
+            type: json

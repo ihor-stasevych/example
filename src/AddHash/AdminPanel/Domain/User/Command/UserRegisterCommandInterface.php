@@ -14,4 +14,5 @@ interface UserRegisterCommandInterface
 	public function getLastName(): string;
 	public function getBackupEmail(): Email;
 	public function getPhone(): Phone;
+	public function getRoles(): array;
 }

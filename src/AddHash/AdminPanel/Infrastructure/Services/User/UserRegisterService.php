@@ -51,7 +51,8 @@ class UserRegisterService implements UserRegisterServiceInterface
 			$command->getBackupEmail(),
 			$command->getFirstName(),
 			$command->getLastName(),
-			$command->getPhone()
+			$command->getPhone(),
+			$command->getRoles()
 		);
 
 		$this->userRepository->create($user);

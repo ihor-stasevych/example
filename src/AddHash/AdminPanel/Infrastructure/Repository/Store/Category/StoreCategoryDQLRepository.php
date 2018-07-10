@@ -34,9 +34,15 @@ class StoreCategoryDQLRepository implements CategoryRepositoryInterface
 		return $res->getOneOrNullResult();
 	}
 
+	/**
+	 * @param StoreCategory $category
+	 * @throws \Doctrine\ORM\ORMException
+	 * @throws \Doctrine\ORM\OptimisticLockException
+	 */
 	public function create(StoreCategory $category)
 	{
-		// TODO: Implement create() method.
+		$this->entityManager->persist($category);
+		$this->entityManager->flush($category);
 	}
 
 	public function update(StoreCategory $category)

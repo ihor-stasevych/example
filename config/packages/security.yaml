@@ -30,11 +30,6 @@ security:
                 success_handler:          lexik_jwt_authentication.handler.authentication_success
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
 
-        api_store:
-              pattern: ^/api/v1/store
-              anonymous: true
-              stateless: true
-              security: false
 
         api_user_register:
               pattern: ^/api/v1/user.register
@@ -48,7 +43,15 @@ security:
             guard:
                 authenticators:
                      - addhash.user_authentificator
-                    #- lexik_jwt_authentication.jwt_token_authenticator
+
+        api_admin:
+            pattern:   ^/api/v1/admin
+            stateless: true
+            provider: addhash.user_provider
+            guard:
+                authenticators:
+                     - addhash.user_authentificator
+                     #- lexik_jwt_authentication.jwt_token_authenticator
 
         main:
             anonymous: true
@@ -80,4 +83,5 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v1/admin,  roles: ROLE_ADMIN }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }

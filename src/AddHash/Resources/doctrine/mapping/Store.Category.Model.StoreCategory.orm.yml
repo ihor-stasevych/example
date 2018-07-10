@@ -1,7 +1,6 @@
 App\AddHash\AdminPanel\Domain\Store\Category\Model\StoreCategory:
     type: entity
     table: Store_Category
-    #repositoryClass: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Category\StoreCategoryDQLRepository
     id:
         id:
             type: integer

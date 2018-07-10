@@ -17,6 +17,14 @@ services:
 
   App\AddHash\AdminPanel\Domain\Store\Category\Services\ListServiceInterface: '@addhash.store.category.list.service'
 
+  addhash.store.admin.category.create.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Category\CreateService
+    public: true
+    arguments: ['@addhash.store.category.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Category\CreateService: '@addhash.store.admin.category.create.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Category\Services\CreateServiceInterface: '@addhash.store.admin.category.create.service'
+
   ##AddHash User Service
   addhash.user.register.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\UserRegisterService

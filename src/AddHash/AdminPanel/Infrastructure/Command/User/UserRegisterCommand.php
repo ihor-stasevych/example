@@ -65,6 +65,11 @@ class UserRegisterCommand implements UserRegisterCommandInterface
 	 */
 	private $phone;
 
+	/**
+	 * @var array
+	 */
+	private $roles;
+
 
 	/**
 	 * UserRegisterCommand constructor.
@@ -77,6 +82,7 @@ class UserRegisterCommand implements UserRegisterCommandInterface
 	 * @param $firstName
 	 * @param $lastName
 	 * @param $phone
+	 * @param $roles
 	 */
 	public function __construct(
 		$userName = '',
@@ -86,7 +92,8 @@ class UserRegisterCommand implements UserRegisterCommandInterface
 		$confirmPassword = '',
 		$firstName = '',
 		$lastName = '',
-		$phone = 0
+		$phone = 0,
+		$roles = []
 	)
 	{
 		$this->userName = $userName;
@@ -97,6 +104,7 @@ class UserRegisterCommand implements UserRegisterCommandInterface
 		$this->firstName = $firstName;
 		$this->lastName = $lastName;
 		$this->phone = $phone;
+		$this->roles = $roles;
 	}
 
 	/**
@@ -135,6 +143,11 @@ class UserRegisterCommand implements UserRegisterCommandInterface
 	public function getBackupEmail(): Email
 	{
 		return new Email($this->backupEmail);
+	}
+
+	public function getRoles(): array
+	{
+		return $this->roles;
 	}
 
 	public function getPhone(): Phone

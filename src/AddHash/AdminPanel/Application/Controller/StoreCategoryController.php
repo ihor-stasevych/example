@@ -2,19 +2,29 @@
 
 namespace App\AddHash\AdminPanel\Application\Controller;
 
+use App\AddHash\AdminPanel\Domain\Store\Category\Services\CreateServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Category\Services\ListServiceInterface;
+use App\AddHash\AdminPanel\Infrastructure\Command\Store\Category\StoreCategoryCreateCommand;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
+use App\AddHash\System\GlobalContext\Validation\Validator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\Response;
 
-class CategoryController extends BaseServiceController
+class StoreCategoryController extends BaseServiceController
 {
 	protected $storeCategoryListService;
+	protected $storeCategoryCreateService;
 
-	public function __construct(ListServiceInterface $storeCategoryListService)
+	public function __construct(
+		ListServiceInterface $storeCategoryListService,
+		CreateServiceInterface $storeCategoryCreateService
+	)
 	{
 		$this->storeCategoryListService = $storeCategoryListService;
+		$this->storeCategoryCreateService = $storeCategoryCreateService;
+		$this->setValidator(new Validator());
 	}
 
 	/**
@@ -44,8 +54,53 @@ class CategoryController extends BaseServiceController
 	{
 		$result =  $this->storeCategoryListService->execute();
 
-		return new JsonResponse($result, 200);
+		return $this->json($result, Response::HTTP_OK);
 	}
+
+
+	/**
+	 * Create new category
+	 *
+	 * @SWG\Parameter(
+	 *     in="query",
+	 *     name="title",
+	 *     type="string",
+	 *     description="Category title",
+	 * )
+	 * @SWG\Parameter(
+	 *     name="position",
+	 *     in="query",
+	 *     type="number",
+	 *     description="Category position"
+	 * )
+	 *
+	 * @SWG\Response(
+	 *     response=200,
+	 *     description="Returns ok",
+	 * )
+	 *
+	 * @SWG\Tag(name="Admin Store")
+	 * @param Request $request
+	 * @return JsonResponse
+	 */
+	public function create(Request $request)
+	{
+		$createCommand = new StoreCategoryCreateCommand(
+			$request->get('title'),
+			$request->get('position', 0)
+		);
+
+		if (!$this->commandIsValid($createCommand)) {
+			return $this->json([
+				'errors' => $this->getLastValidationErrors()
+			], Response::HTTP_BAD_REQUEST);
+		}
+
+		$this->storeCategoryCreateService->execute($createCommand);
+
+		return $this->json(['']);
+	}
+
 
 	/**
 	 * Get one category
