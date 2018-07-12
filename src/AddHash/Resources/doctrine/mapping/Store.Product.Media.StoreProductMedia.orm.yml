@@ -1,0 +1,27 @@
+App\AddHash\AdminPanel\Domain\Store\Product\Media\StoreProductMedia:
+    type: entity
+    table: Store_Product_Media
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        product_id:
+            type: integer
+
+        type:
+            type: integer
+            length: 4
+
+        src:
+            type: string
+            length: 255
+
+    manyToOne:
+      product:
+        targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct
+        inversedBy: product
+        joinColumn:
+          name: product_id
+          referencedColumnName: id
+

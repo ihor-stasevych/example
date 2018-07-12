@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Repository\Store\Category;
 
-use App\AddHash\AdminPanel\Domain\Store\Category\CategoryRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\Store\Category\StoreCategoryRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Category\Model\Store_Category;
 use App\AddHash\AdminPanel\Domain\Store\Category\Model\StoreCategory;
 use Doctrine\ORM\EntityManager;
@@ -11,7 +11,7 @@ use Doctrine\ORM\Query;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 
-class StoreCategoryDQLRepository implements CategoryRepositoryInterface
+class StoreCategoryRepository implements StoreCategoryRepositoryInterface
 {
 	protected $entityManager;
 
@@ -80,5 +80,24 @@ class StoreCategoryDQLRepository implements CategoryRepositoryInterface
 
 		*/
 
+	}
+
+	/**
+	 * @param array $ids
+	 * @return StoreCategory|array
+	 */
+	public function findByIds(array $ids)
+	{
+		$storeCategories = $this->entityManager->getRepository(StoreCategory::class);
+
+		 $res =  $storeCategories->createQueryBuilder('e')
+			->select('e')
+			->where('e.id in (:ids)')
+			->setParameter('ids', $ids)
+			->getQuery()
+			->getResult();
+
+
+		 return $res;
 	}
 }

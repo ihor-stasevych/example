@@ -5,7 +5,7 @@ namespace App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductRepositoryInterface;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query;
+use Symfony\Component\HttpFoundation\Request;
 
 class StoreProductRepository implements StoreProductRepositoryInterface
 {
@@ -37,5 +37,21 @@ class StoreProductRepository implements StoreProductRepositoryInterface
 			->getQuery()->getResult();
 
 		return $res;
+	}
+
+	/**
+	 * TODO: Write to command instead of Request!
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function searchProducts(Request $request)
+	{
+		$qb = $this->entityManager->getRepository(StoreProduct::class)
+			->createQueryBuilder('a')
+			->where('a.title LIKE :query')
+			->orWhere('a.description LIKE :query')
+			->setParameter('query', "% {$request->get('query')} %");
+
+		return $qb->getQuery()->getResult();
 	}
 }

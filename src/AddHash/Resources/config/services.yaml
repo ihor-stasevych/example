@@ -2,10 +2,10 @@ services:
 
   ##AddHash Store Category
   addhash.store.category.repository:
-    class: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Category\StoreCategoryDQLRepository
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Category\StoreCategoryRepository
     public: true
     arguments: ['@doctrine.orm.entity_manager']
-  App\AddHash\AdminPanel\Infrastructure\Repository\Store\Category\StoreCategoryDQLRepository: '@addhash.store.category.repository'
+  App\AddHash\AdminPanel\Infrastructure\Repository\Store\Category\StoreCategoryRepository: '@addhash.store.category.repository'
 
   addhash.store.product.repository:
     class: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product\StoreProductRepository
@@ -30,6 +30,23 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\Store\Category\CreateService: '@addhash.store.admin.category.create.service'
 
   App\AddHash\AdminPanel\Domain\Store\Category\Services\CreateServiceInterface: '@addhash.store.admin.category.create.service'
+
+  addhash.store.product.list.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductListService
+    public: true
+    arguments: ['@addhash.store.product.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductListService: '@addhash.store.product.list.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductListServiceInterface: '@addhash.store.product.list.service'
+
+  addhash.store.product.create.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductCreateService
+    public: true
+    arguments: ['@addhash.store.product.repository', '@addhash.store.category.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductCreateService: '@addhash.store.product.create.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductCreateServiceInterface: '@addhash.store.product.create.service'
+
 
   ##AddHash User Service
   addhash.user.register.service:

@@ -1,6 +1,6 @@
 index:
     path: /api/doc
-#    controller: App\Controller\DefaultController::index
+    controller: App\Addhash\AdminPanel\Application\Controller\AppController
 
 NelmioApiDocBundle:
     resource: "@NelmioApiDocBundle/Resources/config/routing/swaggerui.xml"

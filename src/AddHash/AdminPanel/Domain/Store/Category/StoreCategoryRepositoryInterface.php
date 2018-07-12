@@ -4,7 +4,7 @@ namespace App\AddHash\AdminPanel\Domain\Store\Category;
 
 use App\AddHash\AdminPanel\Domain\Store\Category\Model\StoreCategory;
 
-interface CategoryRepositoryInterface
+interface StoreCategoryRepositoryInterface
 {
 	public function findById($id): ?StoreCategory;
 
@@ -13,4 +13,6 @@ interface CategoryRepositoryInterface
 	public function update(StoreCategory $category);
 
 	public function list();
+
+	public function findByIds(array $ids);
 }

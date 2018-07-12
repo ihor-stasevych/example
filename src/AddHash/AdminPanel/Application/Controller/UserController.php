@@ -18,7 +18,6 @@ class UserController extends BaseServiceController
 	public function __construct(UserRegisterServiceInterface $userRegisterService)
 	{
 		$this->userRegisterService = $userRegisterService;
-		$this->setValidator(new Validator());
 	}
 
 

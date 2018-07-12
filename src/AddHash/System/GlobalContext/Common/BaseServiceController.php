@@ -41,7 +41,6 @@ class BaseServiceController
 	 */
 	public function setSerializer(SerializerInterface $serializer)
 	{
-		var_dump(123123);
 		$this->serializer = $serializer;
 	}
 
@@ -55,8 +54,6 @@ class BaseServiceController
 
 			return new JsonResponse($json, $status, $headers, true);
 		}
-
-		echo 'NIXUYA';
 
 		return new JsonResponse($data, $status, $headers);
 	}

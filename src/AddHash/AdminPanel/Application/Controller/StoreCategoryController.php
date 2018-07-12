@@ -6,7 +6,6 @@ use App\AddHash\AdminPanel\Domain\Store\Category\Services\CreateServiceInterface
 use App\AddHash\AdminPanel\Domain\Store\Category\Services\ListServiceInterface;
 use App\AddHash\AdminPanel\Infrastructure\Command\Store\Category\StoreCategoryCreateCommand;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use App\AddHash\System\GlobalContext\Validation\Validator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Swagger\Annotations as SWG;
@@ -24,7 +23,6 @@ class StoreCategoryController extends BaseServiceController
 	{
 		$this->storeCategoryListService = $storeCategoryListService;
 		$this->storeCategoryCreateService = $storeCategoryCreateService;
-		$this->setValidator(new Validator());
 	}
 
 	/**

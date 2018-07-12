@@ -25,12 +25,22 @@ class StoreProduct
 
 	private $createdAt;
 
+	protected $statusAlias = [
+		self::STATE_AVAILABLE => 'available',
+		self::STATE_UNAVAILABLE => 'unavailable'
+	];
+
 	/**
 	 * @var ArrayCollection
 	 */
 	private $category;
 
-	public function __construct($title, $description, $techDetails, $price, $state)
+	/**
+	 * @var ArrayCollection
+	 */
+	private $media;
+
+	public function __construct($title, $description, $techDetails, $price, $state, $categories)
 	{
 		$this->title = $title;
 		$this->description = $description;
@@ -39,6 +49,8 @@ class StoreProduct
 		$this->state = $state;
 		$this->createdAt = time();
 		$this->category = new ArrayCollection();
+		$this->media = new ArrayCollection();
+		$this->setCategories($categories);
 	}
 
 	public function getId()
@@ -51,9 +63,46 @@ class StoreProduct
 		return $this->title;
 	}
 
+	public function getDescription()
+	{
+		return $this->description;
+	}
+
+	public function getPrice()
+	{
+		return $this->price;
+	}
+
+	public function getTechDetails()
+	{
+		return $this->techDetails;
+	}
+
 	public function getCategories()
 	{
 		return $this->category;
+	}
+
+	public function getMedia()
+	{
+		return $this->media;
+	}
+
+	public function getCreatedAt()
+	{
+		return date('Y-m-d', $this->createdAt);
+	}
+
+	public function getState()
+	{
+		return $this->statusAlias[$this->state] ?? null;
+	}
+
+	public function setCategories($categories = [])
+	{
+		foreach ($categories as $category) {
+			$this->setCategory($category);
+		}
 	}
 
 	public function setCategory(StoreCategory $category)

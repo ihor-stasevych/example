@@ -1,4 +1,5 @@
 App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct:
+    product:
     type: entity
     table: Store_Product
     id:
@@ -18,6 +19,8 @@ App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct:
 
         price:
             type: decimal
+            precision: 5
+            scale: 2
 
         state:
             type: integer
@@ -35,3 +38,8 @@ App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct:
             indexBy: type
             joinTable:
               name: Store_Product_Category
+
+    oneToMany:
+        media:
+          targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\Media\StoreProductMedia
+          mappedBy: product
