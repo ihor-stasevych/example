@@ -5,6 +5,7 @@ namespace App\AddHash\AdminPanel\Application\Controller;
 use App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductCreateServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductListServiceInterface;
 use App\AddHash\AdminPanel\Infrastructure\Command\Store\Product\StoreProductCreateCommand;
+use App\AddHash\AdminPanel\Infrastructure\Command\Store\Product\StoreProductListCommand;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
@@ -39,11 +40,27 @@ class StoreProductController extends BaseServiceController
 	 */
 	public function index()
 	{
-		//TODO:Implements Command and Search func
-
-		$products = $this->productListService->execute();
+		$command = new StoreProductListCommand();
+		$products = $this->productListService->execute($command);
 
 		return $this->json($products);
+	}
+
+
+	/**
+	 * @param $id
+	 * @SWG\Tag(name="Store products")
+	 * @SWG\Response(
+	 *     response=200,
+	 *     description="Returns products list"
+	 * )
+	 *
+	 * @return JsonResponse
+	 */
+	public function get($id)
+	{
+		$command = new StoreProductListCommand($id);
+		return $this->json($this->productListService->execute($command));
 	}
 
 	/**

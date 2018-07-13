@@ -10,10 +10,12 @@ use Symfony\Component\HttpFoundation\Request;
 class StoreProductRepository implements StoreProductRepositoryInterface
 {
 	private $entityManager;
+	private $productRepository;
 
 	public function __construct(EntityManager $entityManager)
 	{
 		$this->entityManager = $entityManager;
+		$this->productRepository = $this->entityManager->getRepository(StoreProduct::class);
 	}
 
 	/**
@@ -29,9 +31,7 @@ class StoreProductRepository implements StoreProductRepositoryInterface
 
 	public function listAllProducts()
 	{
-		$storeProduct = $this->entityManager->getRepository(StoreProduct::class);
-
-		$res = $storeProduct
+		$res = $this->productRepository
 			->createQueryBuilder('t')
 			->select('t')
 			->getQuery()->getResult();
@@ -46,12 +46,17 @@ class StoreProductRepository implements StoreProductRepositoryInterface
 	 */
 	public function searchProducts(Request $request)
 	{
-		$qb = $this->entityManager->getRepository(StoreProduct::class)
+		$qb = $this->productRepository
 			->createQueryBuilder('a')
 			->where('a.title LIKE :query')
 			->orWhere('a.description LIKE :query')
 			->setParameter('query', "% {$request->get('query')} %");
 
 		return $qb->getQuery()->getResult();
+	}
+
+	public function findById($id)
+	{
+		return $this->productRepository->find($id);
 	}
 }
