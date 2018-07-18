@@ -15,6 +15,22 @@ services:
 
   App\AddHash\AdminPanel\Domain\Store\Category\Model\Store_Category\CategoryRepositoryInterface: '@addhash.store.category.repository'
 
+  addhash.store.order.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order\StoreOrderRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order\StoreOrderRepository: '@addhash.store.order.repository'
+
+  App\AddHash\AdminPanel\Domain\Store\Order\OrderRepositoryInterface: '@addhash.store.order.repository'
+
+  addhash.store.order.item.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order\Item\StoreOrderItemRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order\Item\StoreOrderItemRepository: '@addhash.store.order.item.repository'
+
+  App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItemRepositoryInterface: '@addhash.store.order.item.repository'
+
   addhash.store.category.list.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Category\ListService
     public: true
@@ -47,6 +63,22 @@ services:
 
   App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductCreateServiceInterface: '@addhash.store.product.create.service'
 
+  addhash.store.order.create.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCreateService
+    public: true
+    arguments: ['@addhash.store.product.repository','@addhash.store.order.repository','@addhash.store.order.item.repository', '@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCreateService: '@addhash.store.order.create.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface: '@addhash.store.order.create.service'
+
+
+  addhash.store.order.get.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderGetService
+    public: true
+    arguments: ['@addhash.store.order.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderGetService: '@addhash.store.order.get.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface: '@addhash.store.order.get.service'
 
   ##AddHash User Service
   addhash.user.register.service:

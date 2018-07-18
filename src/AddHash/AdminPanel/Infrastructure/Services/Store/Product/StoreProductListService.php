@@ -5,7 +5,6 @@ namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Product;
 use App\AddHash\AdminPanel\Domain\Store\Product\Command\StoreProductListCommandInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductListServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductRepositoryInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 class StoreProductListService implements StoreProductListServiceInterface
 {

@@ -1,0 +1,42 @@
+App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem:
+    type: entity
+    table: Store_Order_Item
+    id:
+       id:
+           type: integer
+           generator: { strategy: AUTO }
+    fields:
+        createdAt:
+            column: created_at
+            type: datetime
+            nullable: false
+        updatedAt:
+            column: updated_at
+            type: datetime
+            nullable: true
+        quantity:
+            column: quantity
+            type: integer
+            nullable: false
+        priceTotal:
+            column: price_total
+            type: float
+            nullable: false
+            options:
+                default: 0.00
+    manyToOne:
+        order:
+            targetEntity: App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder
+            inversedBy: items
+            joinColumn:
+                name: orderId
+                referencedColumnName: id
+                nullable: false
+                onDelete: CASCADE
+        product:
+            targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct
+            inversedBy: orderItem
+            joinColumn:
+                name: productId
+                referencedColumnName: id
+                nullable: false

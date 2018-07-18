@@ -37,7 +37,7 @@ security:
               security: false
 
         api_public_store:
-              pattern: ^/api/v1/store
+              pattern: ^/api/v1/store.product
               anonymous: true
               security: false
 

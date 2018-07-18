@@ -45,6 +45,8 @@ class User implements UserInterface
 	/** @var \DateTime */
 	private $updatedAt;
 
+	private $order;
+
 
 	public function __construct(
 		int $id = null,
@@ -136,7 +138,8 @@ class User implements UserInterface
 
 	public function getRoles()
 	{
-		return $this->roles;
+		return ['ROLE_ADMIN'];
+		//return $this->roles;
 	}
 
 	public function getSalt()

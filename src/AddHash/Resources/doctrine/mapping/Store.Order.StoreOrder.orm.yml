@@ -1,0 +1,44 @@
+App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder:
+    type: entity
+    table: Store_Order
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        createdAt:
+            column: createdAt
+            type: datetime
+            nullable: false
+        updatedAt:
+            column: updatedAt
+            type: datetime
+            nullable: true
+        itemsTotal:
+            column: itemsTotal
+            type: integer
+            nullable: false
+        itemsPriceTotal:
+            column: itemsPriceTotal
+            type: float
+            nullable: false
+            options:
+                default: 0.00
+        state:
+            column: state
+            type: smallint
+
+    oneToMany:
+        items:
+            targetEntity: App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem
+            mappedBy: order
+            orphanRemoval: true
+            cascade: ['all']
+    manyToOne:
+        user:
+            targetEntity:  App\AddHash\AdminPanel\Domain\User\User
+            mappedBy: order
+            joinColumn:
+                name: userId
+                referencedColumnName: id
+                #nullable: false

@@ -13,4 +13,6 @@ interface StoreProductRepositoryInterface
 	public function searchProducts(Request $request);
 
 	public function findById($id);
+
+	public function findByIds(array $ids);
 }

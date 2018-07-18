@@ -60,3 +60,8 @@ App\AddHash\AdminPanel\Domain\User\User:
                 default: CURRENT_TIMESTAMP
         token:
             type: guid
+
+    oneToOne:
+      order:
+          targetEntity:  App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder
+          mappedBy: user

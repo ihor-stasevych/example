@@ -59,4 +59,19 @@ class StoreProductRepository implements StoreProductRepositoryInterface
 	{
 		return $this->productRepository->find($id);
 	}
+
+	public function findByIds(array $ids)
+	{
+		$storeProducts = $this->entityManager->getRepository(StoreProduct::class);
+
+		$res = $storeProducts->createQueryBuilder('e')
+			->select('e')
+			->where('e.id in (:ids)')
+			->setParameter('ids', $ids)
+			->getQuery()
+			->getResult();
+
+
+		return $res;
+	}
 }
