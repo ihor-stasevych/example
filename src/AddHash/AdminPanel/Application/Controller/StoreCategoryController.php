@@ -4,7 +4,7 @@ namespace App\AddHash\AdminPanel\Application\Controller;
 
 use App\AddHash\AdminPanel\Domain\Store\Category\Services\CreateServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Category\Services\ListServiceInterface;
-use App\AddHash\AdminPanel\Infrastructure\Command\Store\Category\StoreCategoryCreateCommand;
+use App\AddHash\AdminPanel\Application\Command\Store\Category\StoreCategoryCreateCommand;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

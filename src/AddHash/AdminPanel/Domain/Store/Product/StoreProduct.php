@@ -3,6 +3,7 @@
 namespace App\AddHash\AdminPanel\Domain\Store\Product;
 
 
+use App\AddHash\AdminPanel\Domain\Miners\Miner;
 use App\AddHash\AdminPanel\Domain\Store\Category\Model\StoreCategory;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -40,7 +41,15 @@ class StoreProduct
 	 */
 	private $media;
 
-	public function __construct($title, $description, $techDetails, $price, $state, $categories)
+	/**
+	 * @var ArrayCollection
+	 */
+	private $miner;
+
+	public function __construct(
+		$title, $description, $techDetails,
+		$price, $state, $categories
+	)
 	{
 		$this->title = $title;
 		$this->description = $description;
@@ -50,6 +59,7 @@ class StoreProduct
 		$this->createdAt = time();
 		$this->category = new ArrayCollection();
 		$this->media = new ArrayCollection();
+		$this->miner = new ArrayCollection();
 		$this->setCategories($categories);
 	}
 
@@ -110,6 +120,25 @@ class StoreProduct
 		if (!$this->category->contains($category)) {
 			$this->category->add($category);
 		}
+	}
+
+	public function getMiners()
+	{
+		return $this->miner;
+	}
+
+	public function getAvailableMinersQuantity()
+	{
+		$result = 0;
+
+		/** @var Miner $miner */
+		foreach ($this->getMiners() as $miner) {
+			if ($miner->getState() == Miner::STATE_AVAILABLE) {
+				$result += 1;
+			}
+		}
+
+		return $result;
 	}
 
 }

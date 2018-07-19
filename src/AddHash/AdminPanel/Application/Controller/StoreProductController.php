@@ -4,8 +4,8 @@ namespace App\AddHash\AdminPanel\Application\Controller;
 
 use App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductCreateServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductListServiceInterface;
-use App\AddHash\AdminPanel\Infrastructure\Command\Store\Product\StoreProductCreateCommand;
-use App\AddHash\AdminPanel\Infrastructure\Command\Store\Product\StoreProductListCommand;
+use App\AddHash\AdminPanel\Application\Command\Store\Product\StoreProductCreateCommand;
+use App\AddHash\AdminPanel\Application\Command\Store\Product\StoreProductListCommand;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;

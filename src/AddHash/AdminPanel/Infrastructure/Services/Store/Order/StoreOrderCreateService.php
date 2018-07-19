@@ -9,6 +9,7 @@ use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItemRepositoryInter
 
 use App\AddHash\AdminPanel\Domain\Store\Order\OrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductRepositoryInterface;
 
@@ -35,6 +36,11 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 		$this->tokenStorage = $tokenStorage;
 	}
 
+	/**
+	 * @param StoreOrderCreateCommandInterface $command
+	 * @return StoreOrder
+	 * @throws StoreOrderException
+	 */
 	public function execute(StoreOrderCreateCommandInterface $command)
 	{
 		$order = $this->storeOrderRepository->findNewByUserId($command->getUser()->getId());
@@ -47,6 +53,11 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 
 		/** @var StoreProduct $product */
 		foreach ($products as $product) {
+
+			if ($product->getAvailableMinersQuantity() == 0) {
+				throw new StoreOrderException('Cant add ' . $product->getTitle() . ' to cart. No available miners.');
+			}
+
 			if (!$order->productContains($product)) {
 				$item = new StoreOrderItem($order, $product);
 				$order->addItem($item);

@@ -4,7 +4,6 @@ namespace App\AddHash\AdminPanel\Infrastructure\Auth;
 
 use App\AddHash\AdminPanel\Domain\User\UserRepositoryInterface;
 use App\AddHash\System\GlobalContext\Auth\JwtAuthenticator;
-use App\AddHash\System\GlobalContext\ValueObject\Email;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\LcobucciJWTEncoder as JWTEncoder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;

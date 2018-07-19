@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AddHash\AdminPanel\Infrastructure\Command\User;
+namespace App\AddHash\AdminPanel\Application\Command\User;
 
 
 use App\AddHash\AdminPanel\Domain\User\Command\UserRegisterCommandInterface;

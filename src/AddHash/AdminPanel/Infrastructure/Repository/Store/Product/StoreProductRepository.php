@@ -2,6 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product;
 
+use App\AddHash\AdminPanel\Domain\Miners\Miner;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductRepositoryInterface;
 use Doctrine\ORM\EntityManager;
@@ -33,8 +34,15 @@ class StoreProductRepository implements StoreProductRepositoryInterface
 	{
 		$res = $this->productRepository
 			->createQueryBuilder('t')
-			->select('t')
-			->getQuery()->getResult();
+			->select('t', 'm')
+			->join('t.miner', 'm')
+			->where('t.state = :state')
+			#->andWhere('m.state = :minerState')
+			->setParameter('state', StoreProduct::STATE_AVAILABLE)
+			#->setParameter('minerState', Miner::STATE_AVAILABLE)
+			#->groupBy('t.id')
+			->getQuery()
+			->getResult();
 
 		return $res;
 	}

@@ -6,7 +6,7 @@ use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCreateCommandInt
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\User;
-use App\AddHash\AdminPanel\Infrastructure\Command\Store\Order\StoreOrderCreateCommand;
+use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCreateCommand;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,7 +71,13 @@ class StoreOrderController extends BaseServiceController
 			], Response::HTTP_BAD_REQUEST);
 		}
 
-		$order = $this->storeOrderCreateService->execute($command);
+		try {
+			$order = $this->storeOrderCreateService->execute($command);
+		} catch (\Exception $e) {
+			return $this->json([
+				'errors' => $e->getMessage()
+			], Response::HTTP_BAD_REQUEST);
+		}
 
 		return $this->json($order);
 	}

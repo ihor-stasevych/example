@@ -1,0 +1,49 @@
+App\AddHash\AdminPanel\Domain\Miners\Miner:
+    miner:
+    type: entity
+    table: Miner
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        title:
+            type: string
+            length: 100
+
+        description:
+            type: json
+
+        hashRate:
+            type: string
+
+        powerRate:
+            type: string
+
+        powerEfficiency:
+            type: string
+
+        ratedVoltage:
+            type: string
+
+        operatingTemperature:
+            type: string
+
+        state:
+            type: smallint
+
+        algorithm:
+            type: string
+
+        ip:
+            type: string
+
+        priority:
+
+    manyToOne:
+        product:
+          targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct
+          inversedBy: product
+          joinColumn:
+            name: productId
+            referencedColumnName: id

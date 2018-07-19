@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AddHash\AdminPanel\Infrastructure\Command\Store\Category;
+namespace App\AddHash\AdminPanel\Application\Command\Store\Category;
 
 use App\AddHash\AdminPanel\Domain\Store\Category\Command\StoreCategoryCreateCommandInterface;
 use Symfony\Component\Validator\Constraints as Assert;

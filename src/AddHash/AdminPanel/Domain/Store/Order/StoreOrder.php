@@ -10,7 +10,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 class StoreOrder
 {
 	const STATE_NEW = 1;
-	const STATE_CLOSED = 2;
+	const STATE_PAYED = 2;
+	const STATE_CLOSED = 3;
 
 	private $id;
 

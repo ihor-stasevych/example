@@ -43,3 +43,7 @@ App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct:
         media:
           targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\Media\StoreProductMedia
           mappedBy: product
+
+        miner:
+          targetEntity: App\AddHash\AdminPanel\Domain\Miners\Miner
+          mappedBy: product

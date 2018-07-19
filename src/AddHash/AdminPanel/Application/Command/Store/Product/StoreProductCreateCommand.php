@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AddHash\AdminPanel\Infrastructure\Command\Store\Product;
+namespace App\AddHash\AdminPanel\Application\Command\Store\Product;
 
 use App\AddHash\AdminPanel\Domain\Store\Product\Command\StoreProductCreateCommandInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;

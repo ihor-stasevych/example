@@ -3,7 +3,7 @@
 namespace App\AddHash\AdminPanel\Application\Controller;
 
 use App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface;
-use App\AddHash\AdminPanel\Infrastructure\Command\User\UserRegisterCommand;
+use App\AddHash\AdminPanel\Application\Command\User\UserRegisterCommand;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\System\GlobalContext\Validation\Validator;
 use Symfony\Component\HttpFoundation\JsonResponse;
