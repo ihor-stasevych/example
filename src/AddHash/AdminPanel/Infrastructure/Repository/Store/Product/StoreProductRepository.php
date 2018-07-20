@@ -2,23 +2,13 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product;
 
-use App\AddHash\AdminPanel\Domain\Miners\Miner;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductRepositoryInterface;
-use Doctrine\ORM\EntityManager;
+use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
 use Symfony\Component\HttpFoundation\Request;
 
-class StoreProductRepository implements StoreProductRepositoryInterface
+class StoreProductRepository extends AbstractRepository implements StoreProductRepositoryInterface
 {
-	private $entityManager;
-	private $productRepository;
-
-	public function __construct(EntityManager $entityManager)
-	{
-		$this->entityManager = $entityManager;
-		$this->productRepository = $this->entityManager->getRepository(StoreProduct::class);
-	}
-
 	/**
 	 * @param StoreProduct $product
 	 * @throws \Doctrine\ORM\ORMException
@@ -32,7 +22,7 @@ class StoreProductRepository implements StoreProductRepositoryInterface
 
 	public function listAllProducts()
 	{
-		$res = $this->productRepository
+		$res = $this->entityRepository
 			->createQueryBuilder('t')
 			->select('t', 'm')
 			->join('t.miner', 'm')
@@ -54,7 +44,7 @@ class StoreProductRepository implements StoreProductRepositoryInterface
 	 */
 	public function searchProducts(Request $request)
 	{
-		$qb = $this->productRepository
+		$qb = $this->entityRepository
 			->createQueryBuilder('a')
 			->where('a.title LIKE :query')
 			->orWhere('a.description LIKE :query')
@@ -65,12 +55,12 @@ class StoreProductRepository implements StoreProductRepositoryInterface
 
 	public function findById($id)
 	{
-		return $this->productRepository->find($id);
+		return $this->entityRepository->find($id);
 	}
 
 	public function findByIds(array $ids)
 	{
-		$storeProducts = $this->entityManager->getRepository(StoreProduct::class);
+		$storeProducts = $this->entityManager->getRepository($this->getEntityName());
 
 		$res = $storeProducts->createQueryBuilder('e')
 			->select('e')
@@ -81,5 +71,13 @@ class StoreProductRepository implements StoreProductRepositoryInterface
 
 
 		return $res;
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function getEntityName()
+	{
+		return StoreProduct::class;
 	}
 }

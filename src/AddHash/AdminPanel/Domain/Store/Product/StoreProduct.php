@@ -6,6 +6,7 @@ namespace App\AddHash\AdminPanel\Domain\Store\Product;
 use App\AddHash\AdminPanel\Domain\Miners\Miner;
 use App\AddHash\AdminPanel\Domain\Store\Category\Model\StoreCategory;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 
 class StoreProduct
 {
@@ -125,6 +126,17 @@ class StoreProduct
 	public function getMiners()
 	{
 		return $this->miner;
+	}
+
+	public function ensureAvailableMiner($quantity)
+	{
+		$criteria = Criteria::create()
+			->where(Criteria::expr()->eq('state', Miner::STATE_AVAILABLE))
+			->orderBy(['priority' => 'ASC'])
+			->setFirstResult(0)
+			->setMaxResults($quantity);
+
+		return $this->miner->matching($criteria);
 	}
 
 	public function getAvailableMinersQuantity()

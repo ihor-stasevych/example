@@ -4,22 +4,18 @@ namespace App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order;
 
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Order\OrderRepositoryInterface;
-use Doctrine\ORM\EntityManager;
+use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
 
-class StoreOrderRepository implements OrderRepositoryInterface
+class StoreOrderRepository extends AbstractRepository implements OrderRepositoryInterface
 {
-	protected $entityManager;
-	protected $orderRepository;
 
-	public function __construct(EntityManager $entityManager)
-	{
-		$this->entityManager = $entityManager;
-		$this->orderRepository = $this->entityManager->getRepository(StoreOrder::class);
-	}
-
+	/**
+	 * @param $id
+	 * @return null|object|StoreOrder
+	 */
 	public function findById($id)
 	{
-		// TODO: Implement findById() method.
+		return $this->entityRepository->find($id);
 	}
 
 	/**
@@ -29,7 +25,7 @@ class StoreOrderRepository implements OrderRepositoryInterface
 	 */
 	public function findNewByUserId($userId)
 	{
-		$order = $this->orderRepository->createQueryBuilder('e')
+		$order = $this->entityRepository->createQueryBuilder('e')
 			->select('e')
 			->where('e.user = :id')
 			->andWhere('e.state = :stateNew')
@@ -50,5 +46,13 @@ class StoreOrderRepository implements OrderRepositoryInterface
 	{
 		$this->entityManager->persist($order);
 		$this->entityManager->flush($order);
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function getEntityName()
+	{
+		return StoreOrder::class;
 	}
 }

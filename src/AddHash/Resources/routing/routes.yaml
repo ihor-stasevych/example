@@ -33,6 +33,11 @@ store.order.get:
     methods: GET
     controller: App\AddHash\AdminPanel\Application\Controller\StoreOrderController::get
 
+store.order.checkout:
+    path: "/api/v1/store.order.checkout"
+    methods: POST
+    controller: App\AddHash\AdminPanel\Application\Controller\StoreOrderController::checkout
+
 admin.store.category.create:
     path: "/api/v1/admin.store.category.create"
     methods: POST

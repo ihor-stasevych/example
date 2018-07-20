@@ -80,6 +80,14 @@ services:
 
   App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface: '@addhash.store.order.get.service'
 
+  addhash.store.order.checkout.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCheckoutService
+    public: true
+    arguments: ['@addhash.store.order.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCheckoutService: '@addhash.store.order.checkout.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface: '@addhash.store.order.checkout.service'
+
   ##AddHash User Service
   addhash.user.register.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\UserRegisterService

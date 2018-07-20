@@ -88,6 +88,35 @@ class StoreOrder
 		return false;
 	}
 
+	public function getState()
+	{
+		return $this->state;
+	}
+
+	public function ensureAvailableProductMiners()
+	{
+		$result = [];
+
+		/** @var StoreOrderItem $item */
+		foreach ($this->getItems() as $key => $item) {
+			$result[] = $item->getProduct()->ensureAvailableMiner($item->getQuantity());
+		}
+
+		return $result;
+	}
+
+	public function checkAvailableMiners()
+	{
+		/** @var StoreOrderItem $item */
+		foreach ($this->getItems() as $item) {
+			if ($item->getProduct()->getAvailableMinersQuantity() < $item->getQuantity()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public function calculateItems()
 	{
 		$totalPrice = 0;

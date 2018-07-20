@@ -5,7 +5,7 @@ namespace App\AddHash\AdminPanel\Domain\Miners;
 class Miner
 {
 	const STATE_AVAILABLE = 1;
-	const STATE_ORDER_PENDING = 2;
+	const STATE_BUSY = 2;
 	const STATE_UNAVAILABLE = 0;
 
 	private $id;
@@ -33,6 +33,12 @@ class Miner
 	private $priority;
 
 	private $product;
+
+	private $stateAliases = [
+		self::STATE_AVAILABLE => 'available',
+		self::STATE_BUSY => 'busy',
+		self::STATE_UNAVAILABLE => 'unavailable'
+	];
 
 	public function __construct(
 		$title, $description, $hashRate, $powerRate,
@@ -68,8 +74,8 @@ class Miner
 		return $this->state;
 	}
 
-	public function getProduct()
+	public function getStateAlias()
 	{
-		//return $this->product;
+		return $this->stateAliases[$this->state];
 	}
 }
