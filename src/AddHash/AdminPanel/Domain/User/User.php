@@ -96,12 +96,32 @@ class User implements UserInterface
 		return $this->email;
 	}
 
+    public function getBackupEmail()
+    {
+        return $this->backupEmail;
+    }
+
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    public function getPhoneNumber()
+    {
+        return $this->phone;
+    }
+
 	private function setUserName(string $userName)
 	{
 		$this->userName = $userName;
 	}
 
-	private function setEmail(Email $email)
+	public function setEmail(Email $email)
 	{
 		$this->email = $email;
 	}
@@ -111,22 +131,22 @@ class User implements UserInterface
 		$this->password = $password;
 	}
 
-	private function setBackupEmail(Email $email)
+	public function setBackupEmail(Email $email)
 	{
 		$this->backupEmail = $email;
 	}
 
-	private function setFirstName(string $firstName)
+	public function setFirstName(string $firstName)
 	{
 		$this->firstName = $firstName;
 	}
 
-	private function setLastName(string $lastName)
+	public function setLastName(string $lastName)
 	{
 		$this->lastName = $lastName;
 	}
 
-	private function setPhoneNumber($phoneNumber)
+	public function setPhoneNumber($phoneNumber)
 	{
 		$this->phone = $phoneNumber;
 	}
@@ -138,8 +158,8 @@ class User implements UserInterface
 
 	public function getRoles()
 	{
-		return ['ROLE_ADMIN'];
-		//return $this->roles;
+		//return ['ROLE_ADMIN'];
+		return $this->roles;
 	}
 
 	public function getSalt()
@@ -164,6 +184,6 @@ class User implements UserInterface
 	 */
 	public function eraseCredentials()
 	{
-		$this->password = null;
+		//$this->password = null;
 	}
 }

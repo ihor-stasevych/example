@@ -31,9 +31,8 @@ interface UserRepositoryInterface
 	 */
 	public function create(User $user);
 
-	/**
-	 * @param User $user
-	 * @return mixed
-	 */
-	public function update(User $user);
+    /**
+     * @return mixed
+     */
+	public function update();
 }

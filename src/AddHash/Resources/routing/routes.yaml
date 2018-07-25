@@ -47,3 +47,18 @@ admin.store.product.create:
     path: "/api/v1/admin.store.product.create"
     methods: POST
     controller: App\AddHash\AdminPanel\Application\Controller\StoreProductController::create
+
+account.settings.general.information.update:
+    path: "/api/v1/user.account.settings.general.information.update"
+    methods: POST
+    controller: App\AddHash\AdminPanel\Application\Controller\AccountSettings\GeneralInformationController::update
+
+account.settings.general.information.get:
+    path: "/api/v1/user.account.settings.general.information.get"
+    methods: GET
+    controller: App\AddHash\AdminPanel\Application\Controller\AccountSettings\GeneralInformationController::get
+
+account.settings.password.update:
+    path: "/api/v1/user.account.settings.password.update"
+    methods: POST
+    controller: App\AddHash\AdminPanel\Application\Controller\AccountSettings\PasswordController::update

@@ -97,3 +97,20 @@ services:
 
   App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface: '@addhash.user.register.service'
 
+
+  addhash.user.account.settings.general.information.update.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationUpdateService
+    public: true
+    arguments: ['@addhash.user.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationUpdateService: '@addhash.user.account.settings.general.information.update.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationUpdateServiceInterface: '@addhash.user.account.settings.general.information.update.service'
+
+
+  addhash.user.account.settings.general.information.get.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationGetService
+    public: true
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationGetService: '@addhash.user.account.settings.general.information.get.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationGetServiceInterface: '@addhash.user.account.settings.general.information.get.service'
+
