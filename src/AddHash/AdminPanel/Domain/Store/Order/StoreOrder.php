@@ -131,4 +131,9 @@ class StoreOrder
 		$this->itemsPriceTotal = $totalPrice;
 		$this->itemsTotal = $count;
 	}
+
+	public function getUser()
+	{
+		return $this->user;
+	}
 }

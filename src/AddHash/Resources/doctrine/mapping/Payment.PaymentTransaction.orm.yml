@@ -1,0 +1,32 @@
+App\AddHash\AdminPanel\Domain\Payment\PaymentTransaction:
+    type: entity
+    table: Payment_Transaction
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        externalId:
+            type: string
+            column: externalId
+            length: 255
+        amount:
+            column: amount
+            type: float
+        state:
+            type: smallint
+        createdAt:
+            column: createdAt
+            type: datetime
+            nullable: false
+
+    oneToOne:
+        payment:
+          targetEntity: App\AddHash\AdminPanel\Domain\Payment\Payment
+          #inversedBy: payment
+          joinColumn:
+            name: paymentId
+            referencedColumnName: id
+
+

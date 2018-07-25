@@ -80,10 +80,28 @@ services:
 
   App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface: '@addhash.store.order.get.service'
 
+  addhash.payment.repository:
+      class: App\AddHash\AdminPanel\Infrastructure\Repository\Payment\PaymentRepository
+      public: true
+      arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\Payment\PaymentRepository: '@addhash.payment.repository'
+
+  addhash.payment.transaction.repository:
+      class: App\AddHash\AdminPanel\Infrastructure\Repository\Payment\PaymentTransactionRepository
+      public: true
+      arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\Payment\PaymentTransactionRepository: '@addhash.payment.transaction.repository'
+
+  addhash.payment.order.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Payment\MakePaymentForOrderService
+    public: true
+    arguments: ['@addhash.payment.repository', '@addhash.payment.transaction.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Payment\MakePaymentForOrderService: '@addhash.payment.order.service'
+
   addhash.store.order.checkout.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCheckoutService
     public: true
-    arguments: ['@addhash.store.order.repository']
+    arguments: ['@addhash.store.order.repository', '@addhash.payment.order.service']
   App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCheckoutService: '@addhash.store.order.checkout.service'
 
   App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface: '@addhash.store.order.checkout.service'

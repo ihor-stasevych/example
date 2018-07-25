@@ -13,6 +13,7 @@
         "pagerfanta/pagerfanta": "^2.0",
         "ramsey/uuid": "^3.7",
         "sensio/framework-extra-bundle": "^5.1",
+        "stripe/stripe-php": "^6.10",
         "symfony/asset": "^4.1",
         "symfony/console": "^4.1",
         "symfony/expression-language": "^4.1",

@@ -100,6 +100,14 @@ class StoreOrderController extends BaseServiceController
 	 *     description="Id of new order"
 	 * )
 	 *
+	 * @SWG\Parameter(
+	 *     name="stripeToken",
+	 *     in="formData",
+	 *     type="string",
+	 *     required=false,
+	 *     description="stripe front token"
+	 * )
+	 *
 	 * @SWG\Response(
 	 *     response=200,
 	 *     description="Pay for products"
@@ -110,7 +118,10 @@ class StoreOrderController extends BaseServiceController
 	 */
 	public function checkout(Request $request)
 	{
-		$command = new StoreOrderCheckoutCommand($request->get('orderId'));
+		$command = new StoreOrderCheckoutCommand(
+			$request->get('orderId'),
+			$request->get('stripeToken')
+		);
 
 		if (!$this->commandIsValid($command)) {
 			return $this->json([
