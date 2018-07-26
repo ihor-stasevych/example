@@ -47,11 +47,13 @@ class StoreOrderCheckoutService implements StoreOrderCheckoutServiceInterface
 			throw new StoreOrderException('Not available product quantity at the moment. Please make new order');
 		}
 
-		$this->payment->execute(
+		$payment = $this->payment->execute(
 			$commandOrder->getToken(),
 			$order->getItemsPriceTotal(),
-			$order->getUser()
+			$order
 		);
+
+		//if ()
 
 		return true;
 

@@ -41,6 +41,6 @@ class MakePaymentForOrderService implements MakePaymentForOrderServiceInterface
 		$this->paymentRepository->save($payment);
 		$this->paymentTransactionRepository->save($transaction);
 
-		return true;
+		return $payment;
 	}
 }
