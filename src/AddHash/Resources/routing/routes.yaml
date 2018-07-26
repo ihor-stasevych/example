@@ -62,3 +62,8 @@ account.settings.password.update:
     path: "/api/v1/user.account.settings.password.update"
     methods: POST
     controller: App\AddHash\AdminPanel\Application\Controller\AccountSettings\PasswordController::update
+
+account.settings.wallet.update:
+    path: "/api/v1/user.account.settings.wallet.update"
+    methods: POST
+    controller: App\AddHash\AdminPanel\Application\Controller\AccountSettings\WalletController::update

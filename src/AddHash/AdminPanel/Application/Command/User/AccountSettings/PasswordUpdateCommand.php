@@ -17,6 +17,10 @@ class PasswordUpdateCommand implements PasswordUpdateCommandInterface
     /**
      * @var string
      * @Assert\NotBlank()
+     *      min = 2,
+     *      max = 255,
+     *      minMessage = "Your password must be at least {{ limit }} characters long",
+     *      maxMessage = "Your password cannot be longer than {{ limit }} characters"
      */
     private $newPassword;
 

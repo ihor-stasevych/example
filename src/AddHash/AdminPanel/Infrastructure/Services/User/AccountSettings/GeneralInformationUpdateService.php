@@ -19,21 +19,35 @@ class GeneralInformationUpdateService implements GeneralInformationUpdateService
 
     /**
      * @param GeneralInformationUpdateCommandInterface $command
+     * @return array
      * @throws GeneralInformationEmailExistException
      */
-	public function execute(GeneralInformationUpdateCommandInterface $command)
+	public function execute(GeneralInformationUpdateCommandInterface $command): array
 	{
 	    $this->validation($command);
 
         $user = $command->getUser();
+        $email = $command->getEmail();
+        $backupEmail = $command->getBackupEmail();
+        $firstName = $command->getFirstName();
+        $lastName = $command->getLastName();
+        $phoneNumber = $command->getPhoneNumber();
 
-        $user->setEmail($command->getEmail());
-        $user->setBackupEmail($command->getBackupEmail());
-        $user->setFirstName($command->getFirstName());
-        $user->setLastName($command->getLastName());
-        $user->setPhoneNumber($command->getPhoneNumber());
+        $user->setEmail($email);
+        $user->setBackupEmail($backupEmail);
+        $user->setFirstName($firstName);
+        $user->setLastName($lastName);
+        $user->setPhoneNumber($phoneNumber);
 
         $this->userRepository->update();
+
+        return [
+            'email'       => $email->getEmail(),
+            'backupEmail' => $backupEmail->getEmail(),
+            'firstName'   => $firstName,
+            'lastName'    => $lastName,
+            'phoneNumber' => $phoneNumber->getPhone(),
+        ];
 	}
 
     /**

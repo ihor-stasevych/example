@@ -1,0 +1,19 @@
+App\AddHash\AdminPanel\Domain\User\UserWallet:
+    type: entity
+    table: User_Wallet
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        userId:
+            type: integer
+            length: 11
+
+        walletId:
+            type: integer
+            length: 11
+
+        name:
+            type: string
+            length: 191

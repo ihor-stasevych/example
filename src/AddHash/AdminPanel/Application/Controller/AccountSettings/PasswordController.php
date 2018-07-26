@@ -82,6 +82,6 @@ class PasswordController extends BaseServiceController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-		return new JsonResponse([]);
+        return $this->json([]);
 	}
 }

@@ -37,7 +37,7 @@ class GeneralInformationController extends BaseServiceController
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns the rewards of an user",
+     *     description="Returns the general information of an user",
      *     @SWG\Schema(
      *              type="object",
      *              @SWG\Property(property="email", type="string"),
@@ -94,7 +94,15 @@ class GeneralInformationController extends BaseServiceController
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns success"
+     *     description="Returns the general information of an user",
+     *     @SWG\Schema(
+     *              type="object",
+     *              @SWG\Property(property="email", type="string"),
+     *              @SWG\Property(property="backupEmail", type="string"),
+     *              @SWG\Property(property="firstName", type="string"),
+     *              @SWG\Property(property="lastName", type="string"),
+     *              @SWG\Property(property="phone", type="string")
+     *     )
      * )
      * @SWG\Response(
      *     response=400,
@@ -124,13 +132,13 @@ class GeneralInformationController extends BaseServiceController
         }
 
         try {
-            $this->updateService->execute($command);
+            $user = $this->updateService->execute($command);
         } catch (GeneralInformationEmailExistException $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
             ], Response::HTTP_BAD_REQUEST);
         }
 
-		return new JsonResponse([]);
+		return $this->json($user);
 	}
 }

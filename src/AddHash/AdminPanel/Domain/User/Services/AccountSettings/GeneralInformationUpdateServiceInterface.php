@@ -6,5 +6,5 @@ use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\GeneralInformatio
 
 interface GeneralInformationUpdateServiceInterface
 {
-	public function execute(GeneralInformationUpdateCommandInterface $command);
+	public function execute(GeneralInformationUpdateCommandInterface $command): array;
 }

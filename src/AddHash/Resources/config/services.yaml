@@ -31,6 +31,25 @@ services:
 
   App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItemRepositoryInterface: '@addhash.store.order.item.repository'
 
+  addhash.user.wallet.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\User\UserWalletRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\User\UserWalletRepository: '@addhash.user.wallet.repository'
+
+  App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface: '@addhash.user.wallet.repository'
+
+  addhash.wallet.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\Wallet\WalletRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\Wallet\WalletRepository: '@addhash.wallet.repository'
+
+  App\AddHash\AdminPanel\Domain\Wallet\WalletRepositoryInterface: '@addhash.wallet.repository'
+
+
+
+
   addhash.store.category.list.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Category\ListService
     public: true
@@ -121,4 +140,12 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\PasswordUpdateService: '@addhash.user.account.settings.password.update.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\PasswordUpdateServiceInterface: '@addhash.user.account.settings.password.update.service'
+
+  addhash.user.account.settings.walltet.update.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletUpdateService
+    public: true
+    arguments: ['@addhash.user.wallet.repository', '@addhash.wallet.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletUpdateService: '@addhash.user.account.settings.walltet.update.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletUpdateServiceInterface: '@addhash.user.account.settings.walltet.update.service'
 
