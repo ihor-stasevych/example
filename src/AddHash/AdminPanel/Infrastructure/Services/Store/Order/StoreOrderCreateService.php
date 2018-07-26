@@ -59,9 +59,6 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 		foreach ($products as $product) {
 
 			if ($product->getAvailableMinersQuantity() == 0) {
-				$product->setUnavailable();
-				$this->storeProductRepository->save($product);
-
 				throw new StoreOrderException('Cant add ' . $product->getTitle() . ' to cart. No available miners.');
 			}
 
