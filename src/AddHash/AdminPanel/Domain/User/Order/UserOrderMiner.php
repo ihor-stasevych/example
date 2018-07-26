@@ -2,9 +2,10 @@
 
 namespace App\AddHash\AdminPanel\Domain\User\Order;
 
+use App\AddHash\AdminPanel\Domain\Miners\Miner;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 
-class Miner
+class UserOrderMiner
 {
 	const STATE_READY = 1;
 	const STATE_NOT_AVAILABLE = 2;

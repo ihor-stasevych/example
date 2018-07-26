@@ -11,6 +11,7 @@ use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
 use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCreateCommand;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
+use Nelmio\ApiDocBundle\Annotation\Operation;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Swagger\Annotations as SWG;
@@ -86,6 +87,15 @@ class StoreOrderController extends BaseServiceController
 		}
 
 		return $this->json($order);
+	}
+
+	/***
+	 * TODO:Implement method
+	 * @param Request $request
+	 */
+	public function prepare(Request $request)
+	{
+
 	}
 
 	/**

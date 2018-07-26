@@ -8,6 +8,8 @@ interface StoreProductRepositoryInterface
 {
 	public function create(StoreProduct $product);
 
+	public function save(StoreProduct $product);
+
 	public function listAllProducts();
 
 	public function searchProducts(Request $request);

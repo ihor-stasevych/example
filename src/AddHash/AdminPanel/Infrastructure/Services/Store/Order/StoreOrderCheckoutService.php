@@ -2,6 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
+use App\AddHash\AdminPanel\Domain\Payment\Payment;
 use App\AddHash\AdminPanel\Domain\Payment\PaymentInterface;
 use App\AddHash\AdminPanel\Domain\Payment\Services\MakePaymentForOrderServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCheckoutCommandOrderInterface;
@@ -47,13 +48,14 @@ class StoreOrderCheckoutService implements StoreOrderCheckoutServiceInterface
 			throw new StoreOrderException('Not available product quantity at the moment. Please make new order');
 		}
 
-		$payment = $this->payment->execute(
+		/** @var Payment $payment */
+		$this->payment->execute(
 			$commandOrder->getToken(),
 			$order->getItemsPriceTotal(),
 			$order
 		);
 
-		//if ()
+		$order->setPayedState();
 
 		return true;
 

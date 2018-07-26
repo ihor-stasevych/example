@@ -1,0 +1,9 @@
+App\AddHash\AdminPanel\Domain\User\Order\UserOrderMiner:
+    type: entity
+    table: User_Order_Miner
+    id:
+        id:
+            type: integer
+            generator:
+                { strategy: AUTO }
+    fields:

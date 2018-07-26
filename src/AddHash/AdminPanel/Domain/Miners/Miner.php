@@ -6,6 +6,8 @@ class Miner
 {
 	const STATE_AVAILABLE = 1;
 	const STATE_BUSY = 2;
+	const STATE_RESERVED = 3;
+
 	const STATE_UNAVAILABLE = 0;
 
 	private $id;
@@ -37,6 +39,7 @@ class Miner
 	private $stateAliases = [
 		self::STATE_AVAILABLE => 'available',
 		self::STATE_BUSY => 'busy',
+		self::STATE_RESERVED => 'reserved',
 		self::STATE_UNAVAILABLE => 'unavailable'
 	];
 
@@ -77,5 +80,10 @@ class Miner
 	public function getStateAlias()
 	{
 		return $this->stateAliases[$this->state];
+	}
+
+	public function reserveMiner()
+	{
+		$this->state = self::STATE_RESERVED;
 	}
 }

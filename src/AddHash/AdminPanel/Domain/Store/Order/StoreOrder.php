@@ -136,4 +136,9 @@ class StoreOrder
 	{
 		return $this->user;
 	}
+
+	public function setPayedState()
+	{
+		$this->state = self::STATE_PAYED;
+	}
 }

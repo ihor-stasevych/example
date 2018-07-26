@@ -31,6 +31,14 @@ services:
 
   App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItemRepositoryInterface: '@addhash.store.order.item.repository'
 
+  addhash.miner.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\Miner\MinerRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\Miner\MinerRepository: '@addhash.miner.repository'
+
+  App\AddHash\AdminPanel\Domain\Miners\Repository\MinerRepositoryInterface: '@addhash.miner.repository'
+
   addhash.store.category.list.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Category\ListService
     public: true
@@ -66,7 +74,7 @@ services:
   addhash.store.order.create.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCreateService
     public: true
-    arguments: ['@addhash.store.product.repository','@addhash.store.order.repository','@addhash.store.order.item.repository', '@security.token_storage']
+    arguments: ['@addhash.store.product.repository','@addhash.store.order.repository','@addhash.store.order.item.repository', '@security.token_storage', '@addhash.miner.repository']
   App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCreateService: '@addhash.store.order.create.service'
 
   App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface: '@addhash.store.order.create.service'
