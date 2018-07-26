@@ -3,6 +3,7 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
 
+use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCreateCommandInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
 use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItemRepositoryInterface;
@@ -21,19 +22,22 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 	private $storeProductRepository;
 	private $storeOrderRepository;
 	private $storeOrderItemRepository;
+	private $minerRepository;
 	private $tokenStorage;
 
 	public function __construct(
 		StoreProductRepositoryInterface $productRepository,
 		OrderRepositoryInterface $orderRepository,
 		StoreOrderItemRepositoryInterface $orderItemRepository,
-		TokenStorageInterface $tokenStorage
+		TokenStorageInterface $tokenStorage,
+		MinerRepositoryInterface $minerRepository
 	)
 	{
 		$this->storeProductRepository = $productRepository;
 		$this->storeOrderRepository = $orderRepository;
 		$this->storeOrderItemRepository = $orderItemRepository;
 		$this->tokenStorage = $tokenStorage;
+		$this->minerRepository = $minerRepository;
 	}
 
 	/**
@@ -69,10 +73,12 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 				$item->calculateTotalPrice();
 				$this->storeOrderItemRepository->save($item);
 			}
+
+			$miner = $product->reserveMiner();
+			$this->minerRepository->save($miner);
 		}
 
 		$order->calculateItems();
-
 		$this->storeOrderRepository->save($order);
 
 		return $order;

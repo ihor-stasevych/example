@@ -2,12 +2,11 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings;
 
+use App\AddHash\AdminPanel\Domain\User\UserWallet;
+use App\AddHash\AdminPanel\Domain\Wallet\WalletRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\WalletUpdateCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletUpdateServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\UserWallet;
-use App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface;
-use App\AddHash\AdminPanel\Domain\Wallet\WalletRepositoryInterface;
-
 
 class WalletUpdateService implements WalletUpdateServiceInterface
 {
@@ -23,32 +22,30 @@ class WalletUpdateService implements WalletUpdateServiceInterface
 
 	public function execute(WalletUpdateCommandInterface $command): array
 	{
-	    $this->userWalletRepository->deleteByUserId();
-        $wallets = $command->getWallets();
-        $data = [];
+        $walletsInput = $command->getWallets();
 
-        if ($wallets) {
-            foreach ($wallets as $walletId => $walletNames) {
-                if (!is_array($walletNames)) {
+        $walletIds = array_keys($walletsInput);
 
-                }
-                foreach ($walletNames as $name) {
-                    if (!$name) {
-                        continue;
-                    }
+        $wallets = $this->walletRepository->getByIds($walletIds);
 
-                    $data[] = [
-                        'walletId' => $walletId,
-                        'name'     => $name,
-                    ];
-                }
+
+
+        $userId = $command->getUser()->getId();
+        $this->userWalletRepository->deleteByUserId($userId);
+
+        foreach ($wallets as $walletId => $walletNames) {
+            foreach ($walletNames as $name) {
+                $userWallet = new UserWallet(
+                    null,
+                    $userId,
+                    $walletId,
+                    $name
+                );
+
+                $this->userWalletRepository->create($userWallet);
             }
         }
 
-        foreach ($data as $item) {
-            $userWallet = new UserWallet(null, $command->getUser()->getId(), $item['walletId'], $item['name']);
-            $this->userWalletRepository->create($userWallet);
-        }
-
+        return $wallets;
 	}
 }

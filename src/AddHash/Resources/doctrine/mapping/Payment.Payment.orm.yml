@@ -1,0 +1,30 @@
+App\AddHash\AdminPanel\Domain\Payment\Payment:
+    type: entity
+    table: Payment
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        currency:
+            type: string
+            length: 25
+        price:
+            type: float
+    oneToOne:
+        paymentMethod:
+          targetEntity: App\AddHash\AdminPanel\Domain\Payment\PaymentMethod
+         # inversedBy: payment
+          joinColumn:
+            name: paymentMethodId
+            referencedColumnName: id
+    manyToOne:
+        user:
+          targetEntity: App\AddHash\AdminPanel\Domain\User\User
+          inversedBy: payment
+          joinColumn:
+            name: userId
+            referencedColumnName: id
+
+

@@ -12,6 +12,7 @@ class WalletUpdateCommand implements WalletUpdateCommandInterface
      * @var array
      * @Assert\Type(type="array")
      * @Assert\NotNull()
+     * @Assert\Expression(expression="this.isValidValueArray()")
      */
     private $wallets;
 
@@ -31,5 +32,32 @@ class WalletUpdateCommand implements WalletUpdateCommandInterface
     public function getUser(): User
     {
         return $this->user;
+    }
+
+    public function isValidValueArray()
+    {
+        $result = false;
+
+        if ($this->wallets) {
+            $result = true;
+
+            foreach ($this->wallets as $walletNames) {
+                if (!is_array($walletNames)) {
+                    $result = false;
+                    break;
+                }
+
+                if ($walletNames) {
+                    foreach ($walletNames as $name) {
+                        if (!is_string($name) || !$name) {
+                            $result = false;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $result;
     }
 }

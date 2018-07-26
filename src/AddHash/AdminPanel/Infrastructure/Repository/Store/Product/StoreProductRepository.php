@@ -20,6 +20,16 @@ class StoreProductRepository extends AbstractRepository implements StoreProductR
 		$this->entityManager->flush($product);
 	}
 
+	/**
+	 * @param StoreProduct $product
+	 * @throws \Doctrine\ORM\ORMException
+	 * @throws \Doctrine\ORM\OptimisticLockException
+	 */
+	public function save(StoreProduct $product)
+	{
+		$this->entityManager->flush($product);
+	}
+
 	public function listAllProducts()
 	{
 		$res = $this->entityRepository

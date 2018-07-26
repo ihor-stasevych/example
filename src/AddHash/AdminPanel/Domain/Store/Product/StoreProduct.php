@@ -64,51 +64,81 @@ class StoreProduct
 		$this->setCategories($categories);
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function getId()
 	{
 		return $this->id;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function getTitle()
 	{
 		return $this->title;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function getDescription()
 	{
 		return $this->description;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function getPrice()
 	{
 		return $this->price;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function getTechDetails()
 	{
 		return $this->techDetails;
 	}
 
+	/**
+	 * @return ArrayCollection
+	 */
 	public function getCategories()
 	{
 		return $this->category;
 	}
 
+	/**
+	 * @return ArrayCollection
+	 */
 	public function getMedia()
 	{
 		return $this->media;
 	}
 
+	/**
+	 * @return false|string
+	 */
 	public function getCreatedAt()
 	{
 		return date('Y-m-d', $this->createdAt);
 	}
 
+	/**
+	 * @return mixed|null
+	 */
 	public function getState()
 	{
 		return $this->statusAlias[$this->state] ?? null;
 	}
 
+	/**
+	 * @param array $categories
+	 */
 	public function setCategories($categories = [])
 	{
 		foreach ($categories as $category) {
@@ -116,6 +146,9 @@ class StoreProduct
 		}
 	}
 
+	/**
+	 * @param StoreCategory $category
+	 */
 	public function setCategory(StoreCategory $category)
 	{
 		if (!$this->category->contains($category)) {
@@ -123,11 +156,18 @@ class StoreProduct
 		}
 	}
 
+	/**
+	 * @return ArrayCollection
+	 */
 	public function getMiners()
 	{
 		return $this->miner;
 	}
 
+	/**
+	 * @param $quantity
+	 * @return ArrayCollection|\Doctrine\Common\Collections\Collection
+	 */
 	public function ensureAvailableMiner($quantity)
 	{
 		$criteria = Criteria::create()
@@ -139,6 +179,9 @@ class StoreProduct
 		return $this->miner->matching($criteria);
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getAvailableMinersQuantity()
 	{
 		$result = 0;
@@ -151,6 +194,28 @@ class StoreProduct
 		}
 
 		return $result;
+	}
+
+	/**
+	 * @return Miner
+	 */
+	public function reserveMiner()
+	{
+		/** @var Miner $miner */
+		foreach ($this->getMiners() as $miner) {
+			if ($miner->getState() == Miner::STATE_AVAILABLE) {
+				$miner->reserveMiner();
+				return $miner;
+			}
+		}
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function setUnavailable()
+	{
+		$this->state = self::STATE_UNAVAILABLE;
 	}
 
 }

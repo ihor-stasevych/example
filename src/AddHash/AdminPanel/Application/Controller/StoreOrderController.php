@@ -11,6 +11,7 @@ use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
 use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCreateCommand;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
+use Nelmio\ApiDocBundle\Annotation\Operation;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Swagger\Annotations as SWG;
@@ -88,6 +89,15 @@ class StoreOrderController extends BaseServiceController
 		return $this->json($order);
 	}
 
+	/***
+	 * TODO:Implement method
+	 * @param Request $request
+	 */
+	public function prepare(Request $request)
+	{
+
+	}
+
 	/**
 	 *
 	 * @SWG\Tag(name="Store Orders")
@@ -100,6 +110,14 @@ class StoreOrderController extends BaseServiceController
 	 *     description="Id of new order"
 	 * )
 	 *
+	 * @SWG\Parameter(
+	 *     name="stripeToken",
+	 *     in="formData",
+	 *     type="string",
+	 *     required=false,
+	 *     description="stripe front token"
+	 * )
+	 *
 	 * @SWG\Response(
 	 *     response=200,
 	 *     description="Pay for products"
@@ -110,7 +128,10 @@ class StoreOrderController extends BaseServiceController
 	 */
 	public function checkout(Request $request)
 	{
-		$command = new StoreOrderCheckoutCommand($request->get('orderId'));
+		$command = new StoreOrderCheckoutCommand(
+			$request->get('orderId'),
+			$request->get('stripeToken')
+		);
 
 		if (!$this->commandIsValid($command)) {
 			return $this->json([

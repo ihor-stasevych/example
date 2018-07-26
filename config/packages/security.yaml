@@ -36,8 +36,23 @@ security:
               anonymous: true
               security: false
 
-        api_public_store:
+        api_public_store_category:
+              pattern: ^/api/v1/store.category
+              anonymous: true
+              security: false
+
+        api_public_store_product:
               pattern: ^/api/v1/store.product
+              anonymous: true
+              security: false
+
+        api_public_store_checkout:
+              pattern: ^/api/v1/store.order.checkout
+              anonymous: true
+              security: false
+
+        api_doc:
+              pattern: ^/api/doc
               anonymous: true
               security: false
 
