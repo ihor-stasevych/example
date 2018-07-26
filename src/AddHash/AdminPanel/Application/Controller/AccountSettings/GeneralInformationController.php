@@ -107,7 +107,7 @@ class GeneralInformationController extends BaseServiceController
      */
     public function update(Request $request)
 	{
-	    $updateCommand = new GeneralInformationUpdateCommand(
+	    $command = new GeneralInformationUpdateCommand(
 	        $request->get('email'),
             $request->get('backupEmail'),
             $request->get('firstName'),
@@ -117,14 +117,14 @@ class GeneralInformationController extends BaseServiceController
             $this->tokenStorage->getToken()->getUser()
         );
 
-        if (!$this->commandIsValid($updateCommand)) {
+        if (!$this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
             ], Response::HTTP_BAD_REQUEST);
         }
 
         try {
-            $this->updateService->execute($updateCommand);
+            $this->updateService->execute($command);
         } catch (GeneralInformationEmailExistException $e) {
             return $this->json([
                 'errors' => $e->getMessage(),

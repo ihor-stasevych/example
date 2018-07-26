@@ -2,6 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\User\Command\AccountSettings;
 
+use App\AddHash\AdminPanel\Domain\User\User;
 
 interface PasswordUpdateCommandInterface
 {
@@ -10,4 +11,6 @@ interface PasswordUpdateCommandInterface
     public function getNewPassword(): string;
 
     public function getConfirmNewPassword(): string;
+
+    public function getUser(): User;
 }

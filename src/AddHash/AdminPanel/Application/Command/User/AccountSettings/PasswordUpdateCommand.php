@@ -4,8 +4,6 @@ namespace App\AddHash\AdminPanel\Application\Command\User\AccountSettings;
 
 use App\AddHash\AdminPanel\Domain\User\User;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\AddHash\System\GlobalContext\ValueObject\Email;
-use App\AddHash\System\GlobalContext\ValueObject\Phone;
 use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\PasswordUpdateCommandInterface;
 
 class PasswordUpdateCommand implements PasswordUpdateCommandInterface
@@ -29,11 +27,17 @@ class PasswordUpdateCommand implements PasswordUpdateCommandInterface
      */
     private $confirmNewPassword;
 
-	public function __construct($currentPassword, $newPassword, $confirmNewPassword)
+    /**
+     * @var User
+     */
+    private $user;
+
+	public function __construct($currentPassword, $newPassword, $confirmNewPassword, User $user)
 	{
 		$this->currentPassword = $currentPassword;
 		$this->newPassword = $newPassword;
 		$this->confirmNewPassword = $confirmNewPassword;
+		$this->user = $user;
 	}
 
     public function getCurrentPassword(): string
@@ -51,7 +55,12 @@ class PasswordUpdateCommand implements PasswordUpdateCommandInterface
         return $this->confirmNewPassword;
     }
 
-    public function comparePasswords()
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function comparePasswords(): bool
     {
         return $this->newPassword == $this->confirmNewPassword;
     }

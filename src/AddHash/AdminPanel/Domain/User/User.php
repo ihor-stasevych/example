@@ -126,7 +126,7 @@ class User implements UserInterface
 		$this->email = $email;
 	}
 
-	private function setPassword(string $password)
+	public function setPassword(string $password)
 	{
 		$this->password = $password;
 	}

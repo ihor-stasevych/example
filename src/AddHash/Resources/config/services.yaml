@@ -114,3 +114,11 @@ services:
 
   App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationGetServiceInterface: '@addhash.user.account.settings.general.information.get.service'
 
+  addhash.user.account.settings.password.update.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\PasswordUpdateService
+    public: true
+    arguments: ['@addhash.user.repository', '@security.encoder_factory']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\PasswordUpdateService: '@addhash.user.account.settings.password.update.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\PasswordUpdateServiceInterface: '@addhash.user.account.settings.password.update.service'
+
