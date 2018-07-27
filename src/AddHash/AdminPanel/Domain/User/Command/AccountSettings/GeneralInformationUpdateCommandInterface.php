@@ -2,7 +2,6 @@
 
 namespace App\AddHash\AdminPanel\Domain\User\Command\AccountSettings;
 
-use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
 use App\AddHash\System\GlobalContext\ValueObject\Phone;
 
@@ -19,6 +18,4 @@ interface GeneralInformationUpdateCommandInterface
     public function getPhoneNumber(): Phone;
 
     public function isMonthlyNewsletter(): bool;
-
-    public function getUser(): User;
 }

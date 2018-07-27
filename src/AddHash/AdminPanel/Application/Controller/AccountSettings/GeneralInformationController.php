@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Application\Command\User\AccountSettings\GeneralInformationUpdateCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationGetServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\AccountSettings\GeneralInformationEmailExistException;
@@ -19,17 +18,13 @@ class GeneralInformationController extends BaseServiceController
 
     private $updateService;
 
-    private $tokenStorage;
-
     public function __construct(
         GeneralInformationGetServiceInterface $getService,
-        GeneralInformationUpdateServiceInterface $updateService,
-        TokenStorageInterface $tokenStorage
+        GeneralInformationUpdateServiceInterface $updateService
     )
     {
         $this->getService = $getService;
         $this->updateService = $updateService;
-        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -53,9 +48,7 @@ class GeneralInformationController extends BaseServiceController
      */
     public function get()
     {
-        return $this->json(
-            $this->getService->execute($this->tokenStorage->getToken()->getUser())
-        );
+        return $this->json($this->getService->execute());
     }
 
     /**
@@ -121,8 +114,7 @@ class GeneralInformationController extends BaseServiceController
             $request->get('firstName'),
             $request->get('lastName'),
             $request->get('phone'),
-            $request->get('isMonthlyNewsletter', 0),
-            $this->tokenStorage->getToken()->getUser()
+            $request->get('isMonthlyNewsletter', 0)
         );
 
         if (!$this->commandIsValid($command)) {

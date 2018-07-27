@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\User\Services\AccountSettings;
 
-interface GeneralInformationGetServiceInterface
+interface WalletGetServiceInterface
 {
 	public function execute(): array;
 }

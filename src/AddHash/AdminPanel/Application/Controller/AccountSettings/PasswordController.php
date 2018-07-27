@@ -64,8 +64,7 @@ class PasswordController extends BaseServiceController
 	    $command = new PasswordUpdateCommand(
             $request->get('currentPassword'),
             $request->get('newPassword'),
-            $request->get('confirmNewPassword'),
-            $this->tokenStorage->getToken()->getUser()
+            $request->get('confirmNewPassword')
         );
 
         if (!$this->commandIsValid($command)) {

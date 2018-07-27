@@ -20,14 +20,43 @@ class UserWalletRepository extends AbstractRepository implements UserWalletRepos
 		$this->entityManager->flush($userWallet);
 	}
 
-    public function deleteByUserId(int $userId): int
+
+    public function getByIdsAndUserId(array $ids, int $userId): array
     {
-        return $this->entityRepository->createQueryBuilder('w')
-            ->delete($this->getEntityName(), 'w')
-            ->where('w.userId = :userId')
+        $user = $this->entityManager->getRepository($this->getEntityName());
+
+        $res = $user->createQueryBuilder('uw')
+            ->select('uw')
+            ->andWhere('uw.id IN (:ids)')
+            ->andWhere('uw.userId = :userId')
+            ->setParameter('ids', $ids)
             ->setParameter('userId', $userId)
-            ->getQuery()
-            ->execute();
+            ->getQuery();
+
+        return $res->getResult();
+    }
+
+
+    public function getByUserId(int $userId): array
+    {
+        $user = $this->entityManager->getRepository($this->getEntityName());
+
+        $res = $user->createQueryBuilder('uw')
+            ->select('uw')
+            ->andWhere('uw.userId = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery();
+
+        return $res->getResult();
+    }
+
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function update()
+    {
+        $this->entityManager->flush();
     }
 
     /**

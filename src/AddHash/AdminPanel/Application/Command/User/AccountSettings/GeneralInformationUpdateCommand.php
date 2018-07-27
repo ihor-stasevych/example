@@ -2,7 +2,6 @@
 
 namespace App\AddHash\AdminPanel\Application\Command\User\AccountSettings;
 
-use App\AddHash\AdminPanel\Domain\User\User;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
 use App\AddHash\System\GlobalContext\ValueObject\Phone;
@@ -65,12 +64,7 @@ class GeneralInformationUpdateCommand implements GeneralInformationUpdateCommand
      */
     private $isMonthlyNewsletter;
 
-    /**
-     * @var User
-     */
-    private $user;
-
-	public function __construct($email, $backupEmail, $firstName, $lastName, $phone, $isMonthlyNewsletter, User $user)
+	public function __construct($email, $backupEmail, $firstName, $lastName, $phone, $isMonthlyNewsletter)
 	{
 		$this->email = $email;
 		$this->backupEmail = $backupEmail;
@@ -78,7 +72,6 @@ class GeneralInformationUpdateCommand implements GeneralInformationUpdateCommand
 		$this->lastName = $lastName;
 		$this->phone = $phone;
 		$this->isMonthlyNewsletter = $isMonthlyNewsletter;
-		$this->user = $user;
 	}
 
 	public function getEmail(): Email
@@ -109,10 +102,5 @@ class GeneralInformationUpdateCommand implements GeneralInformationUpdateCommand
 	public function isMonthlyNewsletter(): bool
     {
         return $this->isMonthlyNewsletter;
-    }
-
-    public function getUser(): User
-    {
-        return $this->user;
     }
 }

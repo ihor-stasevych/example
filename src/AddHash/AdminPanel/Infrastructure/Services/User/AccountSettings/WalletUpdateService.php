@@ -2,48 +2,53 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings;
 
-use App\AddHash\AdminPanel\Domain\User\UserWallet;
-use App\AddHash\AdminPanel\Domain\Wallet\WalletRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\WalletUpdateCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletUpdateServiceInterface;
+use App\AddHash\AdminPanel\Domain\User\Exceptions\AccountSettings\UserWalletIsNotValidException;
 
 class WalletUpdateService implements WalletUpdateServiceInterface
 {
     private $userWalletRepository;
 
-    private $walletRepository;
+    private $tokenStorage;
 
-	public function __construct(UserWalletRepositoryInterface $userWalletRepository, WalletRepositoryInterface $walletRepository)
+	public function __construct(
+	    UserWalletRepositoryInterface $userWalletRepository,
+        TokenStorageInterface $tokenStorage
+    )
 	{
         $this->userWalletRepository = $userWalletRepository;
-        $this->walletRepository = $walletRepository;
+        $this->tokenStorage = $tokenStorage;
 	}
 
+    /**
+     * @param WalletUpdateCommandInterface $command
+     * @return array
+     * @throws UserWalletIsNotValidException
+     */
 	public function execute(WalletUpdateCommandInterface $command): array
 	{
-        $walletsInput = $command->getWallets();
+	    $walletsCommand = $command->getWallets();
+	    $walletsName = [];
 
-        $walletIds = array_keys($walletsInput);
+	    foreach ($walletsCommand as $walletCommand) {
+            $walletsName[$walletCommand['id']] = $walletCommand['name'];
+        }
 
-        $wallets = $this->walletRepository->getByIds($walletIds);
+        $ids = array_keys($walletsName);
+        $userId = $this->tokenStorage->getToken()->getUser()->getId();
+        $wallets = $this->userWalletRepository->getByIdsAndUsertId($ids, $userId);
 
+	    if (count($ids) != count($wallets)) {
+            throw new UserWalletIsNotValidException('User wallet is not valid');
+        }
 
-
-        $userId = $command->getUser()->getId();
-        $this->userWalletRepository->deleteByUserId($userId);
-
-        foreach ($wallets as $walletId => $walletNames) {
-            foreach ($walletNames as $name) {
-                $userWallet = new UserWallet(
-                    null,
-                    $userId,
-                    $walletId,
-                    $name
-                );
-
-                $this->userWalletRepository->create($userWallet);
-            }
+        foreach ($wallets as $wallet) {
+            $id = $wallet->getId();
+            $wallet->setName($walletsName[$id]);
+            $this->userWalletRepository->update();
         }
 
         return $wallets;

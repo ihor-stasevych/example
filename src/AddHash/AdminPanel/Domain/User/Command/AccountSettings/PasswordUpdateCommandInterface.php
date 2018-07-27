@@ -2,8 +2,6 @@
 
 namespace App\AddHash\AdminPanel\Domain\User\Command\AccountSettings;
 
-use App\AddHash\AdminPanel\Domain\User\User;
-
 interface PasswordUpdateCommandInterface
 {
 	public function getCurrentPassword(): string;
@@ -12,5 +10,5 @@ interface PasswordUpdateCommandInterface
 
     public function getConfirmNewPassword(): string;
 
-    public function getUser(): User;
+    public function comparePasswords(): bool;
 }

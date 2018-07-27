@@ -3,9 +3,9 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings;
 
 use App\AddHash\AdminPanel\Domain\User\User;
-use App\AddHash\System\GlobalContext\Identity\UserId;
 use App\AddHash\AdminPanel\Domain\User\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\PasswordUpdateCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\AccountSettings\PasswordIsNotValidException;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\PasswordUpdateServiceInterface;
@@ -16,10 +16,17 @@ class PasswordUpdateService implements PasswordUpdateServiceInterface
 
     private $encoderFactory;
 
-	public function __construct(UserRepositoryInterface $userRepository, EncoderFactoryInterface $encoderFactory)
+    private $tokenStorage;
+
+	public function __construct(
+	    UserRepositoryInterface $userRepository,
+        EncoderFactoryInterface $encoderFactory,
+        TokenStorageInterface $tokenStorage
+    )
 	{
         $this->userRepository = $userRepository;
         $this->encoderFactory = $encoderFactory;
+        $this->tokenStorage = $tokenStorage;
 	}
 
     /**
@@ -28,13 +35,12 @@ class PasswordUpdateService implements PasswordUpdateServiceInterface
      */
 	public function execute(PasswordUpdateCommandInterface $command)
 	{
-        $userId = new UserId($command->getUser()->getId());
-        $user = $this->userRepository->getById($userId);
+        $user = $this->tokenStorage->getToken()->getUser();
 
         $isValidPassword = $this->encoderFactory->getEncoder(User::class)->isPasswordValid(
             $user->getPassword(),
             $command->getCurrentPassword(),
-            $command->getUser()->getSalt()
+            $user->getSalt()
         );
 
         if (false === $isValidPassword) {
@@ -43,7 +49,7 @@ class PasswordUpdateService implements PasswordUpdateServiceInterface
 
         $encodedNewPassword = $this->encoderFactory->getEncoder(User::class)->encodePassword(
             $command->getNewPassword(),
-            $command->getUser()->getSalt()
+            $user->getSalt()
         );
 
         $user->setPassword($encodedNewPassword);

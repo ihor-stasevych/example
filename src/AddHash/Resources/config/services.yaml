@@ -127,7 +127,7 @@ services:
   addhash.user.account.settings.general.information.update.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationUpdateService
     public: true
-    arguments: ['@addhash.user.repository']
+    arguments: ['@addhash.user.repository', '@security.token_storage']
   App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationUpdateService: '@addhash.user.account.settings.general.information.update.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationUpdateServiceInterface: '@addhash.user.account.settings.general.information.update.service'
@@ -136,6 +136,7 @@ services:
   addhash.user.account.settings.general.information.get.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationGetService
     public: true
+    arguments: ['@security.token_storage']
   App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationGetService: '@addhash.user.account.settings.general.information.get.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationGetServiceInterface: '@addhash.user.account.settings.general.information.get.service'
@@ -143,16 +144,24 @@ services:
   addhash.user.account.settings.password.update.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\PasswordUpdateService
     public: true
-    arguments: ['@addhash.user.repository', '@security.encoder_factory']
+    arguments: ['@addhash.user.repository', '@security.encoder_factory', '@security.token_storage']
   App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\PasswordUpdateService: '@addhash.user.account.settings.password.update.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\PasswordUpdateServiceInterface: '@addhash.user.account.settings.password.update.service'
 
-  addhash.user.account.settings.walltet.update.service:
+  addhash.user.account.settings.wallet.update.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletUpdateService
     public: true
-    arguments: ['@addhash.user.wallet.repository', '@addhash.wallet.repository']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletUpdateService: '@addhash.user.account.settings.walltet.update.service'
+    arguments: ['@addhash.user.wallet.repository', '@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletUpdateService: '@addhash.user.account.settings.wallet.update.service'
 
-  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletUpdateServiceInterface: '@addhash.user.account.settings.walltet.update.service'
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletUpdateServiceInterface: '@addhash.user.account.settings.wallet.update.service'
+
+  addhash.user.account.settings.wallet.get.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletGetService
+    public: true
+    arguments: ['@addhash.user.wallet.repository', '@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletGetService: '@addhash.user.account.settings.wallet.get.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletGetServiceInterface: '@addhash.user.account.settings.wallet.get.service'
 
