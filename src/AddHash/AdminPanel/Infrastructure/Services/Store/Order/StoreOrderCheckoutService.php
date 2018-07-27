@@ -6,7 +6,7 @@ use App\AddHash\AdminPanel\Domain\Payment\Payment;
 use App\AddHash\AdminPanel\Domain\Payment\PaymentInterface;
 use App\AddHash\AdminPanel\Domain\Payment\Services\MakePaymentForOrderServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCheckoutCommandOrderInterface;
-use App\AddHash\AdminPanel\Domain\Store\Order\OrderRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
@@ -18,7 +18,7 @@ class StoreOrderCheckoutService implements StoreOrderCheckoutServiceInterface
 	private $payment;
 
 	public function __construct(
-		OrderRepositoryInterface $orderRepository,
+		StoreOrderRepositoryInterface $orderRepository,
 		MakePaymentForOrderServiceInterface $makePaymentForOrderService
 	)
 	{

@@ -82,6 +82,36 @@ class Miner
 		return $this->stateAliases[$this->state];
 	}
 
+	public function getHashRate()
+	{
+		return $this->hashRate;
+	}
+
+	public function getPowerRate()
+	{
+		return $this->powerRate;
+	}
+
+	public function getPowerEfficiency()
+	{
+		return $this->powerEfficiency;
+	}
+
+	public function getRatedVoltage()
+	{
+		return $this->ratedVoltage;
+	}
+
+	public function getOperatingTemperature()
+	{
+		return $this->operatingTemperature;
+	}
+
+	public function getAlgorithm()
+	{
+		return $this->algorithm;
+	}
+
 	public function reserveMiner()
 	{
 		$this->state = self::STATE_RESERVED;

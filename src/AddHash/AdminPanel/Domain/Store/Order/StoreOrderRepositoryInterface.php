@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\Store\Order;
 
-interface OrderRepositoryInterface
+interface StoreOrderRepositoryInterface
 {
 	public function findById($id);
 

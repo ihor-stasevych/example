@@ -2,13 +2,11 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
-
 use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCreateCommandInterface;
-use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
 use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItemRepositoryInterface;
 
-use App\AddHash\AdminPanel\Domain\Store\Order\OrderRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
@@ -27,7 +25,7 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 
 	public function __construct(
 		StoreProductRepositoryInterface $productRepository,
-		OrderRepositoryInterface $orderRepository,
+		StoreOrderRepositoryInterface $orderRepository,
 		StoreOrderItemRepositoryInterface $orderItemRepository,
 		TokenStorageInterface $tokenStorage,
 		MinerRepositoryInterface $minerRepository
@@ -57,23 +55,11 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 
 		/** @var StoreProduct $product */
 		foreach ($products as $product) {
-
-			if ($product->getAvailableMinersQuantity() == 0) {
+			if (!$item = $order->addProductItem($product)) {
 				throw new StoreOrderException('Cant add ' . $product->getTitle() . ' to cart. No available miners.');
 			}
 
-			if (!$order->productContains($product)) {
-				$item = new StoreOrderItem($order, $product);
-				$order->addItem($item);
-			} else {
-				$key = $order->indexOfProduct($product);
-				/** @var StoreOrderItem $item */
-				$item = $order->getItems()->get($key);
-				$item->addQuantity();
-				$item->calculateTotalPrice();
-				$this->storeOrderItemRepository->save($item);
-			}
-
+			$this->storeOrderItemRepository->save($item);
 			$miner = $product->reserveMiner();
 			$this->minerRepository->save($miner);
 		}

@@ -5,6 +5,8 @@ namespace App\AddHash\AdminPanel\Domain\Store\Product;
 
 use App\AddHash\AdminPanel\Domain\Miners\Miner;
 use App\AddHash\AdminPanel\Domain\Store\Category\Model\StoreCategory;
+use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 

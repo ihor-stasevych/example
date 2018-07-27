@@ -2,40 +2,40 @@
 
 namespace App\AddHash\AdminPanel\Application\Controller;
 
+use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderAddProductCommand;
 use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCheckoutCommand;
-use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCreateCommandInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderAddProductServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface;
-use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
-use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCreateCommand;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use Nelmio\ApiDocBundle\Annotation\Operation;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class StoreOrderController extends BaseServiceController
 {
 	private $storeOrderCreateService;
 	private $storeOrderGetService;
 	private $storeOrderCheckout;
+	private $storeOrderAddProduct;
 	private $tokenStorage;
 
 	public function __construct(
 		StoreOrderCreateServiceInterface $storeOrderCreateService,
 		StoreOrderGetServiceInterface $getService,
 		StoreOrderCheckoutServiceInterface $checkoutService,
+		StoreOrderAddProductServiceInterface $orderAddProductService,
 		TokenStorageInterface $tokenStorage
 	)
 	{
 		$this->storeOrderCreateService = $storeOrderCreateService;
 		$this->storeOrderGetService = $getService;
 		$this->storeOrderCheckout = $checkoutService;
+		$this->storeOrderAddProduct = $orderAddProductService;
 		$this->tokenStorage = $tokenStorage;
 	}
 
@@ -89,6 +89,73 @@ class StoreOrderController extends BaseServiceController
 		return $this->json($order);
 	}
 
+	/**
+	 * Add product to existing order
+	 *
+	 * @SWG\Tag(name="Store Orders")
+	 *
+	 * @SWG\Parameter(
+	 *     name="productId",
+	 *     in="formData",
+	 *     type="integer",
+	 *     required=true,
+	 *     description="id of the available product"
+	 * )
+	 *
+	 * @SWG\Parameter(
+	 *     name="orderId",
+	 *     in="formData",
+	 *     type="integer",
+	 *     required=true,
+	 *     description="id of existing order"
+	 * )
+	 *
+	 * @param Request $request
+	 *
+	 * @SWG\Response(
+	 *     response=200,
+	 *     description="Returns true"
+	 * )
+	 *
+	 * @return JsonResponse
+	 */
+	public function addProduct(Request $request)
+	{
+		//var_dump($request->request->all());
+		$command = new StoreOrderAddProductCommand(
+			$request->get('orderId'),
+			$request->get('productId')
+		);
+
+		if (!$this->commandIsValid($command)) {
+			return $this->json([
+				'errors' => $this->getLastValidationErrors()
+			], Response::HTTP_BAD_REQUEST);
+		}
+
+		try {
+			$this->storeOrderAddProduct->execute($command);
+		} catch (\Exception $e) {
+			return $this->json([
+				'errors' => $e->getMessage()
+			], Response::HTTP_BAD_REQUEST);
+		}
+
+		return $this->json([]);
+	}
+
+
+	public function clear()
+	{
+
+	}
+
+
+	public function removeProduct()
+	{
+
+	}
+
 	/***
 	 * TODO:Implement method
 	 * @param Request $request
@@ -114,7 +181,7 @@ class StoreOrderController extends BaseServiceController
 	 *     name="stripeToken",
 	 *     in="formData",
 	 *     type="string",
-	 *     required=false,
+	 *     required=true,
 	 *     description="stripe front token"
 	 * )
 	 *

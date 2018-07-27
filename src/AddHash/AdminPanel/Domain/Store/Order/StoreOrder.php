@@ -31,6 +31,11 @@ class StoreOrder
 	private $user;
 
 
+	/**
+	 * StoreOrder constructor.
+	 *
+	 * @param User $user
+	 */
 	public function __construct(User $user)
 	{
 		$this->createdAt = new \DateTime();
@@ -40,6 +45,9 @@ class StoreOrder
 		$this->user = $user;
 	}
 
+	/**
+	 * @param StoreOrderItem $item
+	 */
 	public function addItem(StoreOrderItem $item)
 	{
 		if (!$this->items->contains($item)) {
@@ -49,21 +57,34 @@ class StoreOrder
 		}
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function getId()
 	{
 		return $this->id;
 	}
 
+	/**
+	 * @return ArrayCollection
+	 */
 	public function getItems()
 	{
 		return $this->items;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function getItemsPriceTotal()
 	{
 		return $this->itemsPriceTotal;
 	}
 
+	/**
+	 * @param StoreProduct $product
+	 * @return bool
+	 */
 	public function productContains(StoreProduct $product)
 	{
 		/** @var StoreOrderItem $item */
@@ -76,6 +97,10 @@ class StoreOrder
 		return false;
 	}
 
+	/**
+	 * @param StoreProduct $product
+	 * @return bool|int|mixed|string
+	 */
 	public function indexOfProduct(StoreProduct $product)
 	{
 		/** @var StoreOrderItem $item */
@@ -88,11 +113,17 @@ class StoreOrder
 		return false;
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getState()
 	{
 		return $this->state;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function ensureAvailableProductMiners()
 	{
 		$result = [];
@@ -105,6 +136,9 @@ class StoreOrder
 		return $result;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function checkAvailableMiners()
 	{
 		/** @var StoreOrderItem $item */
@@ -117,6 +151,10 @@ class StoreOrder
 		return true;
 	}
 
+	/**
+	 * @inheritdoc
+	 * Calculate price of all items
+	 */
 	public function calculateItems()
 	{
 		$totalPrice = 0;
@@ -132,13 +170,44 @@ class StoreOrder
 		$this->itemsTotal = $count;
 	}
 
+	/**
+	 * @return User
+	 */
 	public function getUser()
 	{
 		return $this->user;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function setPayedState()
 	{
 		$this->state = self::STATE_PAYED;
+	}
+
+
+	/**
+	 * @param StoreProduct $product
+	 * @return StoreOrderItem|bool
+	 */
+	public function addProductItem(StoreProduct $product)
+	{
+		if ($product->getAvailableMinersQuantity() == 0) {
+			return false;
+		}
+
+		if (!$this->productContains($product)) {
+			$item = new StoreOrderItem($this, $product);
+			$this->addItem($item);
+		} else {
+			$key = $this->indexOfProduct($product);
+			/** @var StoreOrderItem $item */
+			$item = $this->getItems()->get($key);
+			$item->addQuantity();
+			$item->calculateTotalPrice();
+		}
+
+		return $item;
 	}
 }

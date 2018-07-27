@@ -28,6 +28,11 @@ store.order.create:
     methods: POST
     controller: App\AddHash\AdminPanel\Application\Controller\StoreOrderController::create
 
+store.order.addProduct:
+    path: "/api/v1/store.order.addProduct"
+    methods: POST
+    controller: App\AddHash\AdminPanel\Application\Controller\StoreOrderController::addProduct
+
 store.order.get:
     path: "/api/v1/store.order.get"
     methods: GET
