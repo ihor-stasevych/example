@@ -210,4 +210,18 @@ class StoreOrder
 
 		return $item;
 	}
+
+	public function removeItemByProduct(StoreProduct $product)
+	{
+		if (!$this->productContains($product)) {
+			return false;
+		}
+
+		$key = $this->indexOfProduct($product);
+
+		/** @var StoreOrderItem $item */
+		$item = $this->getItems()->get($key);
+		$this->items->removeElement($item);
+		return $item;
+	}
 }

@@ -33,6 +33,11 @@ store.order.addProduct:
     methods: POST
     controller: App\AddHash\AdminPanel\Application\Controller\StoreOrderController::addProduct
 
+store.order.removeProduct:
+    path: "/api/v1/store.order.removeProduct/{id}"
+    methods: DELETE
+    controller: App\AddHash\AdminPanel\Application\Controller\StoreOrderController::removeProduct
+
 store.order.get:
     path: "/api/v1/store.order.get"
     methods: GET

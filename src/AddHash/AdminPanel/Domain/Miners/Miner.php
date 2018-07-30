@@ -116,4 +116,9 @@ class Miner
 	{
 		$this->state = self::STATE_RESERVED;
 	}
+
+	public function setAvailable()
+	{
+		$this->state = self::STATE_AVAILABLE;
+	}
 }

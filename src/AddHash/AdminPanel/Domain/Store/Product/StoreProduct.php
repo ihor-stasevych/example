@@ -213,6 +213,20 @@ class StoreProduct
 	}
 
 	/**
+	 * @return Miner
+	 */
+	public function unReserveMiner()
+	{
+		/** @var Miner $miner */
+		foreach ($this->getMiners() as $miner) {
+			if ($miner->getState() == Miner::STATE_RESERVED) {
+				$miner->setAvailable();
+				return $miner;
+			}
+		}
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function setUnavailable()

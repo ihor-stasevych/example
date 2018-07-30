@@ -9,6 +9,7 @@ use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutService
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface;
 use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCreateCommand;
+use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderRemoveProductServiceInterface;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +23,7 @@ class StoreOrderController extends BaseServiceController
 	private $storeOrderGetService;
 	private $storeOrderCheckout;
 	private $storeOrderAddProduct;
+	private $storeOrderRemoveProduct;
 	private $tokenStorage;
 
 	public function __construct(
@@ -29,6 +31,7 @@ class StoreOrderController extends BaseServiceController
 		StoreOrderGetServiceInterface $getService,
 		StoreOrderCheckoutServiceInterface $checkoutService,
 		StoreOrderAddProductServiceInterface $orderAddProductService,
+		StoreOrderRemoveProductServiceInterface $orderRemoveProductService,
 		TokenStorageInterface $tokenStorage
 	)
 	{
@@ -36,6 +39,7 @@ class StoreOrderController extends BaseServiceController
 		$this->storeOrderGetService = $getService;
 		$this->storeOrderCheckout = $checkoutService;
 		$this->storeOrderAddProduct = $orderAddProductService;
+		$this->storeOrderRemoveProduct = $orderRemoveProductService;
 		$this->tokenStorage = $tokenStorage;
 	}
 
@@ -151,9 +155,31 @@ class StoreOrderController extends BaseServiceController
 	}
 
 
-	public function removeProduct()
+	/**
+	 * @param $id
+	 * @return JsonResponse
+	 *
+	 * @SWG\Tag(name="Store Orders")
+	 *
+	 * @SWG\Parameter(
+	 *     name="id",
+	 *     in="path",
+	 *     type="integer",
+	 *     required=true,
+	 *     description="id of the available product in order"
+	 * )
+	 *
+	 * @SWG\Response(
+	 *     response=200,
+	 *     description="Returns ok"
+	 *)
+	 *
+	 */
+	public function removeProduct($id)
 	{
+		$this->storeOrderRemoveProduct->execute($id);
 
+		return $this->json([]);
 	}
 
 	/***

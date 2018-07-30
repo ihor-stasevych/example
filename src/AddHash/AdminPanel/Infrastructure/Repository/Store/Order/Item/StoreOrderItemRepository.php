@@ -26,4 +26,15 @@ class StoreOrderItemRepository implements StoreOrderItemRepositoryInterface
 		$this->entityManager->persist($orderItem);
 		$this->entityManager->flush($orderItem);
 	}
+
+	/**
+	 * @param StoreOrderItem $orderItem
+	 * @throws \Doctrine\ORM\ORMException
+	 * @throws \Doctrine\ORM\OptimisticLockException
+	 */
+	public function delete(StoreOrderItem $orderItem)
+	{
+		$this->entityManager->remove($orderItem);
+		$this->entityManager->flush($orderItem);
+	}
 }
