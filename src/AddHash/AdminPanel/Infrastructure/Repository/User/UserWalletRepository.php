@@ -37,13 +37,17 @@ class UserWalletRepository extends AbstractRepository implements UserWalletRepos
     }
 
 
+	/**
+	 * @param int $userId
+	 * @return array
+	 */
     public function getByUserId(int $userId): array
     {
         $user = $this->entityManager->getRepository($this->getEntityName());
 
         $res = $user->createQueryBuilder('uw')
             ->select('uw')
-            ->andWhere('uw.userId = :userId')
+            ->andWhere('uw.user = :userId')
             ->setParameter('userId', $userId)
             ->getQuery();
 

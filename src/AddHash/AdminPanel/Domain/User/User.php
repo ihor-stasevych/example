@@ -47,6 +47,8 @@ class User implements UserInterface
 
 	private $order;
 
+	private $wallet;
+
 
 	public function __construct(
 		int $id = null,
@@ -156,9 +158,13 @@ class User implements UserInterface
 		$this->roles = array_unique($roles);
 	}
 
+	public function getWallet()
+	{
+		return $this->wallet;
+	}
+
 	public function getRoles()
 	{
-		//return ['ROLE_ADMIN'];
 		return $this->roles;
 	}
 

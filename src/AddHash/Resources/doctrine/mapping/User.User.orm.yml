@@ -61,7 +61,10 @@ App\AddHash\AdminPanel\Domain\User\User:
         token:
             type: guid
 
-    oneToOne:
+    oneToMany:
       order:
           targetEntity:  App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder
+          mappedBy: user
+      wallet:
+          targetEntity:   App\AddHash\AdminPanel\Domain\User\UserWallet
           mappedBy: user

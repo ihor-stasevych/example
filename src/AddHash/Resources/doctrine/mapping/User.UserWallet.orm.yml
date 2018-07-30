@@ -6,14 +6,20 @@ App\AddHash\AdminPanel\Domain\User\UserWallet:
             type: integer
             generator: { strategy: AUTO }
     fields:
-        userId:
-            type: integer
-            length: 11
-
-        walletId:
-            type: integer
-            length: 11
-
         name:
             type: string
             length: 191
+
+    manyToOne:
+        user:
+              targetEntity: App\AddHash\AdminPanel\Domain\User\User
+              inversedBy: user
+              joinColumn:
+                name: userId
+                referencedColumnName: id
+        wallet:
+              targetEntity: App\AddHash\AdminPanel\Domain\Wallet\Wallet
+              inversedBy: user
+              joinColumn:
+                name: walletId
+                referencedColumnName: id

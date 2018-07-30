@@ -29,7 +29,8 @@ class WalletController extends BaseServiceController
 
     public function get()
     {
-        return $this->json($this->getService->execute());
+    	$user = $this->getService->execute();
+        return $this->json($user);
     }
 
     public function update(Request $request)
