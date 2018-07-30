@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AddHash\AdminPanel\Application\Controller\AccountSettings;
+namespace App\AddHash\AdminPanel\Application\Controller\User\AccountSettings;
 
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\Request;

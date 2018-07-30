@@ -2,6 +2,8 @@
 
 namespace App\AddHash\AdminPanel\Domain\User;
 
+use App\AddHash\AdminPanel\Domain\Wallet\Wallet;
+
 class UserWallet
 {
 	/**
@@ -12,18 +14,16 @@ class UserWallet
 	/**
      * @var string
      */
-	private $name;
+	private $value;
 
 	private $user;
 
 	private $wallet;
 
-	public function __construct(int $id = null, int $userId, int $walletId, string $name)
+	public function __construct(string $value, int $id = null)
 	{
 		$this->setId($id);
-		//$this->setUserId($userId);
-		//$this->setWalletId($walletId);
-		$this->setName($name);
+		$this->setValue($value);
 	}
 
     public function getId(): ?int
@@ -31,9 +31,20 @@ class UserWallet
         return $this->id;
     }
 
-    public function getName(): string
+    public function getValue(): string
     {
-        return $this->name;
+        return $this->value;
+    }
+
+    public function getWallet(): ?string
+    {
+        $walletName = null;
+
+        if (null !== $this->wallet) {
+            $walletName = $this->wallet->getName();
+        }
+
+        return $walletName;
     }
 
     private function setId($id = null)
@@ -43,8 +54,18 @@ class UserWallet
         }
     }
 
-    public function setName(string $name)
+    public function setValue(string $value)
     {
-        $this->name = $name;
+        $this->value = $value;
+    }
+
+    public function setWallet(Wallet $wallet)
+    {
+        $this->wallet = $wallet;
+    }
+
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 }

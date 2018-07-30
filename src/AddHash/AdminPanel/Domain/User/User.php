@@ -6,6 +6,7 @@ use App\AddHash\System\GlobalContext\ValueObject\Email;
 use App\AddHash\System\GlobalContext\ValueObject\Phone;
 use App\AddHash\System\Lib\Uuid;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class User implements UserInterface
 {
@@ -74,6 +75,7 @@ class User implements UserInterface
 		$this->token = Uuid::generate();
 		$this->createdAt = new \DateTime();
 		$this->updatedAt = new \DateTime();
+		$this->wallet = new ArrayCollection();
 	}
 
 	public function getId()
@@ -158,7 +160,7 @@ class User implements UserInterface
 		$this->roles = array_unique($roles);
 	}
 
-	public function getWallet()
+	public function getUserWallets()
 	{
 		return $this->wallet;
 	}
@@ -172,6 +174,11 @@ class User implements UserInterface
 	{
 		return '';
 	}
+
+	public function setUserWallet(UserWallet $wallet)
+    {
+        $this->wallet = $wallet;
+    }
 
 	/**
 	 * Returns the username used to authenticate the user.

@@ -14,7 +14,7 @@ class Wallet
      */
 	private $name;
 
-	public function __construct(int $id = null, string $name)
+	public function __construct(string $name, int $id = null)
 	{
 		$this->setId($id);
 		$this->setName($name);

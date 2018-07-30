@@ -6,5 +6,5 @@ interface WalletCreateCommandInterface
 {
 	public function getWalletId(): int;
 
-	public function getName(): string;
+	public function getValue(): string;
 }
