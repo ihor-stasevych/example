@@ -4,9 +4,10 @@ namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
 use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderAddProductCommandInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
 use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItemRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderAddProductServiceInterface;
-use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderRemoveProductServiceInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderRemoveItemServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
@@ -14,7 +15,7 @@ use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
 use App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product\StoreProductRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class StoreOrderRemoveProductService implements StoreOrderRemoveProductServiceInterface
+class StoreOrderRemoveItemService implements StoreOrderRemoveItemServiceInterface
 {
 	private $storeOrderRepository;
 	private $productRepository;
@@ -51,21 +52,26 @@ class StoreOrderRemoveProductService implements StoreOrderRemoveProductServiceIn
 			throw new StoreOrderException('Order not found');
 		}
 
-		/** @var StoreProduct $product */
-		$product = $this->productRepository->findById($id);
+		/** @var StoreOrderItem $item */
+		$item = $this->storeOrderItemRepository->findById($id);
 
-		if (!$product) {
-			throw new StoreOrderException('Product not found');
+		if (!$item) {
+			throw new StoreOrderException('Order item not found');
 		}
 
-		if ($item = $order->removeItemByProduct($product)) {
-			$this->storeOrderItemRepository->delete($item);
-		}
+		$order->removeItem($item);
+		$product = $item->getProduct();
+		$this->storeOrderItemRepository->delete($item);
 
 		$miner = $product->unReserveMiner();
 		$this->minerRepository->save($miner);
 
 		$order->calculateItems();
+
+		if ($order->getItems()->count() == 0) {
+			$order->closeOrder();
+		}
+
 		$this->storeOrderRepository->save($order);
 
 		return true;

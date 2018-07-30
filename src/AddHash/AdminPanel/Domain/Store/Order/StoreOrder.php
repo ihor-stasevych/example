@@ -224,4 +224,14 @@ class StoreOrder
 		$this->items->removeElement($item);
 		return $item;
 	}
+
+	public function removeItem(StoreOrderItem $item)
+	{
+		$this->items->removeElement($item);
+	}
+
+	public function closeOrder()
+	{
+		$this->state = self::STATE_CLOSED;
+	}
 }

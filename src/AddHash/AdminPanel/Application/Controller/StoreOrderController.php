@@ -9,7 +9,7 @@ use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutService
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface;
 use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCreateCommand;
-use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderRemoveProductServiceInterface;
+use App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveItemService;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +23,7 @@ class StoreOrderController extends BaseServiceController
 	private $storeOrderGetService;
 	private $storeOrderCheckout;
 	private $storeOrderAddProduct;
-	private $storeOrderRemoveProduct;
+	private $storeOrderRemoveItem;
 	private $tokenStorage;
 
 	public function __construct(
@@ -31,7 +31,7 @@ class StoreOrderController extends BaseServiceController
 		StoreOrderGetServiceInterface $getService,
 		StoreOrderCheckoutServiceInterface $checkoutService,
 		StoreOrderAddProductServiceInterface $orderAddProductService,
-		StoreOrderRemoveProductServiceInterface $orderRemoveProductService,
+		StoreOrderRemoveItemService $storeOrderRemoveItem,
 		TokenStorageInterface $tokenStorage
 	)
 	{
@@ -39,7 +39,7 @@ class StoreOrderController extends BaseServiceController
 		$this->storeOrderGetService = $getService;
 		$this->storeOrderCheckout = $checkoutService;
 		$this->storeOrderAddProduct = $orderAddProductService;
-		$this->storeOrderRemoveProduct = $orderRemoveProductService;
+		$this->storeOrderRemoveItem = $storeOrderRemoveItem;
 		$this->tokenStorage = $tokenStorage;
 	}
 
@@ -156,6 +156,8 @@ class StoreOrderController extends BaseServiceController
 
 
 	/**
+	 * Remove store order item from new order
+	 *
 	 * @param $id
 	 * @return JsonResponse
 	 *
@@ -166,7 +168,7 @@ class StoreOrderController extends BaseServiceController
 	 *     in="path",
 	 *     type="integer",
 	 *     required=true,
-	 *     description="id of the available product in order"
+	 *     description="id of the available item in order"
 	 * )
 	 *
 	 * @SWG\Response(
@@ -175,9 +177,15 @@ class StoreOrderController extends BaseServiceController
 	 *)
 	 *
 	 */
-	public function removeProduct($id)
+	public function removeItem($id)
 	{
-		$this->storeOrderRemoveProduct->execute($id);
+		try {
+			$this->storeOrderRemoveItem->execute($id);
+		} catch (\Exception $e) {
+			return $this->json([
+				'errors' => $e->getMessage()
+			], Response::HTTP_BAD_REQUEST);
+		}
 
 		return $this->json([]);
 	}

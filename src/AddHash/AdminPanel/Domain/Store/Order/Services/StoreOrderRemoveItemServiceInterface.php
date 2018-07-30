@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\Store\Order\Services;
 
-interface StoreOrderRemoveProductServiceInterface
+interface StoreOrderRemoveItemServiceInterface
 {
 	public function execute($id);
 }

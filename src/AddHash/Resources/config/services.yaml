@@ -105,13 +105,13 @@ services:
 
   App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderAddProductServiceInterface: '@addhash.store.order.addproduct.service'
 
-  addhash.store.order.removeproduct.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveProductService
+  addhash.store.order.removeitem.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveItemService
     public: true
     arguments: ['@addhash.store.order.repository', '@addhash.store.product.repository', '@addhash.store.order.item.repository', '@addhash.miner.repository', '@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveProductService: '@addhash.store.order.removeproduct.service'
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveItemService: '@addhash.store.order.removeitem.service'
 
-  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderRemoveProductServiceInterface: '@addhash.store.order.removeproduct.service'
+  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderRemoveItemServiceInterface: '@addhash.store.order.removeitem.service'
 
 
   addhash.store.order.get.service:
