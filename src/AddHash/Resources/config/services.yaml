@@ -31,6 +31,24 @@ services:
 
   App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItemRepositoryInterface: '@addhash.store.order.item.repository'
 
+  addhash.user.wallet.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\User\UserWalletRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\User\UserWalletRepository: '@addhash.user.wallet.repository'
+
+  App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface: '@addhash.user.wallet.repository'
+
+  addhash.wallet.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\Wallet\WalletRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\Wallet\WalletRepository: '@addhash.wallet.repository'
+
+  App\AddHash\AdminPanel\Domain\Wallet\WalletRepositoryInterface: '@addhash.wallet.repository'
+
+
+
   addhash.miner.repository:
     class: App\AddHash\AdminPanel\Infrastructure\Repository\Miner\MinerRepository
     public: true
@@ -74,7 +92,7 @@ services:
   addhash.store.order.create.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCreateService
     public: true
-    arguments: ['@addhash.store.product.repository','@addhash.store.order.repository','@addhash.store.order.item.repository', '@security.token_storage', '@addhash.miner.repository']
+    arguments: ['@addhash.store.product.repository','@addhash.store.order.repository','@addhash.store.order.item.repository', '@security.token_storage']
   App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCreateService: '@addhash.store.order.create.service'
 
   App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface: '@addhash.store.order.create.service'
@@ -96,28 +114,10 @@ services:
 
   App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface: '@addhash.store.order.get.service'
 
-  addhash.payment.repository:
-      class: App\AddHash\AdminPanel\Infrastructure\Repository\Payment\PaymentRepository
-      public: true
-      arguments: ['@doctrine.orm.entity_manager']
-  App\AddHash\AdminPanel\Infrastructure\Repository\Payment\PaymentRepository: '@addhash.payment.repository'
-
-  addhash.payment.transaction.repository:
-      class: App\AddHash\AdminPanel\Infrastructure\Repository\Payment\PaymentTransactionRepository
-      public: true
-      arguments: ['@doctrine.orm.entity_manager']
-  App\AddHash\AdminPanel\Infrastructure\Repository\Payment\PaymentTransactionRepository: '@addhash.payment.transaction.repository'
-
-  addhash.payment.order.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\Payment\MakePaymentForOrderService
-    public: true
-    arguments: ['@addhash.payment.repository', '@addhash.payment.transaction.repository']
-  App\AddHash\AdminPanel\Infrastructure\Services\Payment\MakePaymentForOrderService: '@addhash.payment.order.service'
-
   addhash.store.order.checkout.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCheckoutService
     public: true
-    arguments: ['@addhash.store.order.repository', '@addhash.payment.order.service']
+    arguments: ['@addhash.store.order.repository']
   App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCheckoutService: '@addhash.store.order.checkout.service'
 
   App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface: '@addhash.store.order.checkout.service'
@@ -130,4 +130,46 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\User\UserRegisterService: '@addhash.user.register.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface: '@addhash.user.register.service'
+
+
+  addhash.user.account.settings.general.information.update.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationUpdateService
+    public: true
+    arguments: ['@addhash.user.repository', '@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationUpdateService: '@addhash.user.account.settings.general.information.update.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationUpdateServiceInterface: '@addhash.user.account.settings.general.information.update.service'
+
+
+  addhash.user.account.settings.general.information.get.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationGetService
+    public: true
+    arguments: ['@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationGetService: '@addhash.user.account.settings.general.information.get.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationGetServiceInterface: '@addhash.user.account.settings.general.information.get.service'
+
+  addhash.user.account.settings.password.update.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\PasswordUpdateService
+    public: true
+    arguments: ['@addhash.user.repository', '@security.encoder_factory', '@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\PasswordUpdateService: '@addhash.user.account.settings.password.update.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\PasswordUpdateServiceInterface: '@addhash.user.account.settings.password.update.service'
+
+  addhash.user.account.settings.wallet.update.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletUpdateService
+    public: true
+    arguments: ['@addhash.user.wallet.repository', '@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletUpdateService: '@addhash.user.account.settings.wallet.update.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletUpdateServiceInterface: '@addhash.user.account.settings.wallet.update.service'
+
+  addhash.user.account.settings.wallet.get.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletGetService
+    public: true
+    arguments: ['@addhash.user.wallet.repository', '@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletGetService: '@addhash.user.account.settings.wallet.get.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletGetServiceInterface: '@addhash.user.account.settings.wallet.get.service'
 

@@ -58,13 +58,14 @@ class UserRepository implements UserRepositoryInterface
 		$this->entityManager->flush($user);
 	}
 
-	/**
-	 * @param User $user
-	 * @return mixed
-	 */
-	public function update(User $user)
+    /**
+     * @return mixed|void
+     * @throws ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+	public function update()
 	{
-		// TODO: Implement update() method.
+        $this->entityManager->flush();
 	}
 
 	/**
