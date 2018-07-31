@@ -41,4 +41,10 @@ App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder:
             joinColumn:
                 name: userId
                 referencedColumnName: id
-                #nullable: false
+    oneToOne:
+        payment:
+            targetEntity:  App\AddHash\AdminPanel\Domain\Payment\Payment
+            joinColumn:
+                name: paymentId
+                referencedColumnName: id
+                nullable: true

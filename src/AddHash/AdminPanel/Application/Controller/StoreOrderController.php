@@ -9,6 +9,7 @@ use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutService
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface;
 use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCreateCommand;
+use App\AddHash\AdminPanel\Domain\User\Services\Order\Miner\CreateUserOrderMinerServiceInterface;
 use App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveItemService;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,6 +25,7 @@ class StoreOrderController extends BaseServiceController
 	private $storeOrderCheckout;
 	private $storeOrderAddProduct;
 	private $storeOrderRemoveItem;
+	private $orderMinerService;
 	private $tokenStorage;
 
 	public function __construct(
@@ -32,6 +34,7 @@ class StoreOrderController extends BaseServiceController
 		StoreOrderCheckoutServiceInterface $checkoutService,
 		StoreOrderAddProductServiceInterface $orderAddProductService,
 		StoreOrderRemoveItemService $storeOrderRemoveItem,
+		CreateUserOrderMinerServiceInterface $orderMinerService,
 		TokenStorageInterface $tokenStorage
 	)
 	{
@@ -40,6 +43,7 @@ class StoreOrderController extends BaseServiceController
 		$this->storeOrderCheckout = $checkoutService;
 		$this->storeOrderAddProduct = $orderAddProductService;
 		$this->storeOrderRemoveItem = $storeOrderRemoveItem;
+		$this->orderMinerService = $orderMinerService;
 		$this->tokenStorage = $tokenStorage;
 	}
 
@@ -204,8 +208,8 @@ class StoreOrderController extends BaseServiceController
 	 * @SWG\Tag(name="Store Orders")
 	 *
 	 * @SWG\Parameter(
-	 *     name="orderId",
-	 *     in="query",
+	 *     name="id",
+	 *     in="path",
 	 *     type="string",
 	 *     required=true,
 	 *     description="Id of new order"
@@ -230,7 +234,7 @@ class StoreOrderController extends BaseServiceController
 	public function checkout(Request $request)
 	{
 		$command = new StoreOrderCheckoutCommand(
-			$request->get('orderId'),
+			$request->get('id'),
 			$request->get('stripeToken')
 		);
 
@@ -241,8 +245,8 @@ class StoreOrderController extends BaseServiceController
 		}
 
 		try {
-			$this->storeOrderCheckout->execute($command);
-
+			$order = $this->storeOrderCheckout->execute($command);
+			$this->orderMinerService->execute($order);
 		} catch (\Exception $e) {
 			return $this->json([
 				'errors' => $e->getMessage()

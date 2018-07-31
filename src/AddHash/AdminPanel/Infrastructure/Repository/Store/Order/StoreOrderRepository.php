@@ -39,6 +39,7 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
 
 	/**
 	 * @param StoreOrder $order
+	 * @throws \Doctrine\Common\Persistence\Mapping\MappingException
 	 * @throws \Doctrine\ORM\ORMException
 	 * @throws \Doctrine\ORM\OptimisticLockException
 	 */

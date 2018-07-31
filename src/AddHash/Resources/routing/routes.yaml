@@ -44,7 +44,7 @@ store.order.get:
     controller: App\AddHash\AdminPanel\Application\Controller\StoreOrderController::get
 
 store.order.checkout:
-    path: "/api/v1/store.order.checkout"
+    path: "/api/v1/store.order.checkout/{id}"
     methods: POST
     controller: App\AddHash\AdminPanel\Application\Controller\StoreOrderController::checkout
 

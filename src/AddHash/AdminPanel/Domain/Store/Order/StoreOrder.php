@@ -2,6 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\Store\Order;
 
+use App\AddHash\AdminPanel\Domain\Payment\Payment;
 use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
 use App\AddHash\AdminPanel\Domain\User\User;
@@ -29,6 +30,8 @@ class StoreOrder
 	private $items;
 
 	private $user;
+
+	private $payment;
 
 
 	/**
@@ -233,5 +236,10 @@ class StoreOrder
 	public function closeOrder()
 	{
 		$this->state = self::STATE_CLOSED;
+	}
+
+	public function setPayment(Payment $payment)
+	{
+		$this->payment = $payment;
 	}
 }

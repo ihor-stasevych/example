@@ -28,10 +28,10 @@ class StoreOrderCheckoutService implements StoreOrderCheckoutServiceInterface
 
 	/**
 	 * @param StoreOrderCheckoutCommandOrderInterface $commandOrder
-	 * @return bool
+	 * @return StoreOrder
 	 * @throws StoreOrderException
 	 */
-	public function execute(StoreOrderCheckoutCommandOrderInterface $commandOrder)
+	public function execute(StoreOrderCheckoutCommandOrderInterface $commandOrder): StoreOrder
 	{
 		/** @var StoreOrder $order */
 		$order = $this->orderRepository->findById($commandOrder->getOrder());
@@ -49,15 +49,17 @@ class StoreOrderCheckoutService implements StoreOrderCheckoutServiceInterface
 		}
 
 		/** @var Payment $payment */
-		$this->payment->execute(
+		$payment = $this->payment->execute(
 			$commandOrder->getToken(),
 			$order->getItemsPriceTotal(),
-			$order
+			$order->getUser()
 		);
 
 		$order->setPayedState();
+		$order->setPayment($payment);
 
-		return true;
+		$this->orderRepository->save($order);
 
+		return $order;
 	}
 }

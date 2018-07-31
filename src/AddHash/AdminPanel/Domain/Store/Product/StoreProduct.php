@@ -170,15 +170,18 @@ class StoreProduct
 	 * @param $quantity
 	 * @return ArrayCollection|\Doctrine\Common\Collections\Collection
 	 */
-	public function ensureAvailableMiner($quantity)
+	public function ensureAvailableMiner($quantity = 1)
 	{
-		$criteria = Criteria::create()
-			->where(Criteria::expr()->eq('state', Miner::STATE_AVAILABLE))
-			->orderBy(['priority' => 'ASC'])
-			->setFirstResult(0)
-			->setMaxResults($quantity);
+		return $this->ensureMinersByState(Miner::STATE_AVAILABLE, $quantity);
+	}
 
-		return $this->miner->matching($criteria);
+	/**
+	 * @param $quantity
+	 * @return ArrayCollection|\Doctrine\Common\Collections\Collection
+	 */
+	public function ensureReservedMiner($quantity = 1)
+	{
+		return $this->ensureMinersByState(Miner::STATE_RESERVED, $quantity);
 	}
 
 	/**
@@ -190,7 +193,8 @@ class StoreProduct
 
 		/** @var Miner $miner */
 		foreach ($this->getMiners() as $miner) {
-			if ($miner->getState() == Miner::STATE_AVAILABLE) {
+			if ($miner->getState() == Miner::STATE_AVAILABLE ||
+				$miner->getState() == Miner::STATE_RESERVED) {
 				$result += 1;
 			}
 		}
@@ -232,6 +236,17 @@ class StoreProduct
 	public function setUnavailable()
 	{
 		$this->state = self::STATE_UNAVAILABLE;
+	}
+
+	protected function ensureMinersByState($state, $quantity = 1)
+	{
+		$criteria = Criteria::create()
+			->where(Criteria::expr()->eq('state', $state))
+			->orderBy(['priority' => 'ASC'])
+			->setFirstResult(0)
+			->setMaxResults($quantity);
+
+		return $this->miner->matching($criteria)->toArray();
 	}
 
 }

@@ -29,7 +29,7 @@ class UserOrderMiner
 
 	private $details;
 
-	public function __construct(StoreOrder $order, $endPeriod, $miners, $details = [])
+	public function __construct(StoreOrder $order, $endPeriod, $miners = [], $details = [])
 	{
 		$this->order = $order;
 		$this->user = $order->getUser();
@@ -42,7 +42,16 @@ class UserOrderMiner
 
 	public function setMiners($miners)
 	{
-		$this->miner = $miners;
+		foreach ($miners as $miner) {
+			$this->setMiner($miner);
+		}
+	}
+
+	public function setMiner(Miner $miner)
+	{
+		if (!$this->miner->contains($miner)) {
+			$this->miner->add($miner);
+		}
 	}
 
 }
