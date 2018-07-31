@@ -61,9 +61,23 @@ class WalletController extends BaseServiceController
         return $this->json($user);
     }
 
-
     /**
      * Update user wallets by authorized user
+     *
+     * @SWG\Parameter(
+     *     name="wallets",
+     *     in="body",
+     *     description="id - user wallet id, value - new value wallet",
+     *     required=true,
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(
+     *            type="object",
+     *            @SWG\Property(property="id", type="integer"),
+     *            @SWG\Property(property="value", type="string")
+     *         )
+     *     )
+     * )
      *
      * @SWG\Response(
      *     response=200,
@@ -77,6 +91,10 @@ class WalletController extends BaseServiceController
      *                 @SWG\Property(property="wallet", type="string")
      *             )
      *     ),
+     * )
+     * @SWG\Response(
+     *     response=400,
+     *     description="Returns validation errors"
      * )
      *
      * @param Request $request
@@ -102,7 +120,41 @@ class WalletController extends BaseServiceController
         }
 	}
 
-
+    /**
+     * Create user wallet by authorized user
+     *
+     * @SWG\Parameter(
+     *     name="walletId",
+     *     in="query",
+     *     type="integer",
+     *     description="Wallet ID"
+     * )
+     * @SWG\Parameter(
+     *     name="value",
+     *     in="query",
+     *     type="string",
+     *     description="Value wallet"
+     * )
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the general information of an user",
+     *     @SWG\Schema(
+     *              type="object",
+     *              @SWG\Property(property="id", type="integer"),
+     *              @SWG\Property(property="value", type="string"),
+     *              @SWG\Property(property="wallet", type="string")
+     *     )
+     * )
+     * @SWG\Response(
+     *     response=400,
+     *     description="Returns validation errors"
+     * )
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @SWG\Tag(name="User")
+     */
 	public function create(Request $request)
     {
         $command = new WalletCreateCommand(
