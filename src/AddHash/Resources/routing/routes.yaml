@@ -61,29 +61,29 @@ admin.store.product.create:
 account.settings.general.information.update:
     path: "/api/v1/user.account.settings.general.information.update"
     methods: POST
-    controller: App\AddHash\AdminPanel\Application\Controller\AccountSettings\GeneralInformationController::update
+    controller: App\AddHash\AdminPanel\Application\Controller\User\AccountSettings\GeneralInformationController::update
 
 account.settings.general.information.get:
     path: "/api/v1/user.account.settings.general.information.get"
     methods: GET
-    controller: App\AddHash\AdminPanel\Application\Controller\AccountSettings\GeneralInformationController::get
+    controller: App\AddHash\AdminPanel\Application\Controller\User\AccountSettings\GeneralInformationController::get
 
 account.settings.password.update:
     path: "/api/v1/user.account.settings.password.update"
     methods: POST
-    controller: App\AddHash\AdminPanel\Application\Controller\AccountSettings\PasswordController::update
+    controller: App\AddHash\AdminPanel\Application\Controller\User\AccountSettings\PasswordController::update
 
 account.settings.wallet.update:
     path: "/api/v1/user.account.settings.wallet.update"
     methods: POST
-    controller: App\AddHash\AdminPanel\Application\Controller\AccountSettings\WalletController::update
+    controller: App\AddHash\AdminPanel\Application\Controller\User\AccountSettings\WalletController::update
 
 account.settings.wallet.get:
     path: "/api/v1/user.account.settings.wallet.get"
     methods: GET
-    controller: App\AddHash\AdminPanel\Application\Controller\AccountSettings\WalletController::get
+    controller: App\AddHash\AdminPanel\Application\Controller\User\AccountSettings\WalletController::get
 
 account.settings.wallet.create:
     path: "/api/v1/user.account.settings.wallet.create"
-    methods: GET
-    controller: App\AddHash\AdminPanel\Application\Controller\AccountSettings\WalletController::create
+    methods: POST
+    controller: App\AddHash\AdminPanel\Application\Controller\User\AccountSettings\WalletController::create

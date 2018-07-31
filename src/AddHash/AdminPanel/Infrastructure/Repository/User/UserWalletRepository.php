@@ -9,18 +9,6 @@ use App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface;
 
 class UserWalletRepository extends AbstractRepository implements UserWalletRepositoryInterface
 {
-    /**
-     * @param UserWallet $userWallet
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-	public function create(UserWallet $userWallet)
-	{
-		$this->entityManager->persist($userWallet);
-		$this->entityManager->flush($userWallet);
-	}
-
-
     public function getByIdsAndUserId(array $ids, int $userId): array
     {
         $user = $this->entityManager->getRepository($this->getEntityName());
@@ -28,7 +16,7 @@ class UserWalletRepository extends AbstractRepository implements UserWalletRepos
         $res = $user->createQueryBuilder('uw')
             ->select('uw')
             ->andWhere('uw.id IN (:ids)')
-            ->andWhere('uw.userId = :userId')
+            ->andWhere('uw.user = :userId')
             ->setParameter('ids', $ids)
             ->setParameter('userId', $userId)
             ->getQuery();
@@ -36,22 +24,21 @@ class UserWalletRepository extends AbstractRepository implements UserWalletRepos
         return $res->getResult();
     }
 
-
-	/**
-	 * @param int $userId
-	 * @return array
-	 */
-    public function getByUserId(int $userId): array
+    public function getByValueAndWalletIdAndUserId(string $value, int $walletId, int $userId): ?UserWallet
     {
         $user = $this->entityManager->getRepository($this->getEntityName());
 
         $res = $user->createQueryBuilder('uw')
             ->select('uw')
+            ->andWhere('uw.value = :value')
+            ->andWhere('uw.wallet = :walletId')
             ->andWhere('uw.user = :userId')
+            ->setParameter('value', $value)
+            ->setParameter('walletId', $walletId)
             ->setParameter('userId', $userId)
             ->getQuery();
 
-        return $res->getResult();
+        return $res->getOneOrNullResult();
     }
 
     /**
@@ -61,6 +48,12 @@ class UserWalletRepository extends AbstractRepository implements UserWalletRepos
     public function update()
     {
         $this->entityManager->flush();
+    }
+
+    public function create(UserWallet $userWallet)
+    {
+        $this->entityManager->persist($userWallet);
+        $this->entityManager->flush($userWallet);
     }
 
     /**

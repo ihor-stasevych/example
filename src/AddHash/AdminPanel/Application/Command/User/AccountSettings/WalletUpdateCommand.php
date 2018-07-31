@@ -13,7 +13,7 @@ class WalletUpdateCommand implements WalletUpdateCommandInterface
      *   @Assert\Collection(
      *      fields = {
      *          "id" = @Assert\Required({@Assert\NotNull()}),
-     *          "name" = @Assert\Required({@Assert\NotNull()})
+     *          "value" = @Assert\Required({@Assert\NotNull()})
      *      }
      *   )
      * })

@@ -31,23 +31,22 @@ class WalletUpdateService implements WalletUpdateServiceInterface
 	public function execute(WalletUpdateCommandInterface $command): array
 	{
 	    $walletsCommand = $command->getWallets();
-	    $walletsName = [];
+	    $walletsValue = [];
 
 	    foreach ($walletsCommand as $walletCommand) {
-            $walletsName[$walletCommand['id']] = $walletCommand['name'];
+            $walletsValue[$walletCommand['id']] = $walletCommand['value'];
         }
 
-        $ids = array_keys($walletsName);
+        $ids = array_keys($walletsValue);
         $userId = $this->tokenStorage->getToken()->getUser()->getId();
-        $wallets = $this->userWalletRepository->getByIdsAndUsertId($ids, $userId);
+        $wallets = $this->userWalletRepository->getByIdsAndUserId($ids, $userId);
 
 	    if (count($ids) != count($wallets)) {
             throw new UserWalletIsNotValidException('User wallet is not valid');
         }
 
         foreach ($wallets as $wallet) {
-            $id = $wallet->getId();
-            $wallet->setName($walletsName[$id]);
+            $wallet->setValue($walletsValue[$wallet->getId()]);
             $this->userWalletRepository->update();
         }
 

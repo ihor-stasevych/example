@@ -176,7 +176,7 @@ services:
   addhash.user.account.settings.wallet.get.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletGetService
     public: true
-    arguments: ['@addhash.user.wallet.repository', '@security.token_storage']
+    arguments: ['@security.token_storage']
   App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletGetService: '@addhash.user.account.settings.wallet.get.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletGetServiceInterface: '@addhash.user.account.settings.wallet.get.service'
@@ -204,4 +204,12 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\Payment\MakePaymentForOrderService: '@addhash.order.checkout.payment.service'
 
   App\AddHash\AdminPanel\Domain\Payment\Services\MakePaymentForOrderServiceInterface: '@addhash.order.checkout.payment.service'
+
+  addhash.user.account.settings.wallet.create.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletCreateService
+    public: true
+    arguments: ['@addhash.wallet.repository', '@addhash.user.wallet.repository', '@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletCreateService: '@addhash.user.account.settings.wallet.create.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletCreateServiceInterface: '@addhash.user.account.settings.wallet.create.service'
 
