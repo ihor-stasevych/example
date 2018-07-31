@@ -7,3 +7,38 @@ App\AddHash\AdminPanel\Domain\User\Order\UserOrderMiner:
             generator:
                 { strategy: AUTO }
     fields:
+        createdAt:
+            column: createdAt
+            type: datetime
+            nullable: false
+        endPeriod:
+            column: endPeriod
+            type: datetime
+            nullable: false
+        details:
+            column: details
+            type: json
+
+    manyToOne:
+          user:
+              targetEntity:  App\AddHash\AdminPanel\Domain\User\User
+              mappedBy: User_Order_Miner
+              joinColumn:
+                  name: userId
+                  referencedColumnName: id
+          order:
+              targetEntity:  App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder
+              mappedBy: User_Order_Miner
+              joinColumn:
+                  name: orderId
+                  referencedColumnName: id
+
+
+    manyToMany:
+          miner:
+              targetEntity: App\AddHash\AdminPanel\Domain\Miners\Miner
+              cascade: [ 'persist' ]
+              fetch: EXTRA_LAZY
+              indexBy: type
+              joinTable:
+                name: User_Miner

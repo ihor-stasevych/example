@@ -94,3 +94,7 @@
 2018-07-25 11:13:10,990 INFO supervisord started with pid 1
 2018-07-25 11:13:11,992 INFO spawned: 'php7-fpm' with pid 9
 2018-07-25 11:13:13,241 INFO success: php7-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2018-07-30 16:32:01,891 CRIT Supervisor running as root (no user in config file)
+2018-07-30 16:32:01,908 INFO supervisord started with pid 1
+2018-07-30 16:32:02,912 INFO spawned: 'php7-fpm' with pid 9
+2018-07-30 16:32:04,511 INFO success: php7-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)

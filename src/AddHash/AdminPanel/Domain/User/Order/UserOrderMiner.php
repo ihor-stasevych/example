@@ -4,6 +4,7 @@ namespace App\AddHash\AdminPanel\Domain\User\Order;
 
 use App\AddHash\AdminPanel\Domain\Miners\Miner;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class UserOrderMiner
 {
@@ -19,28 +20,29 @@ class UserOrderMiner
 
 	private $user;
 
+	/** @var ArrayCollection  */
 	private $miner;
 
 	private $createdAt;
 
 	private $endPeriod;
 
-	private $state;
-
-	private $status;
-
 	private $details;
 
-	public function __construct(StoreOrder $order, Miner $miner, $endPeriod, $details = [])
+	public function __construct(StoreOrder $order, $endPeriod, $miners, $details = [])
 	{
 		$this->order = $order;
-		$this->miner = $miner;
 		$this->user = $order->getUser();
 		$this->createdAt = new \DateTime();
 		$this->endPeriod = $endPeriod;
 		$this->details = $details;
-		$this->state = self::STATE_READY;
-		$this->status = self::STATUS_PAUSED;
+		$this->miner = new ArrayCollection();
+		$this->setMiners($miners);
+	}
+
+	public function setMiners($miners)
+	{
+		$this->miner = $miners;
 	}
 
 }

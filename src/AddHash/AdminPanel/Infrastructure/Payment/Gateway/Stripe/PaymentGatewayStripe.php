@@ -9,14 +9,14 @@ use Stripe\Stripe;
 
 class PaymentGatewayStripe implements PaymentGatewayInterface
 {
-	const API_KEY = 'sk_test_UUeNKCoiCH94euQA1F25elLg';
+	const API_KEY_PRIVATE = 'sk_test_UUeNKCoiCH94euQA1F25elLg';
 
 	private $payment;
 
 	public function __construct(PaymentInterface $payment)
 	{
 		$this->payment = $payment;
-		Stripe::setApiKey("sk_test_UUeNKCoiCH94euQA1F25elLg");
+		Stripe::setApiKey(self::API_KEY_PRIVATE);
 	}
 
 	public function makePayment($params = [])
