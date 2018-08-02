@@ -97,4 +97,9 @@ class StoreProductController extends BaseServiceController
 
 		return $this->json([]);
 	}
+
+	public function createVote()
+    {
+
+    }
 }
