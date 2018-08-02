@@ -70,3 +70,6 @@ App\AddHash\AdminPanel\Domain\User\User:
       wallet:
           targetEntity:   App\AddHash\AdminPanel\Domain\User\UserWallet
           mappedBy: user
+      vote:
+          targetEntity:   App\AddHash\AdminPanel\Domain\Store\Product\StoreProductUserVote
+          mappedBy: user

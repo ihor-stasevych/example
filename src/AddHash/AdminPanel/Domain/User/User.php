@@ -50,6 +50,8 @@ class User implements UserInterface
 
 	private $wallet;
 
+	private $vote;
+
 
 	public function __construct(
 		int $id = null,

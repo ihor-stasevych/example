@@ -89,6 +89,6 @@ account.settings.wallet.create:
     controller: App\AddHash\AdminPanel\Application\Controller\User\AccountSettings\WalletController::create
 
 store.product.vote.create:
-    path: "/api/v1/store.product.vote.create"
+    path: "/api/v1/store/product/vote/create"
     methods: POST
     controller: App\AddHash\AdminPanel\Application\Controller\StoreProductController::createVote

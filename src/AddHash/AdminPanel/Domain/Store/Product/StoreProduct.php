@@ -49,9 +49,13 @@ class StoreProduct
 	 */
 	private $miner;
 
+	private $vote;
+
+	private $userVote;
+
 	public function __construct(
 		$title, $description, $techDetails,
-		$price, $state, $categories
+		$price, $state, $categories, $vote = null
 	)
 	{
 		$this->title = $title;
@@ -64,6 +68,7 @@ class StoreProduct
 		$this->media = new ArrayCollection();
 		$this->miner = new ArrayCollection();
 		$this->setCategories($categories);
+		$this->vote = $vote;
 	}
 
 	/**
@@ -138,6 +143,11 @@ class StoreProduct
 		return $this->statusAlias[$this->state] ?? null;
 	}
 
+	public function getVote()
+    {
+        return $this->vote;
+    }
+
 	/**
 	 * @param array $categories
 	 */
@@ -157,6 +167,11 @@ class StoreProduct
 			$this->category->add($category);
 		}
 	}
+
+	public function setVote($vote)
+    {
+        $this->vote = $vote;
+    }
 
 	/**
 	 * @return ArrayCollection

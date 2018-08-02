@@ -26,6 +26,11 @@ App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct:
             type: integer
             length: 2
 
+        vote:
+            type: float
+            options:
+                default: 0.00
+
         createdAt:
             type: integer
             length: 12
@@ -46,4 +51,8 @@ App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct:
 
         miner:
           targetEntity: App\AddHash\AdminPanel\Domain\Miners\Miner
+          mappedBy: product
+
+        userVote:
+          targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProductUserVote
           mappedBy: product
