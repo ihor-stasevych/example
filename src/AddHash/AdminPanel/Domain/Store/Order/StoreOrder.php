@@ -214,6 +214,10 @@ class StoreOrder
 		return $item;
 	}
 
+	/**
+	 * @param StoreProduct $product
+	 * @return StoreOrderItem|bool
+	 */
 	public function removeItemByProduct(StoreProduct $product)
 	{
 		if (!$this->productContains($product)) {
@@ -228,16 +232,25 @@ class StoreOrder
 		return $item;
 	}
 
+	/**
+	 * @param StoreOrderItem $item
+	 */
 	public function removeItem(StoreOrderItem $item)
 	{
 		$this->items->removeElement($item);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function closeOrder()
 	{
 		$this->state = self::STATE_CLOSED;
 	}
 
+	/**
+	 * @param Payment $payment
+	 */
 	public function setPayment(Payment $payment)
 	{
 		$this->payment = $payment;

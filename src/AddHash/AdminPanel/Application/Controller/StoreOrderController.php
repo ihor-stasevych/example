@@ -198,7 +198,7 @@ class StoreOrderController extends BaseServiceController
 	 * TODO:Implement method
 	 * @param Request $request
 	 */
-	public function prepare(Request $request)
+	public function prepareCheckout(Request $request)
 	{
 
 	}
