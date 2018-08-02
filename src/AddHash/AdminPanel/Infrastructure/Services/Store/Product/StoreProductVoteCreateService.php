@@ -70,6 +70,8 @@ class StoreProductVoteCreateService implements StoreProductVoteCreateServiceInte
         //recalculation and save vote
         $vote = $this->productUserVoteRepository->getAvgByProductId($command->getProductId());
 
+        $vote = (null !== $vote) ? $vote['avg'] : 0;
+
         $product->setVote(round($vote, static::ROUND_VOTE));
 
         $this->productRepository->save($product);

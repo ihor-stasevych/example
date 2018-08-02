@@ -39,7 +39,7 @@ class StoreProductUserVoteRepository extends AbstractRepository implements Store
             ->setParameter('productId', $productId)
             ->getQuery();
 
-        return $res->getOneOrNullResult()['avg'];
+        return $res->getOneOrNullResult();
     }
 
 	/**
