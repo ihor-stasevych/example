@@ -1,7 +1,7 @@
 <?php
 namespace App\AddHash\AdminPanel\Infrastructure\Repository\User;
 
-use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterException;
+use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterEmailExistException;
 use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Domain\User\UserRepositoryInterface;
 use App\AddHash\System\GlobalContext\Identity\UserId;
@@ -84,6 +84,26 @@ class UserRepository implements UserRepositoryInterface
 			->getQuery();
 
 		return $res->getOneOrNullResult();
-
 	}
+
+    /**
+     * @param Email $email
+     * @param string $userName
+     * @return User|null
+     * @throws NonUniqueResultException
+     */
+    public function getByEmailOrUserName(Email $email, string $userName): ?User
+    {
+        $user = $this->entityManager->getRepository(User::class);
+
+        $res = $user->createQueryBuilder('u')
+            ->select('u')
+            ->where('u.email = :email')
+            ->orWhere('u.userName = :userName')
+            ->setParameter('email', $email->getEmail())
+            ->setParameter('userName', $userName)
+            ->getQuery();
+
+        return $res->getOneOrNullResult();
+    }
 }

@@ -2,14 +2,15 @@
 
 namespace App\AddHash\AdminPanel\Application\Controller;
 
-use App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface;
-use App\AddHash\AdminPanel\Application\Command\User\UserRegisterCommand;
-use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use App\AddHash\System\GlobalContext\Validation\Validator;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\AddHash\System\GlobalContext\Common\BaseServiceController;
+use App\AddHash\AdminPanel\Application\Command\User\UserRegisterCommand;
+use App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface;
+use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterEmailExistException;
+use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterUserNameExistException;
 
 class UserController extends BaseServiceController
 {
@@ -19,7 +20,6 @@ class UserController extends BaseServiceController
 	{
 		$this->userRegisterService = $userRegisterService;
 	}
-
 
 	/**
 	 * Register new user
@@ -109,8 +109,8 @@ class UserController extends BaseServiceController
 
 		try {
 			$this->userRegisterService->execute($userRegisterCommand);
-		} catch (\Exception $e) {
-			return $this->json(['message' =>$e->getMessage()], Response::HTTP_BAD_REQUEST);
+		} catch (UserRegisterEmailExistException | UserRegisterUserNameExistException $e) {
+			return $this->json(['message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
 		}
 
 		return $this->json([]);

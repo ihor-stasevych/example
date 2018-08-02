@@ -35,4 +35,11 @@ interface UserRepositoryInterface
      * @return mixed
      */
 	public function update();
+
+    /**
+     * @param Email $email
+     * @param string $userName
+     * @return User|null
+     */
+    public function getByEmailOrUserName(Email $email, string $userName): ?User;
 }

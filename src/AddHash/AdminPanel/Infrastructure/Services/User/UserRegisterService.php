@@ -2,15 +2,14 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User;
 
-
-use App\AddHash\AdminPanel\Domain\User\Command\UserRegisterCommandInterface;
-use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterException;
-use App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\User;
-use App\AddHash\AdminPanel\Domain\User\UserRepositoryInterface;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
-use App\AddHash\System\GlobalContext\ValueObject\Phone;
+use App\AddHash\AdminPanel\Domain\User\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use App\AddHash\AdminPanel\Domain\User\Command\UserRegisterCommandInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface;
+use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterEmailExistException;
+use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterUserNameExistException;
 
 class UserRegisterService implements UserRegisterServiceInterface
 {
@@ -26,34 +25,43 @@ class UserRegisterService implements UserRegisterServiceInterface
 		$this->encoderFactory = $encoderFactory;
 	}
 
-
-	/**
-	 * @param UserRegisterCommandInterface $command
-	 * @return User
-	 * @throws UserRegisterException
-	 */
+    /**
+     * @param UserRegisterCommandInterface $command
+     * @return User
+     * @throws UserRegisterEmailExistException
+     * @throws UserRegisterUserNameExistException
+     */
 	public function execute(UserRegisterCommandInterface $command)
 	{
 		$email = new Email($command->getEmail());
 
-		if ($this->userRepository->getByEmail($email)) {
-			throw new UserRegisterException('Such user already exists');
-		}
+        $user = $this->userRepository->getByEmailOrUserName($email, $command->getUserName());
 
-		$password = $command->getPassword();
-		$encodedPassword = $this->encoderFactory->getEncoder(User::class)->encodePassword($password, '');
+		if (null !== $user) {
+		    if ($user->getUsername() == $command->getUserName()) {
+                throw new UserRegisterUserNameExistException('User name already exists');
+            }
+
+            throw new UserRegisterEmailExistException('User email already exists');
+        }
 
 		$user = new User(
 			null,
 			$command->getUserName(),
 			$email,
-			$encodedPassword,
+			'',
 			$command->getBackupEmail(),
 			$command->getFirstName(),
 			$command->getLastName(),
 			$command->getPhone(),
 			$command->getRoles()
 		);
+
+        $encodedPassword = $this->encoderFactory->getEncoder(User::class)->encodePassword(
+            $command->getPassword(),
+            $user->getSalt()
+        );
+        $user->setPassword($encodedPassword);
 
 		$this->userRepository->create($user);
 

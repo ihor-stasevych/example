@@ -10,11 +10,13 @@ App\AddHash\AdminPanel\Domain\User\User:
         userName:
             type: string
             length: 255
+            unique: true
             options:
                 default: ''
         email:
             type: string
             length: 255
+            unique: true
             options:
                 default: ''
         backupEmail:

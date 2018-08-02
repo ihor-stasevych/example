@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\User\Exceptions;
 
-class UserRegisterException extends \Exception
+class UserRegisterEmailExistException extends \Exception
 {
 	protected $code = 400;
 }
