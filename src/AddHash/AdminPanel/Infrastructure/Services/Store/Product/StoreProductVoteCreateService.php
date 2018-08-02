@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use App\AddHash\AdminPanel\Domain\Store\Product\Exceptions\Vote\UserVoteExistException;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductUserVoteRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\Exceptions\Vote\ProductIsNotExistException;
-use App\AddHash\AdminPanel\Domain\Store\Product\Exceptions\Vote\AssessmentIsNotValidException;
+use App\AddHash\AdminPanel\Domain\Store\Product\Exceptions\Vote\RatingIsNotValidException;
 use App\AddHash\AdminPanel\Domain\Store\Product\Command\StoreProductVoteCreateCommandInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductVoteCreateServiceInterface;
 
@@ -37,14 +37,14 @@ class StoreProductVoteCreateService implements StoreProductVoteCreateServiceInte
 
     /**
      * @param StoreProductVoteCreateCommandInterface $command
-     * @throws AssessmentIsNotValidException
+     * @throws RatingIsNotValidException
      * @throws ProductIsNotExistException
      * @throws UserVoteExistException
      */
 	public function execute(StoreProductVoteCreateCommandInterface $command)
 	{
         if (false === array_search($command->getValue(), static::ASSESSMENTS)) {
-            throw new AssessmentIsNotValidException('Assessment is not valid');
+            throw new RatingIsNotValidException('Rating is not valid');
         }
 
         $product = $this->productRepository->findById($command->getProductId());
