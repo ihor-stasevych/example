@@ -9,6 +9,7 @@ use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutService
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface;
 use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCreateCommand;
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderTransformer;
 use App\AddHash\AdminPanel\Domain\User\Services\Order\Miner\CreateUserOrderMinerServiceInterface;
 use App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveItemService;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
@@ -271,8 +272,16 @@ class StoreOrderController extends BaseServiceController
 	 */
 	public function get()
 	{
+		$result = [];
+		$order = $this->storeOrderGetService->execute($this->tokenStorage->getToken()->getUser());
+
+		if ($order) {
+			$transformer = new StoreOrderTransformer();
+			$result = $transformer->transform($order);
+		}
+
 		return $this->json(
-			$this->storeOrderGetService->execute($this->tokenStorage->getToken()->getUser())
+			$result
 		);
 	}
 }

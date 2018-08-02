@@ -193,8 +193,21 @@ class StoreProduct
 
 		/** @var Miner $miner */
 		foreach ($this->getMiners() as $miner) {
-			if ($miner->getState() == Miner::STATE_AVAILABLE ||
-				$miner->getState() == Miner::STATE_RESERVED) {
+			if ($miner->getState() == Miner::STATE_AVAILABLE) {
+				$result += 1;
+			}
+		}
+
+		return $result;
+	}
+
+	public function getReservedMinersQuantity()
+	{
+		$result = 0;
+
+		/** @var Miner $miner */
+		foreach ($this->getMiners() as $miner) {
+			if ($miner->getState() == Miner::STATE_RESERVED) {
 				$result += 1;
 			}
 		}
