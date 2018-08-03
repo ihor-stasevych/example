@@ -10,6 +10,7 @@ use Stripe\Stripe;
 class PaymentGatewayStripe implements PaymentGatewayInterface
 {
 	const API_KEY_PRIVATE = 'sk_test_UUeNKCoiCH94euQA1F25elLg';
+	const API_KEY_PUBLIC = 'pk_test_4d16pNNIAm3Chc7JFRkUOGM0';
 
 	private $payment;
 
@@ -27,6 +28,11 @@ class PaymentGatewayStripe implements PaymentGatewayInterface
 			'source' => $params['token']
 		]);
 
+	}
+
+	public static function getPublicKey()
+	{
+		return self::API_KEY_PUBLIC;
 	}
 
 
