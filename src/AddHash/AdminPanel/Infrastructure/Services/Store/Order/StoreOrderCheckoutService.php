@@ -5,7 +5,7 @@ namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 use App\AddHash\AdminPanel\Domain\Payment\Payment;
 use App\AddHash\AdminPanel\Domain\Payment\PaymentInterface;
 use App\AddHash\AdminPanel\Domain\Payment\Services\MakePaymentForOrderServiceInterface;
-use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCheckoutCommandOrderInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCheckoutCommandInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
@@ -27,11 +27,11 @@ class StoreOrderCheckoutService implements StoreOrderCheckoutServiceInterface
 	}
 
 	/**
-	 * @param StoreOrderCheckoutCommandOrderInterface $commandOrder
+	 * @param StoreOrderCheckoutCommandInterface $commandOrder
 	 * @return StoreOrder
 	 * @throws StoreOrderException
 	 */
-	public function execute(StoreOrderCheckoutCommandOrderInterface $commandOrder): StoreOrder
+	public function execute(StoreOrderCheckoutCommandInterface $commandOrder): StoreOrder
 	{
 		/** @var StoreOrder $order */
 		$order = $this->orderRepository->findById($commandOrder->getOrder());

@@ -4,22 +4,22 @@ user.register:
   controller: App\AddHash\AdminPanel\Application\Controller\UserController::register
 
 store.category.list:
-    path: "/api/v1/store/category/list"
+    path: "/api/v1/store/categories"
     methods: GET
     controller: App\AddHash\AdminPanel\Application\Controller\StoreCategoryController::index
 
 store.category.get:
-    path: "/api/v1/store/category/get/{id}"
+    path: "/api/v1/store/categories/{id}"
     methods: GET
     controller: App\AddHash\AdminPanel\Application\Controller\StoreCategoryController::get
 
 store.product.list:
-    path: "/api/v1/store/product/list"
+    path: "/api/v1/store/products"
     methods: GET
     controller: App\AddHash\AdminPanel\Application\Controller\StoreProductController::index
 
 store.product.get:
-    path: "/api/v1/store/product/get/{id}"
+    path: "/api/v1/store/products/{id}"
     methods: GET
     controller: App\AddHash\AdminPanel\Application\Controller\StoreProductController::get
 
@@ -43,6 +43,11 @@ store.order.get:
     methods: GET
     controller: App\AddHash\AdminPanel\Application\Controller\StoreOrderController::get
 
+store.order.prepare.checkout:
+    path: "/api/v1/store/order/checkout/prepare/{id}"
+    methods: POST
+    controller: App\AddHash\AdminPanel\Application\Controller\StoreOrderController::prepareCheckout
+
 store.order.checkout:
     path: "/api/v1/store/order/checkout/{id}"
     methods: POST
@@ -59,32 +64,32 @@ admin.store.product.create:
     controller: App\AddHash\AdminPanel\Application\Controller\StoreProductController::create
 
 account.settings.general.information.update:
-    path: "/api/v1/user/account/settings/update"
-    methods: POST
+    path: "/api/v1/user/account/settings/information"
+    methods: PUT
     controller: App\AddHash\AdminPanel\Application\Controller\User\AccountSettings\GeneralInformationController::update
 
 account.settings.general.information.get:
-    path: "/api/v1/user/account/settings/information/get"
+    path: "/api/v1/user/account/settings/information"
     methods: GET
     controller: App\AddHash\AdminPanel\Application\Controller\User\AccountSettings\GeneralInformationController::get
 
 account.settings.password.update:
-    path: "/api/v1/user/account/settings/password/update"
-    methods: POST
+    path: "/api/v1/user/account/settings/password"
+    methods: PUT
     controller: App\AddHash\AdminPanel\Application\Controller\User\AccountSettings\PasswordController::update
 
 account.settings.wallet.update:
-    path: "/api/v1/user/account/settings/wallet/update"
-    methods: POST
+    path: "/api/v1/user/account/settings/wallets"
+    methods: PUT
     controller: App\AddHash\AdminPanel\Application\Controller\User\AccountSettings\WalletController::update
 
 account.settings.wallet.get:
-    path: "/api/v1/user/account/settings/wallet/get"
+    path: "/api/v1/user/account/settings/wallets"
     methods: GET
     controller: App\AddHash\AdminPanel\Application\Controller\User\AccountSettings\WalletController::get
 
 account.settings.wallet.create:
-    path: "/api/v1/user/account/settings/wallet/create"
+    path: "/api/v1/user/account/settings/wallets"
     methods: POST
     controller: App\AddHash\AdminPanel\Application\Controller\User\AccountSettings\WalletController::create
 
