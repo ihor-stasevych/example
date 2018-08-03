@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\Miners\Exceptions;
 
-class MinerSocketCreateError extends \Exception
+class MinerSocketCreateErrorException extends \Exception
 {
 	protected $code = 400;
 }

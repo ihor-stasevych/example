@@ -4,8 +4,9 @@ namespace App\AddHash\AdminPanel\Infrastructure\Miners\Extender;
 
 use App\AddHash\AdminPanel\Domain\Miners\Miner;
 use App\AddHash\AdminPanel\Domain\Miners\Extender\MinerSocketInterface;
-use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketCreateError;
-use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketConnectionError;
+use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketErrorException;
+use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketCreateErrorException;
+use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketConnectionErrorException;
 
 class MinerSocket implements MinerSocketInterface
 {
@@ -19,17 +20,19 @@ class MinerSocket implements MinerSocketInterface
         $this->port = $miner->getPort();
     }
 
-    public function request($cmd)
+    /**
+     * @return array|mixed|null
+     * @throws MinerSocketCreateErrorException
+     */
+    public function request()
     {
         try {
             $socket = $this->getSocket($this->ip, $this->port);
-        } catch (\Exception $e) {
-
+            $line = $this->readSocketLine($socket);
+            socket_close($socket);
+        } catch (MinerSocketErrorException $e) {
+            $line = '';
         }
-
-        //socket_write($socket, $cmd, strlen($cmd));
-        $line = $this->readSocketLine($socket);
-        socket_close($socket);
 
         return $this->getData($line);
     }
@@ -71,6 +74,7 @@ class MinerSocket implements MinerSocketInterface
 
                         if (isset($data[$name])) {
                             $num = 1;
+
                             while (isset($data[$name . $num])) {
                                 $num++;
                             }
@@ -103,8 +107,8 @@ class MinerSocket implements MinerSocketInterface
      * @param string $address
      * @param string $port
      * @return resource
-     * @throws MinerSocketConnectionError
-     * @throws MinerSocketCreateError
+     * @throws MinerSocketConnectionErrorException
+     * @throws MinerSocketCreateErrorException
      */
     private function getSocket(string $address, string $port)
     {
@@ -112,7 +116,7 @@ class MinerSocket implements MinerSocketInterface
 
         if (false === $socket) {
             $error = socket_strerror(socket_last_error());
-            throw new MinerSocketCreateError("ERR: socket create(TCP) failed " . $error);
+            throw new MinerSocketCreateErrorException("ERR: socket create(TCP) failed " . $error);
         }
 
         $connection = socket_connect($socket, $address, $port);
@@ -120,7 +124,7 @@ class MinerSocket implements MinerSocketInterface
         if (false === $connection) {
             socket_close($socket);
             $error = socket_strerror(socket_last_error());
-            throw new MinerSocketConnectionError("ERR: socket connect (" . $address . "," . $port . ") failed " . $error);
+            throw new MinerSocketConnectionErrorException("ERR: socket connect (" . $address . "," . $port . ") failed " . $error);
         }
 
         return $socket;
