@@ -36,6 +36,8 @@ class Miner
 
 	private $product;
 
+	private $port;
+
 	private $stateAliases = [
 		self::STATE_AVAILABLE => 'available',
 		self::STATE_BUSY => 'busy',
@@ -46,7 +48,7 @@ class Miner
 	public function __construct(
 		$title, $description, $hashRate, $powerRate,
 		$powerEfficiency, $ratedVoltage, $operatingTemperature,
-		$ip, $algorithm, $priority
+		$ip, $algorithm, $priority, $port
 	)
 	{
 		$this->title = $title;
@@ -60,6 +62,7 @@ class Miner
 		$this->algorithm = $algorithm;
 		$this->ip = $ip;
 		$this->priority = $priority;
+		$this->port = $port;
 	}
 
 	public function getTitle()
@@ -111,6 +114,16 @@ class Miner
 	{
 		return $this->algorithm;
 	}
+
+    public function getIp()
+    {
+        return $this->ip;
+    }
+
+	public function getPort()
+    {
+        return $this->port;
+    }
 
 	public function reserveMiner()
 	{
