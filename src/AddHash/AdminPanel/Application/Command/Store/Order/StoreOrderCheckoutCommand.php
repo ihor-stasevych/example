@@ -2,10 +2,10 @@
 
 namespace App\AddHash\AdminPanel\Application\Command\Store\Order;
 
-use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCheckoutCommandOrderInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCheckoutCommandInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class StoreOrderCheckoutCommand implements StoreOrderCheckoutCommandOrderInterface
+class StoreOrderCheckoutCommand implements StoreOrderCheckoutCommandInterface
 {
 
 	/**

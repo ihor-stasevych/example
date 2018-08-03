@@ -3,12 +3,16 @@
 namespace App\AddHash\AdminPanel\Application\Controller;
 
 use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderAddProductCommand;
+use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreCheckoutCommand;
 use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCheckoutCommand;
+use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderPrepareCheckoutCommand;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderAddProductServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface;
 use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCreateCommand;
+use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderPrepareCheckoutServiceInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderTransformer;
 use App\AddHash\AdminPanel\Domain\User\Services\Order\Miner\CreateUserOrderMinerServiceInterface;
 use App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveItemService;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
@@ -26,6 +30,7 @@ class StoreOrderController extends BaseServiceController
 	private $storeOrderAddProduct;
 	private $storeOrderRemoveItem;
 	private $orderMinerService;
+	private $prepareCheckoutService;
 	private $tokenStorage;
 
 	public function __construct(
@@ -35,6 +40,7 @@ class StoreOrderController extends BaseServiceController
 		StoreOrderAddProductServiceInterface $orderAddProductService,
 		StoreOrderRemoveItemService $storeOrderRemoveItem,
 		CreateUserOrderMinerServiceInterface $orderMinerService,
+		StoreOrderPrepareCheckoutServiceInterface $prepareCheckoutService,
 		TokenStorageInterface $tokenStorage
 	)
 	{
@@ -44,6 +50,7 @@ class StoreOrderController extends BaseServiceController
 		$this->storeOrderAddProduct = $orderAddProductService;
 		$this->storeOrderRemoveItem = $storeOrderRemoveItem;
 		$this->orderMinerService = $orderMinerService;
+		$this->prepareCheckoutService = $prepareCheckoutService;
 		$this->tokenStorage = $tokenStorage;
 	}
 
@@ -194,12 +201,47 @@ class StoreOrderController extends BaseServiceController
 		return $this->json([]);
 	}
 
-	/***
-	 * TODO:Implement method
-	 * @param Request $request
+	/**
+	 * Get pre checkout information by order
+	 *
+	 * @param $id
+	 * @return JsonResponse
+	 *
+	 * @SWG\Tag(name="Store Orders")
+	 *
+	 * @SWG\Parameter(
+	 *     name="id",
+	 *     in="path",
+	 *     type="integer",
+	 *     required=true,
+	 *     description="id of the available order"
+	 * )
+	 *
+	 * @SWG\Response(
+	 *     response=200,
+	 *     description="Returns ok"
+	 *)
+	 *
 	 */
-	public function prepareCheckout(Request $request)
+	public function prepareCheckout($id)
 	{
+		$command = new StoreOrderPrepareCheckoutCommand($id);
+
+		if (!$this->commandIsValid($command)) {
+			return $this->json([
+				'errors' => $this->getLastValidationErrors()
+			], Response::HTTP_BAD_REQUEST);
+		}
+
+		try {
+			$result = $this->prepareCheckoutService->execute($command);
+		} catch(\Exception $e) {
+			return $this->json([
+				'errors' => $e->getMessage()
+			]);
+		}
+
+		return $this->json($result);
 
 	}
 
@@ -253,7 +295,7 @@ class StoreOrderController extends BaseServiceController
 			], Response::HTTP_BAD_REQUEST);
 		}
 
-		return $this->json([]);
+		return $this->prepareCheckout($request);
 
 	}
 
@@ -271,8 +313,16 @@ class StoreOrderController extends BaseServiceController
 	 */
 	public function get()
 	{
+		$result = [];
+		$order = $this->storeOrderGetService->execute($this->tokenStorage->getToken()->getUser());
+
+		if ($order) {
+			$transformer = new StoreOrderTransformer();
+			$result = $transformer->transform($order);
+		}
+
 		return $this->json(
-			$this->storeOrderGetService->execute($this->tokenStorage->getToken()->getUser())
+			$result
 		);
 	}
 }
