@@ -49,7 +49,7 @@ store.order.prepare.checkout:
     controller: App\AddHash\AdminPanel\Application\Controller\StoreOrderController::prepareCheckout
 
 store.order.checkout:
-    path: "/api/v1/store/order/checkout/{id}"
+    path: "/api/v1/store/order/checkout"
     methods: POST
     controller: App\AddHash\AdminPanel\Application\Controller\StoreOrderController::checkout
 

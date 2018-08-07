@@ -14,6 +14,7 @@ use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCreateComma
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderPrepareCheckoutServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderTransformer;
 use App\AddHash\AdminPanel\Domain\User\Services\Order\Miner\CreateUserOrderMinerServiceInterface;
+use App\AddHash\AdminPanel\Infrastructure\Payment\Gateway\Stripe\PaymentGatewayStripe;
 use App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveItemService;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -101,7 +102,11 @@ class StoreOrderController extends BaseServiceController
 			], Response::HTTP_BAD_REQUEST);
 		}
 
-		return $this->json($order);
+		return $this->json([
+			'price' => $order->getItemsPriceTotal(),
+			'userEmail' => $order->getUser()->getEmail(),
+			'apiKey' => PaymentGatewayStripe::getPublicKey()
+		]);
 	}
 
 	/**
@@ -209,32 +214,16 @@ class StoreOrderController extends BaseServiceController
 	 *
 	 * @SWG\Tag(name="Store Orders")
 	 *
-	 * @SWG\Parameter(
-	 *     name="id",
-	 *     in="path",
-	 *     type="integer",
-	 *     required=true,
-	 *     description="id of the available order"
-	 * )
-	 *
 	 * @SWG\Response(
 	 *     response=200,
-	 *     description="Returns ok"
+	 *     description="Returns information for checkout"
 	 *)
 	 *
 	 */
-	public function prepareCheckout($id)
+	public function prepareCheckout()
 	{
-		$command = new StoreOrderPrepareCheckoutCommand($id);
-
-		if (!$this->commandIsValid($command)) {
-			return $this->json([
-				'errors' => $this->getLastValidationErrors()
-			], Response::HTTP_BAD_REQUEST);
-		}
-
 		try {
-			$result = $this->prepareCheckoutService->execute($command);
+			$result = $this->prepareCheckoutService->execute();
 		} catch(\Exception $e) {
 			return $this->json([
 				'errors' => $e->getMessage()
@@ -248,14 +237,6 @@ class StoreOrderController extends BaseServiceController
 	/**
 	 *
 	 * @SWG\Tag(name="Store Orders")
-	 *
-	 * @SWG\Parameter(
-	 *     name="id",
-	 *     in="path",
-	 *     type="string",
-	 *     required=true,
-	 *     description="Id of new order"
-	 * )
 	 *
 	 * @SWG\Parameter(
 	 *     name="stripeToken",
@@ -276,7 +257,6 @@ class StoreOrderController extends BaseServiceController
 	public function checkout(Request $request)
 	{
 		$command = new StoreOrderCheckoutCommand(
-			$request->get('id'),
 			$request->get('stripeToken')
 		);
 
@@ -295,7 +275,7 @@ class StoreOrderController extends BaseServiceController
 			], Response::HTTP_BAD_REQUEST);
 		}
 
-		return $this->prepareCheckout($request);
+		return $this->json([]);
 
 	}
 

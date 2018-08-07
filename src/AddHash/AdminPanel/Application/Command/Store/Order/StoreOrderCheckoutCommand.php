@@ -7,14 +7,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class StoreOrderCheckoutCommand implements StoreOrderCheckoutCommandInterface
 {
-
-	/**
-	 * @var string
-	 * @Assert\Type(type="string")
-	 * @Assert\NotNull()
-	 */
-	private $order;
-
 	/**
 	 * @var string
 	 * @Assert\Type(type="string")
@@ -23,15 +15,9 @@ class StoreOrderCheckoutCommand implements StoreOrderCheckoutCommandInterface
 	private $token;
 
 
-	public function __construct($order, $token)
+	public function __construct($token)
 	{
-		$this->order = $order;
 		$this->token = $token;
-	}
-
-	public function getOrder()
-	{
-		return $this->order;
 	}
 
 	public function getToken()

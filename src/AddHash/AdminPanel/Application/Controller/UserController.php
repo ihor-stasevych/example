@@ -13,6 +13,7 @@ use App\AddHash\AdminPanel\Application\Command\User\UserRegisterCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterEmailExistException;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterUserNameExistException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserController extends BaseServiceController
 {
@@ -119,7 +120,7 @@ class UserController extends BaseServiceController
 		return $this->json($this->getHashByUser($user));
 	}
 
-	protected function getHashByUser(User $user)
+	protected function getHashByUser(UserInterface $user)
 	{
 		$jwtManager = $this->container->get('lexik_jwt_authentication.jwt_manager');
 		return ['token' => $jwtManager->create($user)];

@@ -8,34 +8,41 @@ use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
 use App\AddHash\AdminPanel\Infrastructure\Payment\Gateway\Stripe\PaymentGatewayStripe;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class StoreOrderPrepareCheckoutService implements StoreOrderPrepareCheckoutServiceInterface
 {
 	private $orderRepository;
+	private $tokenStorage;
 
 	public function __construct(
-		StoreOrderRepositoryInterface $orderRepository
+		StoreOrderRepositoryInterface $orderRepository,
+		TokenStorageInterface $tokenStorage
 	)
 	{
 		$this->orderRepository = $orderRepository;
+		$this->tokenStorage = $tokenStorage;
 	}
 
 	/**
-	 * @param StoreOrderPrepareCheckoutCommandInterface $command
 	 * @return array
 	 * @throws StoreOrderException
 	 */
-	public function execute(StoreOrderPrepareCheckoutCommandInterface $command)
+	public function execute()
 	{
-		/** @var StoreOrder $order */
-		$order = $this->orderRepository->findById($command->getOrder());
+		$token = $this->tokenStorage->getToken();
 
-		if (!$order) {
-			throw new StoreOrderException('Cant find order with id: ' . $command->getOrder());
+		if (empty($token)) {
+			throw new StoreOrderException('Unauthorized');
 		}
 
-		if ($order->getState() != StoreOrder::STATE_NEW) {
-			throw new StoreOrderException('Order was closed or already payed: ' . $order->getId());
+		$user = $token->getUser();
+
+		/** @var StoreOrder $order */
+		$order = $this->orderRepository->findNewByUserId($user->getId());
+
+		if (!$order) {
+			throw new StoreOrderException('Cant find order');
 		}
 
 		$result = [

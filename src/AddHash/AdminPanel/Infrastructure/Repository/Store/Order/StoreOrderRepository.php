@@ -4,6 +4,7 @@ namespace App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order;
 
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
 
 class StoreOrderRepository extends AbstractRepository implements StoreOrderRepositoryInterface
