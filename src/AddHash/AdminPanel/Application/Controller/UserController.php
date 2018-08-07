@@ -90,14 +90,10 @@ class UserController extends BaseServiceController
 	public function register(Request $request)
 	{
 		$userRegisterCommand = new UserRegisterCommand(
-			$request->get('userName'),
 			$request->get('email'),
-			$request->get('backupEmail'),
+			$request->get('email'),
+			$request->get('email'),
 			$request->get('password'),
-			$request->get('confirmPassword'),
-			$request->get('firstName'),
-			$request->get('lastName'),
-			$request->get('phone'),
 			$request->get('roles', ['ROLE_USER'])
 		);
 

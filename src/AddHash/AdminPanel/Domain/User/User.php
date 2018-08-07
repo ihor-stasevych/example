@@ -59,9 +59,6 @@ class User implements UserInterface
 		Email $email,
 		string $password,
 		Email $backupEmail,
-		string $firstName,
-		string $lastName,
-		Phone $phoneNumber,
 		array $roles
 	)
 	{
@@ -70,9 +67,9 @@ class User implements UserInterface
 		$this->setEmail($email);
 		$this->setPassword($password);
 		$this->setBackupEmail($backupEmail);
-		$this->setFirstName($firstName);
-		$this->setLastName($lastName);
-		$this->setPhoneNumber($phoneNumber);
+		$this->setFirstName('');
+		$this->setLastName('');
+		$this->setPhoneNumber('');
 		$this->setRoles($roles);
 		$this->token = Uuid::generate();
 		$this->createdAt = new \DateTime();

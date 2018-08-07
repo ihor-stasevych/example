@@ -12,10 +12,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class UserRegisterCommand implements UserRegisterCommandInterface
 {
 
-	/**
-	 * @var string
-	 * @Assert\NotBlank()
-	 */
 	private $userName;
 
 	/**
@@ -25,11 +21,6 @@ class UserRegisterCommand implements UserRegisterCommandInterface
 	 */
 	private $email;
 
-	/**
-	 * @var string
-	 * @Assert\NotBlank()
-	 * @Assert\Email()
-	 */
 	private $backupEmail;
 
 	/**
@@ -38,31 +29,16 @@ class UserRegisterCommand implements UserRegisterCommandInterface
 	 */
 	private $password;
 
-	/**
-	 * @var string
-	 *
-	 * @Assert\NotBlank()
-	 * @Assert\Expression(expression="this.comparePasswords()")
-	 */
+
 	private $confirmPassword;
 
 
-	/**
-	 * @var string
-	 * @Assert\NotBlank()
-	 */
 	private $firstName;
 
-	/**
-	 * @var string
-	 * @Assert\NotBlank()
-	 */
+
 	private $lastName;
 
-	/**
-	 * @var string
-	 * @Assert\NotBlank()
-	 */
+
 	private $phone;
 
 	/**
@@ -71,28 +47,12 @@ class UserRegisterCommand implements UserRegisterCommandInterface
 	private $roles;
 
 
-	/**
-	 * UserRegisterCommand constructor.
-	 *
-	 * @param $userName
-	 * @param $email
-	 * @param $backupEmail
-	 * @param $password
-	 * @param $confirmPassword
-	 * @param $firstName
-	 * @param $lastName
-	 * @param $phone
-	 * @param $roles
-	 */
+
 	public function __construct(
 		$userName = '',
 		$email = '',
 		$backupEmail = '',
 		$password = '',
-		$confirmPassword = '',
-		$firstName = '',
-		$lastName = '',
-		$phone = 0,
 		$roles = []
 	)
 	{
@@ -100,10 +60,10 @@ class UserRegisterCommand implements UserRegisterCommandInterface
 		$this->email = $email;
 		$this->backupEmail = $backupEmail;
 		$this->password = $password;
-		$this->confirmPassword = $confirmPassword;
-		$this->firstName = $firstName;
-		$this->lastName = $lastName;
-		$this->phone = $phone;
+		#$this->confirmPassword = $confirmPassword;
+		#$this->firstName = $firstName;
+		#$this->lastName = $lastName;
+		#$this->phone = $phone;
 		$this->roles = $roles;
 	}
 

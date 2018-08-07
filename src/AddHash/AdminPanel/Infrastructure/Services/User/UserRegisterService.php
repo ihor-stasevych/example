@@ -37,6 +37,7 @@ class UserRegisterService implements UserRegisterServiceInterface
 
         $user = $this->userRepository->getByEmailOrUserName($email, $command->getUserName());
 
+
 		if (null !== $user) {
 		    if ($user->getUsername() == $command->getUserName()) {
                 throw new UserRegisterUserNameExistException('User name already exists');
@@ -51,9 +52,6 @@ class UserRegisterService implements UserRegisterServiceInterface
 			$email,
 			'',
 			$command->getBackupEmail(),
-			$command->getFirstName(),
-			$command->getLastName(),
-			$command->getPhone(),
 			$command->getRoles()
 		);
 
