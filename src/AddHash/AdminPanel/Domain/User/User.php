@@ -52,6 +52,8 @@ class User implements UserInterface
 
 	private $vote;
 
+	private $orderMain;
+
 
 	public function __construct(
 		int $id = null,
@@ -78,6 +80,7 @@ class User implements UserInterface
 		$this->createdAt = new \DateTime();
 		$this->updatedAt = new \DateTime();
 		$this->wallet = new ArrayCollection();
+		$this->orderMain = new ArrayCollection();
 	}
 
 	public function getId()
@@ -176,6 +179,16 @@ class User implements UserInterface
 	{
 		return '';
 	}
+
+	public function getOrder()
+    {
+        return $this->order;
+    }
+
+    public function getOrderMiner()
+    {
+        return $this->orderMain;
+    }
 
 	public function setUserWallet(UserWallet $wallet)
     {

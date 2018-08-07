@@ -2,35 +2,23 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Miners\Commands;
 
-use App\AddHash\AdminPanel\Domain\Miners\Extender\MinerSocketInterface;
+use App\AddHash\AdminPanel\Domain\Miners\Extender\MinerInterface;
 use App\AddHash\AdminPanel\Domain\Miners\Commands\MinerCommandInterface;
 
-class AbstractMinerCommand implements MinerCommandInterface
+abstract class AbstractMinerCommand implements MinerCommandInterface
 {
-    protected $minerSocket;
+    protected $minerConnection;
 
-    public function __construct(MinerSocketInterface $minerSocket)
+    public function __construct(MinerInterface $minerConnection)
     {
-        $this->minerSocket = $minerSocket;
+        $this->minerConnection = $minerConnection;
     }
 
-    public function getConfig()
-    {
+    abstract public function getConfig();
 
-    }
+    abstract public function getSummary();
 
-    public function getSummary()
-    {
+    abstract public function getPools();
 
-    }
-
-    public function getPools()
-    {
-
-    }
-
-    public function getState()
-    {
-
-    }
+    abstract public function getState();
 }

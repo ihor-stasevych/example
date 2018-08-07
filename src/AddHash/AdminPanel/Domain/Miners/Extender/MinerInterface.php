@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\Miners\Extender;
 
-interface MinerSocketInterface
+interface MinerInterface
 {
-    public function request();
+    public function request(string $cmd);
 }

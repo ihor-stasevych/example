@@ -54,4 +54,8 @@ class UserOrderMiner
 		}
 	}
 
+	public function getMiners()
+    {
+        return $this->miner;
+    }
 }

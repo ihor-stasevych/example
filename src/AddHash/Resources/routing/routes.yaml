@@ -97,3 +97,8 @@ store.product.vote:
     path: "/api/v1/store/product/vote"
     methods: POST
     controller: App\AddHash\AdminPanel\Application\Controller\StoreProductController::createVote
+
+user.miner.control.get:
+  path: "/api/v1/user/miner/control"
+  methods: GET
+  controller: App\AddHash\AdminPanel\Application\Controller\User\MinerControlController::get

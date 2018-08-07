@@ -3,104 +3,44 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Miners\Extender;
 
 use App\AddHash\AdminPanel\Domain\Miners\Miner;
-use App\AddHash\AdminPanel\Domain\Miners\Extender\MinerSocketInterface;
+use App\AddHash\AdminPanel\Domain\Miners\Parsers\ParserInterface;
+use App\AddHash\AdminPanel\Domain\Miners\Extender\MinerInterface;
 use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketErrorException;
 use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketCreateErrorException;
 use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketConnectionErrorException;
 
-class MinerSocket implements MinerSocketInterface
+class MinerSocket implements MinerInterface
 {
     private $ip;
 
     private $port;
 
-    public function __construct(Miner $miner)
+    private $parser;
+
+    public function __construct(Miner $miner, ParserInterface $parser)
     {
         $this->ip = $miner->getIp();
         $this->port = $miner->getPort();
+        $this->parser = $parser;
     }
 
     /**
+     * @param string $cmd
      * @return array|mixed|null
      * @throws MinerSocketCreateErrorException
      */
-    public function request()
+    public function request(string $cmd)
     {
         try {
             $socket = $this->getSocket($this->ip, $this->port);
+            socket_write($socket, $cmd, strlen($cmd));
             $line = $this->readSocketLine($socket);
             socket_close($socket);
         } catch (MinerSocketErrorException $e) {
             $line = '';
         }
 
-        return $this->getData($line);
-    }
-
-    /**
-     * Parsing data
-     *
-     * @param $line
-     * @return array|mixed|null
-     */
-    private function getData($line)
-    {
-        $data = null;
-
-        if (strlen($line) != 0) {
-
-            if (substr($line, 0, 1) == '{') {
-                $data = json_decode($line, true);
-            } else {
-                $data = [];
-                $objects = explode('|', $line);
-
-                foreach ($objects as $object) {
-
-                    if (strlen($object) > 0) {
-                        $items = explode(',', $object);
-
-                        $id = explode('=', $items[0], 2);
-
-                        if (count($id) == 1 || !ctype_digit($id[1])) {
-                            $name = $id[0];
-                        } else {
-                            $name = $id[0] . $id[1];
-                        }
-
-                        if (strlen($name) == 0) {
-                            $name = 'null';
-                        }
-
-                        if (isset($data[$name])) {
-                            $num = 1;
-
-                            while (isset($data[$name . $num])) {
-                                $num++;
-                            }
-
-                            $name .= $num;
-                        }
-
-                        $counter = 0;
-
-                        foreach ($items as $item) {
-                            $id = explode('=', $item, 2);
-
-                            if (count($id) == 2) {
-                                $data[$name][$id[0]] = $id[1];
-                            } else {
-                                $data[$name][$counter] = $id[0];
-                            }
-
-                            $counter++;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $data;
+        return $this->parser->normalizeData($line);
     }
 
     /**
