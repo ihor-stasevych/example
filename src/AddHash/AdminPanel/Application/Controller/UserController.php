@@ -2,11 +2,13 @@
 
 namespace App\AddHash\AdminPanel\Application\Controller;
 
+use App\AddHash\AdminPanel\Domain\User\User;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\AddHash\AdminPanel\Application\Command\User\UserRegisterCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterEmailExistException;
@@ -15,9 +17,14 @@ use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterUserNameExistExcep
 class UserController extends BaseServiceController
 {
 	private $userRegisterService;
+	private $container;
 
-	public function __construct(UserRegisterServiceInterface $userRegisterService)
+	public function __construct(
+		UserRegisterServiceInterface $userRegisterService,
+		ContainerInterface $container
+	)
 	{
+		$this->container = $container;
 		$this->userRegisterService = $userRegisterService;
 	}
 
@@ -104,11 +111,17 @@ class UserController extends BaseServiceController
 		}
 
 		try {
-			$this->userRegisterService->execute($userRegisterCommand);
+			$user = $this->userRegisterService->execute($userRegisterCommand);
 		} catch (UserRegisterEmailExistException | UserRegisterUserNameExistException $e) {
 			return $this->json(['message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
 		}
 
-		return $this->json([]);
+		return $this->json($this->getHashByUser($user));
+	}
+
+	protected function getHashByUser(User $user)
+	{
+		$jwtManager = $this->container->get('lexik_jwt_authentication.jwt_manager');
+		return ['token' => $jwtManager->create($user)];
 	}
 }

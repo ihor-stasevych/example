@@ -31,7 +31,7 @@ class UserRegisterService implements UserRegisterServiceInterface
      * @throws UserRegisterEmailExistException
      * @throws UserRegisterUserNameExistException
      */
-	public function execute(UserRegisterCommandInterface $command)
+	public function execute(UserRegisterCommandInterface $command) : User
 	{
 		$email = new Email($command->getEmail());
 
