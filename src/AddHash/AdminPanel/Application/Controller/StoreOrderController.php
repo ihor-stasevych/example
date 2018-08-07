@@ -209,7 +209,6 @@ class StoreOrderController extends BaseServiceController
 	/**
 	 * Get pre checkout information by order
 	 *
-	 * @param $id
 	 * @return JsonResponse
 	 *
 	 * @SWG\Tag(name="Store Orders")
