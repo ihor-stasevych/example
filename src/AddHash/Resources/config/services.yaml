@@ -253,3 +253,11 @@ services:
 
   App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductVoteCreateServiceInterface: '@addhash.store.product.vote.create.service'
 
+  addhash.user.miner.control.get.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetService
+    public: true
+    arguments: ['@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetService: '@addhash.user.miner.control.get.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface: '@addhash.user.miner.control.get.service'
+
