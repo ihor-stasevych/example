@@ -8,6 +8,7 @@ use App\AddHash\AdminPanel\Domain\Miners\Extender\MinerInterface;
 use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketErrorException;
 use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketCreateErrorException;
 use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketConnectionErrorException;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class MinerSocket implements MinerInterface
 {
@@ -52,14 +53,22 @@ class MinerSocket implements MinerInterface
      */
     private function getSocket(string $address, string $port)
     {
-        $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+        try {
+            $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+        } catch (\Exception $e) {
+            $socket = false;
+        }
 
         if (false === $socket) {
             $error = socket_strerror(socket_last_error());
             throw new MinerSocketCreateErrorException("ERR: socket create(TCP) failed " . $error);
         }
 
-        $connection = socket_connect($socket, $address, $port);
+        try {
+            $connection = socket_connect($socket, $address, $port);
+        } catch (\Exception $e) {
+            $connection = false;
+        }
 
         if (false === $connection) {
             socket_close($socket);
