@@ -26,12 +26,16 @@ class StoreOrderItem
 	 */
 	private $product;
 
-	public function __construct(StoreOrder $order, StoreProduct $product)
+	public function __construct(
+		StoreOrder $order, StoreProduct $product,
+		int $quantity
+	)
 	{
 		$this->quantity = 1;
 		$this->createdAt = new \DateTime();
 		$this->setOrder($order);
 		$this->addProduct($product);
+		$this->setQuantity($quantity);
 		$this->priceTotal = $this->quantity * $product->getPrice();
 	}
 
@@ -73,5 +77,10 @@ class StoreOrderItem
 	public function getTotalPrice()
 	{
 		return $this->priceTotal;
+	}
+
+	public function setQuantity(int $quantity = 1)
+	{
+		$this->quantity = $quantity;
 	}
 }

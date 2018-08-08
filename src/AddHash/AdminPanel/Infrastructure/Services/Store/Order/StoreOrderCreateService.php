@@ -4,6 +4,7 @@ namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
 use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCreateCommandInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
 use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItemRepositoryInterface;
 
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
@@ -45,22 +46,31 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 	 */
 	public function execute(StoreOrderCreateCommandInterface $command): StoreOrder
 	{
+		/** @var StoreOrder $order */
 		$order = $this->storeOrderRepository->findNewByUserId($command->getUser()->getId());
 
 		if (empty($order)) {
 			$order = new StoreOrder($command->getUser());
 		}
 
-		$products = $this->storeProductRepository->findByIds($command->getProducts());
+		foreach ($command->getProducts() as $productId => $quantity) {
+			/** @var StoreProduct $product */
+			$product = $this->storeProductRepository->findById($productId);
 
-		/** @var StoreProduct $product */
-		foreach ($products as $product) {
-			if (!$item = $order->addProductItem($product)) {
+			if (!$product) {
+				throw new StoreOrderException('No available product: ' . $productId);
+			}
+
+			if (!$item = $order->addProductItem($product, $quantity)) {
 				throw new StoreOrderException('Cant add ' . $product->getTitle() . ' to cart. No available miners.');
 			}
 
 			$miner = $product->reserveMiner();
-			$this->minerRepository->save($miner);
+
+			if ($miner) {
+				$this->minerRepository->save($miner);
+			}
+
 		}
 
 		$order->calculateItems();

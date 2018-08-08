@@ -61,10 +61,11 @@ class StoreOrderController extends BaseServiceController
 	 *
 	 * @SWG\Parameter(
 	 *     name="products",
-	 *     in="formData",
+	 *     in="body",
 	 *     type="array",
-	 *     @SWG\Items(
-	 *         type="integer"
+	 *     @SWG\Schema(
+	 *         type="array",
+	 *         @SWG\Items(type="integer")
 	 *     ),
 	 *     required=true,
 	 *     description="ids of the store products"

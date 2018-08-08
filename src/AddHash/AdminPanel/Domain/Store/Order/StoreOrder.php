@@ -207,24 +207,34 @@ class StoreOrder
 
 	/**
 	 * @param StoreProduct $product
+	 * @param int $quantity
 	 * @return StoreOrderItem|bool
 	 */
-	public function addProductItem(StoreProduct $product)
+	public function addProductItem(StoreProduct $product, $quantity = 0)
 	{
-		if ($product->getAvailableMinersQuantity() == 0) {
-			return false;
-		}
-
 		if (!$this->productContains($product)) {
-			$item = new StoreOrderItem($this, $product);
+
+			if ($product->getAvailableMinersQuantity() < $quantity) {
+				return false;
+			}
+
+			$item = new StoreOrderItem($this, $product, $quantity);
 			$this->addItem($item);
 		} else {
 			$key = $this->indexOfProduct($product);
 			/** @var StoreOrderItem $item */
 			$item = $this->getItems()->get($key);
-			$item->addQuantity();
-			$item->calculateTotalPrice();
+
+			if ($item->getQuantity() < $quantity) {
+				if ($product->getAvailableMinersQuantity() < $quantity) {
+					return false;
+				}
+			}
+
+			$item->setQuantity($quantity);
 		}
+
+		$item->calculateTotalPrice();
 
 		return $item;
 	}
@@ -245,6 +255,14 @@ class StoreOrder
 		$item = $this->getItems()->get($key);
 		$this->items->removeElement($item);
 		return $item;
+	}
+
+	public function removeItems()
+	{
+		/** @var StoreOrderItem  $item */
+		foreach ($this->getItems() as $item) {
+			$this->items->removeElement($item);
+		}
 	}
 
 	/**
