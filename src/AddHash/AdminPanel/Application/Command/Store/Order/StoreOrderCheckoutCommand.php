@@ -2,19 +2,11 @@
 
 namespace App\AddHash\AdminPanel\Application\Command\Store\Order;
 
-use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCheckoutCommandOrderInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCheckoutCommandInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class StoreOrderCheckoutCommand implements StoreOrderCheckoutCommandOrderInterface
+class StoreOrderCheckoutCommand implements StoreOrderCheckoutCommandInterface
 {
-
-	/**
-	 * @var string
-	 * @Assert\Type(type="string")
-	 * @Assert\NotNull()
-	 */
-	private $order;
-
 	/**
 	 * @var string
 	 * @Assert\Type(type="string")
@@ -23,15 +15,9 @@ class StoreOrderCheckoutCommand implements StoreOrderCheckoutCommandOrderInterfa
 	private $token;
 
 
-	public function __construct($order, $token)
+	public function __construct($token)
 	{
-		$this->order = $order;
 		$this->token = $token;
-	}
-
-	public function getOrder()
-	{
-		return $this->order;
 	}
 
 	public function getToken()

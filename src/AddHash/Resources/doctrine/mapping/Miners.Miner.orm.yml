@@ -38,6 +38,10 @@ App\AddHash\AdminPanel\Domain\Miners\Miner:
         ip:
             type: string
 
+        port:
+            type: integer
+            length: 6
+
         priority:
 
     manyToOne:

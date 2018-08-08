@@ -31,11 +31,12 @@ class UserRegisterService implements UserRegisterServiceInterface
      * @throws UserRegisterEmailExistException
      * @throws UserRegisterUserNameExistException
      */
-	public function execute(UserRegisterCommandInterface $command)
+	public function execute(UserRegisterCommandInterface $command) : User
 	{
 		$email = new Email($command->getEmail());
 
         $user = $this->userRepository->getByEmailOrUserName($email, $command->getUserName());
+
 
 		if (null !== $user) {
 		    if ($user->getUsername() == $command->getUserName()) {
@@ -51,9 +52,6 @@ class UserRegisterService implements UserRegisterServiceInterface
 			$email,
 			'',
 			$command->getBackupEmail(),
-			$command->getFirstName(),
-			$command->getLastName(),
-			$command->getPhone(),
 			$command->getRoles()
 		);
 

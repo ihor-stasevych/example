@@ -1,7 +1,7 @@
 version: '3'
 services:
     mysql:
-      image: mysql:5.7
+      image: mariadb
       ports:
         - "${MYSQL_LOCAL_PORT}:3306"
       environment:
@@ -66,7 +66,7 @@ services:
           - ./docker/frontend:/root/frontend/
           - php-fpm:/var/run/php/
           - ./:/var/www/html
-          - $SSH_AUTH_SOCK:/ssh-agent
+          #- $SSH_AUTH_SOCK:/ssh-agent
         environment:
           SSH_AUTH_SOCK: /ssh-agent
         networks:

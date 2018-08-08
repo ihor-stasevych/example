@@ -73,3 +73,7 @@ App\AddHash\AdminPanel\Domain\User\User:
       vote:
           targetEntity:   App\AddHash\AdminPanel\Domain\Store\Product\StoreProductUserVote
           mappedBy: user
+
+      orderMain:
+          targetEntity:   App\AddHash\AdminPanel\Domain\User\Order\UserOrderMiner
+          mappedBy: user

@@ -52,6 +52,8 @@ class User implements UserInterface
 
 	private $vote;
 
+	private $orderMain;
+
 
 	public function __construct(
 		int $id = null,
@@ -59,9 +61,6 @@ class User implements UserInterface
 		Email $email,
 		string $password,
 		Email $backupEmail,
-		string $firstName,
-		string $lastName,
-		Phone $phoneNumber,
 		array $roles
 	)
 	{
@@ -70,14 +69,15 @@ class User implements UserInterface
 		$this->setEmail($email);
 		$this->setPassword($password);
 		$this->setBackupEmail($backupEmail);
-		$this->setFirstName($firstName);
-		$this->setLastName($lastName);
-		$this->setPhoneNumber($phoneNumber);
+		$this->setFirstName('');
+		$this->setLastName('');
+		$this->setPhoneNumber('');
 		$this->setRoles($roles);
 		$this->token = Uuid::generate();
 		$this->createdAt = new \DateTime();
 		$this->updatedAt = new \DateTime();
 		$this->wallet = new ArrayCollection();
+		$this->orderMain = new ArrayCollection();
 	}
 
 	public function getId()
@@ -176,6 +176,16 @@ class User implements UserInterface
 	{
 		return '';
 	}
+
+	public function getOrder()
+    {
+        return $this->order;
+    }
+
+    public function getOrderMiner()
+    {
+        return $this->orderMain;
+    }
 
 	public function setUserWallet(UserWallet $wallet)
     {

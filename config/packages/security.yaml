@@ -42,17 +42,7 @@ security:
               security: false
 
         api_public_store_product_list:
-              pattern: ^/api/v1/store/product/list
-              anonymous: true
-              security: false
-
-        api_public_store_product_get:
-              pattern: ^/api/v1/store/product/get
-              anonymous: true
-              security: false
-
-        api_public_store_checkout:
-              pattern: ^/api/v1/store/order/checkout
+              pattern: ^/api/v1/store/products
               anonymous: true
               security: false
 

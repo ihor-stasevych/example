@@ -133,10 +133,18 @@ services:
   addhash.store.order.checkout.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCheckoutService
     public: true
-    arguments: ['@addhash.store.order.repository', '@addhash.order.checkout.payment.service']
+    arguments: ['@addhash.store.order.repository', '@addhash.order.checkout.payment.service', '@security.token_storage']
   App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCheckoutService: '@addhash.store.order.checkout.service'
 
   App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface: '@addhash.store.order.checkout.service'
+
+  addhash.store.order.checkout.prepare.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderPrepareCheckoutService
+    public: true
+    arguments: ['@addhash.store.order.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderPrepareCheckoutService: '@addhash.store.order.checkout.prepare.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderPrepareCheckoutServiceInterface: '@addhash.store.order.checkout.prepare.service'
 
   ##AddHash User Service
   addhash.user.register.service:
@@ -244,4 +252,12 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductVoteCreateService: '@addhash.store.product.vote.create.service'
 
   App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductVoteCreateServiceInterface: '@addhash.store.product.vote.create.service'
+
+  addhash.user.miner.control.get.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetService
+    public: true
+    arguments: ['@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetService: '@addhash.user.miner.control.get.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface: '@addhash.user.miner.control.get.service'
 

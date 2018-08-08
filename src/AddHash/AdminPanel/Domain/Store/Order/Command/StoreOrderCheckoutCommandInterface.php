@@ -2,9 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\Store\Order\Command;
 
-interface StoreOrderCheckoutCommandOrderInterface
+interface StoreOrderCheckoutCommandInterface
 {
-	public function getOrder();
-
 	public function getToken();
 }

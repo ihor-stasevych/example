@@ -155,6 +155,21 @@ class StoreOrder
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function checkReservedMiners()
+	{
+		/** @var StoreOrderItem $item */
+		foreach ($this->getItems() as $item) {
+			if ($item->getProduct()->getReservedMinersQuantity() < $item->getQuantity()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * @inheritdoc
 	 * Calculate price of all items
 	 */

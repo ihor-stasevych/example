@@ -43,7 +43,7 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 	 * @return StoreOrder
 	 * @throws StoreOrderException
 	 */
-	public function execute(StoreOrderCreateCommandInterface $command)
+	public function execute(StoreOrderCreateCommandInterface $command): StoreOrder
 	{
 		$order = $this->storeOrderRepository->findNewByUserId($command->getUser()->getId());
 
