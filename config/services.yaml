@@ -12,6 +12,10 @@ services:
                             # fetching services directly from the container via $container->get() won't work.
                             # The best practice is to be explicit about your dependencies anyway.
 
+    addhash.json.request.subscriber:
+       class: App\AddHash\System\Request\JsonRequestSubscriber
+       tags:
+           - { name: kernel.event_subscriber }
 
     addhash.validator:
           class: App\AddHash\System\GlobalContext\Validation\Validator

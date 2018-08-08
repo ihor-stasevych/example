@@ -24,7 +24,7 @@ store.product.get:
     controller: App\AddHash\AdminPanel\Application\Controller\StoreProductController::get
 
 store.order.create:
-    path: "/api/v1/store/order/create"
+    path: "/api/v1/store/order"
     methods: POST
     controller: App\AddHash\AdminPanel\Application\Controller\StoreOrderController::create
 
@@ -39,7 +39,7 @@ store.order.removeItem:
     controller: App\AddHash\AdminPanel\Application\Controller\StoreOrderController::removeItem
 
 store.order.get:
-    path: "/api/v1/store/order/get"
+    path: "/api/v1/store/order"
     methods: GET
     controller: App\AddHash\AdminPanel\Application\Controller\StoreOrderController::get
 
