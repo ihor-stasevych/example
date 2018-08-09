@@ -2,10 +2,12 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product;
 
-use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
-use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductRepositoryInterface;
-use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
+use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\HttpFoundation\Request;
+use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
+use App\AddHash\AdminPanel\Domain\Store\Product\ListParam\Sort;
+use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
+use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductRepositoryInterface;
 
 class StoreProductRepository extends AbstractRepository implements StoreProductRepositoryInterface
 {
@@ -30,18 +32,31 @@ class StoreProductRepository extends AbstractRepository implements StoreProductR
 		$this->entityManager->flush($product);
 	}
 
-	public function listAllProducts()
+    /**
+     * @param Sort $sort
+     * @return Criteria
+     */
+    public function createSortCriteria(Sort $sort)
+    {
+        return Criteria::create()->orderBy([
+            $sort->getSort() => $sort->getOrder()
+        ]);
+    }
+
+    /**
+     * @param Sort $sort
+     * @return mixed
+     */
+	public function listAllProducts(Sort $sort)
 	{
 		$res = $this->entityRepository
 			->createQueryBuilder('t')
 			->select('t', 'm')
 			->join('t.miner', 'm')
 			->where('t.state = :state')
-			#->andWhere('m.state = :minerState')
 			->setParameter('state', StoreProduct::STATE_AVAILABLE)
-			#->setParameter('minerState', Miner::STATE_AVAILABLE)
-			#->groupBy('t.id')
-			->getQuery()
+            ->orderBy('t.' . $sort->getSort(), $sort->getOrder())
+		    ->getQuery()
 			->getResult();
 
 		return $res;
