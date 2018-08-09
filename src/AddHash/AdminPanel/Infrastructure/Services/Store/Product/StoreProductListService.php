@@ -2,9 +2,10 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Product;
 
+use App\AddHash\AdminPanel\Domain\Store\Product\ListParam\Sort;
+use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\Command\StoreProductListCommandInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductListServiceInterface;
-use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductRepositoryInterface;
 
 class StoreProductListService implements StoreProductListServiceInterface
 {
@@ -17,12 +18,14 @@ class StoreProductListService implements StoreProductListServiceInterface
 
 	public function execute(StoreProductListCommandInterface $command)
 	{
-		if (!$command->getId()) {
-			$result = $this->productRepository->listAllProducts();
-		} else {
-			$result = $this->productRepository->findById($command->getId());
-		}
+        $sort = new Sort(
+            $command->getSort(),
+            $command->getOrder()
+        );
 
-		return $result;
+		return $this->productRepository->listAllProducts($sort);
+
+
+        //$result = $this->productRepository->findById($command->getId());
 	}
 }

@@ -89,6 +89,14 @@ services:
 
   App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductListServiceInterface: '@addhash.store.product.list.service'
 
+  addhash.store.product.get.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductGetService
+    public: true
+    arguments: ['@addhash.store.product.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductGetService: '@addhash.store.product.get.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductGetServiceInterface: '@addhash.store.product.get.service'
+
   addhash.store.product.create.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductCreateService
     public: true

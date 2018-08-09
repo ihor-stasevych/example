@@ -3,6 +3,7 @@
 namespace App\AddHash\AdminPanel\Domain\Store\Product;
 
 use Symfony\Component\HttpFoundation\Request;
+use App\AddHash\AdminPanel\Domain\Store\Product\ListParam\Sort;
 
 interface StoreProductRepositoryInterface
 {
@@ -10,7 +11,7 @@ interface StoreProductRepositoryInterface
 
 	public function save(StoreProduct $product);
 
-	public function listAllProducts();
+	public function listAllProducts(Sort $sort);
 
 	public function searchProducts(Request $request);
 

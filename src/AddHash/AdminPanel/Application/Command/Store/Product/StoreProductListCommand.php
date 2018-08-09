@@ -2,28 +2,27 @@
 
 namespace App\AddHash\AdminPanel\Application\Command\Store\Product;
 
-
 use App\AddHash\AdminPanel\Domain\Store\Product\Command\StoreProductListCommandInterface;
 
 class StoreProductListCommand implements StoreProductListCommandInterface
 {
-	private $id;
+	private $sort;
 
-	private $title;
+	private $order;
 
-	public function __construct($id = null, $title = '')
+	public function __construct($sort = null, $order = null)
 	{
-		$this->id = $id;
-		$this->title = $title;
+		$this->sort = $sort;
+		$this->order = $order;
 	}
 
-	public function getId()
+	public function getSort(): ?string
 	{
-		return $this->id;
+		return $this->sort;
 	}
 
-	public function getTitle()
-	{
-		return $this->title;
-	}
+	public function getOrder(): ?string
+    {
+        return $this->order;
+    }
 }

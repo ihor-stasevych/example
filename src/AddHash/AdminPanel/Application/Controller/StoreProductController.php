@@ -8,8 +8,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\AdminPanel\Domain\Store\Product\Exceptions\Vote\VoteException;
+use App\AddHash\AdminPanel\Application\Command\Store\Product\StoreProductGetCommand;
 use App\AddHash\AdminPanel\Application\Command\Store\Product\StoreProductListCommand;
 use App\AddHash\AdminPanel\Application\Command\Store\Product\StoreProductCreateCommand;
+use App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductGetServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductListServiceInterface;
 use App\AddHash\AdminPanel\Application\Command\Store\Product\StoreProductVoteCreateCommand;
 use App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductCreateServiceInterface;
@@ -19,37 +21,61 @@ class StoreProductController extends BaseServiceController
 {
 	private $productListService;
 
+    private $productGetService;
+
 	private $productCreateService;
 
 	private $productVoteCreateService;
 
 	public function __construct(
 		StoreProductListServiceInterface $productListService,
+        StoreProductGetServiceInterface $productGetService,
 		StoreProductCreateServiceInterface $productCreateService,
         StoreProductVoteCreateServiceInterface $productVoteCreateService
 	)
 	{
 		$this->productListService = $productListService;
+        $this->productVoteCreateService = $productVoteCreateService;
 		$this->productCreateService = $productCreateService;
-		$this->productVoteCreateService = $productVoteCreateService;
+		$this->productGetService = $productGetService;
 	}
 
 	/**
 	 * Get Store products list
+     *
+     * @SWG\Parameter(
+     *     in="formData",
+     *     name="sort",
+     *     type="string",
+     *     required=false,
+     *     description="Sort product (price or createdAt)",
+     * )
 	 *
+     * @SWG\Parameter(
+     *     in="formData",
+     *     name="order",
+     *     type="string",
+     *     required=false,
+     *     description="Order product (asc or desc)",
+     * )
+     *
+     *
 	 * @SWG\Tag(name="Store products")
 	 * @SWG\Response(
 	 *     response=200,
 	 *     description="Returns products list"
 	 * )
+     * @param Request $request
 	 * @return JsonResponse
 	 */
-	public function index()
+	public function index(Request $request)
 	{
-		$command = new StoreProductListCommand();
-		$products = $this->productListService->execute($command);
+		$command = new StoreProductListCommand(
+            $request->get('sort'),
+            $request->get('order')
+        );
 
-		return $this->json($products);
+		return $this->json($this->productListService->execute($command));
 	}
 
 	/**
@@ -64,8 +90,15 @@ class StoreProductController extends BaseServiceController
 	 */
 	public function get($id)
 	{
-		$command = new StoreProductListCommand($id);
-		return $this->json($this->productListService->execute($command));
+		$command = new StoreProductGetCommand($id);
+
+        if (!$this->commandIsValid($command)) {
+            return $this->json([
+                'errors' => $this->getLastValidationErrors()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+		return $this->json($this->productGetService->execute($command));
 	}
 
 	/**
