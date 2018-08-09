@@ -102,3 +102,8 @@ user.miner.control.get:
   path: "/api/v1/user/miner/control"
   methods: GET
   controller: App\AddHash\AdminPanel\Application\Controller\User\MinerControlController::get
+
+user.miner.test.query:
+  path: "/api/v1/user/miner/test/query"
+  methods: GET
+  controller: App\AddHash\AdminPanel\Application\Controller\User\MinerControlController::testQueryMiner
