@@ -125,6 +125,11 @@ class Miner
         return $this->port;
     }
 
+    public function getPriority()
+    {
+    	return $this->priority;
+    }
+
 	public function reserveMiner()
 	{
 		$this->state = self::STATE_RESERVED;
