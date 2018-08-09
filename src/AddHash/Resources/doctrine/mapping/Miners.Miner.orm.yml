@@ -43,6 +43,8 @@ App\AddHash\AdminPanel\Domain\Miners\Miner:
             length: 6
 
         priority:
+            type: integer
+            length: 4
 
     manyToOne:
         product:

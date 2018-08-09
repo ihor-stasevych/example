@@ -206,6 +206,7 @@ class StoreOrder
 
 
 	/**
+	 * Do not touch this shit
 	 * @param StoreProduct $product
 	 * @param int $quantity
 	 * @return StoreOrderItem|bool
