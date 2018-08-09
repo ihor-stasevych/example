@@ -23,7 +23,7 @@ class StoreOrderUnReserveMinerService implements StoreOrderUnReserveMinerService
 	public function execute()
 	{
         $dataTime = new \DateTime();
-        $dataTime->setTimestamp(time() - static::RESERVE_TIME);
+        $dataTime->setTimestamp($dataTime->getTimestamp() - static::RESERVE_TIME);
 	    $unpaidOrders = $this->storeOrderRepository->getNewByTime($dataTime);
 
 	    if ($unpaidOrders) {
