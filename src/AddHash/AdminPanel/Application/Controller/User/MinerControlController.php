@@ -13,14 +13,18 @@ use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket; //TEST
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketParser; //TEST
 use App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerException;
+use App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetPoolsServiceInterface;
 
 class MinerControlController extends BaseServiceController
 {
     private $getService;
 
-    public function __construct(MinerControlGetServiceInterface $getService)
+    private $getPoolsService;
+
+    public function __construct(MinerControlGetServiceInterface $getService, MinerControlGetPoolsServiceInterface $getPoolsService)
     {
         $this->getService = $getService;
+        $this->getPoolsService = $getPoolsService;
     }
 
     /**
@@ -46,6 +50,38 @@ class MinerControlController extends BaseServiceController
     {
         try {
             $data = $this->getService->execute();
+        } catch (MinerControlNoMainerException $e) {
+            return $this->json([
+                'errors' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json($data);
+    }
+
+    /**
+     * Get miners pools
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the miners pools",
+     *     @SWG\Schema(
+     *             type="array",
+     *             @SWG\Items(
+     *                 type="object",
+     *                 @SWG\Property(property="Status", type="string"),
+     *                 @SWG\Property(property="Priority", type="integer")
+     *             )
+     *     ),
+     * )
+     *
+     * @return JsonResponse
+     * @SWG\Tag(name="User")
+     */
+    public function getPools()
+    {
+        try {
+            $data = $this->getPoolsService->execute();
         } catch (MinerControlNoMainerException $e) {
             return $this->json([
                 'errors' => $e->getMessage(),

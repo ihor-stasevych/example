@@ -269,3 +269,11 @@ services:
 
   App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface: '@addhash.user.miner.control.get.service'
 
+  addhash.user.miner.control.get.pools.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetPoolsService
+    public: true
+    arguments: ['@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetPoolsService: '@addhash.user.miner.control.get.pools.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetPoolsServiceInterface: '@addhash.user.miner.control.get.pools.service'
+
