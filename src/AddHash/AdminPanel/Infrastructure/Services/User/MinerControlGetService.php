@@ -48,8 +48,10 @@ class MinerControlGetService implements MinerControlGetServiceInterface
                     new MinerSocket($miner, $parser)
                 );
 
-                $data[$miner->getId()] = $command->getSummary();
-                $data[$miner->getId()]['minerTitle'] = $miner->getTitle();
+                $data[] = $command->getSummary() + [
+                    'minerTitle' => $miner->getTitle(),
+                    'minerId'    => $miner->getId(),
+                ];
             }
         }
 

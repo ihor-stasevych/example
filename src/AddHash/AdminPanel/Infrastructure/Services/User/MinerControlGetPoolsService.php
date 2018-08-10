@@ -48,8 +48,10 @@ class MinerControlGetPoolsService implements MinerControlGetPoolsServiceInterfac
                     new MinerSocket($miner, $parser)
                 );
 
-                $data[$miner->getId()] = $command->getPools();
-                $data[$miner->getId()]['minerTitle'] = $miner->getTitle();
+                $data[] = $command->getPools() + [
+                    'minerTitle' => $miner->getTitle(),
+                    'minerId'    => $miner->getId(),
+                ];
             }
         }
 
