@@ -29,6 +29,10 @@ class StoreOrderEventSubscriber implements EventSubscriberInterface
 
 	public function onOrderPayment(StoreOrderPayedEvent $event)
 	{
-		$event->getLogger()->alert('Order created: ' . $event->getOrder()->getId());
+		$event->getNotificationService()->setMessage(
+			'Order with id: ' . $event->getOrder()->getId() . ' was payed by user: ' . $event->getOrder()->getUser()->getEmail()
+		);
+
+		$event->getNotificationService()->notify();
 	}
 }

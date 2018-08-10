@@ -72,6 +72,11 @@ class StoreOrderCheckoutService implements StoreOrderCheckoutServiceInterface
 
 		$this->orderRepository->save($order);
 
+		/**
+		$event = new StoreOrderPayedEvent($order, new Notification(new NotificationTransportTelegram()));
+		$this->dispatcher->dispatch(StoreOrderPayedEvent::NAME, $event);
+		 * */
+
 		return $order;
 	}
 }
