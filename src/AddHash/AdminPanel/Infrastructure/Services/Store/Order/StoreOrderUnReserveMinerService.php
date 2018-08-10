@@ -4,6 +4,8 @@ namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Exceptions\StoreOrderNoUnPaidErrorException;
+use App\AddHash\AdminPanel\Domain\Store\Order\Exceptions\StoreOrderNoUnReserveMinersErrorException;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderUnReserveMinerServiceInterface;
 
 class StoreOrderUnReserveMinerService implements StoreOrderUnReserveMinerServiceInterface
@@ -20,25 +22,40 @@ class StoreOrderUnReserveMinerService implements StoreOrderUnReserveMinerService
         $this->minerRepository = $minerRepository;
 	}
 
-	public function execute()
+    /**
+     * @return array
+     * @throws StoreOrderNoUnPaidErrorException
+     * @throws StoreOrderNoUnReserveMinersErrorException
+     */
+	public function execute(): array
 	{
         $dataTime = new \DateTime();
         $dataTime->setTimestamp($dataTime->getTimestamp() - static::RESERVE_TIME);
-	    $unpaidOrders = $this->storeOrderRepository->getNewByTime($dataTime);
+	    $unPaidOrders = $this->storeOrderRepository->getNewByTime($dataTime);
 
-	    if ($unpaidOrders) {
+	    if (!$unPaidOrders) {
+            throw new StoreOrderNoUnPaidErrorException('No un paid orders');
+        }
 
-            foreach ($unpaidOrders as $unpaidOrder) {
-                $items = $unpaidOrder->getItems();
+        $unReserveMiners = [];
 
-                foreach ($items as $item) {
-                    $miner = $item->getProduct()->unReserveMiner();
+        foreach ($unPaidOrders as $unPaidOrder) {
+            $items = $unPaidOrder->getItems();
 
-                    if ($miner) {
-                        $this->minerRepository->save($miner);
-                    }
+            foreach ($items as $item) {
+                $miner = $item->getProduct()->unReserveMiner();
+
+                if ($miner) {
+                    $unReserveMiners[] = $miner;
+                    $this->minerRepository->save($miner);
                 }
             }
         }
+
+        if (!$unReserveMiners) {
+            throw new StoreOrderNoUnReserveMinersErrorException('No un reserve miners');
+        }
+
+        return $unReserveMiners;
 	}
 }

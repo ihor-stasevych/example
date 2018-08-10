@@ -5,7 +5,9 @@ namespace App\AddHash\AdminPanel\Application\ConsoleCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Exceptions\StoreOrderNoUnPaidErrorException;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderUnReserveMinerServiceInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Exceptions\StoreOrderNoUnReserveMinersErrorException;
 
 class CreateOrderClearCommand extends Command
 {
@@ -27,6 +29,10 @@ class CreateOrderClearCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->service->execute();
+        try {
+            $this->service->execute();
+        } catch (StoreOrderNoUnPaidErrorException | StoreOrderNoUnReserveMinersErrorException $e) {
+
+        }
     }
 }
