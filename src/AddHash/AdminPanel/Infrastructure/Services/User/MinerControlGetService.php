@@ -49,7 +49,7 @@ class MinerControlGetService implements MinerControlGetServiceInterface
                 );
 
                 $data[] = $command->getSummary() + [
-                    'minerTitle' => $miner->getTitle(),
+                    'minerTitle' => $miner->getDetails()->getTitle(),
                     'minerId'    => $miner->getId(),
                 ];
             }

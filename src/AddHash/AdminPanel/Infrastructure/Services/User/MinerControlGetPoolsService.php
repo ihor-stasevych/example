@@ -49,7 +49,7 @@ class MinerControlGetPoolsService implements MinerControlGetPoolsServiceInterfac
                 );
 
                 $data[] = $command->getPools() + [
-                    'minerTitle' => $miner->getTitle(),
+                    'minerTitle' => $miner->getDetails()->getTitle(),
                     'minerId'    => $miner->getId(),
                 ];
             }

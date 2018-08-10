@@ -7,33 +7,12 @@ App\AddHash\AdminPanel\Domain\Miners\Miner:
             type: integer
             generator: { strategy: AUTO }
     fields:
-        title:
-            type: string
-            length: 100
-
-        description:
-            type: json
-
-        hashRate:
-            type: string
-
-        powerRate:
-            type: string
-
-        powerEfficiency:
-            type: string
-
-        ratedVoltage:
-            type: string
-
-        operatingTemperature:
-            type: string
-
         state:
             type: smallint
 
-        algorithm:
-            type: string
+        priority:
+            type: integer
+            length: 4
 
         ip:
             type: string
@@ -42,10 +21,6 @@ App\AddHash\AdminPanel\Domain\Miners\Miner:
             type: integer
             length: 6
 
-        priority:
-            type: integer
-            length: 4
-
     manyToOne:
         product:
           targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct
@@ -53,3 +28,8 @@ App\AddHash\AdminPanel\Domain\Miners\Miner:
           joinColumn:
             name: productId
             referencedColumnName: id
+
+    oneToOne:
+        details:
+          targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerDetails
+          mappedBy: miner
