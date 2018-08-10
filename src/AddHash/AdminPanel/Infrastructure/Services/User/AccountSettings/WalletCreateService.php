@@ -46,7 +46,7 @@ class WalletCreateService implements WalletCreateServiceInterface
 
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $userWallet = $this->userWalletRepository->getByValueAndWalletIdAndUserId(
+        $userWallet = $this->userWalletRepository->getUniqueWallet(
             $command->getValue(),
             $command->getWalletId(),
             $user->getId()
