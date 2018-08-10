@@ -282,3 +282,16 @@ services:
 
   App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetPoolsServiceInterface: '@addhash.user.miner.control.get.pools.service'
 
+  addhash.store.order.un.reserve.miner.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderUnReserveMinerService
+    public: true
+    arguments: ['@addhash.store.order.repository', '@addhash.miner.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderUnReserveMinerService: '@addhash.store.order.un.reserve.miner.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderUnReserveMinerServiceInterface: '@addhash.store.order.un.reserve.miner.service'
+
+  App\AddHash\AdminPanel\Application\ConsoleCommand\CreateOrderClearCommand:
+    public: false
+    arguments: ['@addhash.store.order.un.reserve.miner.service']
+    tags: ['console.command']
+
