@@ -133,7 +133,7 @@ services:
   addhash.store.order.get.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderGetService
     public: true
-    arguments: ['@addhash.store.order.repository']
+    arguments: ['@addhash.store.order.repository', '@debug.event_dispatcher.inner']
   App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderGetService: '@addhash.store.order.get.service'
 
   App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface: '@addhash.store.order.get.service'
@@ -268,4 +268,9 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetService: '@addhash.user.miner.control.get.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface: '@addhash.user.miner.control.get.service'
+
+  addhash.store.order.event.subscriber:
+     class: App\AddHash\AdminPanel\Infrastructure\EventSubscribers\Store\Order\StoreOrderEventSubscriber
+     tags:
+         - { name: kernel.event_subscriber, event: store.order.payed }
 
