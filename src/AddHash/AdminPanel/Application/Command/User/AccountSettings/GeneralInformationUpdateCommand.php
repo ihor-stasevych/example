@@ -18,16 +18,14 @@ class GeneralInformationUpdateCommand implements GeneralInformationUpdateCommand
 
     /**
      * @var string
-     * @Assert\NotBlank()
      * @Assert\Email()
      */
     private $backupEmail;
 
     /**
      * @var string
-     * @Assert\NotBlank()
      * @Assert\Length(
-     *      min = 2,
+     *      min = 1,
      *      max = 255,
      *      minMessage = "Your first name must be at least {{ limit }} characters long",
      *      maxMessage = "Your first name cannot be longer than {{ limit }} characters"
@@ -37,9 +35,8 @@ class GeneralInformationUpdateCommand implements GeneralInformationUpdateCommand
 
     /**
      * @var string
-     * @Assert\NotBlank()
      * @Assert\Length(
-     *      min = 2,
+     *      min = 1,
      *      max = 255,
      *      minMessage = "Your last name must be at least {{ limit }} characters long",
      *      maxMessage = "Your last name cannot be longer than {{ limit }} characters"
@@ -49,9 +46,8 @@ class GeneralInformationUpdateCommand implements GeneralInformationUpdateCommand
 
     /**
      * @var string
-     * @Assert\NotBlank()
      * @Assert\Length(
-     *      min = 2,
+     *      min = 1,
      *      max = 30,
      *      minMessage = "Your phone must be at least {{ limit }} characters long",
      *      maxMessage = "Your phone cannot be longer than {{ limit }} characters"
