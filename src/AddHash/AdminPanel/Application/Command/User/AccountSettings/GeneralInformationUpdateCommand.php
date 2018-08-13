@@ -63,10 +63,10 @@ class GeneralInformationUpdateCommand implements GeneralInformationUpdateCommand
 	public function __construct($email, $backupEmail, $firstName, $lastName, $phone, $isMonthlyNewsletter)
 	{
 		$this->email = $email;
-		$this->backupEmail = $backupEmail;
-		$this->firstName = $firstName;
-		$this->lastName = $lastName;
-		$this->phone = $phone;
+		$this->backupEmail = $backupEmail ?? '';
+		$this->firstName = $firstName ?? '';
+		$this->lastName = $lastName ?? '';
+		$this->phone = $phone ?? '';
 		$this->isMonthlyNewsletter = $isMonthlyNewsletter;
 	}
 
@@ -76,21 +76,21 @@ class GeneralInformationUpdateCommand implements GeneralInformationUpdateCommand
 	}
 
 	public function getBackupEmail(): Email
-    {
+	{
         return new Email($this->backupEmail);
     }
 
-    public function getFirstName(): string
+    public function getFirstName():? string
     {
-        return $this->firstName;
+        return $this->firstName ?? '';
     }
 
-    public function getLastName(): string
+    public function getLastName():? string
     {
-        return $this->lastName;
+        return $this->lastName ?? '';
     }
 
-	public function getPhoneNumber(): Phone
+	public function getPhoneNumber():? Phone
 	{
 		return new Phone($this->phone);
 	}

@@ -2,6 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings;
 
+use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
 use App\AddHash\AdminPanel\Domain\User\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -28,6 +29,7 @@ class GeneralInformationUpdateService implements GeneralInformationUpdateService
      */
 	public function execute(GeneralInformationUpdateCommandInterface $command): array
 	{
+		/** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $email = new Email($user->getEmail());
 
