@@ -19,37 +19,52 @@ class Payment implements PaymentInterface
 
 	private $paymentMethod;
 
-	public function __construct($price, $currency, $user)
+	public function __construct($price, $currency, $user, $id = null)
 	{
+	    $this->id = $id;
 		$this->price = $price;
 		$this->currency = $currency;
 		$this->user = $user;
-		#$this->paymentMethod = $paymentMethod;
 	}
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
+    public function getPaymentMethod()
+    {
+        return $this->paymentMethod;
+    }
+
+    public function getPaymentGateway(): PaymentGatewayInterface
+    {
+        return $this->paymentGateway;
+    }
+
+    public function makePayment($params = [])
+    {
+        return $this->getPaymentGateway()->makePayment($params);
+    }
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
 
 	public function createTransaction($externalId): TransactionInterface
 	{
 		return new PaymentTransaction($this, $externalId);
-	}
-
-	public function getPaymentMethod()
-	{
-		return $this->paymentMethod;
-	}
-
-	public function getId()
-	{
-		return $this->id;
-	}
-
-	public function getPaymentGateway() : PaymentGatewayInterface
-	{
-		return $this->paymentGateway;
-	}
-
-	public function getCurrency()
-	{
-		return $this->currency;
 	}
 
 	public function setPrice($price = 0)
@@ -57,23 +72,8 @@ class Payment implements PaymentInterface
 		$this->price = $price;
 	}
 
-	public function getPrice()
-	{
-		return $this->price;
-	}
-
 	public function setPaymentGateway(PaymentGatewayInterface $gateway)
 	{
 		$this->paymentGateway = $gateway;
-	}
-
-	public function makePayment($params = [])
-	{
-		return $this->getPaymentGateway()->makePayment($params);
-	}
-
-	public function getUser(): User
-	{
-		return $this->user;
 	}
 }

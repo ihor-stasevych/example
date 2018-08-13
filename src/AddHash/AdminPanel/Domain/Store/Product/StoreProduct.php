@@ -2,18 +2,17 @@
 
 namespace App\AddHash\AdminPanel\Domain\Store\Product;
 
-
-use App\AddHash\AdminPanel\Domain\Miners\Miner;
-use App\AddHash\AdminPanel\Domain\Store\Category\Model\StoreCategory;
-use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
-use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use App\AddHash\AdminPanel\Domain\Miners\Miner;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\AddHash\AdminPanel\Domain\Store\Category\Model\StoreCategory;
 
 class StoreProduct
 {
 	const STATE_UNAVAILABLE = 0;
+
 	const STATE_AVAILABLE = 1;
+
 
 	private $id;
 
@@ -54,16 +53,23 @@ class StoreProduct
 	private $userVote;
 
 	public function __construct(
-		$title, $description, $techDetails,
-		$price, $state, $categories, $vote = null
+		$title,
+        $description,
+        $techDetails,
+		$price,
+        $state,
+        $categories,
+        $vote = null,
+        $id = null
 	)
 	{
+	    $this->id = $id;
 		$this->title = $title;
 		$this->description = $description;
 		$this->techDetails = $techDetails;
 		$this->price = $price;
 		$this->state = $state;
-		$this->createdAt = time();
+		$this->createdAt = new \DateTime();
 		$this->category = new ArrayCollection();
 		$this->media = new ArrayCollection();
 		$this->miner = new ArrayCollection();
@@ -71,42 +77,27 @@ class StoreProduct
 		$this->vote = $vote;
 	}
 
-	/**
-	 * @return mixed
-	 */
-	public function getId()
+	public function getId(): ?int
 	{
 		return $this->id;
 	}
 
-	/**
-	 * @return mixed
-	 */
-	public function getTitle()
+	public function getTitle(): string
 	{
 		return $this->title;
 	}
 
-	/**
-	 * @return mixed
-	 */
-	public function getDescription()
+	public function getDescription(): string
 	{
 		return $this->description;
 	}
 
-	/**
-	 * @return mixed
-	 */
-	public function getPrice()
+	public function getPrice(): float
 	{
 		return $this->price;
 	}
 
-	/**
-	 * @return mixed
-	 */
-	public function getTechDetails()
+	public function getTechDetails(): string
 	{
 		return $this->techDetails;
 	}
@@ -127,18 +118,15 @@ class StoreProduct
 		return $this->media;
 	}
 
-	/**
-	 * @return false|string
-	 */
-	public function getCreatedAt()
+	public function getCreatedAt(): string
 	{
-		return date('Y-m-d', $this->createdAt);
+		return $this->createdAt;
 	}
 
 	/**
 	 * @return mixed|null
 	 */
-	public function getState()
+	public function getState(): ?string
 	{
 		return $this->statusAlias[$this->state] ?? null;
 	}
@@ -148,19 +136,13 @@ class StoreProduct
         return $this->vote;
     }
 
-	/**
-	 * @param array $categories
-	 */
-	public function setCategories($categories = [])
+	public function setCategories(array $categories = [])
 	{
 		foreach ($categories as $category) {
 			$this->setCategory($category);
 		}
 	}
 
-	/**
-	 * @param StoreCategory $category
-	 */
 	public function setCategory(StoreCategory $category)
 	{
 		if (!$this->category->contains($category)) {
@@ -185,7 +167,7 @@ class StoreProduct
 	 * @param $quantity
 	 * @return ArrayCollection|\Doctrine\Common\Collections\Collection
 	 */
-	public function ensureAvailableMiner($quantity = 1)
+	public function ensureAvailableMiner(int $quantity = 1)
 	{
 		return $this->ensureMinersByState(Miner::STATE_AVAILABLE, $quantity);
 	}
@@ -194,15 +176,12 @@ class StoreProduct
 	 * @param $quantity
 	 * @return ArrayCollection|\Doctrine\Common\Collections\Collection
 	 */
-	public function ensureReservedMiner($quantity = 1)
+	public function ensureReservedMiner(int $quantity = 1)
 	{
 		return $this->ensureMinersByState(Miner::STATE_RESERVED, $quantity);
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getAvailableMinersQuantity()
+	public function getAvailableMinersQuantity(): int
 	{
 		$result = 0;
 
@@ -216,7 +195,7 @@ class StoreProduct
 		return $result;
 	}
 
-	public function getReservedMinersQuantity()
+	public function getReservedMinersQuantity(): int
 	{
 		$result = 0;
 
@@ -276,5 +255,4 @@ class StoreProduct
 
 		return $this->miner->matching($criteria)->toArray();
 	}
-
 }

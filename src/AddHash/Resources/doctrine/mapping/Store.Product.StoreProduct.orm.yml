@@ -15,6 +15,7 @@ App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct:
             type: json
 
         techDetails:
+            column: techDetails
             type: json
 
         price:
@@ -32,8 +33,9 @@ App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct:
                 default: 0.00
 
         createdAt:
-            type: integer
-            length: 12
+            column: createdAt
+            type: datetime
+            nullable: false
 
     manyToMany:
         category:
