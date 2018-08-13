@@ -32,6 +32,14 @@ services:
           - [setValidator, ['@addhash.validator']]
     App\AddHash\System\GlobalContext\Common\BaseServiceController: '@addhash.service_controller'
 
+    addhash.logger.handler:
+        class: App\AddHash\System\GlobalContext\Repository\LoggerDbHandler
+        #alias: monolog.logger.db
+        public: true
+        arguments: ['@doctrine.orm.entity_manager']
+        #tags:
+        #  - { name: monolog.logger, channel: db }
+
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

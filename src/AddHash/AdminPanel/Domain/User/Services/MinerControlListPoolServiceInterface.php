@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\User\Services;
 
-interface MinerControlGetPoolsServiceInterface
+interface MinerControlListPoolServiceInterface
 {
 	public function execute(): array;
 }

@@ -7,10 +7,10 @@ use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Commands\MinerCommand;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketParser;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerException;
-use App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetPoolsServiceInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\MinerControlListPoolServiceInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class MinerControlGetPoolsService implements MinerControlGetPoolsServiceInterface
+class MinerControlListPoolService implements MinerControlListPoolServiceInterface
 {
     private $tokenStorage;
 

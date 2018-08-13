@@ -17,6 +17,9 @@ use App\AddHash\AdminPanel\Domain\User\Services\Order\Miner\CreateUserOrderMiner
 use App\AddHash\AdminPanel\Infrastructure\Payment\Gateway\Stripe\PaymentGatewayStripe;
 use App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveItemService;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
+use Psr\Log\LoggerInterface;
+use Symfony\Bridge\Monolog\Logger;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Swagger\Annotations as SWG;
@@ -33,6 +36,7 @@ class StoreOrderController extends BaseServiceController
 	private $orderMinerService;
 	private $prepareCheckoutService;
 	private $tokenStorage;
+	private $logger;
 
 	public function __construct(
 		StoreOrderCreateServiceInterface $storeOrderCreateService,
