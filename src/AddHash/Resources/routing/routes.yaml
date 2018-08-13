@@ -99,17 +99,17 @@ store.product.vote:
     controller: App\AddHash\AdminPanel\Application\Controller\StoreProductController::createVote
 
 user.miner.control.get:
-  path: "/api/v1/user/miner/control"
+  path: "/api/v1/user/miners"
   methods: GET
   controller: App\AddHash\AdminPanel\Application\Controller\User\MinerControlController::get
 
 user.miner.control.pools.list:
-  path: "/api/v1/user/miner/pools"
+  path: "/api/v1/user/miners/pools"
   methods: GET
   controller: App\AddHash\AdminPanel\Application\Controller\User\MinerControlController::listPool
 
 user.miner.control.pools.get:
-  path: "/api/v1/user/miner/{id}/pools/"
+  path: "/api/v1/user/miners/{id}/pools/"
   methods: GET
   controller: App\AddHash\AdminPanel\Application\Controller\User\MinerControlController::getPool
 
