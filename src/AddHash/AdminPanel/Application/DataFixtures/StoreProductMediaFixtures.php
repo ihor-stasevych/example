@@ -15,22 +15,26 @@ class StoreProductMediaFixtures extends Fixture
     {
         $data = $this->getData();
 
-        if ($data) {
-            foreach ($data as $d) {
-                $storeProduct = new StoreProductMedia($d['id']);
-                $storeProduct->setType($d['type']);
-                $storeProduct->setSrc($d['src']);
-                $storeProduct->setProduct($manager->getRepository(StoreProduct::class)->find($d['productId']));
-
-                $metadata = $manager->getClassMetadata(StoreProductMedia::class);
-                $metadata->setIdGenerator(new AssignedGenerator());
-                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-
-                $manager->persist($storeProduct);
-            }
-
-            $manager->flush();
+        if (!$data) {
+            return false;
         }
+
+        foreach ($data as $d) {
+            $storeProduct = new StoreProductMedia($d['id']);
+            $storeProduct->setType($d['type']);
+            $storeProduct->setSrc($d['src']);
+            $storeProduct->setProduct($manager->getRepository(StoreProduct::class)->find($d['productId']));
+
+            $metadata = $manager->getClassMetadata(StoreProductMedia::class);
+            $metadata->setIdGenerator(new AssignedGenerator());
+            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+            $manager->persist($storeProduct);
+        }
+
+        $manager->flush();
+
+        return true;
     }
 
     private function getData(): array

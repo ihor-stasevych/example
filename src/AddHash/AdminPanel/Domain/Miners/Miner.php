@@ -2,6 +2,8 @@
 
 namespace App\AddHash\AdminPanel\Domain\Miners;
 
+use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
+
 class Miner
 {
     const STATE_UNAVAILABLE = 0;
@@ -36,8 +38,9 @@ class Miner
 		self::STATE_RESERVED    => 'reserved',
 	];
 
-	public function __construct($priority, $ip, $port)
+	public function __construct($priority, $ip, $port, $id = null)
 	{
+	    $this->id = $id;
 		$this->state = static::STATE_DEFAULT;
         $this->priority = $priority;
 		$this->ip = $ip;
@@ -93,4 +96,9 @@ class Miner
 	{
 		$this->state = self::STATE_AVAILABLE;
 	}
+
+	public function setProduct(StoreProduct $product)
+    {
+        $this->product = $product;
+    }
 }

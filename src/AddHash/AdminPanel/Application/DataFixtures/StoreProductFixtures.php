@@ -14,19 +14,23 @@ class StoreProductFixtures extends Fixture
     {
         $data = $this->getData();
 
-        if ($data) {
-            foreach ($data as $d) {
-                $storeProduct = new StoreProduct($d['title'], $d['description'], $d['techDetails'], $d['price'], $d['state'], $d['categories'], $d['vote'], $d['id']);
-
-                $metadata = $manager->getClassMetadata(StoreProduct::class);
-                $metadata->setIdGenerator(new AssignedGenerator());
-                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-
-                $manager->persist($storeProduct);
-            }
-
-            $manager->flush();
+        if (!$data) {
+            return false;
         }
+
+        foreach ($data as $d) {
+            $storeProduct = new StoreProduct($d['title'], $d['description'], $d['techDetails'], $d['price'], $d['state'], $d['categories'], $d['vote'], $d['id']);
+
+            $metadata = $manager->getClassMetadata(StoreProduct::class);
+            $metadata->setIdGenerator(new AssignedGenerator());
+            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+            $manager->persist($storeProduct);
+        }
+
+        $manager->flush();
+
+        return true;
     }
 
     private function getData(): array

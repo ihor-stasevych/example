@@ -16,22 +16,26 @@ class UserFixtures extends Fixture
     {
         $data = $this->getData();
 
-        if ($data) {
-            foreach ($data as $d) {
-                $user = new User($d['id'], $d['user_name'], $d['email'], $d['password'], $d['backupEmail'], $d['roles']);
-                $user->setFirstName($d['firstName']);
-                $user->setLastName($d['lastName']);
-                $user->setPhoneNumber($d['phone']);
-
-                $metadata = $manager->getClassMetadata(User::class);
-                $metadata->setIdGenerator(new AssignedGenerator());
-                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-
-                $manager->persist($user);
-            }
-
-            $manager->flush();
+        if (!$data) {
+            return false;
         }
+
+        foreach ($data as $d) {
+            $user = new User($d['id'], $d['user_name'], $d['email'], $d['password'], $d['backupEmail'], $d['roles']);
+            $user->setFirstName($d['firstName']);
+            $user->setLastName($d['lastName']);
+            $user->setPhoneNumber($d['phone']);
+
+            $metadata = $manager->getClassMetadata(User::class);
+            $metadata->setIdGenerator(new AssignedGenerator());
+            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+            $manager->persist($user);
+        }
+
+        $manager->flush();
+
+        return true;
     }
 
     private function getData(): array

@@ -18,29 +18,33 @@ class StoreOrderFixtures extends Fixture
     {
         $data = $this->getData();
 
-        if ($data) {
-            foreach ($data as $d) {
-                $user = $manager->getRepository(User::class)->find($d['userId']);
-                $payment = $manager->getRepository(Payment::class)->find($d['paymentId']);
-                $storeOrder = new StoreOrder($user, $d['id']);
-                $storeOrder->setPayment($payment);
+        if (!$data) {
+            return false;
+        }
 
-                if ($d['items']) {
-                    foreach ($d['items'] as $item) {
-                        $product = $manager->getRepository(StoreProduct::class)->find($item['productId']);
-                        $storeOrder->addItem(new StoreOrderItem($storeOrder, $product, $item['quantity']));
-                    }
+        foreach ($data as $d) {
+            $user = $manager->getRepository(User::class)->find($d['userId']);
+            $payment = $manager->getRepository(Payment::class)->find($d['paymentId']);
+            $storeOrder = new StoreOrder($user, $d['id']);
+            $storeOrder->setPayment($payment);
+
+            if ($d['items']) {
+                foreach ($d['items'] as $item) {
+                    $product = $manager->getRepository(StoreProduct::class)->find($item['productId']);
+                    $storeOrder->addItem(new StoreOrderItem($storeOrder, $product, $item['quantity']));
                 }
-
-                $metadata = $manager->getClassMetadata(StoreProduct::class);
-                $metadata->setIdGenerator(new AssignedGenerator());
-                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-
-                $manager->persist($storeOrder);
             }
 
-            $manager->flush();
+            $metadata = $manager->getClassMetadata(StoreProduct::class);
+            $metadata->setIdGenerator(new AssignedGenerator());
+            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+            $manager->persist($storeOrder);
         }
+
+        $manager->flush();
+
+        return true;
     }
 
     private function getData(): array

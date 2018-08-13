@@ -16,21 +16,25 @@ class PaymentFixtures extends Fixture
     {
         $data = $this->getData();
 
-        if ($data) {
-            foreach ($data as $d) {
-                $user = $manager->getRepository(User::class)->find($d['userId']);
-                $payment = new Payment($d['price'], $d['currency'], $user, $d['id']);
-                $payment->setPaymentGateway(new PaymentGatewayStripe($payment));
-
-                $metadata = $manager->getClassMetadata(Payment::class);
-                $metadata->setIdGenerator(new AssignedGenerator());
-                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-
-                $manager->persist($payment);
-            }
-
-            $manager->flush();
+        if (!$data) {
+            return false;
         }
+
+        foreach ($data as $d) {
+            $user = $manager->getRepository(User::class)->find($d['userId']);
+            $payment = new Payment($d['price'], $d['currency'], $user, $d['id']);
+            $payment->setPaymentGateway(new PaymentGatewayStripe($payment));
+
+            $metadata = $manager->getClassMetadata(Payment::class);
+            $metadata->setIdGenerator(new AssignedGenerator());
+            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+            $manager->persist($payment);
+        }
+
+        $manager->flush();
+
+        return true;
     }
 
     private function getData(): array
