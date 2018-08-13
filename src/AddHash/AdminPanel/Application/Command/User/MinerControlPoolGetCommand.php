@@ -18,7 +18,7 @@ class MinerControlPoolGetCommand implements MinerControlPoolGetCommandInterface
 		$this->id = $id;
 	}
 
-	public function getid(): int
+	public function getId(): int
     {
         return $this->id;
     }
