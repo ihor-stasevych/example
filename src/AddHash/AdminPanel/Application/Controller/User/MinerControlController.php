@@ -2,7 +2,6 @@
 
 namespace App\AddHash\AdminPanel\Application\Controller\User;
 
-
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,20 +10,30 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket; //TEST
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketParser; //TEST
+use App\AddHash\AdminPanel\Application\Command\User\MinerControlPoolGetCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerException;
-use App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetPoolsServiceInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetPoolServiceInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\MinerControlListPoolServiceInterface;
+use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerExistException;
 
 class MinerControlController extends BaseServiceController
 {
     private $getService;
 
-    private $getPoolsService;
+    private $listPoolService;
 
-    public function __construct(MinerControlGetServiceInterface $getService, MinerControlGetPoolsServiceInterface $getPoolsService)
+    private $getPoolService;
+
+    public function __construct(
+        MinerControlGetServiceInterface $getService,
+        MinerControlListPoolServiceInterface $listPoolService,
+        MinerControlGetPoolServiceInterface $getPoolService
+    )
     {
         $this->getService = $getService;
-        $this->getPoolsService = $getPoolsService;
+        $this->listPoolService = $listPoolService;
+        $this->getPoolService = $getPoolService;
     }
 
     /**
@@ -78,11 +87,32 @@ class MinerControlController extends BaseServiceController
      * @return JsonResponse
      * @SWG\Tag(name="User")
      */
-    public function getPools()
+    public function listPool()
     {
         try {
-            $data = $this->getPoolsService->execute();
+            $data = $this->listPoolService->execute();
         } catch (MinerControlNoMainerException $e) {
+            return $this->json([
+                'errors' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json($data);
+    }
+
+    public function getPool(int $id)
+    {
+        $command = new MinerControlPoolGetCommand($id);
+
+        if (!$this->commandIsValid($command)) {
+            return $this->json([
+                'errors' => $this->getLastValidationErrors(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        try {
+            $data = $this->getPoolService->execute($command);
+        } catch (MinerControlNoMainerException | MinerControlNoMainerExistException $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
             ], Response::HTTP_BAD_REQUEST);
