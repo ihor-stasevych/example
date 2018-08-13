@@ -69,7 +69,7 @@ class MinerControlController extends BaseServiceController
     }
 
     /**
-     * Get miners pools
+     * List miners pools
      *
      * @SWG\Response(
      *     response=200,
@@ -100,6 +100,26 @@ class MinerControlController extends BaseServiceController
         return $this->json($data);
     }
 
+    /**
+     * Get miners pool by id
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the miners pools",
+     *     @SWG\Schema(
+     *             type="array",
+     *             @SWG\Items(
+     *                 type="object",
+     *                 @SWG\Property(property="Status", type="string"),
+     *                 @SWG\Property(property="Priority", type="integer")
+     *             )
+     *     ),
+     * )
+     *
+     * @param int $id
+     * @return JsonResponse
+     * @SWG\Tag(name="User")
+     */
     public function getPool(int $id)
     {
         $command = new MinerControlPoolGetCommand($id);

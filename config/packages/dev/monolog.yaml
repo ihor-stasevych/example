@@ -1,5 +1,11 @@
 monolog:
+    channels: ['db']
     handlers:
+        db:
+           channels: ['db']
+           type: service
+           id: addhash.logger.handler
+
         main:
             type: stream
             path: "%kernel.logs_dir%/%kernel.environment%.log"

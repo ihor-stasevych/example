@@ -6,8 +6,8 @@ use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Commands\MinerCommand;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketParser;
-use App\AddHash\AdminPanel\Domain\User\Services\MinerControlListPoolServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerException;
+use App\AddHash\AdminPanel\Domain\User\Services\MinerControlListPoolServiceInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class MinerControlListPoolService implements MinerControlListPoolServiceInterface
@@ -48,7 +48,10 @@ class MinerControlListPoolService implements MinerControlListPoolServiceInterfac
                     new MinerSocket($miner, $parser)
                 );
 
-                $data[$miner->getTitle()] = $command->getPools();
+                $data[] = $command->getPools() + [
+                    'minerTitle' => $miner->getTitle(),
+                    'minerId'    => $miner->getId(),
+                ];
             }
         }
 
