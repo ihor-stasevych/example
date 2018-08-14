@@ -87,7 +87,7 @@ class StoreProduct
 		return $this->title;
 	}
 
-	public function getDescription(): string
+	public function getDescription()
 	{
 		return $this->description;
 	}
