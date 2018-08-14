@@ -1,305 +1,35 @@
 services:
 
-  ##AddHash Store Category
-  addhash.store.category.repository:
-    class: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Category\StoreCategoryRepository
-    public: true
-    arguments: ['@doctrine.orm.entity_manager']
-  App\AddHash\AdminPanel\Infrastructure\Repository\Store\Category\StoreCategoryRepository: '@addhash.store.category.repository'
-
-  addhash.store.product.repository:
-    class: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product\StoreProductRepository
-    public: true
-    arguments: ['@doctrine.orm.entity_manager']
-  App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product\StoreProductRepository: '@addhash.store.product.repository'
-
-  App\AddHash\AdminPanel\Domain\Store\Category\Model\Store_Category\CategoryRepositoryInterface: '@addhash.store.category.repository'
-
-  addhash.store.order.repository:
-    class: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order\StoreOrderRepository
-    public: true
-    arguments: ['@doctrine.orm.entity_manager']
-  App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order\StoreOrderRepository: '@addhash.store.order.repository'
-
-  App\AddHash\AdminPanel\Domain\Store\Order\OrderRepositoryInterface: '@addhash.store.order.repository'
-
-  addhash.store.order.item.repository:
-    class: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order\Item\StoreOrderItemRepository
-    public: true
-    arguments: ['@doctrine.orm.entity_manager']
-  App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order\Item\StoreOrderItemRepository: '@addhash.store.order.item.repository'
-
-  App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItemRepositoryInterface: '@addhash.store.order.item.repository'
-
-  addhash.user.wallet.repository:
-    class: App\AddHash\AdminPanel\Infrastructure\Repository\User\UserWalletRepository
-    public: true
-    arguments: ['@doctrine.orm.entity_manager']
-  App\AddHash\AdminPanel\Infrastructure\Repository\User\UserWalletRepository: '@addhash.user.wallet.repository'
-
-  App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface: '@addhash.user.wallet.repository'
-
-  addhash.wallet.repository:
-    class: App\AddHash\AdminPanel\Infrastructure\Repository\Wallet\WalletRepository
-    public: true
-    arguments: ['@doctrine.orm.entity_manager']
-  App\AddHash\AdminPanel\Infrastructure\Repository\Wallet\WalletRepository: '@addhash.wallet.repository'
-
-  App\AddHash\AdminPanel\Domain\Wallet\WalletRepositoryInterface: '@addhash.wallet.repository'
-
-  addhash.user.vote.repository:
-    class: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product\StoreProductUserVoteRepository
-    public: true
-    arguments: ['@doctrine.orm.entity_manager']
-  App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product\StoreProductUserVoteRepository: '@addhash.user.vote.repository'
-
-  App\AddHash\AdminPanel\Domain\Store\Product\StoreProductUserVoteRepositoryInterface: '@addhash.user.vote.repository'
-
-
-
-  addhash.miner.repository:
-    class: App\AddHash\AdminPanel\Infrastructure\Repository\Miner\MinerRepository
-    public: true
-    arguments: ['@doctrine.orm.entity_manager']
-  App\AddHash\AdminPanel\Infrastructure\Repository\Miner\MinerRepository: '@addhash.miner.repository'
-
-  App\AddHash\AdminPanel\Domain\Miners\Repository\MinerRepositoryInterface: '@addhash.miner.repository'
-
-  addhash.store.category.list.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Category\ListService
-    public: true
-    arguments: ['@addhash.store.category.repository']
-  App\AddHash\AdminPanel\Infrastructure\Services\Store\Category\ListService: '@addhash.store.category.list.service'
-
-  App\AddHash\AdminPanel\Domain\Store\Category\Services\ListServiceInterface: '@addhash.store.category.list.service'
-
-  addhash.store.admin.category.create.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Category\CreateService
-    public: true
-    arguments: ['@addhash.store.category.repository']
-  App\AddHash\AdminPanel\Infrastructure\Services\Store\Category\CreateService: '@addhash.store.admin.category.create.service'
-
-  App\AddHash\AdminPanel\Domain\Store\Category\Services\CreateServiceInterface: '@addhash.store.admin.category.create.service'
-
-  addhash.store.product.list.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductListService
-    public: true
-    arguments: ['@addhash.store.product.repository']
-  App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductListService: '@addhash.store.product.list.service'
-
-  App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductListServiceInterface: '@addhash.store.product.list.service'
-
-  addhash.store.product.get.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductGetService
-    public: true
-    arguments: ['@addhash.store.product.repository']
-  App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductGetService: '@addhash.store.product.get.service'
-
-  App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductGetServiceInterface: '@addhash.store.product.get.service'
-
-  addhash.store.product.create.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductCreateService
-    public: true
-    arguments: ['@addhash.store.product.repository', '@addhash.store.category.repository']
-  App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductCreateService: '@addhash.store.product.create.service'
-
-  App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductCreateServiceInterface: '@addhash.store.product.create.service'
-
-  addhash.store.order.create.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCreateService
-    public: true
-    arguments: ['@addhash.store.product.repository','@addhash.store.order.repository','@addhash.store.order.item.repository', '@security.token_storage', '@addhash.miner.repository']
-  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCreateService: '@addhash.store.order.create.service'
-
-  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface: '@addhash.store.order.create.service'
-
-  addhash.store.order.addproduct.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderAddProductService
-    public: true
-    arguments: ['@addhash.store.order.repository', '@addhash.store.product.repository', '@addhash.store.order.item.repository', '@addhash.miner.repository']
-  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderAddProductService: '@addhash.store.order.addproduct.service'
-
-  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderAddProductServiceInterface: '@addhash.store.order.addproduct.service'
-
-  addhash.store.order.removeitem.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveItemService
-    public: true
-    arguments: ['@addhash.store.order.repository', '@addhash.store.product.repository', '@addhash.store.order.item.repository', '@addhash.miner.repository', '@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveItemService: '@addhash.store.order.removeitem.service'
-
-  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderRemoveItemServiceInterface: '@addhash.store.order.removeitem.service'
-
-
-  addhash.store.order.get.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderGetService
-    public: true
-    arguments: ['@addhash.store.order.repository', '@debug.event_dispatcher.inner', '@monolog.logger.db']
-  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderGetService: '@addhash.store.order.get.service'
-
-  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface: '@addhash.store.order.get.service'
-
-  addhash.store.order.checkout.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCheckoutService
-    public: true
-    arguments: ['@addhash.store.order.repository', '@addhash.order.checkout.payment.service', '@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCheckoutService: '@addhash.store.order.checkout.service'
-
-  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface: '@addhash.store.order.checkout.service'
-
-  addhash.store.order.checkout.prepare.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderPrepareCheckoutService
-    public: true
-    arguments: ['@addhash.store.order.repository', '@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderPrepareCheckoutService: '@addhash.store.order.checkout.prepare.service'
-
-  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderPrepareCheckoutServiceInterface: '@addhash.store.order.checkout.prepare.service'
-
-  ##AddHash User Service
-  addhash.user.register.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\UserRegisterService
-    public: true
-    arguments: ['@addhash.user.repository', '@security.encoder_factory']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\UserRegisterService: '@addhash.user.register.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface: '@addhash.user.register.service'
-
-
-  addhash.user.account.settings.general.information.update.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationUpdateService
-    public: true
-    arguments: ['@addhash.user.repository', '@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationUpdateService: '@addhash.user.account.settings.general.information.update.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationUpdateServiceInterface: '@addhash.user.account.settings.general.information.update.service'
-
-
-  addhash.user.account.settings.general.information.get.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationGetService
-    public: true
-    arguments: ['@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationGetService: '@addhash.user.account.settings.general.information.get.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationGetServiceInterface: '@addhash.user.account.settings.general.information.get.service'
-
-  addhash.user.account.settings.password.update.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\PasswordUpdateService
-    public: true
-    arguments: ['@addhash.user.repository', '@security.encoder_factory', '@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\PasswordUpdateService: '@addhash.user.account.settings.password.update.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\PasswordUpdateServiceInterface: '@addhash.user.account.settings.password.update.service'
-
-  addhash.user.account.settings.wallet.update.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletUpdateService
-    public: true
-    arguments: ['@addhash.user.wallet.repository', '@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletUpdateService: '@addhash.user.account.settings.wallet.update.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletUpdateServiceInterface: '@addhash.user.account.settings.wallet.update.service'
-
-  addhash.user.account.settings.wallet.get.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletGetService
-    public: true
-    arguments: ['@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletGetService: '@addhash.user.account.settings.wallet.get.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletGetServiceInterface: '@addhash.user.account.settings.wallet.get.service'
-
-  addhash.payment.repository:
-    class: App\AddHash\AdminPanel\Infrastructure\Repository\Payment\PaymentRepository
-    public: true
-    arguments: ['@doctrine.orm.entity_manager']
-  App\AddHash\AdminPanel\Infrastructure\Repository\Payment\PaymentRepository: '@addhash.payment.repository'
-
-  App\AddHash\AdminPanel\Domain\Payment\PaymentInterface: '@addhash.payment.repository'
-
-  addhash.payment.transaction.repository:
-    class: App\AddHash\AdminPanel\Infrastructure\Repository\Payment\PaymentTransactionRepository
-    public: true
-    arguments: ['@doctrine.orm.entity_manager']
-  App\AddHash\AdminPanel\Infrastructure\Repository\Payment\PaymentTransactionRepository: '@addhash.payment.transaction.repository'
-
-  App\AddHash\AdminPanel\Domain\Payment\Repository\PaymentTransactionRepositoryInterface: '@addhash.payment.transaction.repository'
-
-  addhash.order.checkout.payment.service:
-    class:  App\AddHash\AdminPanel\Infrastructure\Services\Payment\MakePaymentForOrderService
-    public: true
-    arguments: ['@addhash.payment.repository', '@addhash.payment.transaction.repository']
-  App\AddHash\AdminPanel\Infrastructure\Services\Payment\MakePaymentForOrderService: '@addhash.order.checkout.payment.service'
-
-  App\AddHash\AdminPanel\Domain\Payment\Services\MakePaymentForOrderServiceInterface: '@addhash.order.checkout.payment.service'
-
-  addhash.user.account.settings.wallet.create.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletCreateService
-    public: true
-    arguments: ['@addhash.wallet.repository', '@addhash.user.wallet.repository', '@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletCreateService: '@addhash.user.account.settings.wallet.create.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletCreateServiceInterface: '@addhash.user.account.settings.wallet.create.service'
-
-  addhash.user.order.miner.repository:
-    class: App\AddHash\AdminPanel\Infrastructure\Repository\User\Order\Miner\UserOrderMinerRepository
-    public: true
-    arguments: ['@doctrine.orm.entity_manager']
-  App\AddHash\AdminPanel\Infrastructure\Repository\User\Order\Miner\UserOrderMinerRepository: '@addhash.user.order.miner.repository'
-
-  App\AddHash\AdminPanel\Domain\User\Order\UserOrderMinerRepositoryInterface: '@addhash.user.order.miner.repository'
-
-  addhash.user.order.miner.create.service:
-    class:  App\AddHash\AdminPanel\Infrastructure\Services\User\Order\Miner\CreateUserOrderMinerService
-    public: true
-    arguments: ['@addhash.store.order.repository', '@addhash.user.order.miner.repository', '@addhash.miner.repository']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\Order\Miner\CreateUserOrderMinerService: '@addhash.user.order.miner.create.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\Order\Miner\CreateUserOrderMinerServiceInterface: '@addhash.user.order.miner.create.service'
-
-  addhash.store.product.vote.create.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductVoteCreateService
-    public: true
-    arguments: ['@addhash.store.product.repository', '@addhash.user.vote.repository', '@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductVoteCreateService: '@addhash.store.product.vote.create.service'
-
-  App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductVoteCreateServiceInterface: '@addhash.store.product.vote.create.service'
-
-  addhash.user.miner.control.get.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetService
-    public: true
-    arguments: ['@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetService: '@addhash.user.miner.control.get.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface: '@addhash.user.miner.control.get.service'
-
   addhash.store.order.event.subscriber:
      class: App\AddHash\AdminPanel\Infrastructure\EventSubscribers\Store\Order\StoreOrderEventSubscriber
      tags:
          - { name: kernel.event_subscriber, event: store.order.payed }
-
-  addhash.user.miner.control.list.pool.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlListPoolService
-    public: true
-    arguments: ['@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlListPoolService: '@addhash.user.miner.control.list.pool.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\MinerControlListPoolServiceInterface: '@addhash.user.miner.control.list.pool.service'
-
-  addhash.user.miner.control.get.pool.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetPoolService
-    public: true
-    arguments: ['@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetPoolService: '@addhash.user.miner.control.get.pool.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetPoolServiceInterface: '@addhash.user.miner.control.get.pool.service'
-
-  addhash.store.order.un.reserve.miner.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderUnReserveMinerService
-    public: true
-    arguments: ['@addhash.store.order.repository', '@addhash.miner.repository']
-  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderUnReserveMinerService: '@addhash.store.order.un.reserve.miner.service'
-
-  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderUnReserveMinerServiceInterface: '@addhash.store.order.un.reserve.miner.service'
 
   App\AddHash\AdminPanel\Application\ConsoleCommand\CreateOrderClearCommand:
     public: false
     arguments: ['@addhash.store.order.un.reserve.miner.service']
     tags: ['console.command']
 
+
+imports:
+
+  ## User Services ##
+  - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/User/Resources/config/services.yaml"}
+
+  ## Wallet Services ##
+  - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Wallet/Resources/config/services.yaml"}
+
+  ## Srore.Order Services ##
+  - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Store/Order/Resources/config/services.yaml"}
+
+  ## Srore.Product Services ##
+  - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Store/Product/Resources/config/services.yaml"}
+
+  ## Srore.Category Services ##
+  - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Store/Category/Resources/config/services.yaml"}
+
+  ## Miner Services ##
+  - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Miner/Resources/config/services.yaml"}
+
+    ## Payment Services ##
+  - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Payment/Resources/config/services.yaml"}

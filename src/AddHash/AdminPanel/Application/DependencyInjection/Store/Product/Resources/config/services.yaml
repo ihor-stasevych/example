@@ -1,0 +1,41 @@
+services:
+    addhash.store.product.list.service:
+      class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductListService
+      public: true
+      arguments: ['@addhash.store.product.repository']
+    App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductListService: '@addhash.store.product.list.service'
+
+    App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductListServiceInterface: '@addhash.store.product.list.service'
+
+    addhash.store.product.get.service:
+      class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductGetService
+      public: true
+      arguments: ['@addhash.store.product.repository']
+    App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductGetService: '@addhash.store.product.get.service'
+
+    App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductGetServiceInterface: '@addhash.store.product.get.service'
+
+    addhash.store.product.create.service:
+      class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductCreateService
+      public: true
+      arguments: ['@addhash.store.product.repository', '@addhash.store.category.repository']
+    App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductCreateService: '@addhash.store.product.create.service'
+
+    App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductCreateServiceInterface: '@addhash.store.product.create.service'
+
+
+    addhash.store.product.vote.create.service:
+      class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductVoteCreateService
+      public: true
+      arguments: ['@addhash.store.product.repository', '@addhash.user.vote.repository', '@security.token_storage']
+    App\AddHash\AdminPanel\Infrastructure\Services\Store\Product\StoreProductVoteCreateService: '@addhash.store.product.vote.create.service'
+
+    App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductVoteCreateServiceInterface: '@addhash.store.product.vote.create.service'
+
+    addhash.store.product.repository:
+      class: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product\StoreProductRepository
+      public: true
+      arguments: ['@doctrine.orm.entity_manager']
+    App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product\StoreProductRepository: '@addhash.store.product.repository'
+
+    App\AddHash\AdminPanel\Domain\Store\Category\Model\Store_Category\CategoryRepositoryInterface: '@addhash.store.category.repository'

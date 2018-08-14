@@ -1,0 +1,113 @@
+services:
+  addhash.user.register.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\UserRegisterService
+    public: true
+    arguments: ['@addhash.user.repository', '@security.encoder_factory']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\UserRegisterService: '@addhash.user.register.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface: '@addhash.user.register.service'
+
+  addhash.user.wallet.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\User\UserWalletRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\User\UserWalletRepository: '@addhash.user.wallet.repository'
+
+  App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface: '@addhash.user.wallet.repository'
+
+  addhash.user.vote.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product\StoreProductUserVoteRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product\StoreProductUserVoteRepository: '@addhash.user.vote.repository'
+
+  App\AddHash\AdminPanel\Domain\Store\Product\StoreProductUserVoteRepositoryInterface: '@addhash.user.vote.repository'
+
+  addhash.user.account.settings.general.information.update.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationUpdateService
+    public: true
+    arguments: ['@addhash.user.repository', '@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationUpdateService: '@addhash.user.account.settings.general.information.update.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationUpdateServiceInterface: '@addhash.user.account.settings.general.information.update.service'
+
+
+  addhash.user.account.settings.general.information.get.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationGetService
+    public: true
+    arguments: ['@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationGetService: '@addhash.user.account.settings.general.information.get.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationGetServiceInterface: '@addhash.user.account.settings.general.information.get.service'
+
+  addhash.user.account.settings.password.update.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\PasswordUpdateService
+    public: true
+    arguments: ['@addhash.user.repository', '@security.encoder_factory', '@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\PasswordUpdateService: '@addhash.user.account.settings.password.update.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\PasswordUpdateServiceInterface: '@addhash.user.account.settings.password.update.service'
+
+  addhash.user.account.settings.wallet.update.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletUpdateService
+    public: true
+    arguments: ['@addhash.user.wallet.repository', '@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletUpdateService: '@addhash.user.account.settings.wallet.update.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletUpdateServiceInterface: '@addhash.user.account.settings.wallet.update.service'
+
+  addhash.user.account.settings.wallet.get.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletGetService
+    public: true
+    arguments: ['@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletGetService: '@addhash.user.account.settings.wallet.get.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletGetServiceInterface: '@addhash.user.account.settings.wallet.get.service'
+
+  addhash.user.account.settings.wallet.create.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletCreateService
+    public: true
+    arguments: ['@addhash.wallet.repository', '@addhash.user.wallet.repository', '@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletCreateService: '@addhash.user.account.settings.wallet.create.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletCreateServiceInterface: '@addhash.user.account.settings.wallet.create.service'
+
+  addhash.user.order.miner.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\User\Order\Miner\UserOrderMinerRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\User\Order\Miner\UserOrderMinerRepository: '@addhash.user.order.miner.repository'
+
+  App\AddHash\AdminPanel\Domain\User\Order\UserOrderMinerRepositoryInterface: '@addhash.user.order.miner.repository'
+
+  addhash.user.order.miner.create.service:
+    class:  App\AddHash\AdminPanel\Infrastructure\Services\User\Order\Miner\CreateUserOrderMinerService
+    public: true
+    arguments: ['@addhash.store.order.repository', '@addhash.user.order.miner.repository', '@addhash.miner.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Order\Miner\CreateUserOrderMinerService: '@addhash.user.order.miner.create.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\Order\Miner\CreateUserOrderMinerServiceInterface: '@addhash.user.order.miner.create.service'
+
+  addhash.user.miner.control.get.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetService
+    public: true
+    arguments: ['@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetService: '@addhash.user.miner.control.get.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface: '@addhash.user.miner.control.get.service'
+
+  addhash.user.miner.control.list.pool.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlListPoolService
+    public: true
+    arguments: ['@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlListPoolService: '@addhash.user.miner.control.list.pool.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\MinerControlListPoolServiceInterface: '@addhash.user.miner.control.list.pool.service'
+
+  addhash.user.miner.control.get.pool.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetPoolService
+    public: true
+    arguments: ['@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetPoolService: '@addhash.user.miner.control.get.pool.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetPoolServiceInterface: '@addhash.user.miner.control.get.pool.service'

@@ -1,0 +1,8 @@
+services:
+    addhash.miner.repository:
+      class: App\AddHash\AdminPanel\Infrastructure\Repository\Miner\MinerRepository
+      public: true
+      arguments: ['@doctrine.orm.entity_manager']
+    App\AddHash\AdminPanel\Infrastructure\Repository\Miner\MinerRepository: '@addhash.miner.repository'
+
+    App\AddHash\AdminPanel\Domain\Miners\Repository\MinerRepositoryInterface: '@addhash.miner.repository'

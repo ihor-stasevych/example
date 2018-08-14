@@ -1,0 +1,74 @@
+services:
+
+  addhash.store.order.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order\StoreOrderRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order\StoreOrderRepository: '@addhash.store.order.repository'
+
+  App\AddHash\AdminPanel\Domain\Store\Order\OrderRepositoryInterface: '@addhash.store.order.repository'
+
+  addhash.store.order.item.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order\Item\StoreOrderItemRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order\Item\StoreOrderItemRepository: '@addhash.store.order.item.repository'
+
+  App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItemRepositoryInterface: '@addhash.store.order.item.repository'
+
+  addhash.store.order.create.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCreateService
+    public: true
+    arguments: ['@addhash.store.product.repository','@addhash.store.order.repository','@addhash.store.order.item.repository', '@security.token_storage', '@addhash.miner.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCreateService: '@addhash.store.order.create.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface: '@addhash.store.order.create.service'
+
+  addhash.store.order.addproduct.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderAddProductService
+    public: true
+    arguments: ['@addhash.store.order.repository', '@addhash.store.product.repository', '@addhash.store.order.item.repository', '@addhash.miner.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderAddProductService: '@addhash.store.order.addproduct.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderAddProductServiceInterface: '@addhash.store.order.addproduct.service'
+
+  addhash.store.order.removeitem.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveItemService
+    public: true
+    arguments: ['@addhash.store.order.repository', '@addhash.store.product.repository', '@addhash.store.order.item.repository', '@addhash.miner.repository', '@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveItemService: '@addhash.store.order.removeitem.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderRemoveItemServiceInterface: '@addhash.store.order.removeitem.service'
+
+
+  addhash.store.order.get.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderGetService
+    public: true
+    arguments: ['@addhash.store.order.repository', '@debug.event_dispatcher.inner', '@monolog.logger.db']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderGetService: '@addhash.store.order.get.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface: '@addhash.store.order.get.service'
+
+  addhash.store.order.checkout.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCheckoutService
+    public: true
+    arguments: ['@addhash.store.order.repository', '@addhash.order.checkout.payment.service', '@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCheckoutService: '@addhash.store.order.checkout.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface: '@addhash.store.order.checkout.service'
+
+  addhash.store.order.checkout.prepare.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderPrepareCheckoutService
+    public: true
+    arguments: ['@addhash.store.order.repository', '@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderPrepareCheckoutService: '@addhash.store.order.checkout.prepare.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderPrepareCheckoutServiceInterface: '@addhash.store.order.checkout.prepare.service'
+
+  addhash.store.order.un.reserve.miner.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderUnReserveMinerService
+    public: true
+    arguments: ['@addhash.store.order.repository', '@addhash.miner.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderUnReserveMinerService: '@addhash.store.order.un.reserve.miner.service'
+
+  App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderUnReserveMinerServiceInterface: '@addhash.store.order.un.reserve.miner.service'

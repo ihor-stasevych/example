@@ -1,0 +1,25 @@
+services:
+
+  addhash.payment.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\Payment\PaymentRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\Payment\PaymentRepository: '@addhash.payment.repository'
+
+  App\AddHash\AdminPanel\Domain\Payment\PaymentInterface: '@addhash.payment.repository'
+
+  addhash.payment.transaction.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\Payment\PaymentTransactionRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\Payment\PaymentTransactionRepository: '@addhash.payment.transaction.repository'
+
+  App\AddHash\AdminPanel\Domain\Payment\Repository\PaymentTransactionRepositoryInterface: '@addhash.payment.transaction.repository'
+
+  addhash.order.checkout.payment.service:
+    class:  App\AddHash\AdminPanel\Infrastructure\Services\Payment\MakePaymentForOrderService
+    public: true
+    arguments: ['@addhash.payment.repository', '@addhash.payment.transaction.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Payment\MakePaymentForOrderService: '@addhash.order.checkout.payment.service'
+
+  App\AddHash\AdminPanel\Domain\Payment\Services\MakePaymentForOrderServiceInterface: '@addhash.order.checkout.payment.service'

@@ -1,0 +1,8 @@
+services:
+  addhash.wallet.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\Wallet\WalletRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\Wallet\WalletRepository: '@addhash.wallet.repository'
+
+  App\AddHash\AdminPanel\Domain\Wallet\WalletRepositoryInterface: '@addhash.wallet.repository'
