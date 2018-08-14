@@ -118,7 +118,7 @@ class StoreProduct
 		return $this->media;
 	}
 
-	public function getCreatedAt(): string
+	public function getCreatedAt(): \DateTime
 	{
 		return $this->createdAt;
 	}
