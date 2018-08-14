@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use App\AddHash\AdminPanel\Domain\Miners\Miner;
+use App\AddHash\AdminPanel\Domain\Miners\MinerDetails;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
 
 class MinerFixtures extends Fixture
@@ -34,11 +35,25 @@ class MinerFixtures extends Fixture
             $product = $manager->getRepository(StoreProduct::class)->find($d['productId']);
             $miner->setProduct($product);
 
+            $minerDetails = new MinerDetails(
+                $d['details']['title'],
+                $d['details']['description'],
+                $d['details']['hashRate'],
+                $d['details']['powerRate'],
+                $d['details']['powerEfficiency'],
+                $d['details']['ratedVoltage'],
+                $d['details']['operatingTemperature'],
+                $d['details']['algorithm']
+            );
+
+            $minerDetails->setMiner($miner);
+
             $metadata = $manager->getClassMetadata(Miner::class);
             $metadata->setIdGenerator(new AssignedGenerator());
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
             $manager->persist($miner);
+            $manager->persist($minerDetails);
         }
 
         $manager->flush();
@@ -48,10 +63,17 @@ class MinerFixtures extends Fixture
 
     private function getData(): array
     {
-        return [
-            [
-                'id'        => 1,
-                'state'     => 3,
+        $data = [];
+        $state = 1;
+
+        for ($i = 1; $i <= 73; $i++) {
+            if ($i <= 14) {
+                $state = 3;
+            }
+
+            $data[] = [
+                'id'        => $i,
+                'state'     => $state,
                 'priority'  => 2,
                 'ip'        => '10.0.10.6',
                 'port'      => 4028,
@@ -66,7 +88,9 @@ class MinerFixtures extends Fixture
                     'operatingTemperature' => '0 - 40 °C',
                     'algorithm'            => 'SHA256',
                 ],
-            ],
-        ];
+            ];
+        }
+
+        return $data;
     }
 }

@@ -86,4 +86,9 @@ class MinerDetails
 	{
 		return $this->algorithm;
 	}
+
+	public function setMiner(Miner $miner)
+    {
+        $this->miner = $miner;
+    }
 }
