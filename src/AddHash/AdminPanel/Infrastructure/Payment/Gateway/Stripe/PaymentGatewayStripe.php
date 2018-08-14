@@ -11,6 +11,7 @@ class PaymentGatewayStripe implements PaymentGatewayInterface
 {
 	const API_KEY_PRIVATE = 'sk_test_UUeNKCoiCH94euQA1F25elLg';
 	const API_KEY_PUBLIC = 'pk_test_4d16pNNIAm3Chc7JFRkUOGM0';
+	const GATEWAY_NAME = 'Stripe';
 
 	private $payment;
 
@@ -35,6 +36,10 @@ class PaymentGatewayStripe implements PaymentGatewayInterface
 		return self::API_KEY_PUBLIC;
 	}
 
+	public function getGateWayName()
+	{
+		return self::GATEWAY_NAME;
+	}
 
 
 }

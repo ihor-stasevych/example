@@ -2,6 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\Payment;
 
+use App\AddHash\AdminPanel\Domain\Payment\Gateway\PaymentGateway;
 use App\AddHash\AdminPanel\Domain\Payment\Gateway\PaymentGatewayInterface;
 use App\AddHash\AdminPanel\Domain\User\User;
 
