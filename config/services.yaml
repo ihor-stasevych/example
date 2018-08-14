@@ -88,3 +88,4 @@ services:
 
 imports:
   - { resource: "../src/AddHash/Resources/config/services.yaml"}
+  - { resource: "../src/AddHash/Resources/config/fixtures.yaml"}

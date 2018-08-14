@@ -6,9 +6,6 @@ App\AddHash\AdminPanel\Domain\Store\Product\Media\StoreProductMedia:
             type: integer
             generator: { strategy: AUTO }
     fields:
-        product_id:
-            type: integer
-
         type:
             type: integer
             length: 4
@@ -22,6 +19,6 @@ App\AddHash\AdminPanel\Domain\Store\Product\Media\StoreProductMedia:
         targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct
         inversedBy: product
         joinColumn:
-          name: product_id
+          name: productId
           referencedColumnName: id
 

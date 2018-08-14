@@ -2,72 +2,49 @@
 
 namespace App\AddHash\AdminPanel\Domain\Miners;
 
+use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
+
 class Miner
 {
+    const STATE_UNAVAILABLE = 0;
+
 	const STATE_AVAILABLE = 1;
+
 	const STATE_BUSY = 2;
+
 	const STATE_RESERVED = 3;
 
-	const STATE_UNAVAILABLE = 0;
+	const STATE_DEFAULT = self::STATE_AVAILABLE;
+
 
 	private $id;
 
-	private $title;
-
-	private $description;
-
-	private $hashRate;
-
-	private $powerRate;
-
-	private $powerEfficiency;
-
-	private $ratedVoltage;
-
-	private $operatingTemperature;
-
 	private $state;
+
+    private $priority;
 
 	private $ip;
 
-	private $algorithm;
-
-	private $priority;
+    private $port;
 
 	private $product;
 
-	private $port;
+	private $details;
 
 	private $stateAliases = [
-		self::STATE_AVAILABLE => 'available',
-		self::STATE_BUSY => 'busy',
-		self::STATE_RESERVED => 'reserved',
-		self::STATE_UNAVAILABLE => 'unavailable'
+        self::STATE_UNAVAILABLE => 'unavailable',
+		self::STATE_AVAILABLE   => 'available',
+		self::STATE_BUSY        => 'busy',
+		self::STATE_RESERVED    => 'reserved',
 	];
 
-	public function __construct(
-		$title, $description, $hashRate, $powerRate,
-		$powerEfficiency, $ratedVoltage, $operatingTemperature,
-		$ip, $algorithm, $priority, $port
-	)
+	public function __construct($priority, $ip, $port, $id = null)
 	{
-		$this->title = $title;
-		$this->description = $description;
-		$this->hashRate = $hashRate;
-		$this->powerRate = $powerRate;
-		$this->powerEfficiency = $powerEfficiency;
-		$this->ratedVoltage = $ratedVoltage;
-		$this->operatingTemperature = $operatingTemperature;
-		$this->state = self::STATE_AVAILABLE;
-		$this->algorithm = $algorithm;
+	    $this->id = $id;
+		$this->state = static::STATE_DEFAULT;
+        $this->priority = $priority;
 		$this->ip = $ip;
-		$this->priority = $priority;
 		$this->port = $port;
-	}
-
-	public function getTitle()
-	{
-		return $this->title;
 	}
 
 	public function getId()
@@ -80,39 +57,14 @@ class Miner
 		return $this->state;
 	}
 
+    public function getPriority()
+    {
+        return $this->priority;
+    }
+
 	public function getStateAlias()
 	{
 		return $this->stateAliases[$this->state];
-	}
-
-	public function getHashRate()
-	{
-		return $this->hashRate;
-	}
-
-	public function getPowerRate()
-	{
-		return $this->powerRate;
-	}
-
-	public function getPowerEfficiency()
-	{
-		return $this->powerEfficiency;
-	}
-
-	public function getRatedVoltage()
-	{
-		return $this->ratedVoltage;
-	}
-
-	public function getOperatingTemperature()
-	{
-		return $this->operatingTemperature;
-	}
-
-	public function getAlgorithm()
-	{
-		return $this->algorithm;
 	}
 
     public function getIp()
@@ -125,9 +77,14 @@ class Miner
         return $this->port;
     }
 
-    public function getPriority()
+    public function getDetails()
     {
-    	return $this->priority;
+        return $this->details;
+    }
+
+    public function getProduct()
+    {
+        return $this->product;
     }
 
 	public function reserveMiner()
@@ -139,4 +96,9 @@ class Miner
 	{
 		$this->state = self::STATE_AVAILABLE;
 	}
+
+	public function setProduct(StoreProduct $product)
+    {
+        $this->product = $product;
+    }
 }

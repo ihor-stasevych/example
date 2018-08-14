@@ -1,0 +1,30 @@
+services:
+    App\AddHash\AdminPanel\Application\DataFixtures\UserFixtures:
+      public: false
+      arguments: []
+      tags: ['doctrine.fixture.orm']
+
+    App\AddHash\AdminPanel\Application\DataFixtures\StoreProductFixtures:
+      public: false
+      arguments: []
+      tags: ['doctrine.fixture.orm']
+
+    App\AddHash\AdminPanel\Application\DataFixtures\StoreProductMediaFixtures:
+      public: false
+      arguments: []
+      tags: ['doctrine.fixture.orm']
+
+    App\AddHash\AdminPanel\Application\DataFixtures\PaymentFixtures:
+      public: false
+      arguments: []
+      tags: ['doctrine.fixture.orm']
+
+    App\AddHash\AdminPanel\Application\DataFixtures\StoreOrderFixtures:
+      public: false
+      arguments: []
+      tags: ['doctrine.fixture.orm']
+
+    App\AddHash\AdminPanel\Application\DataFixtures\MinerFixtures:
+      public: false
+      arguments: []
+      tags: ['doctrine.fixture.orm']

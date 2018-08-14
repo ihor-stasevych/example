@@ -34,18 +34,19 @@ class StoreOrder
 	private $payment;
 
 
-	/**
-	 * StoreOrder constructor.
-	 *
-	 * @param User $user
-	 */
-	public function __construct(User $user)
+    /**
+     * StoreOrder constructor.
+     * @param User $user
+     * @param null $id
+     */
+	public function __construct(User $user, $id = null)
 	{
 		$this->createdAt = new \DateTime();
 		$this->updatedAt = new \DateTime();
 		$this->items = new ArrayCollection();
 		$this->state = self::STATE_NEW;
 		$this->user = $user;
+		$this->id = $id;
 	}
 
 	/**

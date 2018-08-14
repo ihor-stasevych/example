@@ -28,7 +28,7 @@ class StoreOrderItem
 
 	public function __construct(
 		StoreOrder $order, StoreProduct $product,
-		int $quantity
+		int $quantity, $id = null
 	)
 	{
 		$this->quantity = 1;
@@ -37,6 +37,7 @@ class StoreOrderItem
 		$this->addProduct($product);
 		$this->setQuantity($quantity);
 		$this->priceTotal = $this->quantity * $product->getPrice();
+		$this->id = $id;
 	}
 
 	public function getId()
