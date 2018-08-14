@@ -2,13 +2,12 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Miners\Extender;
 
-use App\AddHash\AdminPanel\Domain\Miners\Miner;
+use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Domain\Miners\Parsers\ParserInterface;
 use App\AddHash\AdminPanel\Domain\Miners\Extender\MinerInterface;
 use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketErrorException;
 use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketCreateErrorException;
 use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketConnectionErrorException;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 class MinerSocket implements MinerInterface
 {
@@ -18,10 +17,10 @@ class MinerSocket implements MinerInterface
 
     private $parser;
 
-    public function __construct(Miner $miner, ParserInterface $parser)
+    public function __construct(MinerStock $minerStock, ParserInterface $parser)
     {
-        $this->ip = $miner->getIp();
-        $this->port = $miner->getPort();
+        $this->ip = $minerStock->getIp();
+        $this->port = $minerStock->getPort();
         $this->parser = $parser;
     }
 
@@ -53,22 +52,14 @@ class MinerSocket implements MinerInterface
      */
     private function getSocket(string $address, string $port)
     {
-        try {
-            $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-        } catch (\Exception $e) {
-            $socket = false;
-        }
+        $socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 
         if (false === $socket) {
             $error = socket_strerror(socket_last_error());
             throw new MinerSocketCreateErrorException("ERR: socket create(TCP) failed " . $error);
         }
 
-        try {
-            $connection = socket_connect($socket, $address, $port);
-        } catch (\Exception $e) {
-            $connection = false;
-        }
+        $connection = @socket_connect($socket, $address, $port);
 
         if (false === $connection) {
             socket_close($socket);

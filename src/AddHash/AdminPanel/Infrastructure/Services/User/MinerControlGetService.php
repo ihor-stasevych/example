@@ -3,6 +3,7 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User;
 
 use App\AddHash\AdminPanel\Domain\User\User;
+use App\AddHash\AdminPanel\Domain\Miners\Miner;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Commands\MinerCommand;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketParser;
@@ -33,25 +34,20 @@ class MinerControlGetService implements MinerControlGetServiceInterface
         }
 
         $parser = new MinerSocketParser();
-        $minersUniqueId = [];
         $data = [];
 
         foreach ($user->getOrderMiner() as $orderMiners) {
+            /** @var Miner $miner **/
             foreach ($orderMiners->getMiners() as $miner) {
-                if (false !== array_search($miner->getId(), $minersUniqueId)) {
-                    break;
+                foreach ($miner->getStock() as $stock) {
+                    $command = new MinerCommand(new MinerSocket($stock, $parser));
+
+                    $data[] = $command->getSummary() + [
+                        'minerTitle'   => $miner->getTitle(),
+                        'minerId'      => $miner->getId(),
+                        'minerStockId' => $stock->getId(),
+                    ];
                 }
-
-                $minersUniqueId[] = $miner->getId();
-
-                $command = new MinerCommand(
-                    new MinerSocket($miner, $parser)
-                );
-
-                $data[] = $command->getSummary() + [
-                    'minerTitle' => $miner->getDetails()->getTitle(),
-                    'minerId'    => $miner->getId(),
-                ];
             }
         }
 

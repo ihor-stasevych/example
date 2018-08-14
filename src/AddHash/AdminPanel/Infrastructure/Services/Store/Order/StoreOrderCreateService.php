@@ -2,26 +2,27 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
-use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerRepositoryInterface;
-use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCreateCommandInterface;
-use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
-use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItemRepositoryInterface;
-
-use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
-use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductRepositoryInterface;
-
-use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface;
+use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerStockRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItemRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCreateCommandInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface;
 
 class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 {
 	private $storeProductRepository;
+
 	private $storeOrderRepository;
+
 	private $storeOrderItemRepository;
-	private $minerRepository;
+
+	private $minerStockRepository;
+
 	private $tokenStorage;
 
 	public function __construct(
@@ -29,14 +30,14 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 		StoreOrderRepositoryInterface $orderRepository,
 		StoreOrderItemRepositoryInterface $orderItemRepository,
 		TokenStorageInterface $tokenStorage,
-		MinerRepositoryInterface $minerRepository
+        MinerStockRepositoryInterface $minerStockRepository
 	)
 	{
 		$this->storeProductRepository = $productRepository;
 		$this->storeOrderRepository = $orderRepository;
 		$this->storeOrderItemRepository = $orderItemRepository;
 		$this->tokenStorage = $tokenStorage;
-		$this->minerRepository = $minerRepository;
+		$this->minerStockRepository = $minerStockRepository;
 	}
 
 	/**
@@ -68,9 +69,8 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 			$miner = $product->reserveMiner();
 
 			if ($miner) {
-				$this->minerRepository->save($miner);
+				$this->minerStockRepository->save($miner);
 			}
-
 		}
 
 		$order->calculateItems();

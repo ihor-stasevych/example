@@ -2,6 +2,8 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
+use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Exceptions\StoreOrderNoUnPaidErrorException;
@@ -39,9 +41,10 @@ class StoreOrderUnReserveMinerService implements StoreOrderUnReserveMinerService
 
         $unReserveMiners = [];
 
+	    /** @var  StoreOrder $unPaidOrder */
         foreach ($unPaidOrders as $unPaidOrder) {
             $items = $unPaidOrder->getItems();
-
+            /** @var StoreOrderItem $item **/
             foreach ($items as $item) {
                 $miner = $item->getProduct()->unReserveMiner();
 

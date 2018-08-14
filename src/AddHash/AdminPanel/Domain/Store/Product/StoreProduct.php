@@ -2,9 +2,10 @@
 
 namespace App\AddHash\AdminPanel\Domain\Store\Product;
 
-use Doctrine\Common\Collections\Criteria;
 use App\AddHash\AdminPanel\Domain\Miners\Miner;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Domain\Store\Category\Model\StoreCategory;
 
 class StoreProduct
@@ -29,7 +30,7 @@ class StoreProduct
 	private $createdAt;
 
 	protected $statusAlias = [
-		self::STATE_AVAILABLE => 'available',
+		self::STATE_AVAILABLE   => 'available',
 		self::STATE_UNAVAILABLE => 'unavailable'
 	];
 
@@ -77,27 +78,27 @@ class StoreProduct
 		$this->vote = $vote;
 	}
 
-	public function getId(): ?int
+	public function getId()
 	{
 		return $this->id;
 	}
 
-	public function getTitle(): string
+	public function getTitle()
 	{
 		return $this->title;
 	}
 
-	public function getDescription(): string
+	public function getDescription()
 	{
 		return $this->description;
 	}
 
-	public function getPrice(): float
+	public function getPrice()
 	{
 		return $this->price;
 	}
 
-	public function getTechDetails(): string
+	public function getTechDetails()
 	{
 		return $this->techDetails;
 	}
@@ -105,20 +106,20 @@ class StoreProduct
 	/**
 	 * @return ArrayCollection
 	 */
-	public function getCategories()
-	{
-		return $this->category;
-	}
+//	public function getCategories()
+//	{
+//		return $this->category;
+//	}
+//
+//	/**
+//	 * @return ArrayCollection
+//	 */
+//	public function getMedia()
+//	{
+//		return $this->media;
+//	}
 
-	/**
-	 * @return ArrayCollection
-	 */
-	public function getMedia()
-	{
-		return $this->media;
-	}
-
-	public function getCreatedAt(): string
+	public function getCreatedAt()
 	{
 		return $this->createdAt;
 	}
@@ -169,7 +170,7 @@ class StoreProduct
 	 */
 	public function ensureAvailableMiner(int $quantity = 1)
 	{
-		return $this->ensureMinersByState(Miner::STATE_AVAILABLE, $quantity);
+		return $this->ensureMinersByState(MinerStock::STATE_AVAILABLE, $quantity);
 	}
 
 	/**
@@ -178,7 +179,7 @@ class StoreProduct
 	 */
 	public function ensureReservedMiner(int $quantity = 1)
 	{
-		return $this->ensureMinersByState(Miner::STATE_RESERVED, $quantity);
+		return $this->ensureMinersByState(MinerStock::STATE_RESERVED, $quantity);
 	}
 
 	public function getAvailableMinersQuantity(): int
@@ -187,9 +188,11 @@ class StoreProduct
 
 		/** @var Miner $miner */
 		foreach ($this->getMiners() as $miner) {
-			if ($miner->getState() == Miner::STATE_AVAILABLE) {
-				$result += 1;
-			}
+		    foreach ($miner->getStock() as $stock) {
+                if ($stock->getState() == MinerStock::STATE_AVAILABLE) {
+                    $result += 1;
+                }
+            }
 		}
 
 		return $result;
@@ -201,39 +204,47 @@ class StoreProduct
 
 		/** @var Miner $miner */
 		foreach ($this->getMiners() as $miner) {
-			if ($miner->getState() == Miner::STATE_RESERVED) {
-				$result += 1;
-			}
+            foreach ($miner->getStock() as $stock) {
+                if ($stock->getState() == MinerStock::STATE_RESERVED) {
+                    $result += 1;
+                }
+            }
 		}
 
 		return $result;
 	}
 
 	/**
-	 * @return Miner
+	 * @return MinerStock
 	 */
 	public function reserveMiner()
 	{
 		/** @var Miner $miner */
 		foreach ($this->getMiners() as $miner) {
-			if ($miner->getState() == Miner::STATE_AVAILABLE) {
-				$miner->reserveMiner();
-				return $miner;
-			}
+            foreach ($miner->getStock() as $stock) {
+                if ($stock->getState() == MinerStock::STATE_AVAILABLE) {
+                    $stock->reserveMiner();
+
+                    return $stock;
+                }
+            }
 		}
 	}
 
 	/**
-	 * @return Miner
+	 * @return MinerStock
 	 */
 	public function unReserveMiner()
 	{
 		/** @var Miner $miner */
 		foreach ($this->getMiners() as $miner) {
-			if ($miner->getState() == Miner::STATE_RESERVED) {
-				$miner->setAvailable();
-				return $miner;
-			}
+            foreach ($miner->getStock() as $stock) {
+                if ($stock->getState() == MinerStock::STATE_RESERVED) {
+                    $stock->setAvailable();
+
+                    return $stock;
+                }
+            }
 		}
 	}
 

@@ -6,8 +6,8 @@ use Doctrine\ORM\Id\AssignedGenerator;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Domain\Miners\Miner;
-use App\AddHash\AdminPanel\Domain\Miners\MinerDetails;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
 
 class MinerFixtures extends Fixture
@@ -21,13 +21,13 @@ class MinerFixtures extends Fixture
         }
 
         foreach ($data as $d) {
-            $miner = new Miner($d['priority'], $d['ip'], $d['port'], $d['id']);
+            $miner = new MinerStock($d['priority'], $d['ip'], $d['port'], $d['id']);
 
             switch($d['state']) {
-                case Miner::STATE_AVAILABLE:
+                case MinerStock::STATE_AVAILABLE:
                     $miner->setAvailable();
                     break;
-                case Miner::STATE_RESERVED:
+                case MinerStock::STATE_RESERVED:
                     $miner->reserveMiner();
                     break;
             }
@@ -35,7 +35,7 @@ class MinerFixtures extends Fixture
             $product = $manager->getRepository(StoreProduct::class)->find($d['productId']);
             $miner->setProduct($product);
 
-            $minerDetails = new MinerDetails(
+            $minerDetails = new Miner(
                 $d['details']['title'],
                 $d['details']['description'],
                 $d['details']['hashRate'],
@@ -48,7 +48,7 @@ class MinerFixtures extends Fixture
 
             $minerDetails->setMiner($miner);
 
-            $metadata = $manager->getClassMetadata(Miner::class);
+            $metadata = $manager->getClassMetadata(MinerStock::class);
             $metadata->setIdGenerator(new AssignedGenerator());
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 

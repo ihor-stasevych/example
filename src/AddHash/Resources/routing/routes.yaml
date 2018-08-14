@@ -103,11 +103,6 @@ user.miner.control.get:
   methods: GET
   controller: App\AddHash\AdminPanel\Application\Controller\User\MinerControlController::get
 
-user.miner.control.pools.list:
-  path: "/api/v1/user/miners/pools"
-  methods: GET
-  controller: App\AddHash\AdminPanel\Application\Controller\User\MinerControlController::listPool
-
 user.miner.control.pools.get:
   path: "/api/v1/user/miners/{id}/pools/"
   methods: GET

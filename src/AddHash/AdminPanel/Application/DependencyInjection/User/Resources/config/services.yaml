@@ -96,14 +96,6 @@ services:
 
   App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface: '@addhash.user.miner.control.get.service'
 
-  addhash.user.miner.control.list.pool.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlListPoolService
-    public: true
-    arguments: ['@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlListPoolService: '@addhash.user.miner.control.list.pool.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\MinerControlListPoolServiceInterface: '@addhash.user.miner.control.list.pool.service'
-
   addhash.user.miner.control.get.pool.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetPoolService
     public: true

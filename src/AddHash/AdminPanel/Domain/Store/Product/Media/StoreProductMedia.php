@@ -39,7 +39,7 @@ class StoreProductMedia
 		return $this->src;
 	}
 
-	public function getType(): int
+	public function getType()
 	{
 		return $this->typeAlias[$this->type] ?? 'undefined';
 	}

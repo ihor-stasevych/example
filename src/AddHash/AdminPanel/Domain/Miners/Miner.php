@@ -2,103 +2,105 @@
 
 namespace App\AddHash\AdminPanel\Domain\Miners;
 
+use Doctrine\ORM\PersistentCollection;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
 
 class Miner
 {
-    const STATE_UNAVAILABLE = 0;
-
-	const STATE_AVAILABLE = 1;
-
-	const STATE_BUSY = 2;
-
-	const STATE_RESERVED = 3;
-
-	const STATE_DEFAULT = self::STATE_AVAILABLE;
-
-
 	private $id;
 
-	private $state;
+	private $title;
 
-    private $priority;
+	private $description;
 
-	private $ip;
+	private $hashRate;
 
-    private $port;
+	private $powerRate;
+
+	private $powerEfficiency;
+
+	private $ratedVoltage;
+
+	private $operatingTemperature;
+
+	private $algorithm;
 
 	private $product;
 
-	private $details;
+    private $stock;
 
-	private $stateAliases = [
-        self::STATE_UNAVAILABLE => 'unavailable',
-		self::STATE_AVAILABLE   => 'available',
-		self::STATE_BUSY        => 'busy',
-		self::STATE_RESERVED    => 'reserved',
-	];
-
-	public function __construct($priority, $ip, $port, $id = null)
+	public function __construct(
+	    string $title,
+        string $description,
+        string $hashRate,
+        string $powerRate,
+        string $powerEfficiency,
+        string $ratedVoltage,
+        string $operatingTemperature,
+        string $algorithm,
+        int $id = null
+    )
 	{
-	    $this->id = $id;
-		$this->state = static::STATE_DEFAULT;
-        $this->priority = $priority;
-		$this->ip = $ip;
-		$this->port = $port;
+		$this->title = $title;
+		$this->description = $description;
+		$this->hashRate = $hashRate;
+		$this->powerRate = $powerRate;
+		$this->powerEfficiency = $powerEfficiency;
+		$this->ratedVoltage = $ratedVoltage;
+		$this->operatingTemperature = $operatingTemperature;
+		$this->algorithm = $algorithm;
+		$this->stock = new ArrayCollection();
+		$this->id = $id;
 	}
 
-	public function getId()
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+	public function getTitle(): string
 	{
-		return $this->id;
+		return $this->title;
 	}
 
-	public function getState()
+	public function getHashRate(): string
 	{
-		return $this->state;
+		return $this->hashRate;
 	}
 
-    public function getPriority()
-    {
-        return $this->priority;
-    }
-
-	public function getStateAlias()
+	public function getPowerRate(): string
 	{
-		return $this->stateAliases[$this->state];
+		return $this->powerRate;
 	}
 
-    public function getIp()
-    {
-        return $this->ip;
-    }
+	public function getPowerEfficiency(): string
+	{
+		return $this->powerEfficiency;
+	}
 
-	public function getPort()
-    {
-        return $this->port;
-    }
+	public function getRatedVoltage(): string
+	{
+		return $this->ratedVoltage;
+	}
 
-    public function getDetails()
-    {
-        return $this->details;
-    }
+	public function getOperatingTemperature(): string
+	{
+		return $this->operatingTemperature;
+	}
 
-    public function getProduct()
+	public function getAlgorithm(): string
+	{
+		return $this->algorithm;
+	}
+
+	public function getProduct(): StoreProduct
     {
         return $this->product;
     }
 
-	public function reserveMiner()
-	{
-		$this->state = self::STATE_RESERVED;
-	}
-
-	public function setAvailable()
-	{
-		$this->state = self::STATE_AVAILABLE;
-	}
-
-	public function setProduct(StoreProduct $product)
+    public function getStock(): PersistentCollection
     {
-        $this->product = $product;
+        return $this->stock;
     }
 }
