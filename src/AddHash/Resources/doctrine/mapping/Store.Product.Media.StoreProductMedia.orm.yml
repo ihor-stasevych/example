@@ -15,9 +15,9 @@ App\AddHash\AdminPanel\Domain\Store\Product\Media\StoreProductMedia:
             length: 255
 
     manyToOne:
-      product:
-        targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct
-        inversedBy: product
-        joinColumn:
-          name: productId
-          referencedColumnName: id
+        product:
+            targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct
+            inversedBy: product
+            joinColumn:
+                name: productId
+                referencedColumnName: id

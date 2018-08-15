@@ -3,6 +3,7 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User;
 
 use App\AddHash\AdminPanel\Domain\User\User;
+use App\AddHash\AdminPanel\Domain\Miners\Miner;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Commands\MinerCommand;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketParser;
@@ -40,18 +41,21 @@ class MinerControlGetPoolService implements MinerControlGetPoolServiceInterface
         $id = $command->getId();
 
         foreach ($user->getOrderMiner() as $orderMiners) {
+            /** @var Miner $miner **/
             foreach ($orderMiners->getMiners() as $miner) {
-                if ($miner->getId() == $id) {
-                    $parser = new MinerSocketParser();
+                foreach ($miner->getStock() as $stock) {
+                    if ($stock->getId() == $id) {
+                        $parser = new MinerSocketParser();
+                        $command = new MinerCommand(new MinerSocket($stock, $parser));
 
-                    $command = new MinerCommand(
-                        new MinerSocket($miner, $parser)
-                    );
+                        $data = $command->getPools() + [
+                            'minerTitle'   => $miner->getTitle(),
+                            'minerId'      => $miner->getId(),
+                            'minerStockId' => $stock->getId(),
+                        ];
 
-                    $data = $command->getPools() + [
-                        'minerTitle' => $miner->getTitle(),
-                        'minerId'    => $miner->getId(),
-                    ];
+                        break;
+                    }
                 }
             }
         }

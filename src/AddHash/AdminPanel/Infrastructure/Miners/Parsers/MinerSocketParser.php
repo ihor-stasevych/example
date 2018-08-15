@@ -6,9 +6,9 @@ use App\AddHash\AdminPanel\Domain\Miners\Parsers\ParserInterface;
 
 class MinerSocketParser implements ParserInterface
 {
-    public function normalizeData($line): ?array
+    public function normalizeData($line): array
     {
-        $data = null;
+        $data = [];
 
         if ($line) {
             if (substr($line, 0, 1) == '{') {

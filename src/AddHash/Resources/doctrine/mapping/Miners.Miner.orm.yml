@@ -1,5 +1,5 @@
 App\AddHash\AdminPanel\Domain\Miners\Miner:
-    miner:
+    minerDetails:
     type: entity
     table: Miner
     id:
@@ -7,29 +7,40 @@ App\AddHash\AdminPanel\Domain\Miners\Miner:
             type: integer
             generator: { strategy: AUTO }
     fields:
-        state:
-            type: smallint
+        title:
+            type: string
+            length: 100
 
-        priority:
-            type: integer
-            length: 4
+        description:
+            type: json
 
-        ip:
+        hashRate:
             type: string
 
-        port:
-            type: integer
-            length: 6
+        powerRate:
+            type: string
+
+        powerEfficiency:
+            type: string
+
+        ratedVoltage:
+            type: string
+
+        operatingTemperature:
+            type: string
+
+        algorithm:
+            type: string
 
     manyToOne:
         product:
-          targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct
-          inversedBy: product
-          joinColumn:
-            name: productId
-            referencedColumnName: id
+            targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct
+            inversedBy: product
+            joinColumn:
+                name: productId
+                referencedColumnName: id
 
-    oneToOne:
-        details:
-          targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerDetails
-          mappedBy: miner
+    oneToMany:
+        stock:
+            targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerStock
+            mappedBy: miner
