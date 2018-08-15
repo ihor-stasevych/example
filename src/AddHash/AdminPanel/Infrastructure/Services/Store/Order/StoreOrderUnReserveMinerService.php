@@ -47,9 +47,15 @@ class StoreOrderUnReserveMinerService implements StoreOrderUnReserveMinerService
 
             /** @var StoreOrderItem $item **/
             foreach ($items as $item) {
-                $minerStock = $item->getProduct()->unReserveMiner();
+                $quantity = $item->getQuantity();
 
-                if ($minerStock) {
+                for ($i = 0; $i < $quantity; $i++) {
+                    $minerStock = $item->getProduct()->unReserveMiner();
+
+                    if (!$minerStock) {
+                        break;
+                    }
+
                     $unReserveMiners[] = $minerStock;
                     $this->minerStockRepository->save($minerStock);
                 }

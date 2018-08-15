@@ -35,8 +35,8 @@ App\AddHash\AdminPanel\Domain\User\Order\UserOrderMiner:
 
 
     manyToMany:
-          miner:
-              targetEntity: App\AddHash\AdminPanel\Domain\Miners\Miner
+          minerStock:
+              targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerStock
               cascade: [ 'persist' ]
               fetch: EXTRA_LAZY
               indexBy: type
