@@ -8,27 +8,15 @@ use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\WalletCreateComma
 class WalletCreateCommand implements WalletCreateCommandInterface
 {
     /**
-     * @var int
-     * @Assert\NotBlank()
-     */
-    private $walletId;
-
-    /**
      * @var string
      * @Assert\NotBlank()
      */
     private $value;
 
-	public function __construct($walletId, $value)
+	public function __construct($value)
 	{
-		$this->walletId = $walletId;
 		$this->value = $value;
 	}
-
-	public function getWalletId(): int
-    {
-        return $this->walletId;
-    }
 
     public function getValue(): string
     {
