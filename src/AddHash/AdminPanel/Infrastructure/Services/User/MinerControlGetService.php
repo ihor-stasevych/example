@@ -2,6 +2,8 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User;
 
+use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
+use App\AddHash\AdminPanel\Domain\User\Order\UserOrderMiner;
 use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Domain\Miners\Miner;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket;
@@ -36,18 +38,18 @@ class MinerControlGetService implements MinerControlGetServiceInterface
         $parser = new MinerSocketParser();
         $data = [];
 
-        foreach ($user->getOrderMiner() as $orderMiners) {
-            /** @var Miner $miner **/
-            foreach ($orderMiners->getMiners() as $miner) {
-                foreach ($miner->getStock() as $stock) {
+        /** @var UserOrderMiner $orderMiners */
+		foreach ($user->getOrderMiner() as $orderMiners) {
+			/** @var MinerStock $stock */
+			foreach ($orderMiners->getMiners() as $stock) {
                     $command = new MinerCommand(new MinerSocket($stock, $parser));
 
                     $data[] = $command->getSummary() + [
-                        'minerTitle'   => $miner->getTitle(),
-                        'minerId'      => $miner->getId(),
+                        'minerTitle'   => $stock->getMiner()->getTitle(),
+                        'minerId'      => $stock->getMiner()->getId(),
                         'minerStockId' => $stock->getId(),
                     ];
-                }
+
             }
         }
 

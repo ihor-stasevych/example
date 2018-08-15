@@ -25,6 +25,7 @@ class MinerStock
 
     private $port;
 
+    /** @var Miner */
 	private $miner;
 
 	private $product;
@@ -83,5 +84,10 @@ class MinerStock
 	public function setAvailable()
 	{
 		$this->state = self::STATE_AVAILABLE;
+	}
+
+	public function getMiner()
+	{
+		return $this->miner;
 	}
 }
