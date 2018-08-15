@@ -86,7 +86,7 @@ class MinerStock
 		$this->state = self::STATE_AVAILABLE;
 	}
 
-	public function getMiner()
+	public function infoMiner()
 	{
 		return $this->miner;
 	}

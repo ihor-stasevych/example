@@ -45,8 +45,8 @@ class MinerControlGetService implements MinerControlGetServiceInterface
                     $command = new MinerCommand(new MinerSocket($stock, $parser));
 
                     $data[] = $command->getSummary() + [
-                        'minerTitle'   => $stock->getMiner()->getTitle(),
-                        'minerId'      => $stock->getMiner()->getId(),
+                        'minerTitle'   => $stock->infoMiner()->getTitle(),
+                        'minerId'      => $stock->infoMiner()->getId(),
                         'minerStockId' => $stock->getId(),
                     ];
 
