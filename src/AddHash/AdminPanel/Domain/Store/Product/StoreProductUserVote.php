@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\Store\Product;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use App\AddHash\Authentication\Domain\Model\User;
 
 class StoreProductUserVote
 {
@@ -35,17 +35,12 @@ class StoreProductUserVote
         return $this->user;
     }
 
-    public function getProduct()
-    {
-        return $this->product;
-    }
-
-    public function setUser($user)
+    public function setUser(User $user)
     {
         $this->user = $user;
     }
 
-    public function setProduct($product)
+    public function setProduct(StoreProduct $product)
     {
         $this->product = $product;
     }

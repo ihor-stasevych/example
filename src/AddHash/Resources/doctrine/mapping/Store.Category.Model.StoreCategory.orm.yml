@@ -11,8 +11,7 @@ App\AddHash\AdminPanel\Domain\Store\Category\Model\StoreCategory:
             length: 100
 
         createdAt:
-            type: integer
-            length: 12
+            type: datetime
 
         position:
             type: integer

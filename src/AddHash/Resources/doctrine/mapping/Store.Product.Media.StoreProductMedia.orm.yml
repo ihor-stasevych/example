@@ -21,4 +21,3 @@ App\AddHash\AdminPanel\Domain\Store\Product\Media\StoreProductMedia:
         joinColumn:
           name: productId
           referencedColumnName: id
-

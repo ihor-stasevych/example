@@ -17,7 +17,7 @@ class StoreCategory
 	{
 		$this->title = $title;
 		$this->position = $position;
-		$this->createdAt = time();
+		$this->createdAt = new \DateTime();
 	}
 
 	public function getId()
