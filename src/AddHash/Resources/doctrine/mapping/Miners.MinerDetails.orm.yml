@@ -35,7 +35,6 @@ App\AddHash\AdminPanel\Domain\Miners\MinerDetails:
     oneToOne:
         miner:
           targetEntity: App\AddHash\AdminPanel\Domain\Miners\Miner
-          inversedBy: miner
           joinColumn:
             name: minerId
             referencedColumnName: id
