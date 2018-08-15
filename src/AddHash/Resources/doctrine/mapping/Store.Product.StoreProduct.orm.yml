@@ -48,13 +48,13 @@ App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct:
 
     oneToMany:
         media:
-          targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\Media\StoreProductMedia
-          mappedBy: product
+            targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\Media\StoreProductMedia
+            mappedBy: product
 
-        miner:
-          targetEntity: App\AddHash\AdminPanel\Domain\Miners\Miner
-          mappedBy: product
+        minerStock:
+            targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerStock
+            mappedBy: product
 
         userVote:
-          targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProductUserVote
-          mappedBy: product
+            targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProductUserVote
+            mappedBy: product

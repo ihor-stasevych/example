@@ -27,6 +27,8 @@ class MinerStock
 
 	private $miner;
 
+	private $product;
+
 	private $stateAliases = [
         self::STATE_UNAVAILABLE => 'unavailable',
 		self::STATE_AVAILABLE   => 'available',

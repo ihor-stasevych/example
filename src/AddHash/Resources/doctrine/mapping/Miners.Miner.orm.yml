@@ -32,14 +32,6 @@ App\AddHash\AdminPanel\Domain\Miners\Miner:
         algorithm:
             type: string
 
-    manyToOne:
-        product:
-            targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct
-            inversedBy: product
-            joinColumn:
-                name: productId
-                referencedColumnName: id
-
     oneToMany:
         stock:
             targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerStock
