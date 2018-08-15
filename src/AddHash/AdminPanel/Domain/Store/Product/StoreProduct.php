@@ -38,7 +38,8 @@ class StoreProduct
 
 	private $media;
 
-	private $minerStock;
+	/** @var Miner */
+	private $miner;
 
 	private $vote;
 
@@ -46,16 +47,16 @@ class StoreProduct
 
 	public function __construct(
 		$title,
-        $description,
-        $techDetails,
+		$description,
+		$techDetails,
 		$price,
-        $state,
-        $categories,
-        $vote = null,
-        $id = null
+		$state,
+		$categories,
+		$vote = null,
+		$id = null
 	)
 	{
-	    $this->id = $id;
+		$this->id = $id;
 		$this->title = $title;
 		$this->description = $description;
 		$this->techDetails = $techDetails;
@@ -64,7 +65,6 @@ class StoreProduct
 		$this->createdAt = new \DateTime();
 		$this->category = new ArrayCollection();
 		$this->media = new ArrayCollection();
-		$this->minerStock = new ArrayCollection();
 		$this->setCategories($categories);
 		$this->vote = $vote;
 	}
@@ -115,9 +115,9 @@ class StoreProduct
 	}
 
 	public function getVote()
-    {
-        return $this->vote;
-    }
+	{
+		return $this->vote;
+	}
 
 	public function setCategories(array $categories = [])
 	{
@@ -134,13 +134,13 @@ class StoreProduct
 	}
 
 	public function setVote($vote)
-    {
-        $this->vote = $vote;
-    }
-
-	public function getMinerStocks()
 	{
-		return $this->minerStock;
+		$this->vote = $vote;
+	}
+
+	public function getMiner() : Miner
+	{
+		return $this->miner;
 	}
 
 	/**
@@ -165,11 +165,12 @@ class StoreProduct
 	{
 		$result = 0;
 
-        foreach ($this->getMinerStocks() as $stock) {
-            if ($stock->getState() == MinerStock::STATE_AVAILABLE) {
-                $result += 1;
-            }
-        }
+		/** @var MinerStock $stock */
+		foreach ($this->miner->getStock() as $stock) {
+			if ($stock->getState() == MinerStock::STATE_AVAILABLE) {
+				$result += 1;
+			}
+		}
 
 		return $result;
 	}
@@ -178,11 +179,12 @@ class StoreProduct
 	{
 		$result = 0;
 
-        foreach ($this->getMinerStocks() as $stock) {
-            if ($stock->getState() == MinerStock::STATE_RESERVED) {
-                $result += 1;
-            }
-        }
+		/** @var MinerStock $stock */
+		foreach ($this->miner->getStock() as $stock) {
+			if ($stock->getState() == MinerStock::STATE_RESERVED) {
+				$result += 1;
+			}
+		}
 
 		return $result;
 	}
@@ -192,13 +194,15 @@ class StoreProduct
 	 */
 	public function reserveMiner()
 	{
-        foreach ($this->getMinerStocks() as $stock) {
-            if ($stock->getState() == MinerStock::STATE_AVAILABLE) {
-                $stock->reserveMiner();
 
-                return $stock;
-            }
-        }
+		/** @var MinerStock $stock */
+		foreach ($this->miner->getStock() as $stock) {
+			if ($stock->getState() == MinerStock::STATE_AVAILABLE) {
+				$stock->reserveMiner();
+
+				return $stock;
+			}
+		}
 	}
 
 	/**
@@ -206,13 +210,15 @@ class StoreProduct
 	 */
 	public function unReserveMiner()
 	{
-        foreach ($this->getMinerStocks() as $stock) {
-            if ($stock->getState() == MinerStock::STATE_RESERVED) {
-                $stock->setAvailable();
 
-                return $stock;
-            }
-        }
+		/** @var MinerStock $stock */
+		foreach ($this->miner->getStock() as $stock) {
+			if ($stock->getState() == MinerStock::STATE_RESERVED) {
+				$stock->setAvailable();
+
+				return $stock;
+			}
+		}
 	}
 
 	public function setUnavailable()
@@ -228,6 +234,6 @@ class StoreProduct
 			->setFirstResult(0)
 			->setMaxResults($quantity);
 
-		return $this->minerStock->matching($criteria)->toArray();
+		return $this->miner->getStock()->matching($criteria)->toArray();
 	}
 }

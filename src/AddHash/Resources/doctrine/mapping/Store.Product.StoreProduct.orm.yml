@@ -16,6 +16,7 @@ App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct:
 
         techDetails:
             type: json
+            column: techDetails
 
         price:
             type: decimal
@@ -49,6 +50,10 @@ App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct:
             targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProductUserVote
             mappedBy: product
 
+
+    manyToOne:
         miner:
           targetEntity: App\AddHash\AdminPanel\Domain\Miners\Miner
-          mappedBy: product
+          joinColumn:
+            name: minerId
+            referencedColumnName: id
