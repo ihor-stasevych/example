@@ -82,11 +82,6 @@ class Miner
         return $this->details;
     }
 
-    public function getProduct()
-    {
-        return $this->product;
-    }
-
 	public function reserveMiner()
 	{
 		$this->state = self::STATE_RESERVED;

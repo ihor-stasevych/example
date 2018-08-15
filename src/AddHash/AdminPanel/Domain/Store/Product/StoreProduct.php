@@ -29,23 +29,14 @@ class StoreProduct
 	private $createdAt;
 
 	protected $statusAlias = [
-		self::STATE_AVAILABLE => 'available',
+		self::STATE_AVAILABLE   => 'available',
 		self::STATE_UNAVAILABLE => 'unavailable'
 	];
 
-	/**
-	 * @var ArrayCollection
-	 */
 	private $category;
 
-	/**
-	 * @var ArrayCollection
-	 */
 	private $media;
 
-	/**
-	 * @var ArrayCollection
-	 */
 	private $miner;
 
 	private $vote;
@@ -77,12 +68,12 @@ class StoreProduct
 		$this->vote = $vote;
 	}
 
-	public function getId(): ?int
+	public function getId()
 	{
 		return $this->id;
 	}
 
-	public function getTitle(): string
+	public function getTitle()
 	{
 		return $this->title;
 	}
@@ -92,41 +83,32 @@ class StoreProduct
 		return $this->description;
 	}
 
-	public function getPrice(): float
+	public function getPrice()
 	{
 		return $this->price;
 	}
 
-	public function getTechDetails(): string
+	public function getTechDetails()
 	{
 		return $this->techDetails;
 	}
 
-	/**
-	 * @return ArrayCollection
-	 */
 	public function getCategories()
 	{
 		return $this->category;
 	}
 
-	/**
-	 * @return ArrayCollection
-	 */
 	public function getMedia()
 	{
 		return $this->media;
 	}
 
-	public function getCreatedAt(): \DateTime
+	public function getCreatedAt()
 	{
 		return $this->createdAt;
 	}
 
-	/**
-	 * @return mixed|null
-	 */
-	public function getState(): ?string
+	public function getState()
 	{
 		return $this->statusAlias[$this->state] ?? null;
 	}
@@ -134,6 +116,11 @@ class StoreProduct
 	public function getVote()
     {
         return $this->vote;
+    }
+
+    public function getMiners()
+    {
+        return $this->miner;
     }
 
 	public function setCategories(array $categories = [])
@@ -154,14 +141,6 @@ class StoreProduct
     {
         $this->vote = $vote;
     }
-
-	/**
-	 * @return ArrayCollection
-	 */
-	public function getMiners()
-	{
-		return $this->miner;
-	}
 
 	/**
 	 * @param $quantity
@@ -237,9 +216,6 @@ class StoreProduct
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
 	public function setUnavailable()
 	{
 		$this->state = self::STATE_UNAVAILABLE;
