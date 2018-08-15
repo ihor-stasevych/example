@@ -29,12 +29,12 @@ class StoreProductMedia
         $this->id = $id;
     }
 
-    public function getId(): ?int
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getSrc(): ?string
+    public function getSrc()
 	{
 		return $this->src;
 	}
@@ -44,17 +44,12 @@ class StoreProductMedia
 		return $this->typeAlias[$this->type] ?? 'undefined';
 	}
 
-	public function getProduct(): StoreProduct
-    {
-        return $this->product;
-    }
-
-	public function setSrc(string $src)
+	public function setSrc($src)
     {
         $this->src = $src;
     }
 
-    public function setType(int $type)
+    public function setType($type)
     {
         $this->type = $type;
     }

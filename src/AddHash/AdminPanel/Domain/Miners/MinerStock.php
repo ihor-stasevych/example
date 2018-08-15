@@ -34,12 +34,7 @@ class MinerStock
 		self::STATE_RESERVED    => 'reserved',
 	];
 
-	public function __construct(
-	    int $priority,
-        string $ip,
-        int $port,
-        int $id = null
-    )
+	public function __construct($priority, $ip, $port, $id = null)
 	{
 	    $this->id = $id;
 		$this->state = static::STATE_DEFAULT;
@@ -53,34 +48,29 @@ class MinerStock
 		return $this->id;
 	}
 
-	public function getState(): int
+	public function getState()
 	{
 		return $this->state;
 	}
 
-    public function getPriority(): int
+    public function getPriority()
     {
         return $this->priority;
     }
 
-	public function getStateAlias(): string
+	public function getStateAlias()
 	{
 		return $this->stateAliases[$this->state];
 	}
 
-    public function getIp(): string
+    public function getIp()
     {
         return $this->ip;
     }
 
-	public function getPort(): int
+	public function getPort()
     {
         return $this->port;
-    }
-
-    public function getMiner(): Miner
-    {
-        return $this->miner;
     }
 
 	public function reserveMiner()

@@ -12,10 +12,14 @@ App\AddHash\AdminPanel\Domain\Payment\Payment:
             length: 25
         price:
             type: float
+        gatewayName:
+            type: string
+            length: 100
+        createdAt:
+            type: datetime
     oneToOne:
         paymentMethod:
           targetEntity: App\AddHash\AdminPanel\Domain\Payment\PaymentMethod
-         # inversedBy: payment
           joinColumn:
             name: paymentMethodId
             referencedColumnName: id

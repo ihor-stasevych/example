@@ -2,8 +2,8 @@
 
 namespace App\AddHash\AdminPanel\Domain\Store\Product;
 
-use App\AddHash\AdminPanel\Domain\Miners\Miner;
 use Doctrine\Common\Collections\Criteria;
+use App\AddHash\AdminPanel\Domain\Miners\Miner;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Domain\Store\Category\Model\StoreCategory;
@@ -34,19 +34,10 @@ class StoreProduct
 		self::STATE_UNAVAILABLE => 'unavailable'
 	];
 
-	/**
-	 * @var ArrayCollection
-	 */
 	private $category;
 
-	/**
-	 * @var ArrayCollection
-	 */
 	private $media;
 
-	/**
-	 * @var ArrayCollection
-	 */
 	private $miner;
 
 	private $vote;
@@ -103,30 +94,21 @@ class StoreProduct
 		return $this->techDetails;
 	}
 
-	/**
-	 * @return ArrayCollection
-	 */
-//	public function getCategories()
-//	{
-//		return $this->category;
-//	}
-//
-//	/**
-//	 * @return ArrayCollection
-//	 */
-//	public function getMedia()
-//	{
-//		return $this->media;
-//	}
+	public function getCategories()
+	{
+		return $this->category;
+	}
+
+	public function getMedia()
+	{
+		return $this->media;
+	}
 
 	public function getCreatedAt()
 	{
 		return $this->createdAt;
 	}
 
-	/**
-	 * @return mixed|null
-	 */
 	public function getState(): ?string
 	{
 		return $this->statusAlias[$this->state] ?? null;
@@ -156,9 +138,6 @@ class StoreProduct
         $this->vote = $vote;
     }
 
-	/**
-	 * @return ArrayCollection
-	 */
 	public function getMiners()
 	{
 		return $this->miner;
@@ -248,9 +227,6 @@ class StoreProduct
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
 	public function setUnavailable()
 	{
 		$this->state = self::STATE_UNAVAILABLE;

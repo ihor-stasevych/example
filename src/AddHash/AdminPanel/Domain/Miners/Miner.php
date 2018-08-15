@@ -4,7 +4,6 @@ namespace App\AddHash\AdminPanel\Domain\Miners;
 
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\Common\Collections\ArrayCollection;
-use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
 
 class Miner
 {
@@ -31,15 +30,15 @@ class Miner
     private $stock;
 
 	public function __construct(
-	    string $title,
-        string $description,
-        string $hashRate,
-        string $powerRate,
-        string $powerEfficiency,
-        string $ratedVoltage,
-        string $operatingTemperature,
-        string $algorithm,
-        int $id = null
+	     $title,
+         $description,
+         $hashRate,
+         $powerRate,
+         $powerEfficiency,
+         $ratedVoltage,
+         $operatingTemperature,
+         $algorithm,
+         $id = null
     )
 	{
 		$this->title = $title;
@@ -54,50 +53,45 @@ class Miner
 		$this->id = $id;
 	}
 
-    public function getId(): ?int
+    public function getId()
     {
         return $this->id;
     }
 
-	public function getTitle(): string
+	public function getTitle()
 	{
 		return $this->title;
 	}
 
-	public function getHashRate(): string
+	public function getHashRate()
 	{
 		return $this->hashRate;
 	}
 
-	public function getPowerRate(): string
+	public function getPowerRate()
 	{
 		return $this->powerRate;
 	}
 
-	public function getPowerEfficiency(): string
+	public function getPowerEfficiency()
 	{
 		return $this->powerEfficiency;
 	}
 
-	public function getRatedVoltage(): string
+	public function getRatedVoltage()
 	{
 		return $this->ratedVoltage;
 	}
 
-	public function getOperatingTemperature(): string
+	public function getOperatingTemperature()
 	{
 		return $this->operatingTemperature;
 	}
 
-	public function getAlgorithm(): string
+	public function getAlgorithm()
 	{
 		return $this->algorithm;
 	}
-
-	public function getProduct(): StoreProduct
-    {
-        return $this->product;
-    }
 
     public function getStock(): PersistentCollection
     {

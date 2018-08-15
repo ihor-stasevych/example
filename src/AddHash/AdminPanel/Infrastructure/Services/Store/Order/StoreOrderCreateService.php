@@ -66,11 +66,15 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 				throw new StoreOrderException('Cant add ' . $product->getTitle() . ' to cart. No available miners.');
 			}
 
-			$miner = $product->reserveMiner();
+            for ($i = 0; $i < $quantity; $i++) {
+                $miner = $product->reserveMiner();
 
-			if ($miner) {
-				$this->minerStockRepository->save($miner);
-			}
+                if (!$miner) {
+                    break;
+                }
+
+                $this->minerStockRepository->save($miner);
+            }
 		}
 
 		$order->calculateItems();

@@ -2,13 +2,13 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
-use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
+use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
-use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerStockRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Exceptions\StoreOrderNoUnPaidErrorException;
-use App\AddHash\AdminPanel\Domain\Store\Order\Exceptions\StoreOrderNoUnReserveMinersErrorException;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderUnReserveMinerServiceInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Exceptions\StoreOrderNoUnReserveMinersErrorException;
 
 class StoreOrderUnReserveMinerService implements StoreOrderUnReserveMinerServiceInterface
 {
@@ -16,12 +16,12 @@ class StoreOrderUnReserveMinerService implements StoreOrderUnReserveMinerService
 
     private $storeOrderRepository;
 
-    private $minerRepository;
+    private $minerStockRepository;
 
-	public function __construct(StoreOrderRepositoryInterface $storeOrderRepository, MinerRepositoryInterface $minerRepository)
+	public function __construct(StoreOrderRepositoryInterface $storeOrderRepository, MinerStockRepositoryInterface $minerStockRepository)
 	{
         $this->storeOrderRepository = $storeOrderRepository;
-        $this->minerRepository = $minerRepository;
+        $this->minerStockRepository = $minerStockRepository;
 	}
 
     /**
@@ -44,13 +44,14 @@ class StoreOrderUnReserveMinerService implements StoreOrderUnReserveMinerService
 	    /** @var  StoreOrder $unPaidOrder */
         foreach ($unPaidOrders as $unPaidOrder) {
             $items = $unPaidOrder->getItems();
+
             /** @var StoreOrderItem $item **/
             foreach ($items as $item) {
-                $miner = $item->getProduct()->unReserveMiner();
+                $minerStock = $item->getProduct()->unReserveMiner();
 
-                if ($miner) {
-                    $unReserveMiners[] = $miner;
-                    $this->minerRepository->save($miner);
+                if ($minerStock) {
+                    $unReserveMiners[] = $minerStock;
+                    $this->minerStockRepository->save($minerStock);
                 }
             }
         }

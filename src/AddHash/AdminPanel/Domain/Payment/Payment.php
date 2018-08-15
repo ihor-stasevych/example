@@ -2,6 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\Payment;
 
+use App\AddHash\AdminPanel\Domain\Payment\Gateway\PaymentGateway;
 use App\AddHash\AdminPanel\Domain\Payment\Gateway\PaymentGatewayInterface;
 use App\AddHash\AdminPanel\Domain\User\User;
 
@@ -19,12 +20,17 @@ class Payment implements PaymentInterface
 
 	private $paymentMethod;
 
+	private $createdAt;
+
+	private $gatewayName;
+
 	public function __construct($price, $currency, $user, $id = null)
 	{
 	    $this->id = $id;
 		$this->price = $price;
 		$this->currency = $currency;
 		$this->user = $user;
+		$this->createdAt = new \DateTime();
 	}
 
     public function getId()
@@ -75,5 +81,11 @@ class Payment implements PaymentInterface
 	public function setPaymentGateway(PaymentGatewayInterface $gateway)
 	{
 		$this->paymentGateway = $gateway;
+		$this->gatewayName = $this->paymentGateway->getGateWayName();
+	}
+
+	public function setPaymentMethod(PaymentMethod $paymentMethod)
+	{
+		$this->paymentMethod = $paymentMethod;
 	}
 }
