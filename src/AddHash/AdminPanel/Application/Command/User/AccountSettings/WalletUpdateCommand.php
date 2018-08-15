@@ -9,11 +9,12 @@ class WalletUpdateCommand implements WalletUpdateCommandInterface
 {
     /**
      * @var array
+     * @Assert\NotBlank()
      * @Assert\All({
      *   @Assert\Collection(
      *      fields = {
-     *          "id" = @Assert\Required({@Assert\NotNull()}),
-     *          "value" = @Assert\Required({@Assert\NotNull()})
+     *          "id" = @Assert\Required({@Assert\NotBlank()}),
+     *          "value" = @Assert\Required({@Assert\NotBlank()})
      *      }
      *   )
      * })
