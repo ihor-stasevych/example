@@ -12,11 +12,10 @@ App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct:
             length: 100
 
         description:
-            type: string
+            type: json
 
         techDetails:
-            column: techDetails
-            type: string
+            type: json
 
         price:
             type: decimal
@@ -26,11 +25,6 @@ App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct:
         state:
             type: integer
             length: 2
-
-        vote:
-            type: float
-            options:
-                default: 0.00
 
         createdAt:
             column: createdAt
@@ -51,10 +45,10 @@ App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct:
             targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\Media\StoreProductMedia
             mappedBy: product
 
-        minerStock:
-            targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerStock
-            mappedBy: product
-
         userVote:
             targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProductUserVote
             mappedBy: product
+
+        miner:
+          targetEntity: App\AddHash\AdminPanel\Domain\Miners\Miner
+          mappedBy: product
