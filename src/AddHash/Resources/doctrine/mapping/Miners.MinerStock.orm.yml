@@ -28,3 +28,10 @@ App\AddHash\AdminPanel\Domain\Miners\MinerStock:
             joinColumn:
                 name: minerId
                 referencedColumnName: id
+
+        product:
+            targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct
+            inversedBy: product
+            joinColumn:
+                name: productId
+                referencedColumnName: id
