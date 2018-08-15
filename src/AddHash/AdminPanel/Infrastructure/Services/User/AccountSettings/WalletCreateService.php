@@ -3,8 +3,8 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings;
 
 use App\AddHash\AdminPanel\Domain\User\User;
-use App\AddHash\AdminPanel\Domain\User\UserWallet;
 use App\AddHash\AdminPanel\Domain\Wallet\Wallet;
+use App\AddHash\AdminPanel\Domain\User\UserWallet;
 use App\AddHash\AdminPanel\Domain\Wallet\WalletRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Wallet\Exceptions\WalletIsExistException;
@@ -33,10 +33,10 @@ class WalletCreateService implements WalletCreateServiceInterface
 
     /**
      * @param WalletCreateCommandInterface $command
-     * @return Wallet
+     * @return array
      * @throws WalletIsExistException
      */
-	public function execute(WalletCreateCommandInterface $command): Wallet
+	public function execute(WalletCreateCommandInterface $command): array
 	{
         $value = $command->getValue();
 
@@ -58,6 +58,9 @@ class WalletCreateService implements WalletCreateServiceInterface
 
         $this->userWalletRepository->create($userWallet);
 
-        return $wallet;
+        return [
+            'id'    => $userWallet->getId(),
+            'value' => $value
+        ];
 	}
 }

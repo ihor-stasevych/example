@@ -9,6 +9,11 @@ use App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface;
 
 class UserWalletRepository extends AbstractRepository implements UserWalletRepositoryInterface
 {
+    /**
+     * @param array $ids
+     * @param int $userId
+     * @return array
+     */
     public function getByIdsAndUserId(array $ids, int $userId): array
     {
         $user = $this->entityManager->getRepository($this->getEntityName());
@@ -24,23 +29,6 @@ class UserWalletRepository extends AbstractRepository implements UserWalletRepos
         return $res->getResult();
     }
 
-    public function getByValueAndWalletIdAndUserId(string $value, int $walletId, int $userId): ?UserWallet
-    {
-        $user = $this->entityManager->getRepository($this->getEntityName());
-
-        $res = $user->createQueryBuilder('uw')
-            ->select('uw')
-            ->andWhere('uw.value = :value')
-            ->andWhere('uw.wallet = :walletId')
-            ->andWhere('uw.user = :userId')
-            ->setParameter('value', $value)
-            ->setParameter('walletId', $walletId)
-            ->setParameter('userId', $userId)
-            ->getQuery();
-
-        return $res->getOneOrNullResult();
-    }
-
     /**
      * @throws ORMException
      * @throws OptimisticLockException
@@ -50,6 +38,11 @@ class UserWalletRepository extends AbstractRepository implements UserWalletRepos
         $this->entityManager->flush();
     }
 
+    /**
+     * @param UserWallet $userWallet
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function create(UserWallet $userWallet)
     {
         $this->entityManager->persist($userWallet);

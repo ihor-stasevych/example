@@ -51,13 +51,21 @@ class WalletUpdateService implements WalletUpdateServiceInterface
             throw new UserWalletIsNotValidException('User wallet is not valid');
         }
 
+        $result = [];
+
         foreach ($userWallets as $userWallet) {
             /** @var UserWallet $userWallet */
-            $userWallet->getWallet()->setValue($walletsValue[$userWallet->getId()]);
+            $value = $walletsValue[$userWallet->getId()];
+            $userWallet->getWallet()->setValue($value);
 
             $this->walletRepository->update();
+
+            $result[] = [
+                'id'    => $userWallet->getId(),
+                'value' => $value,
+            ];
         }
 
-        return $userWallets;
+        return $result;
 	}
 }

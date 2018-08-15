@@ -28,10 +28,10 @@ class WalletRepository extends AbstractRepository implements WalletRepositoryInt
 
     /**
      * @param string $value
-     * @return mixed
+     * @return Wallet|null
      * @throws NonUniqueResultException
      */
-    public function getByValue(string $value)
+    public function getByValue(string $value): ?Wallet
     {
         $wallet = $this->entityManager->getRepository($this->getEntityName());
 
@@ -44,11 +44,20 @@ class WalletRepository extends AbstractRepository implements WalletRepositoryInt
         return $res->getOneOrNullResult();
     }
 
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function update()
     {
         $this->entityManager->flush();
     }
 
+    /**
+     * @param Wallet $wallet
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function create(Wallet $wallet)
     {
         $this->entityManager->persist($wallet);
