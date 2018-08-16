@@ -2,6 +2,8 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User;
 
+use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
+use App\AddHash\AdminPanel\Domain\User\Order\UserOrderMiner;
 use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Domain\Miners\Miner;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket;
@@ -40,29 +42,31 @@ class MinerControlGetPoolService implements MinerControlGetPoolServiceInterface
         $data = null;
         $id = $command->getId();
 
-        foreach ($user->getOrderMiner() as $orderMiners) {
-            /** @var Miner $miner **/
-            foreach ($orderMiners->getMiners() as $miner) {
-                foreach ($miner->getStock() as $stock) {
-                    if ($stock->getId() == $id) {
-                        $parser = new MinerSocketParser();
-                        $command = new MinerCommand(new MinerSocket($stock, $parser));
+		/** @var UserOrderMiner $orderMiners */
+		foreach ($user->getOrderMiner() as $orderMiners) {
+			/** @var MinerStock $stock */
+			foreach ($orderMiners->getMiners() as $stock) {
+				if ($stock->getId() == $id) {
+					$parser = new MinerSocketParser();
+					$command = new MinerCommand(new MinerSocket($stock, $parser));
 
-                        $data = $command->getPools() + [
-                            'minerTitle'   => $miner->getTitle(),
-                            'minerId'      => $miner->getId(),
-                            'minerStockId' => $stock->getId(),
-                        ];
+					$data = $command->getPools() + [
+							'minerTitle' => $stock->infoMiner()->getTitle(),
+							'minerId' => $stock->infoMiner()->getId(),
+							'minerStockId' => $stock->getId(),
+						];
 
-                        break;
-                    }
-                }
-            }
-        }
+					break;
+				}
+			}
+		}
 
-        if (null === $data) {
-            throw new MinerControlNoMainerExistException('No mine exists');
-        }
+		/**
+		 * if (null === $data) {
+		throw new MinerControlNoMainerExistException('No mine exists');
+		}
+		 */
+
 
         return $data;
 	}
