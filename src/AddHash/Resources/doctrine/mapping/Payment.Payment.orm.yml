@@ -18,11 +18,7 @@ App\AddHash\AdminPanel\Domain\Payment\Payment:
         createdAt:
             type: datetime
     oneToOne:
-        paymentMethod:
-          targetEntity: App\AddHash\AdminPanel\Domain\Payment\PaymentMethod
-          joinColumn:
-            name: paymentMethodId
-            referencedColumnName: id
+
     manyToOne:
         user:
           targetEntity: App\AddHash\AdminPanel\Domain\User\User
@@ -30,5 +26,10 @@ App\AddHash\AdminPanel\Domain\Payment\Payment:
           joinColumn:
             name: userId
             referencedColumnName: id
+        paymentMethod:
+                  targetEntity: App\AddHash\AdminPanel\Domain\Payment\PaymentMethod
+                  joinColumn:
+                    name: paymentMethodId
+                    referencedColumnName: id
 
 
