@@ -20,7 +20,7 @@ App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct:
 
         price:
             type: decimal
-            precision: 5
+            precision: 10
             scale: 2
 
         state:
