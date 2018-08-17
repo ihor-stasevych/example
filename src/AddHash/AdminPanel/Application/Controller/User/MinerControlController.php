@@ -10,25 +10,16 @@ use App\AddHash\AdminPanel\Domain\Miners\MinerStock; //TEST
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket; //TEST
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketParser; //TEST
-use App\AddHash\AdminPanel\Application\Command\User\MinerControlPoolGetCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerException;
-use App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetPoolServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerExistException;
 
 class MinerControlController extends BaseServiceController
 {
     private $getService;
 
-    private $getPoolService;
-
-    public function __construct(
-        MinerControlGetServiceInterface $getService,
-        MinerControlGetPoolServiceInterface $getPoolService
-    )
+    public function __construct(MinerControlGetServiceInterface $getService)
     {
         $this->getService = $getService;
-        $this->getPoolService = $getPoolService;
     }
 
     /**
@@ -64,47 +55,6 @@ class MinerControlController extends BaseServiceController
     }
 
     /**
-     * Get miners pool by id
-     *
-     * @SWG\Response(
-     *     response=200,
-     *     description="Returns the miners pools",
-     *     @SWG\Schema(
-     *             type="array",
-     *             @SWG\Items(
-     *                 type="object",
-     *                 @SWG\Property(property="Status", type="string"),
-     *                 @SWG\Property(property="Priority", type="integer")
-     *             )
-     *     ),
-     * )
-     *
-     * @param int $id
-     * @return JsonResponse
-     * @SWG\Tag(name="User")
-     */
-    public function getPool(int $id)
-    {
-        $command = new MinerControlPoolGetCommand($id);
-
-        if (!$this->commandIsValid($command)) {
-            return $this->json([
-                'errors' => $this->getLastValidationErrors(),
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        try {
-            $data = $this->getPoolService->execute($command);
-        } catch (MinerControlNoMainerException | MinerControlNoMainerExistException $e) {
-            return $this->json([
-                'errors' => $e->getMessage(),
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        return $this->json($data);
-    }
-
-    /**
      * Command test cgminer
      *
      * @SWG\Parameter(
@@ -129,8 +79,8 @@ class MinerControlController extends BaseServiceController
         $cmd = $request->get('cmd');
         $miner = new MinerStock('1', '10.0.10.7', '4028');
         $parser = new MinerSocketParser();
-        $socket = new MinerSocket($miner, $parser);
+        $socket = new MinerSocket($miner);
 
-        return $this->json($socket->request($cmd));
+        return $this->json($parser->normalizeData($socket->request($cmd)));
     }
 }
