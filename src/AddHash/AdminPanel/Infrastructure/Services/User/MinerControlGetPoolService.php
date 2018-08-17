@@ -54,6 +54,7 @@ class MinerControlGetPoolService implements MinerControlGetPoolServiceInterface
 							'minerTitle' => $stock->infoMiner()->getTitle(),
 							'minerId' => $stock->infoMiner()->getId(),
 							'minerStockId' => $stock->getId(),
+							'rentPeriod' => $orderMiners->getRentPeriod()
 						];
 
 					break;

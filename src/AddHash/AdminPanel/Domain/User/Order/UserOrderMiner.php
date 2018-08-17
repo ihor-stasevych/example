@@ -27,8 +27,10 @@ class UserOrderMiner
 
 	private $minerStock;
 
+	/** @var \DateTime  */
 	private $createdAt;
 
+	/** @var \DateTime */
 	private $endPeriod;
 
 	private $details;
@@ -61,5 +63,10 @@ class UserOrderMiner
 	public function getMiners()
     {
         return $this->minerStock;
+    }
+
+    public function getRentPeriod()
+    {
+    	return $this->createdAt->format('Y-d-m H:i') . ' - ' . $this->endPeriod->format('Y-d-m H:i');
     }
 }
