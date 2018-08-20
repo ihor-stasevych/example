@@ -3,97 +3,123 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool;
 
 use Psr\Log\LoggerInterface;
-use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
-use App\AddHash\AdminPanel\Domain\User\Order\UserOrderMiner;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Commands\MinerCommand;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketParser;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketStatusParser;
-use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlPoolNoAddedException;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketCountPoolsParser;
-use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlMaxCountPoolsException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCreateCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolCreateServiceInterface;
 
 class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateServiceInterface
 {
-    const MAX_COUNT_POOLS = 3;
+    private const FIRST_POOL_ID = 0;
 
-    private $tokenStorage;
+    private const SECOND_POOL_ID = 1;
 
     private $logger;
 
-    public function __construct(TokenStorageInterface $tokenStorage, LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger)
     {
-        $this->tokenStorage = $tokenStorage;
         $this->logger = $logger;
     }
 
-    /**
-     * @param UserMinerControlPoolCreateCommandInterface $command
-     * @return array|null
-     * @throws MinerControlMaxCountPoolsException
-     * @throws MinerControlPoolNoAddedException
-     */
-    public function execute(UserMinerControlPoolCreateCommandInterface $command)
+    public function execute(UserMinerControlPoolCreateCommandInterface $command, MinerStock $minerStock)
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        $minerId = $command->getMinerId();
         $data = [];
+        $minerId = $command->getMinerId();
 
-        /** @var UserOrderMiner $orderMiners */
-        foreach ($user->getOrderMiner() as $orderMiners) {
-            /** @var MinerStock $minerStock */
-            foreach ($orderMiners->getMiners() as $minerStock) {
-                if ($minerStock->getId() != $minerId) {
-                    continue;
-                }
+        if ($minerStock->getId() != $minerId) {
+            return $data;
+        }
 
-                $minerCommand = new MinerCommand(
-                    new MinerSocket($minerStock),
-                    new MinerSocketCountPoolsParser()
-                );
+        $minerCommand = new MinerCommand(
+            new MinerSocket($minerStock),
+            new MinerSocketCountPoolsParser()
+        );
 
-                if ($minerCommand->getPools() >= static::MAX_COUNT_POOLS) {
-                    $this->logger->error('The pool limit is exceeded', [
-                        'minerId' => $minerId,
-                    ]);
+        /** Count current pools */
+        $countOldPools = $minerCommand->getPools();
+        $newPools = $command->getPools();
 
-                    throw new MinerControlMaxCountPoolsException('The pool limit is exceeded');
-                }
+        /** Get first pool */
+        $firstNewPool = array_shift($newPools);
 
-                $minerCommand->setParser(new MinerSocketStatusParser());
-                $isAddPool = $minerCommand->addPool($command->getUrl(), $command->getUser(), $command->getPassword());
+        $minerCommand->setParser(new MinerSocketStatusParser());
+        $firstNewPoolId = $countOldPools;
 
-                if (false === $isAddPool) {
-                    $this->logger->error('The pool was not added', [
-                        'minerId'  => $minerId,
-                        'url'      => $command->getUrl(),
-                        'user'     => $command->getUser(),
-                        'password' => $command->getPassword(),
-                    ]);
+        /** Add first new pool */
+        $isAdd = $minerCommand->addPool($firstNewPool['url'], $firstNewPool['user'], $firstNewPool['password']);
+        $this->addPoolWriteLog($minerId, $firstNewPool, $isAdd);
 
-                    throw new MinerControlPoolNoAddedException('The pool was not added');
-                }
+        /** Add priority first new pool */
+        $minerCommand->setPoolPriority($firstNewPoolId);
 
-                $minerCommand->setParser(new MinerSocketParser());
+        $deleteId = static::FIRST_POOL_ID;
 
-                $data = $minerCommand->getPools() + [
-                    'minerTitle'   => $minerStock->infoMiner()->getTitle(),
-                    'minerId'      => $minerStock->infoMiner()->getId(),
-                    'minerStockId' => $minerStock->getId(),
-                ];
+        /** Delete old pool */
+        for ($i = 0; $i <= $countOldPools; $i++) {
+            $isDelete = $minerCommand->removePool($deleteId);
+            $deleteId = static::SECOND_POOL_ID;
 
-                $this->logger->info('Pool added', $data);
-
-                break;
+            if (false === $isDelete) {
+                $this->logger->error('No deleted pool', ['minerId' => $minerId]);
+            } else {
+                $this->logger->info('Pool was deleted', ['minerId' => $minerId]);
             }
         }
 
+        /** Create the remaining new pools */
+        if ($newPools) {
+            $poolId = static::SECOND_POOL_ID;
+
+            foreach ($newPools as $pool) {
+                $isAdd = $minerCommand->addPool($pool['url'], $pool['user'], $pool['password']);
+                $this->addPoolWriteLog($minerId, $pool, $isAdd);
+
+                if ($pool['status']) {
+                    $minerCommand->enablePool($poolId);
+                } else {
+                    $minerCommand->disablePool($poolId);
+                }
+
+                $poolId++;
+            }
+        }
+
+        /** Set status first new pool */
+        if ($firstNewPool['status']) {
+            $minerCommand->enablePool(static::FIRST_POOL_ID);
+        } else {
+            $minerCommand->disablePool(static::FIRST_POOL_ID);
+        }
+
+        $minerCommand->setParser(new MinerSocketParser());
+
+        $data = $minerCommand->getPools() + [
+            'minerTitle'   => $minerStock->infoMiner()->getTitle(),
+            'minerId'      => $minerStock->infoMiner()->getId(),
+            'minerStockId' => $minerStock->getId(),
+        ];
+
         return $data;
+    }
+
+    private function addPoolWriteLog(int $minerId, array $data, bool $isAdd = false)
+    {
+        $logData = [
+            'minerId'  => $minerId,
+            'url'      => $data['url'],
+            'user'     => $data['user'],
+            'password' => $data['password'],
+            'status'   => $data['status'],
+        ];
+
+        if (false === $isAdd) {
+            $this->logger->error('The pool was not added', $logData);
+        } else {
+            $this->logger->info('Pool added', $logData);
+        }
     }
 }

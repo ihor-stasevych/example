@@ -11,15 +11,15 @@ class UserMinerControlPoolGetCommand implements UserMinerControlPoolGetCommandIn
 	 * @var int
 	 * @Assert\NotBlank()
 	 */
-	private $id;
+	private $minerId;
 
-	public function __construct($id)
+	public function __construct($minerId)
 	{
-		$this->id = $id;
+		$this->minerId = $minerId;
 	}
 
-	public function getId(): int
+	public function getMinerId(): int
     {
-        return $this->id;
+        return $this->minerId;
     }
 }

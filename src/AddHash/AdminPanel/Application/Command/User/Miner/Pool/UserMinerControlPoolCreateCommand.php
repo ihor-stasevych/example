@@ -7,6 +7,8 @@ use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCr
 
 class UserMinerControlPoolCreateCommand implements UserMinerControlPoolCreateCommandInterface
 {
+    const MAX_COUNT_POOLS = 3;
+
     /**
      * @var int
      * @Assert\NotBlank()
@@ -14,29 +16,29 @@ class UserMinerControlPoolCreateCommand implements UserMinerControlPoolCreateCom
     private $minerId;
 
     /**
-     * @var string
+     * @var array
      * @Assert\NotBlank()
+     * @Assert\Count(
+     *      max = 3,
+     *      maxMessage = "You can only have 3 pools"
+     * )
+     * @Assert\All({
+     *   @Assert\Collection(
+     *      fields = {
+     *          "user" = @Assert\Required({@Assert\NotBlank()}),
+     *          "url" = @Assert\Required({@Assert\NotBlank()}),
+     *          "password" = @Assert\Required({@Assert\NotBlank()}),
+     *          "status" = @Assert\Required({@Assert\NotBlank()})
+     *      }
+     *   )
+     * })
      */
-    private $url;
+    private $pools;
 
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     */
-    private $user;
-
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     */
-    private $password;
-
-    public function __construct($minerId, $url, $user, $password)
+    public function __construct($minerId, $pools)
     {
         $this->minerId = $minerId;
-        $this->url = $url;
-        $this->user = $user;
-        $this->password = $password;
+        $this->pools = $pools;
     }
 
     public function getMinerId(): int
@@ -44,18 +46,8 @@ class UserMinerControlPoolCreateCommand implements UserMinerControlPoolCreateCom
         return $this->minerId;
     }
 
-    public function getUrl(): string
+    public function getPools(): array
     {
-        return $this->url;
-    }
-
-    public function getUser(): string
-    {
-        return $this->user;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->password;
+        return $this->pools;
     }
 }

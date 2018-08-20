@@ -53,4 +53,14 @@ class MinerCommand extends AbstractMinerCommand
     {
         return $this->request('enablepool|' . $id);
     }
+
+    public function setPoolPriority(string $ids)
+    {
+        return $this->request('poolpriority|' . $ids);
+    }
+
+    public function switchPool(int $id)
+    {
+        return $this->request('switchpool|' . $id);
+    }
 }
