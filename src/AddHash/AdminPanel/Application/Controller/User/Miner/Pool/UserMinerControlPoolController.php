@@ -6,6 +6,7 @@ use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerException;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlPoolNoAddedException;
@@ -14,9 +15,11 @@ use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlMaxCountPoolsExcep
 use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerExistException;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlPoolNoChangeStatusException;
 use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolGetCommand;
+use App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Strategy\UserMinerControlStrategy;
 use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolUpdateCommand;
 use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolCreateCommand;
 use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolDeleteCommand;
+use App\AddHash\AdminPanel\Domain\User\Services\Miner\Strategy\UserMinerControlStrategyInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolGetServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolCreateServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolDeleteServiceInterface;
@@ -24,8 +27,11 @@ use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolU
 use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolStatusUpdateCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolStatusUpdateServiceInterface;
 
+
 class UserMinerControlPoolController extends BaseServiceController
 {
+    private $strategy;
+
     private $getService;
 
     private $createService;
@@ -36,7 +42,9 @@ class UserMinerControlPoolController extends BaseServiceController
 
     private $updateStatusService;
 
+
     public function __construct(
+        UserMinerControlStrategyInterface $strategy,
         UserMinerControlPoolGetServiceInterface $getService,
         UserMinerControlPoolCreateServiceInterface $createService,
         UserMinerControlPoolDeleteServiceInterface $deleteService,
@@ -44,6 +52,7 @@ class UserMinerControlPoolController extends BaseServiceController
         UserMinerControlPoolStatusUpdateServiceInterface $updateStatusService
     )
     {
+        $this->strategy = $strategy;
         $this->getService = $getService;
         $this->createService = $createService;
         $this->deleteService = $deleteService;
@@ -82,7 +91,7 @@ class UserMinerControlPoolController extends BaseServiceController
         }
 
         try {
-            $data = $this->getService->execute($command);
+            $data = $this->strategy->execute($command, $this->getService);
         } catch (MinerControlNoMainerException | MinerControlNoMainerExistException $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
@@ -139,12 +148,7 @@ class UserMinerControlPoolController extends BaseServiceController
      */
     public function create(int $id, Request $request)
     {
-        $command = new UserMinerControlPoolCreateCommand(
-            $id,
-            $request->get('url'),
-            $request->get('user'),
-            $request->get('password')
-        );
+        $command = new UserMinerControlPoolCreateCommand($id, $request->get('pools'));
 
         if (!$this->commandIsValid($command)) {
             return $this->json([
@@ -153,7 +157,8 @@ class UserMinerControlPoolController extends BaseServiceController
         }
 
         try {
-            $data = $this->createService->execute($command);
+            $data = $this->strategy->execute($command, $this->createService);
+
         } catch (MinerControlMaxCountPoolsException | MinerControlPoolNoAddedException $e) {
             return $this->json([
                 'errors' => $e->getMessage(),

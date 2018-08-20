@@ -96,6 +96,14 @@ services:
 
   App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface: '@addhash.user.miner.control.get.service'
 
+  addhash.user.miner.control.strategy:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Strategy\UserMinerControlStrategy
+    public: true
+    arguments: ['@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Strategy\UserMinerControlStrategy: '@addhash.user.miner.control.strategy'
+
+  App\AddHash\AdminPanel\Domain\User\Services\Miner\Strategy\UserMinerControlStrategyInterface: '@addhash.user.miner.control.strategy'
+
   addhash.user.miner.control.get.pool.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolGetService
     public: true
@@ -107,7 +115,7 @@ services:
   addhash.user.miner.control.create.pool.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolCreateService
     public: true
-    arguments: ['@security.token_storage', '@monolog.logger.db']
+    arguments: ['@monolog.logger.db']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolCreateService: '@addhash.user.miner.control.create.pool.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolCreateServiceInterface: '@addhash.user.miner.control.create.pool.service'
