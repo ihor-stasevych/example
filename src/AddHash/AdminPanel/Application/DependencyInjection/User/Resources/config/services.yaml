@@ -97,9 +97,41 @@ services:
   App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface: '@addhash.user.miner.control.get.service'
 
   addhash.user.miner.control.get.pool.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetPoolService
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolGetService
     public: true
     arguments: ['@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetPoolService: '@addhash.user.miner.control.get.pool.service'
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolGetService: '@addhash.user.miner.control.get.pool.service'
 
-  App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetPoolServiceInterface: '@addhash.user.miner.control.get.pool.service'
+  App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolGetServiceInterface: '@addhash.user.miner.control.get.pool.service'
+
+  addhash.user.miner.control.create.pool.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolCreateService
+    public: true
+    arguments: ['@security.token_storage', '@monolog.logger.db']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolCreateService: '@addhash.user.miner.control.create.pool.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolCreateServiceInterface: '@addhash.user.miner.control.create.pool.service'
+
+  addhash.user.miner.control.delete.pool.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolDeleteService
+    public: true
+    arguments: ['@security.token_storage', '@monolog.logger.db']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolDeleteService: '@addhash.user.miner.control.delete.pool.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolDeleteServiceInterface: '@addhash.user.miner.control.delete.pool.service'
+
+  addhash.user.miner.control.update.pool.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolUpdateService
+    public: true
+    arguments: ['@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolUpdateService: '@addhash.user.miner.control.update.pool.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolUpdateServiceInterface: '@addhash.user.miner.control.update.pool.service'
+
+  addhash.user.miner.control.update.pool.status.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolStatusUpdateService
+    public: true
+    arguments: ['@security.token_storage', '@monolog.logger.db']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolStatusUpdateService: '@addhash.user.miner.control.update.pool.status.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolStatusUpdateServiceInterface: '@addhash.user.miner.control.update.pool.status.service'

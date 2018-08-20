@@ -4,5 +4,5 @@ namespace App\AddHash\AdminPanel\Domain\Miners\Parsers;
 
 interface ParserInterface
 {
-    public function normalizeData($data): array;
+    public function normalizeData($data);
 }

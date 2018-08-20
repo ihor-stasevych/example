@@ -3,7 +3,6 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Miners\Extender;
 
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
-use App\AddHash\AdminPanel\Domain\Miners\Parsers\ParserInterface;
 use App\AddHash\AdminPanel\Domain\Miners\Extender\MinerInterface;
 use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketErrorException;
 use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketCreateErrorException;
@@ -15,13 +14,10 @@ class MinerSocket implements MinerInterface
 
     private $port;
 
-    private $parser;
-
-    public function __construct(MinerStock $minerStock, ParserInterface $parser)
+    public function __construct(MinerStock $minerStock)
     {
         $this->ip = $minerStock->getIp();
         $this->port = $minerStock->getPort();
-        $this->parser = $parser;
     }
 
     /**
@@ -29,7 +25,7 @@ class MinerSocket implements MinerInterface
      * @return array|mixed|null
      * @throws MinerSocketCreateErrorException
      */
-    public function request(string $cmd)
+    public function request(string $cmd): string
     {
         try {
             $socket = $this->getSocket($this->ip, $this->port);
@@ -40,7 +36,7 @@ class MinerSocket implements MinerInterface
             $line = '';
         }
 
-        return $this->parser->normalizeData($line);
+        return $line;
     }
 
     /**

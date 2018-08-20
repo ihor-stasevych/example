@@ -104,9 +104,29 @@ user.miner.control.get:
   controller: App\AddHash\AdminPanel\Application\Controller\User\MinerControlController::get
 
 user.miner.control.pools.get:
-  path: "/api/v1/user/miners/{id}/pools/"
+  path: "/api/v1/user/miners/{id}/pools"
   methods: GET
-  controller: App\AddHash\AdminPanel\Application\Controller\User\MinerControlController::getPool
+  controller: App\AddHash\AdminPanel\Application\Controller\User\Miner\Pool\UserMinerControlPoolController::get
+
+user.miner.control.pools.create:
+  path: "/api/v1/user/miners/{id}/pools"
+  methods: POST
+  controller: App\AddHash\AdminPanel\Application\Controller\User\Miner\Pool\UserMinerControlPoolController::create
+
+user.miner.control.pools.delete:
+  path: "/api/v1/user/miners/{id}/pools"
+  methods: DELETE
+  controller: App\AddHash\AdminPanel\Application\Controller\User\Miner\Pool\UserMinerControlPoolController::delete
+
+user.miner.control.pools.update:
+  path: "/api/v1/user/miners/{id}/pools"
+  methods: PUT
+  controller: App\AddHash\AdminPanel\Application\Controller\User\Miner\Pool\UserMinerControlPoolController::update
+
+user.miner.control.pools.status.update:
+  path: "/api/v1/user/miners/{id}/pools/status"
+  methods: PUT
+  controller: App\AddHash\AdminPanel\Application\Controller\User\Miner\Pool\UserMinerControlPoolController::statusUpdate
 
 user.miner.test.query:
   path: "/api/v1/user/miner/test/query"
