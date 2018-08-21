@@ -2,7 +2,9 @@
 
 namespace App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool;
 
-interface UserMinerControlPoolGetCommandInterface
+use App\AddHash\AdminPanel\Domain\User\Command\Miner\UserMinerControlCommandInterface;
+
+interface UserMinerControlPoolGetCommandInterface extends UserMinerControlCommandInterface
 {
-	public function getId(): int;
+	public function getMinerId(): int;
 }

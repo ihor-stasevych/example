@@ -2,13 +2,11 @@
 
 namespace App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool;
 
-interface UserMinerControlPoolCreateCommandInterface
+use App\AddHash\AdminPanel\Domain\User\Command\Miner\UserMinerControlCommandInterface;
+
+interface UserMinerControlPoolCreateCommandInterface extends UserMinerControlCommandInterface
 {
     public function getMinerId(): int;
 
-    public function getUrl(): string;
-
-    public function getUser(): string;
-
-    public function getPassword(): string;
+    public function getPools(): array;
 }
