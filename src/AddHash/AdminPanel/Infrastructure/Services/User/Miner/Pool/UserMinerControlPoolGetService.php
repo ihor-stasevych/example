@@ -6,12 +6,18 @@ use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Commands\MinerCommand;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketParser;
+use App\AddHash\AdminPanel\Domain\User\Command\Miner\UserMinerControlCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolGetCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolGetServiceInterface;
 
 class UserMinerControlPoolGetService implements UserMinerControlPoolGetServiceInterface
 {
-    public function execute(UserMinerControlPoolGetCommandInterface $command, MinerStock $minerStock): array
+    /**
+     * @param UserMinerControlPoolGetCommandInterface $command
+     * @param MinerStock $minerStock
+     * @return array
+     */
+    public function execute(UserMinerControlCommandInterface $command, MinerStock $minerStock): array
 	{
 	    $data = [];
 
