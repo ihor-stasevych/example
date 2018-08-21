@@ -3,7 +3,9 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Order\Miner;
 
 
+use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerStockRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
@@ -16,17 +18,20 @@ class CreateUserOrderMinerService implements CreateUserOrderMinerServiceInterfac
 {
 	private $orderRepository;
 	private $orderMinerRepository;
+	private $minerStockRepository;
 	private $minerRepository;
 
 	public function __construct(
 		StoreOrderRepositoryInterface $orderRepository,
 		UserOrderMinerRepositoryInterface $orderMinerRepository,
-		MinerRepositoryInterface $minerRepository
+		MinerRepositoryInterface $minerRepository,
+		MinerStockRepositoryInterface $minerStockRepository
 	)
 	{
 		$this->orderRepository = $orderRepository;
 		$this->minerRepository = $minerRepository;
 		$this->orderMinerRepository = $orderMinerRepository;
+		$this->minerStockRepository = $minerStockRepository;
 	}
 
 	/**
@@ -49,6 +54,12 @@ class CreateUserOrderMinerService implements CreateUserOrderMinerServiceInterfac
 		foreach ($storeOrder->getItems() as $item) {
 			$miners = $item->getProduct()->ensureReservedMiner($item->getQuantity());
 			$userMinerOrder->setMiners($miners);
+
+			/** @var MinerStock $miner */
+			foreach ($miners as $miner) {
+				$miner->setBusy();
+				$this->minerStockRepository->save($miner);
+			}
 		}
 
 		$this->orderMinerRepository->save($userMinerOrder);

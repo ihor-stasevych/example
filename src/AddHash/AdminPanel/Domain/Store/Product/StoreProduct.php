@@ -144,8 +144,8 @@ class StoreProduct
 	}
 
 	/**
-	 * @param $quantity
-	 * @return ArrayCollection|\Doctrine\Common\Collections\Collection
+	 * @param int $quantity
+	 * @return array
 	 */
 	public function ensureAvailableMiner(int $quantity = 1)
 	{
@@ -153,8 +153,8 @@ class StoreProduct
 	}
 
 	/**
-	 * @param $quantity
-	 * @return ArrayCollection|\Doctrine\Common\Collections\Collection
+	 * @param int $quantity
+	 * @return array
 	 */
 	public function ensureReservedMiner(int $quantity = 1)
 	{

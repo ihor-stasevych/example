@@ -83,7 +83,7 @@ services:
   addhash.user.order.miner.create.service:
     class:  App\AddHash\AdminPanel\Infrastructure\Services\User\Order\Miner\CreateUserOrderMinerService
     public: true
-    arguments: ['@addhash.store.order.repository', '@addhash.user.order.miner.repository', '@addhash.miner.repository']
+    arguments: ['@addhash.store.order.repository', '@addhash.user.order.miner.repository', '@addhash.miner.repository', '@addhash.miner.stock.repository']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Order\Miner\CreateUserOrderMinerService: '@addhash.user.order.miner.create.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Order\Miner\CreateUserOrderMinerServiceInterface: '@addhash.user.order.miner.create.service'
