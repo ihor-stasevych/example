@@ -2,6 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool;
 
+use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCreateCommandInterface;
 use Psr\Log\LoggerInterface;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket;
@@ -9,7 +10,7 @@ use App\AddHash\AdminPanel\Infrastructure\Miners\Commands\MinerCommand;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketParser;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketStatusParser;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketCountPoolsParser;
-use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCreateCommandInterface;
+use App\AddHash\AdminPanel\Domain\User\Command\Miner\UserMinerControlCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolCreateServiceInterface;
 
 class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateServiceInterface
@@ -25,7 +26,12 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
         $this->logger = $logger;
     }
 
-    public function execute(UserMinerControlPoolCreateCommandInterface $command, MinerStock $minerStock)
+    /**
+     * @param UserMinerControlPoolCreateCommandInterface $command
+     * @param MinerStock $minerStock
+     * @return array
+     */
+    public function execute(UserMinerControlCommandInterface $command, MinerStock $minerStock)
     {
         $data = [];
         $minerId = $command->getMinerId();
