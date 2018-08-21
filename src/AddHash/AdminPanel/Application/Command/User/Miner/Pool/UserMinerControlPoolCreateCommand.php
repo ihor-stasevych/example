@@ -19,15 +19,17 @@ class UserMinerControlPoolCreateCommand implements UserMinerControlPoolCreateCom
      * @var array
      * @Assert\NotBlank()
      * @Assert\Count(
-     *      max = 3,
-     *      maxMessage = "You can only have 3 pools"
+     *      max =
+                UserMinerControlPoolCreateCommand::MAX_COUNT_POOLS
+     * ,
+     *      maxMessage = "You can have only 3 pools"
      * )
      * @Assert\All({
      *   @Assert\Collection(
      *      fields = {
      *          "user" = @Assert\Required({@Assert\NotBlank()}),
      *          "url" = @Assert\Required({@Assert\NotBlank()}),
-     *          "password" = @Assert\Required({@Assert\NotBlank()}),
+     *          "password" = @Assert\NotBlank(),
      *          "status" = @Assert\Required({@Assert\NotBlank()})
      *      }
      *   )

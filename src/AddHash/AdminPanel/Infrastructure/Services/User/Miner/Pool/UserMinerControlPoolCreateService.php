@@ -50,7 +50,8 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
         $firstNewPoolId = $countOldPools;
 
         /** Add first new pool */
-        $isAdd = $minerCommand->addPool($firstNewPool['url'], $firstNewPool['user'], $firstNewPool['password']);
+        $firstNewPassword = !empty($firstNewPool['password']) ? $firstNewPool['password'] : '';
+        $isAdd = $minerCommand->addPool($firstNewPool['url'], $firstNewPool['user'], $firstNewPassword);
         $this->addPoolWriteLog($minerId, $firstNewPool, $isAdd);
 
         /** Add priority first new pool */
@@ -75,7 +76,9 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
             $poolId = static::SECOND_POOL_ID;
 
             foreach ($newPools as $pool) {
-                $isAdd = $minerCommand->addPool($pool['url'], $pool['user'], $pool['password']);
+                $poolPassword = !empty($pool['password']) ? $pool['password'] : '';
+
+                $isAdd = $minerCommand->addPool($pool['url'], $pool['user'], $poolPassword);
                 $this->addPoolWriteLog($minerId, $pool, $isAdd);
 
                 if ($pool['status']) {
@@ -112,7 +115,7 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
             'minerId'  => $minerId,
             'url'      => $data['url'],
             'user'     => $data['user'],
-            'password' => $data['password'],
+            'password' => !empty($data['password']) ? $data['password'] : '',
             'status'   => $data['status'],
         ];
 
