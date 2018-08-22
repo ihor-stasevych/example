@@ -36,11 +36,7 @@ class MinerCommand extends AbstractMinerCommand
 
     public function addPool(string $url, string $user, string $password = '')
     {
-        if ($password) {
-            $password = ',' . $password;
-        }
-
-        return $this->request('addpool|' . $url . ',' . $user . $password);
+        return $this->request('addpool|' . $url . ',' . $user . ',' . $password);
     }
 
     public function removePool(int $id)
