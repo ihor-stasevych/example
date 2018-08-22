@@ -57,7 +57,7 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
 
         /** Add first new pool */
         $firstNewPassword = !empty($firstNewPool['password']) ? $firstNewPool['password'] : ' ';
-        $isAdd = $minerCommand->addPool($firstNewPool['url'], $firstNewPool['user'], $firstNewPassword);
+        $isAdd = $minerCommand->addPool($firstNewPool['url'], $firstNewPool['user'], ' ');
         $this->addPoolWriteLog($minerId, $firstNewPool, $isAdd);
 
         /** Add priority first new pool */
