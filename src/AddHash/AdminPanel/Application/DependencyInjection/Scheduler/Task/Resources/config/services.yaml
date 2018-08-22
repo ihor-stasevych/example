@@ -1,0 +1,16 @@
+services:
+    addhash.scheduler.task.worker.service:
+      class: App\AddHash\AdminPanel\Infrastructure\Services\Scheduler\Task\SchedulerTaskWorkerService
+      public: true
+      arguments: ['@addhash.scheduler.task.repository', '@monolog.logger.db']
+    App\AddHash\AdminPanel\Infrastructure\Services\Scheduler\Task\SchedulerTaskWorkerService: '@addhash.scheduler.task.worker.service'
+
+    App\AddHash\AdminPanel\Domain\Scheduler\Task\Services\SchedulerTaskWorkerServiceInterface: '@addhash.scheduler.task.worker.service'
+
+    addhash.scheduler.task.repository:
+      class: App\AddHash\AdminPanel\Infrastructure\Repository\Scheduler\Task\SchedulerTaskRepository
+      public: true
+      arguments: ['@doctrine.orm.entity_manager']
+    App\AddHash\AdminPanel\Infrastructure\Repository\Scheduler\Task\SchedulerTaskRepository: '@addhash.scheduler.task.repository'
+
+    App\AddHash\AdminPanel\Domain\Scheduler\Task\SchedulerTaskRepositoryInterface: '@addhash.scheduler.task.repository'

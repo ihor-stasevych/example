@@ -10,6 +10,10 @@ services:
     arguments: ['@addhash.store.order.un.reserve.miner.service']
     tags: ['console.command']
 
+  App\AddHash\AdminPanel\Application\ConsoleCommand\ProcessSchedulerTask:
+    public: false
+    arguments: ['@addhash.scheduler.task.worker.service']
+    tags: ['console.command']
 
 imports:
 
@@ -33,3 +37,6 @@ imports:
 
     ## Payment Services ##
   - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Payment/Resources/config/services.yaml"}
+
+  ## Scheduler Services ##
+  - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Scheduler/Task/Resources/config/services.yaml"}

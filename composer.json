@@ -10,6 +10,7 @@
         "doctrine/orm": "^2.6",
         "league/fractal": "^0.17.0",
         "lexik/jwt-authentication-bundle": "^2.5",
+        "mtdowling/cron-expression": "^1.2",
         "nelmio/api-doc-bundle": "^3.2",
         "nelmio/cors-bundle": "^1.5",
         "pagerfanta/pagerfanta": "^2.0",
