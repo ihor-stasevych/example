@@ -50,7 +50,7 @@ class MinerSocketParser implements ParserInterface
             }
         }
 
-        var_dump($data);
+      //  var_dump($data);
 
         return $data;
     }
