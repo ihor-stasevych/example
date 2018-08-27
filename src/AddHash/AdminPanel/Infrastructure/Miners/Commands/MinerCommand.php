@@ -34,13 +34,9 @@ class MinerCommand extends AbstractMinerCommand
         return $this->request('version');
     }
 
-    public function addPool(string $url, string $user, string $password = '')
+    public function addPool(string $url, string $user, string $password)
     {
-        if ($password) {
-            $password = ',' . $password;
-        }
-
-        return $this->request('addpool|' . $url . ',' . $user . $password);
+        return $this->request('addpool|' . $url . ',' . $user . ',' . $password);
     }
 
     public function removePool(int $id)
@@ -61,10 +57,5 @@ class MinerCommand extends AbstractMinerCommand
     public function setPoolPriority(string $ids)
     {
         return $this->request('poolpriority|' . $ids);
-    }
-
-    public function switchPool(int $id)
-    {
-        return $this->request('switchpool|' . $id);
     }
 }

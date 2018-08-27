@@ -29,7 +29,7 @@ class UserMinerControlPoolCreateCommand implements UserMinerControlPoolCreateCom
      *      fields = {
      *          "user" = @Assert\Required({@Assert\NotBlank()}),
      *          "url" = @Assert\Required({@Assert\NotBlank()}),
-     *          "password" = @Assert\NotBlank(),
+     *          "password" = @Assert\Blank(),
      *          "status" = @Assert\Required({@Assert\NotBlank()})
      *      }
      *   )
@@ -51,5 +51,16 @@ class UserMinerControlPoolCreateCommand implements UserMinerControlPoolCreateCom
     public function getPools(): array
     {
         return $this->pools;
+    }
+
+    public function getUniqueUrls(): array
+    {
+        $urls = [];
+
+        foreach ($this->pools as $pool) {
+            $urls[] = $pool['url'];
+        }
+
+        return array_unique($urls);
     }
 }

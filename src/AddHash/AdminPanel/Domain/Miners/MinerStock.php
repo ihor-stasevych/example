@@ -86,6 +86,11 @@ class MinerStock
 		$this->state = self::STATE_AVAILABLE;
 	}
 
+	public function setBusy()
+	{
+		$this->state = self::STATE_BUSY;
+	}
+
 	public function infoMiner()
 	{
 		return $this->miner;

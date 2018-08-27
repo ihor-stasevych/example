@@ -51,7 +51,7 @@ services:
   addhash.user.account.settings.wallet.update.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletUpdateService
     public: true
-    arguments: ['@addhash.user.wallet.repository', '@security.token_storage']
+    arguments: ['@addhash.user.wallet.repository', '@addhash.wallet.repository', '@security.token_storage']
   App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletUpdateService: '@addhash.user.account.settings.wallet.update.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletUpdateServiceInterface: '@addhash.user.account.settings.wallet.update.service'
@@ -83,7 +83,7 @@ services:
   addhash.user.order.miner.create.service:
     class:  App\AddHash\AdminPanel\Infrastructure\Services\User\Order\Miner\CreateUserOrderMinerService
     public: true
-    arguments: ['@addhash.store.order.repository', '@addhash.user.order.miner.repository', '@addhash.miner.repository']
+    arguments: ['@addhash.store.order.repository', '@addhash.user.order.miner.repository', '@addhash.miner.repository', '@addhash.miner.stock.repository']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Order\Miner\CreateUserOrderMinerService: '@addhash.user.order.miner.create.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Order\Miner\CreateUserOrderMinerServiceInterface: '@addhash.user.order.miner.create.service'
@@ -115,7 +115,7 @@ services:
   addhash.user.miner.control.create.pool.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolCreateService
     public: true
-    arguments: ['@monolog.logger.db']
+    arguments: ['@monolog.logger.db', '@addhash.miner.allowed.url.repository']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolCreateService: '@addhash.user.miner.control.create.pool.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolCreateServiceInterface: '@addhash.user.miner.control.create.pool.service'

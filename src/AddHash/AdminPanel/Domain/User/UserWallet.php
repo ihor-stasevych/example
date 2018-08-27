@@ -6,24 +6,18 @@ use App\AddHash\AdminPanel\Domain\Wallet\Wallet;
 
 class UserWallet
 {
-	/**
-     * @var integer
-     */
-	private $id = null;
-
-	/**
-     * @var string
-     */
-	private $value;
+	private $id;
 
 	private $user;
 
+    /**
+     * @var Wallet
+     */
 	private $wallet;
 
-	public function __construct(string $value, int $id = null)
+	public function __construct(int $id = null)
 	{
-		$this->setId($id);
-		$this->setValue($value);
+        $this->id = $id;
 	}
 
     public function getId(): ?int
@@ -31,32 +25,9 @@ class UserWallet
         return $this->id;
     }
 
-    public function getValue(): string
+    public function getWallet()
     {
-        return $this->value;
-    }
-
-    public function getWallet(): ?string
-    {
-        $walletName = null;
-
-        if (null !== $this->wallet) {
-            $walletName = $this->wallet->getName();
-        }
-
-        return $walletName;
-    }
-
-    private function setId($id = null)
-    {
-        if (null != $id) {
-            $this->id = $id;
-        }
-    }
-
-    public function setValue(string $value)
-    {
-        $this->value = $value;
+        return $this->wallet;
     }
 
     public function setWallet(Wallet $wallet)

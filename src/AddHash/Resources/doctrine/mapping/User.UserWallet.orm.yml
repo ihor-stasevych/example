@@ -5,21 +5,17 @@ App\AddHash\AdminPanel\Domain\User\UserWallet:
         id:
             type: integer
             generator: { strategy: AUTO }
-    fields:
-        value:
-            type: string
-            length: 191
 
     manyToOne:
         user:
-              targetEntity: App\AddHash\AdminPanel\Domain\User\User
-              inversedBy: user
-              joinColumn:
+            targetEntity: App\AddHash\AdminPanel\Domain\User\User
+            inversedBy: user
+            joinColumn:
                 name: userId
                 referencedColumnName: id
     oneToOne:
-          wallet:
+        wallet:
             targetEntity: App\AddHash\AdminPanel\Domain\Wallet\Wallet
             joinColumn:
-              name: walletId
-              referencedColumnName: id
+                name: walletId
+                referencedColumnName: id
