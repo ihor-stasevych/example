@@ -11,6 +11,8 @@ use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketParser;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketStatusParser;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketCountPoolsParser;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\UserMinerControlCommandInterface;
+use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerAllowedUrlRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\User\Exceptions\Miner\Pool\UserMinerNoValidUrlPoolException;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCreateCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolCreateServiceInterface;
 
@@ -27,17 +29,21 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
 
     private $logger;
 
+    private $allowedUrlRepository;
+
     private $countRepeatDeleteFirstPool = 0;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, MinerAllowedUrlRepositoryInterface $allowedUrlRepository)
     {
         $this->logger = $logger;
+        $this->allowedUrlRepository = $allowedUrlRepository;
     }
 
     /**
      * @param UserMinerControlPoolCreateCommandInterface $command
      * @param MinerStock $minerStock
      * @return array
+     * @throws UserMinerNoValidUrlPoolException
      */
     public function execute(UserMinerControlCommandInterface $command, MinerStock $minerStock)
     {
@@ -46,6 +52,12 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
 
         if ($minerStock->getId() != $minerId) {
             return $data;
+        }
+
+        $getCountAllowedUrl = $this->allowedUrlRepository->getCountByValuesEnabledUrl($command->getUniqueUrls());
+
+        if ($getCountAllowedUrl != count($command->getUniqueUrls())) {
+            throw new UserMinerNoValidUrlPoolException('No valid url');
         }
 
         $minerCommand = new MinerCommand(
