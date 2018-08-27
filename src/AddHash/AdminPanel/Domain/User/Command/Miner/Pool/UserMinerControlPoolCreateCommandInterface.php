@@ -9,4 +9,6 @@ interface UserMinerControlPoolCreateCommandInterface extends UserMinerControlCom
     public function getMinerId(): int;
 
     public function getPools(): array;
+
+    public function getUniqueUrls(): array;
 }

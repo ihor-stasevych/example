@@ -115,7 +115,7 @@ services:
   addhash.user.miner.control.create.pool.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolCreateService
     public: true
-    arguments: ['@monolog.logger.db']
+    arguments: ['@monolog.logger.db', '@addhash.miner.allowed.url.repository']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolCreateService: '@addhash.user.miner.control.create.pool.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolCreateServiceInterface: '@addhash.user.miner.control.create.pool.service'

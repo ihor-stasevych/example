@@ -52,4 +52,15 @@ class UserMinerControlPoolCreateCommand implements UserMinerControlPoolCreateCom
     {
         return $this->pools;
     }
+
+    public function getUniqueUrls(): array
+    {
+        $urls = [];
+
+        foreach ($this->pools as $pool) {
+            $urls[] = $pool['url'];
+        }
+
+        return array_unique($urls);
+    }
 }
