@@ -4,20 +4,14 @@ namespace App\AddHash\AdminPanel\Domain\Wallet;
 
 class Wallet
 {
-	/**
-     * @var integer
-     */
-	private $id = null;
+	private $id;
 
-	/**
-     * @var string
-     */
-	private $name;
+	private $value;
 
-	public function __construct(string $name, int $id = null)
+	public function __construct(string $value, int $id = null)
 	{
-		$this->setId($id);
-		$this->setName($name);
+        $this->id = $id;
+        $this->value = $value;
 	}
 
     public function getId(): ?int
@@ -25,20 +19,13 @@ class Wallet
         return $this->id;
     }
 
-    public function getName(): string
+    public function getValue(): string
     {
-        return $this->name;
+        return $this->value;
     }
 
-    private function setId($id = null)
+    public function setValue(string $value)
     {
-        if (null != $id) {
-            $this->id = $id;
-        }
-    }
-
-    private function setName(string $name)
-    {
-        $this->name = $name;
+        $this->value = $value;
     }
 }

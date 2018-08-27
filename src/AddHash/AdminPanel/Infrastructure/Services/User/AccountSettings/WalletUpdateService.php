@@ -2,6 +2,8 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings;
 
+use App\AddHash\AdminPanel\Domain\User\UserWallet;
+use App\AddHash\AdminPanel\Domain\Wallet\WalletRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\WalletUpdateCommandInterface;
@@ -12,14 +14,18 @@ class WalletUpdateService implements WalletUpdateServiceInterface
 {
     private $userWalletRepository;
 
+    private $walletRepository;
+
     private $tokenStorage;
 
 	public function __construct(
 	    UserWalletRepositoryInterface $userWalletRepository,
+        WalletRepositoryInterface $walletRepository,
         TokenStorageInterface $tokenStorage
     )
 	{
         $this->userWalletRepository = $userWalletRepository;
+        $this->walletRepository = $walletRepository;
         $this->tokenStorage = $tokenStorage;
 	}
 
@@ -39,17 +45,27 @@ class WalletUpdateService implements WalletUpdateServiceInterface
 
         $ids = array_keys($walletsValue);
         $userId = $this->tokenStorage->getToken()->getUser()->getId();
-        $wallets = $this->userWalletRepository->getByIdsAndUserId($ids, $userId);
+        $userWallets = $this->userWalletRepository->getByIdsAndUserId($ids, $userId);
 
-	    if (count($ids) != count($wallets)) {
+	    if (count($ids) != count($userWallets)) {
             throw new UserWalletIsNotValidException('User wallet is not valid');
         }
 
-        foreach ($wallets as $wallet) {
-            $wallet->setValue($walletsValue[$wallet->getId()]);
-            $this->userWalletRepository->update();
+        $result = [];
+
+        foreach ($userWallets as $userWallet) {
+            /** @var UserWallet $userWallet */
+            $value = $walletsValue[$userWallet->getId()];
+            $userWallet->getWallet()->setValue($value);
+
+            $this->walletRepository->update();
+
+            $result[] = [
+                'id'    => $userWallet->getId(),
+                'value' => $value,
+            ];
         }
 
-        return $wallets;
+        return $result;
 	}
 }

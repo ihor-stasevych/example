@@ -15,15 +15,53 @@ class WalletRepository extends AbstractRepository implements WalletRepositoryInt
      */
     public function getById(int $id): ?Wallet
     {
-        $user = $this->entityManager->getRepository($this->getEntityName());
+        $wallet = $this->entityManager->getRepository($this->getEntityName());
 
-        $res = $user->createQueryBuilder('w')
+        $res = $wallet->createQueryBuilder('w')
             ->select('w')
             ->andWhere('w.id = :id')
             ->setParameter('id', $id)
             ->getQuery();
 
         return $res->getOneOrNullResult();
+    }
+
+    /**
+     * @param string $value
+     * @return Wallet|null
+     * @throws NonUniqueResultException
+     */
+    public function getByValue(string $value): ?Wallet
+    {
+        $wallet = $this->entityManager->getRepository($this->getEntityName());
+
+        $res = $wallet->createQueryBuilder('w')
+            ->select('w')
+            ->andWhere('w.value = :value')
+            ->setParameter('value', $value)
+            ->getQuery();
+
+        return $res->getOneOrNullResult();
+    }
+
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function update()
+    {
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param Wallet $wallet
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function create(Wallet $wallet)
+    {
+        $this->entityManager->persist($wallet);
+        $this->entityManager->flush($wallet);
     }
 
     /**

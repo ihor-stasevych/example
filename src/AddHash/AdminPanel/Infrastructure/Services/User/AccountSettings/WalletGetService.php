@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings;
 
-use Doctrine\ORM\PersistentCollection;
+use App\AddHash\AdminPanel\Domain\User\UserWallet;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletGetServiceInterface;
 
@@ -15,10 +15,19 @@ class WalletGetService implements WalletGetServiceInterface
         $this->tokenStorage = $tokenStorage;
 	}
 
-	public function execute(): PersistentCollection
+	public function execute(): array
 	{
 	    $user = $this->tokenStorage->getToken()->getUser();
+	    $data = [];
 
-        return $user->getUserWallets();
+	    /** @var UserWallet $userWallet */
+        foreach ($user->getUserWallets() as $userWallet) {
+	        $data[] = [
+	            'id'    => $userWallet->getId(),
+                'value' => $userWallet->getWallet()->getValue(),
+            ];
+        }
+
+        return $data;
 	}
 }

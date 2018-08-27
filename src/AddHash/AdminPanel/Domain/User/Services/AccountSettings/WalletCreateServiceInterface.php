@@ -2,10 +2,9 @@
 
 namespace App\AddHash\AdminPanel\Domain\User\Services\AccountSettings;
 
-use App\AddHash\AdminPanel\Domain\User\UserWallet;
 use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\WalletCreateCommandInterface;
 
 interface WalletCreateServiceInterface
 {
-	public function execute(WalletCreateCommandInterface $command): UserWallet;
+	public function execute(WalletCreateCommandInterface $command): array ;
 }
