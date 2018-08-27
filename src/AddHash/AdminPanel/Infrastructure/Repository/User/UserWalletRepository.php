@@ -16,17 +16,31 @@ class UserWalletRepository extends AbstractRepository implements UserWalletRepos
      */
     public function getByIdsAndUserId(array $ids, int $userId): array
     {
-        $user = $this->entityManager->getRepository($this->getEntityName());
-
-        $res = $user->createQueryBuilder('uw')
+        return $this->entityManager->getRepository($this->getEntityName())
+            ->createQueryBuilder('uw')
             ->select('uw')
             ->andWhere('uw.id IN (:ids)')
             ->andWhere('uw.user = :userId')
             ->setParameter('ids', $ids)
             ->setParameter('userId', $userId)
-            ->getQuery();
+            ->getQuery()
+            ->getResult();
+    }
 
-        return $res->getResult();
+    public function getByUnique(array $ids, int $typeId, string $value)
+    {
+        return $this->entityManager->getRepository($this->getEntityName())
+            ->createQueryBuilder('uw')
+            ->select('uw', 'w')
+            ->join('uw.wallet', 'w')
+            ->andWhere('uw.id NOT IN (:ids)')
+            ->andWhere('w.value = :value')
+            ->andWhere('w.type = :type')
+            ->setParameter('ids', $ids)
+            ->setParameter('value', $value)
+            ->setParameter('type', $typeId)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**

@@ -6,7 +6,7 @@ interface WalletRepositoryInterface
 {
     public function getById(int $id): ?Wallet;
 
-    public function getByValue(string $value): ?Wallet;
+    public function getByValueAndType(string $value, int $typeId): ?Wallet;
 
     public function update();
 

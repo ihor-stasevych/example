@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\AdminPanel\Domain\Wallet\Exceptions\WalletIsExistException;
+use App\AddHash\AdminPanel\Domain\Wallet\Exceptions\WalletTypeIsNotExistException;
 use App\AddHash\AdminPanel\Application\Command\User\AccountSettings\WalletCreateCommand;
 use App\AddHash\AdminPanel\Application\Command\User\AccountSettings\WalletUpdateCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletGetServiceInterface;
@@ -112,7 +113,7 @@ class WalletController extends BaseServiceController
 
         try {
             return $this->json($this->updateService->execute($command));
-        } catch (UserWalletIsNotValidException $e) {
+        } catch (UserWalletIsNotValidException | WalletTypeIsNotExistException $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
             ], Response::HTTP_BAD_REQUEST);
@@ -127,6 +128,13 @@ class WalletController extends BaseServiceController
      *     in="query",
      *     type="string",
      *     description="Value wallet"
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="typeId",
+     *     in="query",
+     *     type="integer",
+     *     description="Wallet type ID"
      * )
      *
      * @SWG\Response(
@@ -150,7 +158,8 @@ class WalletController extends BaseServiceController
 	public function create(Request $request)
     {
         $command = new WalletCreateCommand(
-            $request->get('value')
+            $request->get('value'),
+            (int)$request->get('typeId')
         );
 
         if (!$this->commandIsValid($command)) {
@@ -161,7 +170,7 @@ class WalletController extends BaseServiceController
 
         try {
             return $this->json($this->createService->execute($command));
-        } catch (WalletIsExistException $e) {
+        } catch (WalletIsExistException | WalletTypeIsNotExistException $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
             ], Response::HTTP_BAD_REQUEST);

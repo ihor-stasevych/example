@@ -2,13 +2,11 @@
 
 namespace App\AddHash\AdminPanel\Domain\Wallet;
 
-class Wallet
+class WalletType
 {
 	private $id;
 
 	private $value;
-
-	private $type;
 
 	public function __construct(string $value, int $id = null)
 	{
@@ -26,18 +24,8 @@ class Wallet
         return $this->value;
     }
 
-    public function getType(): WalletType
-    {
-        return $this->type;
-    }
-
     public function setValue(string $value)
     {
         $this->value = $value;
-    }
-
-    public function setType(WalletType $type)
-    {
-        $this->type = $type;
     }
 }

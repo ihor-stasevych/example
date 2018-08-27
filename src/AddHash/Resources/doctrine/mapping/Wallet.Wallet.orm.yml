@@ -9,3 +9,10 @@ App\AddHash\AdminPanel\Domain\Wallet\Wallet:
         value:
             type: string
             length: 191
+
+    manyToOne:
+        type:
+            targetEntity: App\AddHash\AdminPanel\Domain\Wallet\WalletType
+            joinColumn:
+                name: typeId
+                referencedColumnName: id
