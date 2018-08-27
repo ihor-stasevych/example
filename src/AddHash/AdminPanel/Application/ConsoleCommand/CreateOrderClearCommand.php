@@ -34,5 +34,7 @@ class CreateOrderClearCommand extends Command
         } catch (StoreOrderNoUnPaidErrorException | StoreOrderNoUnReserveMinersErrorException $e) {
 
         }
+
+        return 1;
     }
 }
