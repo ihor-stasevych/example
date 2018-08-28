@@ -2,12 +2,10 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User;
 
+use App\AddHash\AdminPanel\Domain\User\Miner\UserMinerRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Domain\User\Order\UserOrderMiner;
-use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket;
-use App\AddHash\AdminPanel\Infrastructure\Miners\Commands\MinerCommand;
-use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketParser;
 use App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -15,10 +13,14 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class MinerControlGetService implements MinerControlGetServiceInterface
 {
     private $tokenStorage;
+    private $userMinerRepository;
 
-    public function __construct(TokenStorageInterface $tokenStorage)
+    public function __construct(
+    	TokenStorageInterface $tokenStorage,
+	    UserMinerRepositoryInterface $userMinerRepository)
     {
         $this->tokenStorage = $tokenStorage;
+        $this->userMinerRepository = $userMinerRepository;
     }
 
     /**
@@ -31,23 +33,16 @@ class MinerControlGetService implements MinerControlGetServiceInterface
         $user = $this->tokenStorage->getToken()->getUser();
 
         if (!count($user->getOrderMiner())) {
-            throw new MinerControlNoMainerException('No mainer');
+            return [];
         }
 
-        $parser = new MinerSocketParser();
         $data = [];
 
         /** @var UserOrderMiner $orderMiners */
 		foreach ($user->getOrderMiner() as $orderMiners) {
 			/** @var MinerStock $minerStock */
 			foreach ($orderMiners->getMiners() as $minerStock) {
-                $command = new MinerCommand(new MinerSocket($minerStock), $parser);
-
-                $data[] = $command->getSummary() + [
-                    'minerTitle'   => $minerStock->infoMiner()->getTitle(),
-                    'minerId'      => $minerStock->infoMiner()->getId(),
-                    'minerStockId' => $minerStock->getId(),
-                ];
+                $data[] = $this->userMinerRepository->getSummary($minerStock);
             }
         }
 
