@@ -3,10 +3,11 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings;
 
 use App\AddHash\AdminPanel\Domain\User\UserWallet;
+use App\AddHash\AdminPanel\Domain\Wallet\WalletType;
 use App\AddHash\AdminPanel\Domain\Wallet\WalletRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface;
-use App\AddHash\AdminPanel\Domain\Wallet\WalletType;
 use App\AddHash\AdminPanel\Domain\Wallet\WalletTypeRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\Wallet\Exceptions\WalletIsExistException;
 use App\AddHash\AdminPanel\Domain\Wallet\Exceptions\WalletTypeIsNotExistException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\WalletUpdateCommandInterface;
@@ -41,16 +42,15 @@ class WalletUpdateService implements WalletUpdateServiceInterface
      * @return array
      * @throws UserWalletIsNotValidException
      * @throws WalletTypeIsNotExistException
+     * @throws WalletIsExistException
      */
 	public function execute(WalletUpdateCommandInterface $command): array
 	{
-	    /** TEST */
-	    $result = $this->userWalletRepository->getByUnique([1], 2, 'qqqq2wfa2');
-	    dd($result);
-
         $walletsCommand = $command->getWallets();
         $walletsValue = [];
-        $walletTypeIds = [];
+        $walletsTypeId = [];
+        $userWalletsId = [];
+        $uniqueWallets = [];
 
         foreach ($walletsCommand as $walletCommand) {
             $walletsValue[$walletCommand['id']] = [
@@ -58,30 +58,45 @@ class WalletUpdateService implements WalletUpdateServiceInterface
                 'typeId' => $walletCommand['typeId'],
             ];
 
-            if (false === array_search($walletCommand['typeId'], $walletTypeIds)) {
-                $walletTypeIds[] = $walletCommand['typeId'];
+            $userWalletsId[] = $walletCommand['id'];
+            $uniqueWallets[] = $walletCommand['value'] . $walletCommand['typeId'];
+
+            if (false === array_search($walletCommand['typeId'], $walletsTypeId)) {
+                $walletsTypeId[] = $walletCommand['typeId'];
             }
         }
 
-        $walletTypes = $this->walletTypeRepository->getByIds($walletTypeIds);
-
-        if (count($walletTypes) != count($walletTypeIds)) {
-            throw new WalletTypeIsNotExistException('Invalid type Id');
-        }
-
-        $ids = array_keys($walletsValue);
-        $userId = $this->tokenStorage->getToken()->getUser()->getId();
-        $userWallets = $this->userWalletRepository->getByIdsAndUserId($ids, $userId);
-
-	    if (count($ids) != count($userWallets)) {
+        if (count(array_unique($uniqueWallets)) != count($walletsValue)) {
             throw new UserWalletIsNotValidException('User wallet is not valid');
         }
 
-        $walletTypesObject = [];
+        $userId = $this->tokenStorage->getToken()->getUser()->getId();
+        $userWallets = $this->userWalletRepository->getByIdsAndUserId($userWalletsId, $userId);
+
+	    if (count($userWalletsId) != count($userWallets)) {
+            throw new UserWalletIsNotValidException('User wallet is not valid');
+        }
+
+        foreach ($walletsValue as $walletValue) {
+
+            $uw = $this->userWalletRepository->getByUnique($userWalletsId, $walletValue['typeId'], $walletValue['value']);
+
+            if (null !== $uw) {
+                throw new WalletIsExistException('Wallet already exist');
+            }
+        }
+
+        $walletsType = $this->walletTypeRepository->getByIds($walletsTypeId);
+
+        if (count($walletsType) != count($walletsTypeId)) {
+            throw new WalletTypeIsNotExistException('Invalid type Id');
+        }
+
+        $walletsTypeObject = [];
 
         /** @var WalletType $walletType */
-        foreach ($walletTypes as $walletType) {
-            $walletTypesObject[$walletType->getId()] = $walletType;
+        foreach ($walletsType as $walletType) {
+            $walletsTypeObject[$walletType->getId()] = $walletType;
         }
 
         $result = [];
@@ -90,7 +105,7 @@ class WalletUpdateService implements WalletUpdateServiceInterface
             /** @var UserWallet $userWallet */
             $data = $walletsValue[$userWallet->getId()];
             $userWallet->getWallet()->setValue($data['value']);
-            $userWallet->getWallet()->setType($walletTypesObject[$data['typeId']]);
+            $userWallet->getWallet()->setType($walletsTypeObject[$data['typeId']]);
 
             $this->walletRepository->update();
 
@@ -103,16 +118,4 @@ class WalletUpdateService implements WalletUpdateServiceInterface
 
         return $result;
 	}
-
-	private function checkUniqueNewUserWallet(WalletUpdateCommandInterface $command)
-    {
-        $uniqueWallets = [];
-        $wallets = $command->getWallets();
-
-        foreach ($wallets as $wallet) {
-            $uniqueWallets[$wallet['value'] . $wallet['typeId']] = $wallet;
-        }
-
-        return count($uniqueWallets) == count($wallets);
-    }
 }

@@ -9,4 +9,6 @@ interface UserWalletRepositoryInterface
     public function update();
 
     public function create(UserWallet $userWallet);
+
+    public function getByUnique(array $ids, int $typeId, string $value);
 }

@@ -3,6 +3,7 @@ namespace App\AddHash\AdminPanel\Infrastructure\Repository\User;
 
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\NonUniqueResultException;
 use App\AddHash\AdminPanel\Domain\User\UserWallet;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
 use App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface;
@@ -27,11 +28,18 @@ class UserWalletRepository extends AbstractRepository implements UserWalletRepos
             ->getResult();
     }
 
+    /**
+     * @param array $ids
+     * @param int $typeId
+     * @param string $value
+     * @return array|null
+     * @throws NonUniqueResultException
+     */
     public function getByUnique(array $ids, int $typeId, string $value)
     {
         return $this->entityManager->getRepository($this->getEntityName())
             ->createQueryBuilder('uw')
-            ->select('uw', 'w')
+            ->select('uw')
             ->join('uw.wallet', 'w')
             ->andWhere('uw.id NOT IN (:ids)')
             ->andWhere('w.value = :value')
