@@ -57,6 +57,12 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
+    addhash.cache:
+      class: App\AddHash\System\Lib\Cache\RedisCache
+      arguments: ['@app.cache.widget', '%kernel.environment%']
+    App\AddHash\System\Lib\Cache\RedisCache: '@addhash.cache'
+    App\AddHash\System\Lib\Cache\CacheInterface: '@addhash.cache'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 

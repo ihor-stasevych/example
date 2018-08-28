@@ -122,6 +122,9 @@
     "monolog/monolog": {
         "version": "1.23.0"
     },
+    "mtdowling/cron-expression": {
+        "version": "v1.2.1"
+    },
     "namshi/jose": {
         "version": "7.2.3"
     },
@@ -169,6 +172,9 @@
     },
     "pimple/pimple": {
         "version": "v3.2.3"
+    },
+    "predis/predis": {
+        "version": "v1.1.1"
     },
     "psr/cache": {
         "version": "1.0.1"
