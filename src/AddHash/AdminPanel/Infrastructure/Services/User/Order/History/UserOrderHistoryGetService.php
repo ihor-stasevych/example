@@ -24,7 +24,7 @@ class UserOrderHistoryGetService implements UserOrderHistoryGetServiceInterface
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $result = [];
-        $orders = $user->getOrder();
+        $orders = $user->getOrdersPaid();
         $orderId = $command->getOrderId();
 
         if (!count($orders)) {
@@ -33,7 +33,7 @@ class UserOrderHistoryGetService implements UserOrderHistoryGetServiceInterface
 
         /** @var StoreOrder $order */
         foreach ($orders as $order) {
-            if (null === $order->getPayment() || $orderId != $order->getId()) {
+            if ($orderId != $order->getId()) {
                 continue;
             }
 

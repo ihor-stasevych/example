@@ -2,6 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\User;
 
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
 use App\AddHash\System\GlobalContext\ValueObject\Phone;
 use App\AddHash\System\Lib\Uuid;
@@ -180,6 +181,20 @@ class User implements UserInterface
 	public function getOrder()
     {
         return $this->order;
+    }
+
+    public function getOrdersPaid(): array
+    {
+        $ordersPaid = [];
+
+        /** @var StoreOrder $order */
+        foreach ($this->order as $order) {
+            if (null !== $order->getPayment()) {
+                $ordersPaid[] = $order;
+            }
+        }
+
+        return $ordersPaid;
     }
 
     public function getOrderMiner()

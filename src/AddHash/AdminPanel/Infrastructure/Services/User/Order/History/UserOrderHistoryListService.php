@@ -23,7 +23,7 @@ class UserOrderHistoryListService implements UserOrderHistoryListServiceInterfac
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $result = [];
-        $orders = $user->getOrder();
+        $orders = $user->getOrdersPaid();
 
         if (!count($orders)) {
             return $result;
@@ -31,10 +31,6 @@ class UserOrderHistoryListService implements UserOrderHistoryListServiceInterfac
 
         /** @var StoreOrder $order */
         foreach ($orders as $order) {
-            if (null === $order->getPayment()) {
-                continue;
-            }
-
             $items = [];
 
             /** @var StoreOrderItem $item */
