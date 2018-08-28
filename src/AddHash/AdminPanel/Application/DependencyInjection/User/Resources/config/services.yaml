@@ -127,3 +127,19 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolCreateService: '@addhash.user.miner.control.create.pool.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolCreateServiceInterface: '@addhash.user.miner.control.create.pool.service'
+
+  addhash.user.order.history.list.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryListService
+    public: true
+    arguments: ['@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryListService: '@addhash.user.order.history.list.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryListServiceInterface: '@addhash.user.order.history.list.service'
+
+  addhash.user.order.history.get.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryGetService
+    public: true
+    arguments: ['@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryGetService: '@addhash.user.order.history.get.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryGetServiceInterface: '@addhash.user.order.history.get.service'

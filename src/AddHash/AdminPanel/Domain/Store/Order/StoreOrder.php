@@ -85,6 +85,11 @@ class StoreOrder
 		return $this->itemsPriceTotal;
 	}
 
+	public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
 	/**
 	 * @param StoreProduct $product
 	 * @return bool
@@ -196,6 +201,11 @@ class StoreOrder
 	{
 		return $this->user;
 	}
+
+    public function getPayment(): ?Payment
+    {
+        return $this->payment;
+    }
 
 	/**
 	 * @inheritdoc
