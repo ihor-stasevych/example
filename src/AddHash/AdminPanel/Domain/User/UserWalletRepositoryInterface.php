@@ -10,5 +10,5 @@ interface UserWalletRepositoryInterface
 
     public function create(UserWallet $userWallet);
 
-    public function getByUnique(array $ids, int $typeId, string $value);
+    public function getByUnique(array $ids, int $typeId, string $value): ?UserWallet;
 }

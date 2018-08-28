@@ -35,7 +35,7 @@ class UserWalletRepository extends AbstractRepository implements UserWalletRepos
      * @return array|null
      * @throws NonUniqueResultException
      */
-    public function getByUnique(array $ids, int $typeId, string $value)
+    public function getByUnique(array $ids, int $typeId, string $value): ?UserWallet
     {
         return $this->entityManager->getRepository($this->getEntityName())
             ->createQueryBuilder('uw')
