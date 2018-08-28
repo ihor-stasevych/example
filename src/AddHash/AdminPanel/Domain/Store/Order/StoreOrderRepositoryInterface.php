@@ -8,7 +8,11 @@ interface StoreOrderRepositoryInterface
 
     public function getNewByTime(\DateTime $updatedAt);
 
-	public function save(StoreOrder $order);
+    public function getOrdersPaidByUserId(int $userId): array;
 
-	public function findNewByUserId($userId);
+    public function getOrderPaidByIdAndUserId(int $id, int $userId): ?StoreOrder;
+
+    public function save(StoreOrder $order);
+
+    public function findNewByUserId($userId);
 }

@@ -131,7 +131,7 @@ services:
   addhash.user.order.history.list.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryListService
     public: true
-    arguments: ['@security.token_storage']
+    arguments: ['@security.token_storage', '@addhash.store.order.repository']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryListService: '@addhash.user.order.history.list.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryListServiceInterface: '@addhash.user.order.history.list.service'
@@ -139,7 +139,7 @@ services:
   addhash.user.order.history.get.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryGetService
     public: true
-    arguments: ['@security.token_storage']
+    arguments: ['@security.token_storage', '@addhash.store.order.repository']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryGetService: '@addhash.user.order.history.get.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryGetServiceInterface: '@addhash.user.order.history.get.service'

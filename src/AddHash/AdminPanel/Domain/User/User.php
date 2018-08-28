@@ -183,20 +183,6 @@ class User implements UserInterface
         return $this->order;
     }
 
-    public function getOrdersPaid(): array
-    {
-        $ordersPaid = [];
-
-        /** @var StoreOrder $order */
-        foreach ($this->order as $order) {
-            if (null !== $order->getPayment()) {
-                $ordersPaid[] = $order;
-            }
-        }
-
-        return $ordersPaid;
-    }
-
     public function getOrderMiner()
     {
         return $this->orderMain;

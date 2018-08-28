@@ -6,6 +6,7 @@ use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
+use App\AddHash\AdminPanel\Domain\Store\Order\Exceptions\StoreOrderNoOrderErrorException;
 use App\AddHash\AdminPanel\Application\Command\User\Order\History\UserOrderHistoryGetCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryGetServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryListServiceInterface;
@@ -104,6 +105,14 @@ class UserOrderHistoryController extends BaseServiceController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        return $this->json($this->getService->execute($command));
+        try {
+            $order = $this->getService->execute($command);
+        } catch (StoreOrderNoOrderErrorException $e) {
+            return $this->json([
+                'errors' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json($order);
     }
 }
