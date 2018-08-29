@@ -128,6 +128,16 @@ user.miner.control.pools.status.update:
   methods: PUT
   controller: App\AddHash\AdminPanel\Application\Controller\User\Miner\Pool\UserMinerControlPoolController::statusUpdate
 
+user.order.history.list:
+  path: "/api/v1/user/orders"
+  methods: GET
+  controller: App\AddHash\AdminPanel\Application\Controller\User\Order\History\UserOrderHistoryController::index
+
+user.order.history.get:
+  path: "/api/v1/user/orders/{id}"
+  methods: GET
+  controller: App\AddHash\AdminPanel\Application\Controller\User\Order\History\UserOrderHistoryController::get
+
 user.miner.test.query:
   path: "/api/v1/user/miner/test/query"
   methods: GET

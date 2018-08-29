@@ -2,6 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\User;
 
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
 use App\AddHash\System\GlobalContext\ValueObject\Phone;
 use App\AddHash\System\Lib\Uuid;

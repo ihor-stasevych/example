@@ -2,6 +2,9 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order;
 
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\NonUniqueResultException;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
@@ -20,11 +23,11 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
 	/**
 	 * @param $userId
 	 * @return mixed
-	 * @throws \Doctrine\ORM\NonUniqueResultException
+	 * @throws NonUniqueResultException
 	 */
 	public function findNewByUserId($userId)
 	{
-		$order = $this->entityRepository->createQueryBuilder('e')
+		return $this->entityRepository->createQueryBuilder('e')
 			->select('e')
 			->where('e.user = :id')
 			->andWhere('e.state = :stateNew')
@@ -32,8 +35,6 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
 			->setParameter('stateNew', StoreOrder::STATE_NEW)
 			->getQuery()
 			->getOneOrNullResult();
-
-		return $order;
 	}
 
     /**
@@ -42,7 +43,7 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
      */
 	public function getNewByTime(\DateTime $updatedAt)
     {
-        $order = $this->entityRepository->createQueryBuilder('e')
+        return $this->entityRepository->createQueryBuilder('e')
             ->select('e')
             ->where('e.state = :stateNew')
             ->andWhere('e.updatedAt < :updatedAt')
@@ -50,14 +51,44 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
             ->setParameter('updatedAt', $updatedAt)
             ->getQuery()
             ->getResult();
+    }
 
-        return $order;
+    /**
+     * @param int $userId
+     * @return array
+     */
+    public function getOrdersPaidByUserId(int $userId): array
+    {
+        return $this->entityRepository->createQueryBuilder('o')
+            ->select('o')
+            ->where('o.user = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param int $id
+     * @param int $userId
+     * @return StoreOrder|null
+     * @throws NonUniqueResultException
+     */
+    public function getOrderPaidByIdAndUserId(int $id, int $userId): ?StoreOrder
+    {
+        return $this->entityRepository->createQueryBuilder('o')
+            ->select('o')
+            ->where('o.id = :id')
+            ->andWhere('o.user = :userId')
+            ->setParameter('id', $id)
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**
      * @param StoreOrder $order
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
 	public function save(StoreOrder $order)
 	{
