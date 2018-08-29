@@ -14,6 +14,12 @@ class StoreOrder
 	const STATE_PAYED = 2;
 	const STATE_CLOSED = 3;
 
+	const STATE_ALIAS = [
+        self::STATE_NEW    => 'New',
+        self::STATE_PAYED  => 'Payed',
+        self::STATE_CLOSED => 'Closed',
+    ];
+
 	private $id;
 
 	private $createdAt;
@@ -76,6 +82,11 @@ class StoreOrder
 	{
 		return $this->items;
 	}
+
+	public function getStateAlias()
+    {
+        return static::STATE_ALIAS[$this->state];
+    }
 
 	/**
 	 * @return mixed
