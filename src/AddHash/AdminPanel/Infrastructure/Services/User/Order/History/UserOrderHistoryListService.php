@@ -55,7 +55,7 @@ class UserOrderHistoryListService implements UserOrderHistoryListServiceInterfac
             $result[] = [
                 'id'                => $order->getId(),
                 'createdAt'         => $order->getCreatedAt(),
-                'state'             => $order->getState(),
+                'state'             => $order->getStateAlias(),
                 'paymentMethodName' => $paymentMethod->getName(),
                 'currency'          => $order->getPayment()->getCurrency(),
                 'itemsPriceTotal'   => $order->getItemsPriceTotal(),

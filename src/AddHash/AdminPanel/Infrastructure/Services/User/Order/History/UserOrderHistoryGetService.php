@@ -60,7 +60,7 @@ class UserOrderHistoryGetService implements UserOrderHistoryGetServiceInterface
         return [
             'id'                => $order->getId(),
             'createdAt'         => $order->getCreatedAt(),
-            'state'             => $order->getState(),
+            'state'             => $order->getStateAlias(),
             'paymentMethodName' => $paymentMethod->getName(),
             'currency'          => $order->getPayment()->getCurrency(),
             'itemsPriceTotal'   => $order->getItemsPriceTotal(),
