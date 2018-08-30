@@ -10,3 +10,8 @@ App\AddHash\AdminPanel\Domain\Payment\PaymentMethod:
         name:
             type: string
             length: 255
+
+    oneToMany:
+        payment:
+            targetEntity: App\AddHash\AdminPanel\Domain\Payment\Payment
+            mappedBy: payment

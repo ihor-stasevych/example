@@ -51,12 +51,13 @@ class UserOrderHistoryListService implements UserOrderHistoryListServiceInterfac
 
             /** @var PaymentMethod $paymentMethod */
             $paymentMethod = $order->getPayment()->getPaymentMethod();
+            $paymentName = (null !== $paymentMethod) ? $paymentMethod->getName() : '';
 
             $result[] = [
                 'id'                => $order->getId(),
                 'createdAt'         => $order->getCreatedAt(),
                 'state'             => $order->getStateAlias(),
-                'paymentMethodName' => $paymentMethod->getName(),
+                'paymentMethodName' => $paymentName,
                 'currency'          => $order->getPayment()->getCurrency(),
                 'itemsPriceTotal'   => $order->getItemsPriceTotal(),
                 'items'             => $items,
