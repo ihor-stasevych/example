@@ -20,6 +20,12 @@ class StoreOrder
         self::STATE_CLOSED => 'Closed',
     ];
 
+	const STATES = [
+	    self::STATE_NEW,
+        self::STATE_PAYED,
+        self::STATE_CLOSED,
+    ];
+
 	private $id;
 
 	private $createdAt;

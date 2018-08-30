@@ -2,6 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order;
 
+use App\AddHash\AdminPanel\Domain\User\Order\History\ListParam\Sort;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\NonUniqueResultException;
@@ -55,18 +56,31 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
 
     /**
      * @param int $userId
+     * @param Sort $sort
+     * @param null $state
      * @return array
      */
-    public function getOrdersPaidByUserId(int $userId): array
+    public function getOrdersByUserId(int $userId, Sort $sort, $state = null): array
     {
-        return $this->entityRepository->createQueryBuilder('o')
+        $order = $this->entityRepository->createQueryBuilder('o')
             ->select('o')
-            ->where('o.user = :userId')
-            ->andWhere('o.state = :state')
-            ->setParameter('userId', $userId)
-            ->setParameter('state', StoreOrder::STATE_PAYED)
-            ->getQuery()
+            ->where('o.user = :userId');
+
+        if (null !== $state) {
+            $order = $order->andWhere('o.state  = :state');
+        }
+
+        $order = $order->orderBy('o.' . $sort->getSort(), $sort->getOrder())
+            ->setParameter('userId', $userId);
+
+        if (null !== $state) {
+            $order = $order->setParameter('state', $state);
+        }
+
+        $order = $order->getQuery()
             ->getResult();
+
+        return $order;
     }
 
     /**
@@ -75,16 +89,14 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
      * @return StoreOrder|null
      * @throws NonUniqueResultException
      */
-    public function getOrderPaidByIdAndUserId(int $id, int $userId): ?StoreOrder
+    public function getOrderByIdAndUserId(int $id, int $userId): ?StoreOrder
     {
         return $this->entityRepository->createQueryBuilder('o')
             ->select('o')
             ->where('o.id = :id')
             ->andWhere('o.user = :userId')
-            ->andWhere('o.state = :state')
             ->setParameter('id', $id)
             ->setParameter('userId', $userId)
-            ->setParameter('state', StoreOrder::STATE_PAYED)
             ->getQuery()
             ->getOneOrNullResult();
     }

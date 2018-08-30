@@ -3,12 +3,15 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History;
 
 use App\AddHash\AdminPanel\Domain\User\User;
+use App\AddHash\AdminPanel\Domain\Payment\Payment;
 use App\AddHash\AdminPanel\Domain\Payment\PaymentMethod;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
+use App\AddHash\AdminPanel\Domain\User\Order\History\ListParam\Sort;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryListServiceInterface;
+use App\AddHash\AdminPanel\Domain\User\Command\Miner\Order\History\UserOrderHistoryListCommandInterface;
 
 class UserOrderHistoryListService implements UserOrderHistoryListServiceInterface
 {
@@ -22,12 +25,23 @@ class UserOrderHistoryListService implements UserOrderHistoryListServiceInterfac
         $this->orderRepository = $orderRepository;
     }
 
-    public function execute(): array
+    public function execute(UserOrderHistoryListCommandInterface $command): array
     {
+        $state = $command->getStateFilter();
+
+        if (null !== $state && false === array_search($state, StoreOrder::STATES)) {
+            $state = null;
+        }
+
+        $sort = new Sort(
+            $command->getSort(),
+            $command->getOrder()
+        );
+
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $orders = $this->orderRepository->getOrdersPaidByUserId($user->getId());
+        $orders = $this->orderRepository->getOrdersByUserId($user->getId(), $sort, $state);
 
         $result = [];
 
@@ -49,16 +63,24 @@ class UserOrderHistoryListService implements UserOrderHistoryListServiceInterfac
                 ];
             }
 
-            /** @var PaymentMethod $paymentMethod */
-            $paymentMethod = $order->getPayment()->getPaymentMethod();
-            $paymentName = (null !== $paymentMethod) ? $paymentMethod->getName() : '';
+            $paymentName = '';
+            $currency = '';
+            /** @var Payment $payment */
+            $payment = $order->getPayment();
+
+            if (null !== $payment && $order->getState() == StoreOrder::STATE_PAYED) {
+                /** @var PaymentMethod $paymentMethod */
+                $paymentMethod = $payment->getPaymentMethod();
+                $paymentName = $paymentMethod->getName();
+                $currency = $payment->getCurrency();
+            }
 
             $result[] = [
                 'id'                => $order->getId(),
                 'createdAt'         => $order->getCreatedAt(),
                 'state'             => $order->getStateAlias(),
                 'paymentMethodName' => $paymentName,
-                'currency'          => $order->getPayment()->getCurrency(),
+                'currency'          => $currency,
                 'itemsPriceTotal'   => $order->getItemsPriceTotal(),
                 'items'             => $items,
             ];
