@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use App\AddHash\AdminPanel\Domain\Scheduler\Task\SchedulerTask;
 use App\AddHash\AdminPanel\Domain\Scheduler\Task\SchedulerTaskRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Scheduler\Task\Services\SchedulerTaskWorkerServiceInterface;
+use Symfony\Component\VarDumper\VarDumper;
 
 class SchedulerTaskWorkerService implements SchedulerTaskWorkerServiceInterface
 {
@@ -37,7 +38,7 @@ class SchedulerTaskWorkerService implements SchedulerTaskWorkerServiceInterface
 
         for ($i = 0; $i < $countTasks; $i++) {
 
-            var_dump($tasks[$i]);
+	        VarDumper::dump($tasks[$i]);
 
             $consoleCommand = $tasks[$i]->getCommand();
 
