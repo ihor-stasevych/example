@@ -44,6 +44,7 @@ class StoreOrderUnReserveMinerService implements StoreOrderUnReserveMinerService
 	    /** @var  StoreOrder $unPaidOrder */
         foreach ($unPaidOrders as $unPaidOrder) {
             $items = $unPaidOrder->getItems();
+            $unPaidOrder->closeOrder();
 
             /** @var StoreOrderItem $item **/
             foreach ($items as $item) {
@@ -60,6 +61,8 @@ class StoreOrderUnReserveMinerService implements StoreOrderUnReserveMinerService
                     $this->minerStockRepository->save($minerStock);
                 }
             }
+
+            $this->storeOrderRepository->save($unPaidOrder);
         }
 
         if (!$unReserveMiners) {
