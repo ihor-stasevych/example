@@ -3,11 +3,13 @@
 namespace App\AddHash\AdminPanel\Application\Controller\User\Order\History;
 
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\AdminPanel\Domain\Store\Order\Exceptions\StoreOrderNoOrderErrorException;
 use App\AddHash\AdminPanel\Application\Command\User\Order\History\UserOrderHistoryGetCommand;
+use App\AddHash\AdminPanel\Application\Command\User\Order\History\UserOrderHistoryListCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryGetServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryListServiceInterface;
 
@@ -25,6 +27,30 @@ class UserOrderHistoryController extends BaseServiceController
 
     /**
      * Get user orders history
+     *
+     * @SWG\Parameter(
+     *     in="formData",
+     *     name="sort",
+     *     type="string",
+     *     required=false,
+     *     description="Sort orders (createdAt)",
+     * )
+     *
+     * @SWG\Parameter(
+     *     in="formData",
+     *     name="order",
+     *     type="string",
+     *     required=false,
+     *     description="Order (asc or desc)",
+     * )
+     *
+     * @SWG\Parameter(
+     *     in="formData",
+     *     name="state",
+     *     type="integer",
+     *     required=false,
+     *     description="Filter State (1 or 2 or 3)",
+     * )
      *
      * @SWG\Response(
      *     response=200,
@@ -53,13 +79,19 @@ class UserOrderHistoryController extends BaseServiceController
      *            )
      *     ),
      * )
-     *
+     * @param Request $request
      * @return JsonResponse
      * @SWG\Tag(name="User")
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->json($this->listService->execute());
+        $command = new UserOrderHistoryListCommand(
+            $request->get('sort'),
+            $request->get('order'),
+            $request->get('state')
+        );
+
+        return $this->json($this->listService->execute($command));
     }
 
 

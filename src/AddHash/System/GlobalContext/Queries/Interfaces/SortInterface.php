@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AddHash\AdminPanel\Domain\Store\Product\Queries\Interfaces;
+namespace App\AddHash\System\GlobalContext\Queries\Interfaces;
 
 interface SortInterface
 {

@@ -3,7 +3,9 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History;
 
 use App\AddHash\AdminPanel\Domain\User\User;
+use App\AddHash\AdminPanel\Domain\Payment\Payment;
 use App\AddHash\AdminPanel\Domain\Payment\PaymentMethod;
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -33,7 +35,7 @@ class UserOrderHistoryGetService implements UserOrderHistoryGetServiceInterface
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $order = $orders = $this->orderRepository->getOrderPaidByIdAndUserId(
+        $order = $orders = $this->orderRepository->getOrderByIdAndUserId(
             $command->getOrderId(),
             $user->getId()
         );
@@ -54,16 +56,24 @@ class UserOrderHistoryGetService implements UserOrderHistoryGetServiceInterface
             ];
         }
 
-        /** @var PaymentMethod $paymentMethod */
-        $paymentMethod = $order->getPayment()->getPaymentMethod();
-        $paymentName = (null !== $paymentMethod) ? $paymentMethod->getName() : '';
+        $paymentName = '';
+        $currency = '';
+        /** @var Payment $payment */
+        $payment = $order->getPayment();
+
+        if (null !== $payment && $order->getState() == StoreOrder::STATE_PAYED) {
+            /** @var PaymentMethod $paymentMethod */
+            $paymentMethod = $payment->getPaymentMethod();
+            $paymentName = $paymentMethod->getName();
+            $currency = $payment->getCurrency();
+        }
 
         return [
             'id'                => $order->getId(),
             'createdAt'         => $order->getCreatedAt(),
             'state'             => $order->getStateAlias(),
             'paymentMethodName' => $paymentName,
-            'currency'          => $order->getPayment()->getCurrency(),
+            'currency'          => $currency,
             'itemsPriceTotal'   => $order->getItemsPriceTotal(),
             'items'             => $items,
         ];

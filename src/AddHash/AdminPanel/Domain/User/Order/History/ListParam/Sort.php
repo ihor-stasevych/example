@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AddHash\AdminPanel\Domain\Store\Product\ListParam;
+namespace App\AddHash\AdminPanel\Domain\User\Order\History\ListParam;
 
 use App\AddHash\System\GlobalContext\Common\SortList;
 use App\AddHash\System\GlobalContext\Queries\Interfaces\SortInterface;
@@ -8,7 +8,7 @@ use App\AddHash\System\GlobalContext\Queries\Interfaces\SortInterface;
 class Sort extends SortList implements SortInterface
 {
     const SORTED_FIELDS = [
-        'createdAt', 'price',
+        'createdAt',
     ];
 
     protected function getDefaultOrder()
