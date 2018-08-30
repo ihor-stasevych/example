@@ -30,6 +30,7 @@ class UserMinerRepository implements UserMinerRepositoryInterface
 			return $this->cache->getKey($key);
 		}
 
+
 		$command = new MinerCommand(new MinerSocket($minerStock), new MinerSocketParser());
 
 		$result = $command->getSummary() + [
@@ -39,6 +40,7 @@ class UserMinerRepository implements UserMinerRepositoryInterface
 		];
 
 		$this->cache->add($key, $result);
+
 
 		return $result;
 	}
