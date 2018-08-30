@@ -62,7 +62,9 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
         return $this->entityRepository->createQueryBuilder('o')
             ->select('o')
             ->where('o.user = :userId')
+            ->andWhere('o.state = :state')
             ->setParameter('userId', $userId)
+            ->setParameter('state', StoreOrder::STATE_PAYED)
             ->getQuery()
             ->getResult();
     }
@@ -79,8 +81,10 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
             ->select('o')
             ->where('o.id = :id')
             ->andWhere('o.user = :userId')
+            ->andWhere('o.state = :state')
             ->setParameter('id', $id)
             ->setParameter('userId', $userId)
+            ->setParameter('state', StoreOrder::STATE_PAYED)
             ->getQuery()
             ->getOneOrNullResult();
     }
