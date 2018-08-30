@@ -37,9 +37,7 @@ class SchedulerTaskWorkerService implements SchedulerTaskWorkerServiceInterface
 
         for ($i = 0; $i < $countTasks; $i++) {
 
-            dd($tasks[$i]);
-
-
+            var_dump($tasks[$i]);
 
             $consoleCommand = $tasks[$i]->getCommand();
 
