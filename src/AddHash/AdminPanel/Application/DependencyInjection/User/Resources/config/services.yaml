@@ -59,7 +59,7 @@ services:
   addhash.user.account.settings.wallet.update.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletUpdateService
     public: true
-    arguments: ['@addhash.user.wallet.repository', '@addhash.wallet.repository', '@security.token_storage']
+    arguments: ['@addhash.user.wallet.repository', '@addhash.wallet.repository', '@addhash.wallet.type.repository', '@security.token_storage']
   App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletUpdateService: '@addhash.user.account.settings.wallet.update.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletUpdateServiceInterface: '@addhash.user.account.settings.wallet.update.service'
@@ -75,7 +75,7 @@ services:
   addhash.user.account.settings.wallet.create.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletCreateService
     public: true
-    arguments: ['@addhash.wallet.repository', '@addhash.user.wallet.repository', '@security.token_storage']
+    arguments: ['@addhash.wallet.repository', '@addhash.user.wallet.repository', '@addhash.wallet.type.repository', '@security.token_storage']
   App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\WalletCreateService: '@addhash.user.account.settings.wallet.create.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletCreateServiceInterface: '@addhash.user.account.settings.wallet.create.service'

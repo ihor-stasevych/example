@@ -13,13 +13,25 @@ class WalletCreateCommand implements WalletCreateCommandInterface
      */
     private $value;
 
-	public function __construct($value)
+    /**
+     * @var int
+     * @Assert\NotBlank()
+     */
+    private $typeId;
+
+	public function __construct($value, $typeId)
 	{
 		$this->value = $value;
+        $this->typeId = $typeId;
 	}
 
     public function getValue(): string
     {
         return $this->value;
+    }
+
+    public function getTypeId(): int
+    {
+        return $this->typeId;
     }
 }

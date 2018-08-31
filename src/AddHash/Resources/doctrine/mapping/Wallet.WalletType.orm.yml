@@ -1,0 +1,11 @@
+App\AddHash\AdminPanel\Domain\Wallet\WalletType:
+    type: entity
+    table: Wallet_Type
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        value:
+            type: string
+            length: 191

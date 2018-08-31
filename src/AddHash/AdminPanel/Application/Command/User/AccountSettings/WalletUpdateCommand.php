@@ -14,6 +14,7 @@ class WalletUpdateCommand implements WalletUpdateCommandInterface
      *   @Assert\Collection(
      *      fields = {
      *          "id" = @Assert\Required({@Assert\NotBlank()}),
+     *          "typeId" = @Assert\Required({@Assert\NotBlank()}),
      *          "value" = @Assert\Required({@Assert\NotBlank()})
      *      }
      *   )

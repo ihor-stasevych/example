@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\AdminPanel\Domain\Wallet\Exceptions\WalletIsExistException;
+use App\AddHash\AdminPanel\Domain\Wallet\Exceptions\WalletTypeIsNotExistException;
 use App\AddHash\AdminPanel\Application\Command\User\AccountSettings\WalletCreateCommand;
 use App\AddHash\AdminPanel\Application\Command\User\AccountSettings\WalletUpdateCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletGetServiceInterface;
@@ -45,8 +46,8 @@ class WalletController extends BaseServiceController
      *             @SWG\Items(
      *                 type="object",
      *                 @SWG\Property(property="id", type="integer"),
+     *                 @SWG\Property(property="typeId", type="integer"),
      *                 @SWG\Property(property="value", type="string"),
-     *                 @SWG\Property(property="wallet", type="string")
      *             )
      *     ),
      * )
@@ -66,14 +67,15 @@ class WalletController extends BaseServiceController
      * @SWG\Parameter(
      *     name="wallets",
      *     in="body",
-     *     description="id - user wallet id, value - new value wallet",
+     *     description="id - user wallet ID, value - new value wallet, typeId - new type ID",
      *     required=true,
      *     @SWG\Schema(
      *         type="array",
      *         @SWG\Items(
      *            type="object",
      *            @SWG\Property(property="id", type="integer"),
-     *            @SWG\Property(property="value", type="string")
+     *            @SWG\Property(property="typeId", type="integer"),
+     *            @SWG\Property(property="value", type="string"),
      *         )
      *     )
      * )
@@ -86,8 +88,8 @@ class WalletController extends BaseServiceController
      *             @SWG\Items(
      *                 type="object",
      *                 @SWG\Property(property="id", type="integer"),
+     *                 @SWG\Property(property="typeId", type="integer"),
      *                 @SWG\Property(property="value", type="string"),
-     *                 @SWG\Property(property="wallet", type="string")
      *             )
      *     ),
      * )
@@ -112,7 +114,7 @@ class WalletController extends BaseServiceController
 
         try {
             return $this->json($this->updateService->execute($command));
-        } catch (UserWalletIsNotValidException $e) {
+        } catch (UserWalletIsNotValidException | WalletTypeIsNotExistException | WalletIsExistException $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
             ], Response::HTTP_BAD_REQUEST);
@@ -126,15 +128,25 @@ class WalletController extends BaseServiceController
      *     name="value",
      *     in="query",
      *     type="string",
-     *     description="Value wallet"
+     *     description="Value wallet",
+     *     required=true,
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="typeId",
+     *     in="query",
+     *     type="integer",
+     *     description="Wallet type ID",
+     *     required=true,
      * )
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns the general information of an user",
+     *     description="Returns the create user wallets",
      *     @SWG\Schema(
      *              type="object",
      *              @SWG\Property(property="id", type="integer"),
+     *              @SWG\Property(property="typeId", type="integer"),
      *              @SWG\Property(property="value", type="string"),
      *     )
      * )
@@ -150,7 +162,8 @@ class WalletController extends BaseServiceController
 	public function create(Request $request)
     {
         $command = new WalletCreateCommand(
-            $request->get('value')
+            $request->get('value'),
+            (int)$request->get('typeId')
         );
 
         if (!$this->commandIsValid($command)) {
@@ -161,7 +174,7 @@ class WalletController extends BaseServiceController
 
         try {
             return $this->json($this->createService->execute($command));
-        } catch (WalletIsExistException $e) {
+        } catch (WalletIsExistException | WalletTypeIsNotExistException $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
             ], Response::HTTP_BAD_REQUEST);

@@ -1,6 +1,8 @@
 <?php
 namespace App\AddHash\AdminPanel\Infrastructure\Repository\Wallet;
 
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\NonUniqueResultException;
 use App\AddHash\AdminPanel\Domain\Wallet\Wallet;
 use App\AddHash\AdminPanel\Domain\Wallet\WalletRepositoryInterface;
@@ -15,38 +17,39 @@ class WalletRepository extends AbstractRepository implements WalletRepositoryInt
      */
     public function getById(int $id): ?Wallet
     {
-        $wallet = $this->entityManager->getRepository($this->getEntityName());
-
-        $res = $wallet->createQueryBuilder('w')
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('w')
             ->select('w')
             ->andWhere('w.id = :id')
             ->setParameter('id', $id)
-            ->getQuery();
-
-        return $res->getOneOrNullResult();
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**
      * @param string $value
+     * @param int $typeId
      * @return Wallet|null
      * @throws NonUniqueResultException
      */
-    public function getByValue(string $value): ?Wallet
+    public function getByValueAndType(string $value, int $typeId): ?Wallet
     {
-        $wallet = $this->entityManager->getRepository($this->getEntityName());
-
-        $res = $wallet->createQueryBuilder('w')
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('w')
             ->select('w')
             ->andWhere('w.value = :value')
+            ->andWhere('w.type = :typeId')
             ->setParameter('value', $value)
-            ->getQuery();
-
-        return $res->getOneOrNullResult();
+            ->setParameter('typeId', $typeId)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function update()
     {
@@ -55,8 +58,8 @@ class WalletRepository extends AbstractRepository implements WalletRepositoryInt
 
     /**
      * @param Wallet $wallet
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function create(Wallet $wallet)
     {

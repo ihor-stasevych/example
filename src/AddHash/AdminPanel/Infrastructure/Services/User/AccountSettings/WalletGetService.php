@@ -23,8 +23,9 @@ class WalletGetService implements WalletGetServiceInterface
 	    /** @var UserWallet $userWallet */
         foreach ($user->getUserWallets() as $userWallet) {
 	        $data[] = [
-	            'id'    => $userWallet->getId(),
-                'value' => $userWallet->getWallet()->getValue(),
+	            'id'     => $userWallet->getId(),
+                'typeId' => $userWallet->getWallet()->getType()->getId(),
+                'value'  => $userWallet->getWallet()->getValue(),
             ];
         }
 
