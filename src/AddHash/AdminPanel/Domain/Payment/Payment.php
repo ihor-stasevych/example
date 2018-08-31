@@ -4,6 +4,7 @@ namespace App\AddHash\AdminPanel\Domain\Payment;
 
 use App\AddHash\AdminPanel\Domain\Payment\Gateway\PaymentGateway;
 use App\AddHash\AdminPanel\Domain\Payment\Gateway\PaymentGatewayInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\User\User;
 
 class Payment implements PaymentInterface
@@ -56,6 +57,11 @@ class Payment implements PaymentInterface
     public function getPaymentGateway(): PaymentGatewayInterface
     {
         return $this->paymentGateway;
+    }
+
+    public function createPayment(StoreOrder $order, $params  = [])
+    {
+		return $this->getPaymentGateway()->createPayment($order, $params);
     }
 
     public function makePayment($params = [])

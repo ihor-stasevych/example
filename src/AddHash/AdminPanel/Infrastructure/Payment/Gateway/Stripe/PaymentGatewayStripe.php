@@ -4,6 +4,7 @@ namespace App\AddHash\AdminPanel\Infrastructure\Payment\Gateway\Stripe;
 
 use App\AddHash\AdminPanel\Domain\Payment\Gateway\PaymentGatewayInterface;
 use App\AddHash\AdminPanel\Domain\Payment\PaymentInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use Stripe\Charge;
 use Stripe\Stripe;
 
@@ -19,6 +20,11 @@ class PaymentGatewayStripe implements PaymentGatewayInterface
 	{
 		$this->payment = $payment;
 		Stripe::setApiKey(self::API_KEY_PRIVATE);
+	}
+
+	public function createPayment(StoreOrder $order, $params = [])
+	{
+		return true;
 	}
 
 	public function makePayment($params = [])

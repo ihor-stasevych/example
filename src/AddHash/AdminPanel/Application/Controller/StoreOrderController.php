@@ -283,6 +283,11 @@ class StoreOrderController extends BaseServiceController
 
 	}
 
+	public function createPayment(Request $request)
+	{
+
+	}
+
 	/**
 	 * Get available unpaid order by authorized user
 	 *
