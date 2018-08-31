@@ -10,8 +10,8 @@ use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Exceptions\StoreOrderNoOrderErrorException;
+use App\AddHash\AdminPanel\Domain\User\Command\Order\History\UserOrderHistoryGetCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryGetServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\Command\Miner\Order\History\UserOrderHistoryGetCommandInterface;
 
 class UserOrderHistoryGetService implements UserOrderHistoryGetServiceInterface
 {

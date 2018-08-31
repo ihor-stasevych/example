@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AddHash\AdminPanel\Domain\User\Command\Miner\Order\History;
+namespace App\AddHash\AdminPanel\Domain\User\Command\Order\History;
 
 interface UserOrderHistoryGetCommandInterface
 {

@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\User\Services\Order\History;
 
-use App\AddHash\AdminPanel\Domain\User\Command\Miner\Order\History\UserOrderHistoryGetCommandInterface;
+use App\AddHash\AdminPanel\Domain\User\Command\Order\History\UserOrderHistoryGetCommandInterface;
 
 interface UserOrderHistoryGetServiceInterface
 {
