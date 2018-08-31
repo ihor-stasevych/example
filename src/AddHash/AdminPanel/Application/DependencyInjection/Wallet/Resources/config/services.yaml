@@ -14,3 +14,11 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Repository\Wallet\WalletTypeRepository: '@addhash.wallet.type.repository'
 
   App\AddHash\AdminPanel\Domain\Wallet\WalletTypeRepositoryInterface: '@addhash.wallet.type.repository'
+
+  addhash.wallet.type.list.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Wallet\Type\WalletTypeListService
+    public: true
+    arguments: ['@addhash.wallet.type.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Wallet\Type\WalletTypeListService: '@addhash.wallet.type.list.service'
+
+  App\AddHash\AdminPanel\Domain\Wallet\Services\Type\WalletTypeListServiceInterface: '@addhash.wallet.type.list.service'

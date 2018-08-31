@@ -35,6 +35,16 @@ class WalletTypeRepository extends AbstractRepository implements WalletTypeRepos
     }
 
     /**
+     * @return array
+     */
+    public function findAll(): array
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->findAll();
+    }
+
+    /**
      * @return string
      */
     protected function getEntityName()
