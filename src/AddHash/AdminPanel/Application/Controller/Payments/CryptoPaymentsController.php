@@ -104,10 +104,7 @@ class CryptoPaymentsController extends BaseServiceController
 	public function getCurrencies()
 	{
 		$data = $this->currenciesService->execute();
-
-		return $this->json([
-			$data
-		]);
+		return $this->json($data);
 	}
 
 }
