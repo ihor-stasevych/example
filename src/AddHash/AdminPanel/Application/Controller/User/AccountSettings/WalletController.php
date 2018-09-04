@@ -115,8 +115,13 @@ class WalletController extends BaseServiceController
         try {
             return $this->json($this->updateService->execute($command));
         } catch (UserWalletIsNotValidException | WalletTypeIsNotExistException | WalletIsExistException $e) {
+            $errors = $e->getMessage();
+
+            if ($e instanceof WalletIsExistException) {
+                $errors = json_decode($errors, true);
+            }
             return $this->json([
-                'errors' => $e->getMessage(),
+                'errors' => $errors,
             ], Response::HTTP_BAD_REQUEST);
         }
 	}
