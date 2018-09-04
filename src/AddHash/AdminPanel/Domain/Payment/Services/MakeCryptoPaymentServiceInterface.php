@@ -2,9 +2,10 @@
 
 namespace App\AddHash\AdminPanel\Domain\Payment\Services;
 
-use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
+use App\AddHash\AdminPanel\Domain\Payment\Command\MakeCryptoPaymentCommandInterface;
+use App\AddHash\AdminPanel\Domain\User\User;
 
 interface MakeCryptoPaymentServiceInterface
 {
-	public function execute(StoreOrder $order, $amount, $currency);
+	public function execute(User $user, MakeCryptoPaymentCommandInterface $command);
 }

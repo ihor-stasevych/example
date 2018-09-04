@@ -9,6 +9,7 @@ use App\AddHash\System\GlobalContext\ValueObject\CryptoPayment;
 class PaymentGatewayPayBear implements PaymentGatewayInterface
 {
 	const API_KEY_SECRET = 'sec132369cd45cc3110707c785513c80d05';
+	const API_KEY_SECRET_TEST = 'secaba806820dac7678dfbf72bf2d97aabf';
 
 	/**
 	 * @param StoreOrder $order
@@ -34,6 +35,20 @@ class PaymentGatewayPayBear implements PaymentGatewayInterface
 		}
 
 		return null;
+	}
+
+	public function getCurrencies()
+	{
+		$url = sprintf('https://api.paybear.io/v2/currencies?token=%s', self::API_KEY_SECRET);
+
+		if ($response = file_get_contents($url)) {
+			$response = json_decode($response, true);
+			if (!$response['success']) {
+				return null;
+			}
+		}
+
+		return $response['data'];
 	}
 
 	public function makePayment($params = [])

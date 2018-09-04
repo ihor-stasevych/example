@@ -6,6 +6,7 @@ use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderAddProductC
 use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreCheckoutCommand;
 use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCheckoutCommand;
 use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderPrepareCheckoutCommand;
+use App\AddHash\AdminPanel\Domain\Payment\Services\MakeCryptoPaymentServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderAddProductServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface;
@@ -35,6 +36,7 @@ class StoreOrderController extends BaseServiceController
 	private $storeOrderRemoveItem;
 	private $orderMinerService;
 	private $prepareCheckoutService;
+	private $cryptoPaymentService;
 	private $tokenStorage;
 	private $logger;
 
@@ -46,6 +48,7 @@ class StoreOrderController extends BaseServiceController
 		StoreOrderRemoveItemService $storeOrderRemoveItem,
 		CreateUserOrderMinerServiceInterface $orderMinerService,
 		StoreOrderPrepareCheckoutServiceInterface $prepareCheckoutService,
+		MakeCryptoPaymentServiceInterface $cryptoPaymentService,
 		TokenStorageInterface $tokenStorage
 	)
 	{
@@ -56,6 +59,7 @@ class StoreOrderController extends BaseServiceController
 		$this->storeOrderRemoveItem = $storeOrderRemoveItem;
 		$this->orderMinerService = $orderMinerService;
 		$this->prepareCheckoutService = $prepareCheckoutService;
+		$this->cryptoPaymentService = $cryptoPaymentService;
 		$this->tokenStorage = $tokenStorage;
 	}
 
@@ -280,11 +284,6 @@ class StoreOrderController extends BaseServiceController
 		}
 
 		return $this->json([]);
-
-	}
-
-	public function createPayment(Request $request)
-	{
 
 	}
 
