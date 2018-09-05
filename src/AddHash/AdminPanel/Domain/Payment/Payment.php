@@ -25,7 +25,7 @@ class Payment implements PaymentInterface
 
 	private $gatewayName;
 
-	public function __construct($price, $currency, $user, $id = null)
+	public function __construct($price = 0, $currency, $user, $id = null)
 	{
 	    $this->id = $id;
 		$this->price = $price;

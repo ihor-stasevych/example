@@ -13,32 +13,15 @@ class MakeCryptoPaymentCommand implements MakeCryptoPaymentCommandInterface
 	 */
 	private $currency;
 
-	/**
-	 * @var string
-	 * @Assert\NotNull()
-	 */
-	private $amount;
 
-	/**
-	 * MakeCryptoPaymentCommand constructor.
-	 *
-	 * @param $currency
-	 * @param $amount
-	 */
-	public function __construct($currency, $amount)
+	public function __construct($currency)
 	{
 		$this->currency = $currency;
-		$this->amount = $amount;
 
 	}
 
 	public function getCurrency()
 	{
 		return $this->currency;
-	}
-
-	public function getAmount()
-	{
-		return $this->amount;
 	}
 }

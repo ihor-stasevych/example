@@ -7,6 +7,7 @@ use App\AddHash\AdminPanel\Application\Command\Payments\MakeCryptoPaymentCommand
 use App\AddHash\AdminPanel\Domain\Payment\Services\GetCryptoCurrenciesServiceInterface;
 use App\AddHash\AdminPanel\Domain\Payment\Services\MakeCryptoPaymentServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\User;
+use App\AddHash\AdminPanel\Infrastructure\Repository\User\UserRepository;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\System\GlobalContext\ValueObject\CryptoPayment;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -36,23 +37,14 @@ class CryptoPaymentsController extends BaseServiceController
 	/**
 	 * @SWG\Parameter(
 	 *     name="currency",
-	 *     in="formData",
+	 *     in="path",
 	 *     type="string",
 	 *     required=true,
 	 *     description="Type of cryptocurrency"
 	 * )
 	 *
-	 * @SWG\Parameter(
-	 *     name="amount",
-	 *     in="formData",
-	 *     type="string",
-	 *     required=true,
-	 *     description="Amount of cryptocurrency"
-	 * )
-	 *
-	 *
 	 * @SWG\Tag(name="Payments")
-	 * @param Request $request
+	 * @param $currency
 	 *
 	 * @SWG\Response(
 	 *     response=200,
@@ -61,15 +53,12 @@ class CryptoPaymentsController extends BaseServiceController
 	 *
 	 * @return CryptoPayment|JsonResponse
 	 */
-	public function createNewPayment(Request $request)
+	public function createNewPayment($currency)
 	{
 		/** @var User $user */
 		$user = $this->tokenStorage->getToken()->getUser();
 
-		$command = new MakeCryptoPaymentCommand(
-			$request->get('currency'),
-			$request->get('amount')
-		);
+		$command = new MakeCryptoPaymentCommand($currency);
 
 		if (!$this->commandIsValid($command)) {
 			return $this->json([
@@ -86,9 +75,7 @@ class CryptoPaymentsController extends BaseServiceController
 			], Response::HTTP_BAD_REQUEST);
 		}
 
-		return $this->json([
-			'address' => $cryptoPayment->getAddress()
-		]);
+		return $this->json($cryptoPayment->getData());
 	}
 
 	/**
@@ -105,6 +92,15 @@ class CryptoPaymentsController extends BaseServiceController
 	{
 		$data = $this->currenciesService->execute();
 		return $this->json($data);
+	}
+
+	public function getState()
+	{
+		return $this->json([
+			'success' => false,
+			'error' => null,
+			'coinsPaid' => 0
+		]);
 	}
 
 }

@@ -44,6 +44,7 @@ class MakeCryptoPaymentService implements MakeCryptoPaymentServiceInterface
 	 */
 	public function execute(User $user, MakeCryptoPaymentCommandInterface $command)
 	{
+		/** @var StoreOrder $order */
 		$order = $this->orderRepository->findNewByUserId($user->getId());
 
 		if (!$order) {
@@ -56,7 +57,7 @@ class MakeCryptoPaymentService implements MakeCryptoPaymentServiceInterface
 			throw new \Exception('Cant find payment method');
 		}
 
-		$payment = new Payment($command->getAmount(), $command->getCurrency(), $user);
+		$payment = new Payment(0, $command->getCurrency(), $user);
 		$payment->setPaymentMethod($method);
 		$payment->setPaymentGateway(new PaymentGatewayPayBear());
 
@@ -64,8 +65,10 @@ class MakeCryptoPaymentService implements MakeCryptoPaymentServiceInterface
 		$cryptoPayment = $payment->createPayment($order, ['currency' => $command->getCurrency()]);
 
 		if (!$cryptoPayment){
-			throw new \Exception('Cant create PayBear payment');
+			throw new \Exception('Cant create payment');
 		}
+
+		$payment->setPrice($cryptoPayment->getPrice());
 
 		$transaction = new PaymentTransaction($payment, $cryptoPayment->getInvoice());
 
