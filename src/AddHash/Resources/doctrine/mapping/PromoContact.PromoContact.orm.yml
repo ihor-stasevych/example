@@ -1,0 +1,23 @@
+App\AddHash\AdminPanel\Domain\PromoContact\PromoContact:
+    minerDetails:
+    type: entity
+    table: Promo_Contact
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        email:
+            type: string
+            length: 100
+
+        name:
+            type: string
+            length: 100
+
+        message:
+            type: text
+
+        createdAt:
+            column: createdAt
+            type: datetime
