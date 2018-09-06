@@ -2,6 +2,8 @@
 
 namespace App\AddHash\AdminPanel\Domain\Miners;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class MinerStock
 {
     const STATE_UNAVAILABLE = 0;
@@ -30,6 +32,8 @@ class MinerStock
 
 	private $product;
 
+	private $pool;
+
 	private $stateAliases = [
         self::STATE_UNAVAILABLE => 'unavailable',
 		self::STATE_AVAILABLE   => 'available',
@@ -44,6 +48,7 @@ class MinerStock
         $this->priority = $priority;
 		$this->ip = $ip;
 		$this->port = $port;
+		$this->pool = new ArrayCollection();
 	}
 
 	public function getId(): ?int
@@ -76,6 +81,11 @@ class MinerStock
         return $this->port;
     }
 
+    public function getPool()
+    {
+        return $this->pool;
+    }
+
 	public function reserveMiner()
 	{
 		$this->state = self::STATE_RESERVED;
@@ -90,6 +100,11 @@ class MinerStock
 	{
 		$this->state = self::STATE_BUSY;
 	}
+
+	public function setPool(MinerPool $pool)
+    {
+        $this->pool = $pool;
+    }
 
 	public function infoMiner()
 	{

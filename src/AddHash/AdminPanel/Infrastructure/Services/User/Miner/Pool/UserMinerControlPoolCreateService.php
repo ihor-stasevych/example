@@ -54,6 +54,8 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
             return $data;
         }
 
+        $this->execute2($command, $minerStock);
+
         $getCountAllowedUrl = $this->allowedUrlRepository->getCountByValuesEnabledUrl($command->getUniqueUrls());
 
         if ($getCountAllowedUrl != count($command->getUniqueUrls())) {
@@ -231,5 +233,38 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
                 $this->logger->info('Could not delete the first pool', $loggerData);
             }
         }
+    }
+
+
+    /**
+     * @param UserMinerControlCommandInterface $command
+     * @param MinerStock $minerStock
+     */
+    public function execute2(UserMinerControlCommandInterface $command, MinerStock $minerStock)
+    {
+        $oldPools = $minerStock->getPool();
+        $newPools = $command->getPools();
+
+        if (count($oldPools) == count($command->getPools())) {
+            foreach ($oldPools as $oldPool) {
+                foreach ($newPools as &$newPool) {
+                    if (
+                        $newPool['url'] == $oldPool->getUrl() &&
+                        $newPool['user'] == $oldPool->getUser() &&
+                        $newPool['password'] == $oldPool->getPassword() &&
+                        !isset($newPool['reserved'])
+                    ) {
+                        $newPool['reserved'] = 1;
+                    }
+                }
+            }
+
+            foreach ($newPools as $newPool) {
+
+            }
+        }
+
+
+        die();
     }
 }

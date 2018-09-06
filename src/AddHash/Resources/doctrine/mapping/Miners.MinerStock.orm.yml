@@ -35,3 +35,8 @@ App\AddHash\AdminPanel\Domain\Miners\MinerStock:
             joinColumn:
                 name: productId
                 referencedColumnName: id
+
+    oneToMany:
+        pool:
+            targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerPool
+            mappedBy: minerStock
