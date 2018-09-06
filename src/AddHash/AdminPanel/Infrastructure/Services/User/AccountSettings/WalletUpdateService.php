@@ -77,13 +77,19 @@ class WalletUpdateService implements WalletUpdateServiceInterface
             throw new UserWalletIsNotValidException('User wallet is not valid');
         }
 
-        foreach ($walletsValue as $walletValue) {
+         $errorsNotUnique = [];
+
+        foreach ($walletsValue as $walletId => $walletValue) {
 
             $uw = $this->userWalletRepository->getByUnique($userWalletsId, $walletValue['typeId'], $walletValue['value']);
 
             if (null !== $uw) {
-                throw new WalletIsExistException('Wallet already exist');
+                $errorsNotUnique[$walletId] = "Not unique value: " . $walletValue['value'];
             }
+        }
+
+        if (!empty($errorsNotUnique)) {
+            throw new WalletIsExistException(json_encode($errorsNotUnique));
         }
 
         $walletsType = $this->walletTypeRepository->getByIds($walletsTypeId);
