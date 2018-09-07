@@ -1,0 +1,16 @@
+services:
+  addhash.promo.contact.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\PromoContact\PromoContactRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\PromoContact\PromoContactRepository: '@addhash.promo.contact.repository'
+
+  App\AddHash\AdminPanel\Domain\PromoContact\PromoContactRepositoryInterface: '@addhash.promo.contact.repository'
+
+  addhash.promo.contact.create.service:
+    class:  App\AddHash\AdminPanel\Infrastructure\Services\PromoContact\PromoContactCreateService
+    public: true
+    arguments: ['@addhash.promo.contact.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\PromoContact\PromoContactCreateService: '@addhash.promo.contact.create.service'
+
+  App\AddHash\AdminPanel\Domain\PromoContact\Services\PromoContactCreateServiceInterface: '@addhash.promo.contact.create.service'

@@ -40,3 +40,6 @@ imports:
 
   ## Scheduler Services ##
   - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Scheduler/Task/Resources/config/services.yaml"}
+
+  ## PromoContact Services ##
+  - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/PromoContact/Resources/config/services.yaml"}

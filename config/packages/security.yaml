@@ -46,6 +46,11 @@ security:
               anonymous: true
               security: false
 
+        api_public_promo_contact_create:
+              pattern: ^/api/v1/promo/contact
+              anonymous: true
+              security: false
+
         api_doc:
               pattern: ^/api/doc
               anonymous: true
