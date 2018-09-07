@@ -2,6 +2,8 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool;
 
+use App\AddHash\AdminPanel\Domain\Miners\MinerPool;
+use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerPoolRepositoryInterface;
 use Psr\Log\LoggerInterface;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket;
@@ -31,12 +33,15 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
 
     private $allowedUrlRepository;
 
+    private $minerPoolRepository;
+
     private $countRepeatDeleteFirstPool = 0;
 
-    public function __construct(LoggerInterface $logger, MinerAllowedUrlRepositoryInterface $allowedUrlRepository)
+    public function __construct(LoggerInterface $logger, MinerAllowedUrlRepositoryInterface $allowedUrlRepository, MinerPoolRepositoryInterface $minerPoolRepository)
     {
         $this->logger = $logger;
         $this->allowedUrlRepository = $allowedUrlRepository;
+        $this->minerPoolRepository = $minerPoolRepository;
     }
 
     /**
@@ -245,26 +250,77 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
         $oldPools = $minerStock->getPool();
         $newPools = $command->getPools();
 
-        if (count($oldPools) == count($command->getPools())) {
-            foreach ($oldPools as $oldPool) {
-                foreach ($newPools as &$newPool) {
-                    if (
-                        $newPool['url'] == $oldPool->getUrl() &&
-                        $newPool['user'] == $oldPool->getUser() &&
-                        $newPool['password'] == $oldPool->getPassword() &&
-                        !isset($newPool['reserved'])
-                    ) {
-                        $newPool['reserved'] = 1;
-                    }
-                }
-            }
+        $isIdentity = $this->checkIdentity($oldPools, $newPools);
 
-            foreach ($newPools as $newPool) {
 
+        if (false === $isIdentity) {
+            $pools = $this->toFormatPools($newPools);
+
+            /**
+             * Save file
+             */
+
+            $this->minerPoolRepository->deleteByMinerStock($minerStock->getId());
+
+            foreach ($newPools as $pool) {
+                $minerPool = new MinerPool($pool['url'], $pool['user'], $pool['password']);
+                $minerPool->setMinerStock($minerStock);
+                $this->minerPoolRepository->save($minerPool);
             }
         }
 
 
-        die();
+
+
+
+//        $conn = ssh2_connect('10.0.10.7', 22);
+//        dd($conn);
+
+
+
+        die('1');
+    }
+
+    private function checkIdentity($oldPools, $newPools): bool
+    {
+        if (count($oldPools) != count($newPools)) {
+            return false;
+        }
+
+        foreach ($oldPools as $oldPool) {
+            foreach ($newPools as &$newPool) {
+                if (
+                    $newPool['url'] == $oldPool->getUrl() &&
+                    $newPool['user'] == $oldPool->getUser() &&
+                    $newPool['password'] == $oldPool->getPassword() &&
+                    empty($newPool['reserved'])
+                ) {
+                    $newPool['reserved'] = 1;
+                }
+            }
+        }
+
+        foreach ($newPools as $pool) {
+            if (empty($pool['reserved'])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function toFormatPools($pools): array
+    {
+        $newFormatPools = [];
+
+        foreach ($pools as $pool) {
+            $newFormatPools[] = [
+                'url'  => $pool['url'],
+                'user' => $pool['user'],
+                'pass' => $pool['password']
+            ];
+        }
+
+        return $newFormatPools;
     }
 }

@@ -106,3 +106,28 @@
 2018-08-09 06:55:24,971 INFO supervisord started with pid 1
 2018-08-09 06:55:25,972 INFO spawned: 'php7-fpm' with pid 12
 2018-08-09 06:55:27,235 INFO success: php7-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2018-09-07 08:46:49,083 CRIT Supervisor running as root (no user in config file)
+2018-09-07 08:46:49,085 INFO supervisord started with pid 1
+2018-09-07 08:46:50,087 INFO spawned: 'php7-fpm' with pid 9
+2018-09-07 08:46:51,134 INFO success: php7-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2018-09-07 08:47:56,513 WARN received SIGTERM indicating exit request
+2018-09-07 08:47:56,513 INFO waiting for php7-fpm to die
+2018-09-07 08:47:56,521 INFO stopped: php7-fpm (exit status 0)
+2018-09-07 08:57:39,769 CRIT Supervisor running as root (no user in config file)
+2018-09-07 08:57:39,772 INFO supervisord started with pid 1
+2018-09-07 08:57:40,773 INFO spawned: 'php7-fpm' with pid 14
+2018-09-07 08:57:41,826 INFO success: php7-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2018-09-07 09:05:59,965 WARN received SIGTERM indicating exit request
+2018-09-07 09:05:59,965 INFO waiting for php7-fpm to die
+2018-09-07 09:05:59,976 INFO stopped: php7-fpm (exit status 0)
+2018-09-07 09:08:14,999 CRIT Supervisor running as root (no user in config file)
+2018-09-07 09:08:15,002 INFO supervisord started with pid 1
+2018-09-07 09:08:16,005 INFO spawned: 'php7-fpm' with pid 8
+2018-09-07 09:08:17,059 INFO success: php7-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2018-09-07 09:49:03,816 WARN received SIGTERM indicating exit request
+2018-09-07 09:49:03,816 INFO waiting for php7-fpm to die
+2018-09-07 09:49:03,826 INFO stopped: php7-fpm (exit status 0)
+2018-09-07 09:51:09,200 CRIT Supervisor running as root (no user in config file)
+2018-09-07 09:51:09,202 INFO supervisord started with pid 1
+2018-09-07 09:51:10,204 INFO spawned: 'php7-fpm' with pid 9
+2018-09-07 09:51:11,257 INFO success: php7-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)

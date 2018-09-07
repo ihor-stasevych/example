@@ -46,4 +46,9 @@ class MinerPool
     {
         $this->password = (null === $password) ? '' : $password;
     }
+
+    public function setMinerStock(MinerStock $minerStock)
+    {
+        $this->minerStock = $minerStock;
+    }
 }
