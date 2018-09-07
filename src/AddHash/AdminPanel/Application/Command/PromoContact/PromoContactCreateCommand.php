@@ -26,16 +26,28 @@ class PromoContactCreateCommand implements PromoContactCreateCommandInterface
      */
     private $message;
 
-    public function __construct($email, $name, $message)
+    /**
+     * @var int
+     * @Assert\NotBlank()
+     */
+    private $gender;
+
+    public function __construct($email, $name, $message, $gender)
     {
         $this->email = $email;
         $this->name = $name;
         $this->message = $message;
+        $this->gender = $gender;
     }
 
     public function getEmail(): string
     {
         return $this->email;
+    }
+
+    public function getGender(): int
+    {
+        return $this->gender;
     }
 
     public function getName(): string

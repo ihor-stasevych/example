@@ -24,6 +24,10 @@ class PromoContactCreateService implements PromoContactCreateServiceInterface
             $command->getMessage()
         );
 
+        if ($command->getGender() == PromoContact::MRS) {
+            $promoContact->setGenderMrs();
+        }
+
         $this->promoContactRepository->save($promoContact);
     }
 }

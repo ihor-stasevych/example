@@ -15,6 +15,9 @@ App\AddHash\AdminPanel\Domain\PromoContact\PromoContact:
             type: string
             length: 100
 
+        gender:
+            type: smallint
+
         message:
             type: text
 

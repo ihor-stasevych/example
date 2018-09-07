@@ -32,6 +32,14 @@ class PromoContactController extends BaseServiceController
      *
      * @SWG\Parameter(
      *     in="query",
+     *     name="gender",
+     *     required=true,
+     *     type="string",
+     *     description="Mr or Mrs (1 or 0)",
+     * )
+     *
+     * @SWG\Parameter(
+     *     in="query",
      *     name="name",
      *     required=true,
      *     type="string",
@@ -65,7 +73,8 @@ class PromoContactController extends BaseServiceController
 	    $command = new PromoContactCreateCommand(
 	        $request->get('email'),
             $request->get('name'),
-            $request->get('message')
+            $request->get('message'),
+            $request->get('gender')
         );
 
         if (!$this->commandIsValid($command)) {

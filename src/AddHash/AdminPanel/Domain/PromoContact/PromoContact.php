@@ -4,9 +4,18 @@ namespace App\AddHash\AdminPanel\Domain\PromoContact;
 
 class PromoContact
 {
+    const MR = 1;
+
+    const MRS = 0;
+
+    const DEFAULT_GENDER = self::MR;
+
+
     private $id;
 
     private $email;
+
+    private $gender;
 
     private $name;
 
@@ -17,6 +26,7 @@ class PromoContact
     public function __construct(string $email, string $name, string $message, int $id = null)
     {
         $this->email = $email;
+        $this->gender = static::DEFAULT_GENDER;
         $this->name = $name;
         $this->message = $message;
         $this->createdAt = new \DateTime();
@@ -61,5 +71,15 @@ class PromoContact
     public function setMessage(string $message)
     {
         $this->message = $message;
+    }
+
+    public function setGenderMr()
+    {
+        $this->gender = static::MR;
+    }
+
+    public function setGenderMrs()
+    {
+        $this->gender = static::MRS;
     }
 }
