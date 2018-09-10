@@ -44,6 +44,11 @@ RUN apt-get install -yy libxrender1 libfontconfig
 RUN pecl channel-update pecl.php.net
 RUN pecl install amqp
 RUN phpenmod amqp
+RUN apt-get install -y unzip libssh2-1 libssh2-1-dev
+RUN wget https://github.com/Sean-Der/pecl-networking-ssh2/archive/php7.zip
+RUN unzip php7.zip
+RUN cd pecl-networking-ssh2-php7 && phpize && ./configure && make && make install
+
 
 
 RUN mkdir -p /var/log/php-fpm/ \

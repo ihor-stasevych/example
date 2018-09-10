@@ -18,8 +18,6 @@ interface MinerCommandInterface
 
     public function getState();
 
-    public function getVersion();
-
     public function addPool(string $url, string $user, string $password);
 
     public function removePool(int $id);
@@ -27,4 +25,6 @@ interface MinerCommandInterface
     public function disablePool(int $id);
 
     public function enablePool(int $id);
+
+    public function restart();
 }

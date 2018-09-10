@@ -2,31 +2,31 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool;
 
-use App\AddHash\AdminPanel\Domain\Miners\MinerPool;
-use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerPoolRepositoryInterface;
 use Psr\Log\LoggerInterface;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
+use App\AddHash\AdminPanel\Infrastructure\Miners\SSH2\SSH2SCP;
+use App\AddHash\AdminPanel\Infrastructure\Miners\SSH2\SSH2Connection;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket;
+use App\AddHash\AdminPanel\Infrastructure\Miners\SSH2\SSH2AuthPassword;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Commands\MinerCommand;
-use App\AddHash\AdminPanel\Domain\Miners\Commands\MinerCommandInterface;
-use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketParser;
-use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketStatusParser;
-use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketCountPoolsParser;
+use App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2SCPFailException;
+use App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2AuthFailException;
+use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerPoolRepositoryInterface;
+use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketDefaultParser;
+use App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2ConnectionFailException;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\UserMinerControlCommandInterface;
 use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerAllowedUrlRepositoryInterface;
-use App\AddHash\AdminPanel\Domain\User\Exceptions\Miner\Pool\UserMinerNoValidUrlPoolException;
-use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCreateCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolCreateServiceInterface;
 
 class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateServiceInterface
 {
-    private const FIRST_POOL_ID = 0;
+    const PATH_TEMP_CONFIG = '../config_pools/';
 
-    private const SECOND_POOL_ID = 1;
+    const DEFAULT_CONFIG_NAME = 'bmminer.conf';
 
-    private const DELAY_REPEAT_DELETE_FIRST_POOL = 1;
+    const PATH_CONFIG_REMOTE_SERVER = '/config/' . self::DEFAULT_CONFIG_NAME;
 
-    private const MAX_COUNT_REPEAT_DELETE_FIRST_POOL = 30;
+    const INDEX_POOLS = 'pools';
 
 
     private $logger;
@@ -34,8 +34,6 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
     private $allowedUrlRepository;
 
     private $minerPoolRepository;
-
-    private $countRepeatDeleteFirstPool = 0;
 
     public function __construct(LoggerInterface $logger, MinerAllowedUrlRepositoryInterface $allowedUrlRepository, MinerPoolRepositoryInterface $minerPoolRepository)
     {
@@ -45,243 +43,73 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
     }
 
     /**
-     * @param UserMinerControlPoolCreateCommandInterface $command
+     * @param UserMinerControlCommandInterface $command
      * @param MinerStock $minerStock
      * @return array
-     * @throws UserMinerNoValidUrlPoolException
+     * @throws SSH2AuthFailException
+     * @throws SSH2SCPFailException
+     * @throws SSH2ConnectionFailException
      */
     public function execute(UserMinerControlCommandInterface $command, MinerStock $minerStock)
     {
         $data = [];
-        $minerId = $command->getMinerId();
 
-        if ($minerStock->getId() != $minerId) {
+        if ($minerStock->getId() != $command->getMinerId()) {
             return $data;
         }
 
-        $this->execute2($command, $minerStock);
+        $pathTempConfig = static::PATH_TEMP_CONFIG . $minerStock->getId() . '/';
+        $pathTempConfigFile = $pathTempConfig . static::DEFAULT_CONFIG_NAME;
 
-        $getCountAllowedUrl = $this->allowedUrlRepository->getCountByValuesEnabledUrl($command->getUniqueUrls());
+        $oldPools = [];
 
-        if ($getCountAllowedUrl != count($command->getUniqueUrls())) {
-            throw new UserMinerNoValidUrlPoolException('No valid url');
+        if (file_exists($pathTempConfigFile)) {
+            $oldConfigFile = json_decode(
+                file_get_contents($pathTempConfigFile),
+                true
+            );
+
+            $oldPools = $oldConfigFile[static::INDEX_POOLS];
         }
 
-        $minerCommand = new MinerCommand(
-            new MinerSocket($minerStock),
-            new MinerSocketCountPoolsParser()
-        );
-
-        /** Count current pools */
-        $countOldPools = $minerCommand->getPools();
-
-        $this->logger->info('Get count pools = ' . $countOldPools, [
-            'minerStockId' => $minerId,
-        ]);
-
-        $minerCommand->setParser(new MinerSocketStatusParser());
-
-        $newPools = $command->getPools();
-
-        /** Add first new pool */
-        $firstNewPool = array_shift($newPools);
-
-        $pool = $minerCommand->addPool(
-            $firstNewPool['url'],
-            $firstNewPool['user'],
-            $this->normalizePassword($firstNewPool['password'])
-        );
-
-        $loggerData = [
-            'minerStockId' => $minerId,
-            'url'          => $firstNewPool['url'],
-            'user'         => $firstNewPool['user'],
-            'password'     => $firstNewPool['password'],
-            'data'         => $pool['data'],
-        ];
-
-        if ($pool['status'] == MinerSocketStatusParser::STATUS_SUCCESS) {
-            $this->logger->info('The pool has been added', $loggerData);
-        } else {
-            $this->logger->error('The pool was not added', $loggerData);
-        }
-
-        $firstNewPoolId = $countOldPools;
-
-        /** Add priority first new pool */
-        $priority = $minerCommand->setPoolPriority($firstNewPoolId);
-
-        $loggerData['data'] = $priority['data'];
-
-        if ($priority['status'] == MinerSocketStatusParser::STATUS_SUCCESS) {
-            $this->logger->info('Priority is set', $loggerData);
-        } else {
-            $this->logger->error('Priority not set', $loggerData);
-        }
-
-        /** Delete old pool */
-        $loggerData = [
-            'minerStockId' => $minerId,
-        ];
-
-        /** Trying to remove the first pool */
-        $this->deleteFirstPool($minerCommand, $minerId);
-
-        for ($i = static::SECOND_POOL_ID; $i < $countOldPools; $i++) {
-            $pool = $minerCommand->removePool(static::SECOND_POOL_ID);
-
-            $loggerData['data'] = $pool['data'];
-
-            if ($pool['status'] == MinerSocketStatusParser::STATUS_SUCCESS) {
-                $this->logger->info('The pool has been deleted', $loggerData);
-            } else {
-                $this->logger->error('The pool was not deleted', $loggerData);
-            }
-        }
-
-        if ($newPools) {
-            $poolId = static::SECOND_POOL_ID;
-
-            foreach ($newPools as $pool) {
-                $addPool = $minerCommand->addPool(
-                    $pool['url'],
-                    $pool['user'],
-                    $this->normalizePassword($pool['password'])
-                );
-
-                $loggerData = [
-                    'minerStockId' => $minerId,
-                    'url'          => $pool['url'],
-                    'user'         => $pool['user'],
-                    'password'     => $pool['password'],
-                    'data'         => $addPool['data'],
-                ];
-
-                if ($addPool['status'] == MinerSocketStatusParser::STATUS_SUCCESS) {
-                    $this->logger->info('The pool has been added', $loggerData);
-
-                    $loggerData['status'] = $pool['status'];
-
-                    $this->changeStatus($minerCommand, $pool['status'], $poolId, $loggerData);
-                } else {
-                    $this->logger->error('The pool was not added', $loggerData);
-                }
-
-                $poolId++;
-            }
-        }
-
-        $loggerData = [
-            'minerStockId' => $minerId,
-            'url'          => $firstNewPool['url'],
-            'user'         => $firstNewPool['user'],
-            'password'     => $firstNewPool['password'],
-            'status'       => $firstNewPool['status']
-        ];
-
-        $this->changeStatus($minerCommand, $firstNewPool['status'], static::FIRST_POOL_ID, $loggerData);
-
-        $minerCommand->setParser(new MinerSocketParser());
-
-        return $minerCommand->getPools() + [
-            'minerTitle'   => $minerStock->infoMiner()->getTitle(),
-            'minerId'      => $minerStock->infoMiner()->getId(),
-            'minerStockId' => $minerStock->getId(),
-        ];
-    }
-
-    private function changeStatus(MinerCommandInterface $minerCommand, int $status, int $poolId, array $loggerData)
-    {
-        if ($status) {
-            $enablePool = $minerCommand->enablePool($poolId);
-
-            if ($enablePool['status'] == MinerSocketStatusParser::STATUS_SUCCESS) {
-                $this->logger->info('Enable status is set', $loggerData);
-            } else {
-                $this->logger->info('Enable status is not set', $loggerData);
-            }
-        } else {
-            $disablePool = $minerCommand->disablePool($poolId);
-
-            if ($disablePool['status'] == MinerSocketStatusParser::STATUS_SUCCESS) {
-                $this->logger->info('Disable status is set', $loggerData);
-            } else {
-                $this->logger->info('Disable status is not set', $loggerData);
-            }
-        }
-    }
-
-    private function normalizePassword($password)
-    {
-        return !empty($password) ? $password : ' ';
-    }
-
-    private function deleteFirstPool(MinerCommandInterface $minerCommand, int $minerStockId)
-    {
-        $pool = $minerCommand->removePool(static::FIRST_POOL_ID);
-        $loggerData = [
-            'minerStockId' => $minerStockId,
-            'data'         => $pool['data'],
-        ];
-
-        if ($pool['status'] == MinerSocketStatusParser::STATUS_SUCCESS) {
-            $this->logger->info('Remove the first pool', $loggerData);
-        } else {
-
-            if ($this->countRepeatDeleteFirstPool < static::MAX_COUNT_REPEAT_DELETE_FIRST_POOL) {
-                $this->countRepeatDeleteFirstPool++;
-                $this->logger->info('Trying to remove the first pool', $loggerData);
-
-                sleep(static::DELAY_REPEAT_DELETE_FIRST_POOL);
-                $this->deleteFirstPool($minerCommand, $minerStockId);
-            } else {
-                $this->logger->info('Could not delete the first pool', $loggerData);
-            }
-        }
-    }
-
-
-    /**
-     * @param UserMinerControlCommandInterface $command
-     * @param MinerStock $minerStock
-     */
-    public function execute2(UserMinerControlCommandInterface $command, MinerStock $minerStock)
-    {
-        $oldPools = $minerStock->getPool();
         $newPools = $command->getPools();
 
         $isIdentity = $this->checkIdentity($oldPools, $newPools);
 
-
         if (false === $isIdentity) {
-            $pools = $this->toFormatPools($newPools);
+            $ssh2Connection = new SSH2Connection('10.0.10.7');
+            $connection = $ssh2Connection->getConnection();
 
-            /**
-             * Save file
-             */
+            new SSH2AuthPassword($connection, 'root', 'Dmnrtpf[23-}');
 
-            $this->minerPoolRepository->deleteByMinerStock($minerStock->getId());
+            @mkdir($pathTempConfig, 0777, true);
+            $scp = new SSH2SCP($connection);
+            $scp->fetch($pathTempConfigFile, static::PATH_CONFIG_REMOTE_SERVER);
 
-            foreach ($newPools as $pool) {
-                $minerPool = new MinerPool($pool['url'], $pool['user'], $pool['password']);
-                $minerPool->setMinerStock($minerStock);
-                $this->minerPoolRepository->save($minerPool);
-            }
+            $tempConfigFile = json_decode(
+                file_get_contents($pathTempConfigFile),
+                true
+            );
+
+            $tempConfigFile[static::INDEX_POOLS] = $this->toFormatPools($newPools);
+
+            file_put_contents(
+                $pathTempConfigFile,
+                json_encode($tempConfigFile, JSON_UNESCAPED_SLASHES)
+            );
+
+            $scp->send($pathTempConfigFile, static::PATH_CONFIG_REMOTE_SERVER);
+
+            $minerCommand = new MinerCommand(
+                new MinerSocket($minerStock),
+                new MinerSocketDefaultParser()
+            );
+
+            $minerCommand->restart();
         }
-
-
-
-
-
-//        $conn = ssh2_connect('10.0.10.7', 22);
-//        dd($conn);
-
-
-
-        die('1');
     }
 
-    private function checkIdentity($oldPools, $newPools): bool
+    private function checkIdentity(array $oldPools, array $newPools): bool
     {
         if (count($oldPools) != count($newPools)) {
             return false;
@@ -290,9 +118,9 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
         foreach ($oldPools as $oldPool) {
             foreach ($newPools as &$newPool) {
                 if (
-                    $newPool['url'] == $oldPool->getUrl() &&
-                    $newPool['user'] == $oldPool->getUser() &&
-                    $newPool['password'] == $oldPool->getPassword() &&
+                    $newPool['url'] == $oldPool['url'] &&
+                    $newPool['user'] == $oldPool['user'] &&
+                    $newPool['password'] == $oldPool['pass'] &&
                     empty($newPool['reserved'])
                 ) {
                     $newPool['reserved'] = 1;
