@@ -21,6 +21,9 @@ App\AddHash\AdminPanel\Domain\Miners\MinerStock:
             type: integer
             length: 6
 
+        user:
+            type: string
+
     manyToOne:
         miner:
             targetEntity: App\AddHash\AdminPanel\Domain\Miners\Miner
@@ -35,8 +38,3 @@ App\AddHash\AdminPanel\Domain\Miners\MinerStock:
             joinColumn:
                 name: productId
                 referencedColumnName: id
-
-    oneToMany:
-        pool:
-            targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerPool
-            mappedBy: minerStock

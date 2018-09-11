@@ -2,16 +2,17 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool;
 
+use App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2AuthKeyIsNotExistsException;
+use App\AddHash\AdminPanel\Domain\User\Exceptions\Miner\Pool\UserMinerNoValidUrlPoolException;
 use Psr\Log\LoggerInterface;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Infrastructure\Miners\SSH2\SSH2SCP;
+use App\AddHash\AdminPanel\Infrastructure\Miners\SSH2\SSH2AuthPubKey;
 use App\AddHash\AdminPanel\Infrastructure\Miners\SSH2\SSH2Connection;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket;
-use App\AddHash\AdminPanel\Infrastructure\Miners\SSH2\SSH2AuthPassword;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Commands\MinerCommand;
 use App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2SCPFailException;
 use App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2AuthFailException;
-use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerPoolRepositoryInterface;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketDefaultParser;
 use App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2ConnectionFailException;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\UserMinerControlCommandInterface;
@@ -26,6 +27,12 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
 
     const PATH_CONFIG_REMOTE_SERVER = '/config/' . self::DEFAULT_CONFIG_NAME;
 
+    const PATH_SSH_KEYS = '../ssh_keys/';
+
+    const DEFAULT_NAME_PUBLIC_KEY = 'id_rsa.pub';
+
+    const DEFAULT_NAME_PRIVATE_KEY = 'id_rsa';
+
     const INDEX_POOLS = 'pools';
 
 
@@ -33,13 +40,10 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
 
     private $allowedUrlRepository;
 
-    private $minerPoolRepository;
-
-    public function __construct(LoggerInterface $logger, MinerAllowedUrlRepositoryInterface $allowedUrlRepository, MinerPoolRepositoryInterface $minerPoolRepository)
+    public function __construct(LoggerInterface $logger, MinerAllowedUrlRepositoryInterface $allowedUrlRepository)
     {
         $this->logger = $logger;
         $this->allowedUrlRepository = $allowedUrlRepository;
-        $this->minerPoolRepository = $minerPoolRepository;
     }
 
     /**
@@ -47,18 +51,32 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
      * @param MinerStock $minerStock
      * @return array
      * @throws SSH2AuthFailException
-     * @throws SSH2SCPFailException
+     * @throws SSH2AuthKeyIsNotExistsException
      * @throws SSH2ConnectionFailException
+     * @throws SSH2SCPFailException
+     * @throws UserMinerNoValidUrlPoolException
      */
     public function execute(UserMinerControlCommandInterface $command, MinerStock $minerStock)
     {
         $data = [];
 
-        if ($minerStock->getId() != $command->getMinerId()) {
+        $minerStockId = $minerStock->getId();
+
+        if ($minerStockId != $command->getMinerId()) {
             return $data;
         }
 
-        $pathTempConfig = static::PATH_TEMP_CONFIG . $minerStock->getId() . '/';
+        $newPools = $command->getPools();
+
+        $uniqueUrls = $this->getUniqueUrls($newPools);
+
+        $getCountAllowedUrl = $this->allowedUrlRepository->getCountByValuesEnabledUrl($uniqueUrls);
+
+        if ($getCountAllowedUrl != count($uniqueUrls)) {
+            throw new UserMinerNoValidUrlPoolException('No valid url');
+        }
+
+        $pathTempConfig = static::PATH_TEMP_CONFIG . $minerStockId . '/';
         $pathTempConfigFile = $pathTempConfig . static::DEFAULT_CONFIG_NAME;
 
         $oldPools = [];
@@ -72,41 +90,49 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
             $oldPools = $oldConfigFile[static::INDEX_POOLS];
         }
 
-        $newPools = $command->getPools();
-
         $isIdentity = $this->checkIdentity($oldPools, $newPools);
 
-        if (false === $isIdentity) {
-            $ssh2Connection = new SSH2Connection('10.0.10.7');
-            $connection = $ssh2Connection->getConnection();
-
-            new SSH2AuthPassword($connection, 'root', 'Dmnrtpf[23-}');
-
-            @mkdir($pathTempConfig, 0777, true);
-            $scp = new SSH2SCP($connection);
-            $scp->fetch($pathTempConfigFile, static::PATH_CONFIG_REMOTE_SERVER);
-
-            $tempConfigFile = json_decode(
-                file_get_contents($pathTempConfigFile),
-                true
-            );
-
-            $tempConfigFile[static::INDEX_POOLS] = $this->toFormatPools($newPools);
-
-            file_put_contents(
-                $pathTempConfigFile,
-                json_encode($tempConfigFile, JSON_UNESCAPED_SLASHES)
-            );
-
-            $scp->send($pathTempConfigFile, static::PATH_CONFIG_REMOTE_SERVER);
-
-            $minerCommand = new MinerCommand(
-                new MinerSocket($minerStock),
-                new MinerSocketDefaultParser()
-            );
-
-            $minerCommand->restart();
+        if (true === $isIdentity) {
+            return $data;
         }
+
+        $pathKeys = static::PATH_SSH_KEYS . $minerStockId . '/';
+        $pathPublicKey = $pathKeys . static::DEFAULT_NAME_PUBLIC_KEY;
+        $pathPrivateKey = $pathKeys . static::DEFAULT_NAME_PRIVATE_KEY;
+
+        if (!file_exists($pathPublicKey) || !file_exists($pathPrivateKey)) {
+            throw new SSH2AuthKeyIsNotExistsException('Auth key is not exists');
+        }
+
+        $connection = (new SSH2Connection($minerStock->getIp()))->getConnection();
+        new SSH2AuthPubKey($connection, $minerStock->getUser(), $pathPublicKey, $pathPrivateKey);
+
+        @mkdir($pathTempConfig, 0777, true);
+        $scp = new SSH2SCP($connection);
+        $scp->fetch($pathTempConfigFile, static::PATH_CONFIG_REMOTE_SERVER);
+
+        $tempConfigFile = json_decode(
+            file_get_contents($pathTempConfigFile),
+            true
+        );
+
+        $tempConfigFile[static::INDEX_POOLS] = $this->toFormatPools($newPools);
+
+        file_put_contents(
+            $pathTempConfigFile,
+            json_encode($tempConfigFile, JSON_UNESCAPED_SLASHES)
+        );
+
+        $scp->send($pathTempConfigFile, static::PATH_CONFIG_REMOTE_SERVER);
+
+        $minerCommand = new MinerCommand(
+            new MinerSocket($minerStock),
+            new MinerSocketDefaultParser()
+        );
+
+        $minerCommand->restart();
+
+        return $data;
     }
 
     private function checkIdentity(array $oldPools, array $newPools): bool
@@ -137,7 +163,7 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
         return true;
     }
 
-    private function toFormatPools($pools): array
+    private function toFormatPools(array $pools): array
     {
         $newFormatPools = [];
 
@@ -150,5 +176,18 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
         }
 
         return $newFormatPools;
+    }
+
+    private function getUniqueUrls(array $pools)
+    {
+        $urls = [];
+
+        foreach ($pools as $pool) {
+            if (false === array_search($pool['url'], $urls)) {
+                $urls[] = $pool['url'];
+            }
+        }
+
+        return $urls;
     }
 }

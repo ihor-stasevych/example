@@ -27,12 +27,12 @@ class MinerStock
 
     private $port;
 
+    private $user;
+
     /** @var Miner */
 	private $miner;
 
 	private $product;
-
-	private $pool;
 
 	private $stateAliases = [
         self::STATE_UNAVAILABLE => 'unavailable',
@@ -41,14 +41,14 @@ class MinerStock
 		self::STATE_RESERVED    => 'reserved',
 	];
 
-	public function __construct($priority, $ip, $port, $id = null)
+	public function __construct($priority, $ip, $port, $user, $id = null)
 	{
 	    $this->id = $id;
 		$this->state = static::STATE_DEFAULT;
         $this->priority = $priority;
 		$this->ip = $ip;
 		$this->port = $port;
-		$this->pool = new ArrayCollection();
+        $this->user = $user;
 	}
 
 	public function getId(): ?int
@@ -81,9 +81,9 @@ class MinerStock
         return $this->port;
     }
 
-    public function getPool()
+    public function getUser()
     {
-        return $this->pool;
+        return $this->user;
     }
 
 	public function reserveMiner()
@@ -100,11 +100,6 @@ class MinerStock
 	{
 		$this->state = self::STATE_BUSY;
 	}
-
-	public function setPool(MinerPool $pool)
-    {
-        $this->pool = $pool;
-    }
 
 	public function infoMiner()
 	{

@@ -7,10 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerException;
-use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerExistException;
 use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolGetCommand;
-use App\AddHash\AdminPanel\Domain\User\Exceptions\Miner\Pool\UserMinerNoValidUrlPoolException;
 use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolCreateCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Strategy\UserMinerControlStrategyInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolGetServiceInterface;
@@ -67,7 +64,7 @@ class UserMinerControlPoolController extends BaseServiceController
 
         try {
             $data = $this->strategy->execute($command, $this->getService);
-        } catch (MinerControlNoMainerException | MinerControlNoMainerExistException $e) {
+        } catch (\Exception $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
             ], Response::HTTP_BAD_REQUEST);
@@ -126,7 +123,7 @@ class UserMinerControlPoolController extends BaseServiceController
 
         try {
             $data = $this->strategy->execute($command, $this->createService);
-        } catch (MinerControlNoMainerException | UserMinerNoValidUrlPoolException $e) {
+        } catch (\Exception $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
             ], Response::HTTP_BAD_REQUEST);

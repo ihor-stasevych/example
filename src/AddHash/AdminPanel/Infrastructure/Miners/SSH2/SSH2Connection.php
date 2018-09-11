@@ -23,7 +23,9 @@ class SSH2Connection implements SSH2ConnectionInterface
      */
     public function getConnection()
     {
-        $connection = @ssh2_connect($this->host, $this->port);
+        $connection = @ssh2_connect($this->host, $this->port, [
+            'hostkey' => 'ssh-rsa'
+        ]);
 
         if (false === $connection) {
             throw new SSH2ConnectionFailException('Connection fail');
