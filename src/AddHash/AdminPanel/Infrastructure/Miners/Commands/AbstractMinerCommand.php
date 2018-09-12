@@ -38,4 +38,6 @@ abstract class AbstractMinerCommand implements MinerCommandInterface
     abstract function disablePool(int $id);
 
     abstract function enablePool(int $id);
+
+    abstract function restart();
 }
