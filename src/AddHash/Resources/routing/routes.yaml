@@ -158,6 +158,11 @@ wallet.type.list:
   methods: GET
   controller: App\AddHash\AdminPanel\Application\Controller\WalletTypeController::index
 
+promo.contact.create:
+  path: "/api/v1/promo/contact"
+  methods: POST
+  controller: App\AddHash\AdminPanel\Application\Controller\PromoContactController::create
+
 user.miner.test.query:
   path: "/api/v1/user/miner/test/query"
   methods: GET
