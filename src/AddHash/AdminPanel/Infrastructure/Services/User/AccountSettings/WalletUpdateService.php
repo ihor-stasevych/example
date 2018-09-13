@@ -66,10 +66,6 @@ class WalletUpdateService implements WalletUpdateServiceInterface
             }
         }
 
-        if (count(array_unique($uniqueWallets)) != count($walletsValue)) {
-            throw new UserWalletIsNotValidException('User wallet is not valid');
-        }
-
         $userId = $this->tokenStorage->getToken()->getUser()->getId();
         $userWallets = $this->userWalletRepository->getByIdsAndUserId($userWalletsId, $userId);
 
@@ -77,7 +73,25 @@ class WalletUpdateService implements WalletUpdateServiceInterface
             throw new UserWalletIsNotValidException('User wallet is not valid');
         }
 
-         $errorsNotUnique = [];
+        $errorsNotUnique = [];
+
+        $countValueWallets = array_count_values($uniqueWallets);
+
+        foreach ($countValueWallets as $walletValue => $walletCount) {
+            if ($walletCount > 1) {
+                foreach ($walletsCommand as $walletCommand) {
+                    if ($walletCommand['value'] . $walletCommand['typeId'] == $walletValue) {
+                        $errorsNotUnique[$walletCommand['id']] = "Not unique value: " . $walletCommand['value'];
+                    }
+                }
+            }
+        }
+
+        if (!empty($errorsNotUnique)) {
+            throw new WalletIsExistException(json_encode($errorsNotUnique));
+        }
+
+        $errorsNotUnique = [];
 
         foreach ($walletsValue as $walletId => $walletValue) {
 
