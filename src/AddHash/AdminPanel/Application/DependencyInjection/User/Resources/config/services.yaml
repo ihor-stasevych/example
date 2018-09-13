@@ -112,22 +112,6 @@ services:
 
   App\AddHash\AdminPanel\Domain\User\Services\Miner\Strategy\UserMinerControlStrategyInterface: '@addhash.user.miner.control.strategy'
 
-  addhash.user.miner.control.get.pool.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolGetService
-    public: true
-    arguments: ['@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolGetService: '@addhash.user.miner.control.get.pool.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolGetServiceInterface: '@addhash.user.miner.control.get.pool.service'
-
-  addhash.user.miner.control.create.pool.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolCreateService
-    public: true
-    arguments: ['@monolog.logger.db', '@addhash.miner.allowed.url.repository']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolCreateService: '@addhash.user.miner.control.create.pool.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolCreateServiceInterface: '@addhash.user.miner.control.create.pool.service'
-
   addhash.user.order.history.list.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryListService
     public: true
@@ -147,13 +131,14 @@ services:
   user.miner.pool.context:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolContext
     public: true
+    arguments: ['@security.token_storage']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolContext: '@user.miner.pool.context'
 
-  App\AddHash\AdminPanel\Domain\User\Miner\Pool\UserMinerControlPoolContextInterface: '@user.miner.pool.context'
+  App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolContextInterface: '@user.miner.pool.context'
 
   user.miner.pool.create.strategy:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\Strategy\UserMinerControlPoolCreateStrategy
-    arguments: ['@monolog.logger.db', '@addhash.miner.allowed.url.repository']
+    arguments: ['@addhash.miner.allowed.url.repository']
     tags:
       - { name: user.miner.pool.strategy }
 

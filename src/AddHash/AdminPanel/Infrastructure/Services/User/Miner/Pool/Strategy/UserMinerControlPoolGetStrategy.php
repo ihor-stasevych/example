@@ -2,19 +2,34 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\Strategy;
 
-use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\Strategy\StrategyInterface;
+use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
+use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket;
+use App\AddHash\AdminPanel\Infrastructure\Miners\Commands\MinerCommand;
+use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketParser;
+use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\Strategy\UserMinerControlPoolStrategyInterface;
+use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCommandInterface;
 
-class UserMinerControlPoolGetStrategy implements StrategyInterface
+
+class UserMinerControlPoolGetStrategy implements UserMinerControlPoolStrategyInterface
 {
-    const STRATEGY_FLAG = 'get';
+    const STRATEGY_ALIAS = 'pool_get';
 
-    public function canProcess($data)
+    public function canProcess(string $strategyAlias)
     {
-        return static::STRATEGY_FLAG == $data;
+        return static::STRATEGY_ALIAS == $strategyAlias;
     }
 
-    public function process($data)
+    public function process(MinerStock $minerStock, UserMinerControlPoolCommandInterface $command): array
     {
-        dd($data);
+        $minerCommand = new MinerCommand(
+            new MinerSocket($minerStock),
+            new MinerSocketParser()
+        );
+
+        return $minerCommand->getPools() + [
+            'minerTitle'   => $minerStock->infoMiner()->getTitle(),
+            'minerId'      => $minerStock->infoMiner()->getId(),
+            'minerStockId' => $minerStock->getId(),
+        ];
     }
 }

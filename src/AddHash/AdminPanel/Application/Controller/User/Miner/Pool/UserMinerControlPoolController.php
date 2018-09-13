@@ -7,34 +7,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use App\AddHash\AdminPanel\Domain\User\Miner\Pool\UserMinerControlPoolContextInterface;
-use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolGetCommand;
+use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolCommand;
+use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolContextInterface;
 use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolCreateCommand;
-use App\AddHash\AdminPanel\Domain\User\Services\Miner\Strategy\UserMinerControlStrategyInterface;
-use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolGetServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolCreateServiceInterface;
+use App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\Strategy\UserMinerControlPoolGetStrategy;
+use App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\Strategy\UserMinerControlPoolCreateStrategy;
 
 class UserMinerControlPoolController extends BaseServiceController
 {
-    private $context;
+    private $contextPool;
 
-    private $strategy;
-
-    private $getService;
-
-    private $createService;
-
-    public function __construct(
-        UserMinerControlPoolContextInterface $context,
-        UserMinerControlStrategyInterface $strategy,
-        UserMinerControlPoolGetServiceInterface $getService,
-        UserMinerControlPoolCreateServiceInterface $createService
-    )
+    public function __construct(UserMinerControlPoolContextInterface $contextPool)
     {
-        $this->context = $context;
-        $this->strategy = $strategy;
-        $this->getService = $getService;
-        $this->createService = $createService;
+        $this->contextPool = $contextPool;
     }
 
     /**
@@ -59,9 +44,7 @@ class UserMinerControlPoolController extends BaseServiceController
      */
     public function get(int $id)
     {
-        $this->context->handle('create');
-
-        $command = new UserMinerControlPoolGetCommand($id);
+        $command = new UserMinerControlPoolCommand($id);
 
         if (!$this->commandIsValid($command)) {
             return $this->json([
@@ -70,7 +53,7 @@ class UserMinerControlPoolController extends BaseServiceController
         }
 
         try {
-            $data = $this->strategy->execute($command, $this->getService);
+            $data = $this->contextPool->handle(UserMinerControlPoolGetStrategy::STRATEGY_ALIAS, $command);
         } catch (\Exception $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
@@ -129,7 +112,7 @@ class UserMinerControlPoolController extends BaseServiceController
         }
 
         try {
-            $data = $this->strategy->execute($command, $this->createService);
+            $data = $this->contextPool->handle(UserMinerControlPoolCreateStrategy::STRATEGY_ALIAS, $command);
         } catch (\Exception $e) {
             return $this->json([
                 'errors' => $e->getMessage(),

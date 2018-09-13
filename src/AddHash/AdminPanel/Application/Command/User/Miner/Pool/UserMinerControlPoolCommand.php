@@ -3,9 +3,9 @@
 namespace App\AddHash\AdminPanel\Application\Command\User\Miner\Pool;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolGetCommandInterface;
+use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCommandInterface;
 
-class UserMinerControlPoolGetCommand implements UserMinerControlPoolGetCommandInterface
+class UserMinerControlPoolCommand implements UserMinerControlPoolCommandInterface
 {
 	/**
 	 * @var int
