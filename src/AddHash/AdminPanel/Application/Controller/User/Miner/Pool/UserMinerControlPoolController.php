@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
+use App\AddHash\AdminPanel\Domain\User\Miner\Pool\UserMinerControlPoolContextInterface;
 use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolGetCommand;
 use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolCreateCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Strategy\UserMinerControlStrategyInterface;
@@ -15,6 +16,8 @@ use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolC
 
 class UserMinerControlPoolController extends BaseServiceController
 {
+    private $context;
+
     private $strategy;
 
     private $getService;
@@ -22,11 +25,13 @@ class UserMinerControlPoolController extends BaseServiceController
     private $createService;
 
     public function __construct(
+        UserMinerControlPoolContextInterface $context,
         UserMinerControlStrategyInterface $strategy,
         UserMinerControlPoolGetServiceInterface $getService,
         UserMinerControlPoolCreateServiceInterface $createService
     )
     {
+        $this->context = $context;
         $this->strategy = $strategy;
         $this->getService = $getService;
         $this->createService = $createService;
@@ -54,6 +59,8 @@ class UserMinerControlPoolController extends BaseServiceController
      */
     public function get(int $id)
     {
+        $this->context->handle('create');
+
         $command = new UserMinerControlPoolGetCommand($id);
 
         if (!$this->commandIsValid($command)) {

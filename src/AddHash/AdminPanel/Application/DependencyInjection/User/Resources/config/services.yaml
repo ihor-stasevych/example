@@ -143,3 +143,21 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryGetService: '@addhash.user.order.history.get.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryGetServiceInterface: '@addhash.user.order.history.get.service'
+
+  user.miner.pool.context:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolContext
+    public: true
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolContext: '@user.miner.pool.context'
+
+  App\AddHash\AdminPanel\Domain\User\Miner\Pool\UserMinerControlPoolContextInterface: '@user.miner.pool.context'
+
+  user.miner.pool.create.strategy:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\Strategy\UserMinerControlPoolCreateStrategy
+    arguments: ['@monolog.logger.db', '@addhash.miner.allowed.url.repository']
+    tags:
+      - { name: user.miner.pool.strategy }
+
+  user.miner.pool.get.strategy:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\Strategy\UserMinerControlPoolGetStrategy
+    tags:
+      - { name: user.miner.pool.strategy }

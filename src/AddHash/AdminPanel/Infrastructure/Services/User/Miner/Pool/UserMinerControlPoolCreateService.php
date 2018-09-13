@@ -2,8 +2,6 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool;
 
-use App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2AuthKeyIsNotExistsException;
-use App\AddHash\AdminPanel\Domain\User\Exceptions\Miner\Pool\UserMinerNoValidUrlPoolException;
 use Psr\Log\LoggerInterface;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Infrastructure\Miners\SSH2\SSH2SCP;
@@ -17,21 +15,15 @@ use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketDefaultParse
 use App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2ConnectionFailException;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\UserMinerControlCommandInterface;
 use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerAllowedUrlRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2AuthKeyIsNotExistsException;
+use App\AddHash\AdminPanel\Domain\User\Exceptions\Miner\Pool\UserMinerNoValidUrlPoolException;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolCreateServiceInterface;
 
 class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateServiceInterface
 {
-    const PATH_TEMP_CONFIG = '../config_pools/';
-
     const DEFAULT_CONFIG_NAME = 'bmminer.conf';
 
     const PATH_CONFIG_REMOTE_SERVER = '/config/' . self::DEFAULT_CONFIG_NAME;
-
-    const PATH_SSH_KEYS = '../ssh_keys/';
-
-    const DEFAULT_NAME_PUBLIC_KEY = 'id_rsa.pub';
-
-    const DEFAULT_NAME_PRIVATE_KEY = 'id_rsa';
 
     const INDEX_POOLS = 'pools';
 
@@ -68,27 +60,12 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
 
         $newPools = $command->getPools();
 
-        $uniqueUrls = $this->getUniqueUrls($newPools);
+        $this->checkAllowedUrl($newPools);
 
-        $getCountAllowedUrl = $this->allowedUrlRepository->getCountByValuesEnabledUrl($uniqueUrls);
+        $pathLocalConfigDir = getenv('PATH_CONFIG_POOLS') . $minerStockId . '/';
+        $pathLocalConfigFile = $pathLocalConfigDir . static::DEFAULT_CONFIG_NAME;
 
-        if ($getCountAllowedUrl != count($uniqueUrls)) {
-            throw new UserMinerNoValidUrlPoolException('No valid url');
-        }
-
-        $pathTempConfig = static::PATH_TEMP_CONFIG . $minerStockId . '/';
-        $pathTempConfigFile = $pathTempConfig . static::DEFAULT_CONFIG_NAME;
-
-        $oldPools = [];
-
-        if (file_exists($pathTempConfigFile)) {
-            $oldConfigFile = json_decode(
-                file_get_contents($pathTempConfigFile),
-                true
-            );
-
-            $oldPools = $oldConfigFile[static::INDEX_POOLS];
-        }
+        $oldPools = $this->getOldPools($pathLocalConfigFile);
 
         $isIdentity = $this->checkIdentity($oldPools, $newPools);
 
@@ -96,9 +73,9 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
             return $data;
         }
 
-        $pathKeys = static::PATH_SSH_KEYS . $minerStockId . '/';
-        $pathPublicKey = $pathKeys . static::DEFAULT_NAME_PUBLIC_KEY;
-        $pathPrivateKey = $pathKeys . static::DEFAULT_NAME_PRIVATE_KEY;
+        $pathKeys = getenv('PATH_SSH_KEYS') . $minerStockId . '/';
+        $pathPublicKey = $pathKeys . getenv('DEFAULT_NAME_RSA_PUBLIC_KEY');
+        $pathPrivateKey = $pathKeys . getenv('DEFAULT_NAME_RSA_PRIVATE_KEY');
 
         if (!file_exists($pathPublicKey) || !file_exists($pathPrivateKey)) {
             throw new SSH2AuthKeyIsNotExistsException('Auth key is not exists');
@@ -107,32 +84,74 @@ class UserMinerControlPoolCreateService implements UserMinerControlPoolCreateSer
         $connection = (new SSH2Connection($minerStock->getIp()))->getConnection();
         new SSH2AuthPubKey($connection, $minerStock->getUser(), $pathPublicKey, $pathPrivateKey);
 
-        @mkdir($pathTempConfig, 0777, true);
+        @mkdir($pathLocalConfigDir, 0777, true);
         $scp = new SSH2SCP($connection);
-        $scp->fetch($pathTempConfigFile, static::PATH_CONFIG_REMOTE_SERVER);
+        $scp->fetch($pathLocalConfigFile, static::PATH_CONFIG_REMOTE_SERVER);
 
-        $tempConfigFile = json_decode(
-            file_get_contents($pathTempConfigFile),
-            true
-        );
+        $this->changeLocalConfig($pathLocalConfigFile, $newPools);
 
-        $tempConfigFile[static::INDEX_POOLS] = $this->toFormatPools($newPools);
+        $scp->send($pathLocalConfigFile, static::PATH_CONFIG_REMOTE_SERVER);
 
-        file_put_contents(
-            $pathTempConfigFile,
-            json_encode($tempConfigFile, JSON_UNESCAPED_SLASHES)
-        );
+        $this->minerRestart($minerStock);
 
-        $scp->send($pathTempConfigFile, static::PATH_CONFIG_REMOTE_SERVER);
+        return $data;
+    }
 
+    private function minerRestart(MinerStock $minerStock)
+    {
         $minerCommand = new MinerCommand(
             new MinerSocket($minerStock),
             new MinerSocketDefaultParser()
         );
 
         $minerCommand->restart();
+    }
 
-        return $data;
+    private function changeLocalConfig(string $path, array $pools)
+    {
+        $tempConfigFile = $this->getLocalConfig($path);
+
+        $tempConfigFile[static::INDEX_POOLS] = $this->toFormatPools($pools);
+
+        file_put_contents(
+            $path,
+            json_encode($tempConfigFile, JSON_UNESCAPED_SLASHES)
+        );
+    }
+
+    private function getOldPools(string $path): array
+    {
+        $oldPools = [];
+
+        if (file_exists($path)) {
+            $oldConfigFile = $this->getLocalConfig($path);
+            $oldPools = $oldConfigFile[static::INDEX_POOLS];
+        }
+
+        return $oldPools;
+    }
+
+    private function getLocalConfig(string $path): array
+    {
+        return json_decode(
+            file_get_contents($path),
+            true
+        );
+    }
+
+    /**
+     * @param $pools
+     * @throws UserMinerNoValidUrlPoolException
+     */
+    private function checkAllowedUrl(array $pools)
+    {
+        $uniqueUrls = $this->getUniqueUrls($pools);
+
+        $getCountAllowedUrl = $this->allowedUrlRepository->getCountByValuesEnabledUrl($uniqueUrls);
+
+        if ($getCountAllowedUrl != count($uniqueUrls)) {
+            throw new UserMinerNoValidUrlPoolException('No valid url');
+        }
     }
 
     private function checkIdentity(array $oldPools, array $newPools): bool
