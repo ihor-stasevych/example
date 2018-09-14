@@ -5,10 +5,10 @@ namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool;
 use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerException;
-use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\Strategy\UserMinerControlPoolStrategyInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolContextInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\Strategy\UserMinerControlPoolStrategyInterface;
 
 class UserMinerControlPoolContext implements UserMinerControlPoolContextInterface
 {

@@ -163,6 +163,31 @@ promo.contact.create:
   methods: POST
   controller: App\AddHash\AdminPanel\Application\Controller\PromoContactController::create
 
+user.miner.control.rig.index:
+  path: "/api/v1/user/miners/rigs"
+  methods: GET
+  controller: App\AddHash\AdminPanel\Application\Controller\User\Miner\Rig\UserMinerControlRigController::index
+
+user.miner.control.rig.get:
+  path: "/api/v1/user/miners/rigs/{id}"
+  methods: GET
+  controller: App\AddHash\AdminPanel\Application\Controller\User\Miner\Rig\UserMinerControlRigController::get
+
+user.miner.control.rig.create:
+  path: "/api/v1/user/miners/rigs"
+  methods: POST
+  controller: App\AddHash\AdminPanel\Application\Controller\User\Miner\Rig\UserMinerControlRigController::create
+
+user.miner.control.rig.update:
+  path: "/api/v1/user/miners/rigs/{id}"
+  methods: PUT
+  controller: App\AddHash\AdminPanel\Application\Controller\User\Miner\Rig\UserMinerControlRigController::update
+
+user.miner.control.rig.delete:
+  path: "/api/v1/user/miners/rigs/{id}"
+  methods: DELETE
+  controller: App\AddHash\AdminPanel\Application\Controller\User\Miner\Rig\UserMinerControlRigController::delete
+
 user.miner.test.query:
   path: "/api/v1/user/miner/test/query"
   methods: GET

@@ -146,3 +146,11 @@ services:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\Strategy\UserMinerControlPoolGetStrategy
     tags:
       - { name: user.miner.pool.strategy }
+
+  addhash.user.miner.control.rig.create.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Rig\UserMinerControlRigCreateService
+    public: true
+    arguments: ['@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Rig\UserMinerControlRigCreateService: '@addhash.user.miner.control.rig.create.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\Miner\Rig\UserMinerControlRigCreateServiceInterface: '@addhash.user.miner.control.rig.create.service'
