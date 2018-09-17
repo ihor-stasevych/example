@@ -51,6 +51,11 @@ security:
               anonymous: true
               security: false
 
+        api_public_crypto_callback:
+              pattern: ^/api/v1/payments/crypto/callback
+              anonymous: true
+              security: false
+
         api_doc:
               pattern: ^/api/doc
               anonymous: true

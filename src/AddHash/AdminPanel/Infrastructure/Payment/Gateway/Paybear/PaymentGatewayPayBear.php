@@ -2,14 +2,16 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Payment\Gateway\Paybear;
 
-use App\AddHash\AdminPanel\Domain\Payment\Gateway\PaymentGatewayInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\System\GlobalContext\ValueObject\CryptoPayment;
+use App\AddHash\AdminPanel\Domain\Payment\Gateway\PaymentGatewayInterface;
 
 class PaymentGatewayPayBear implements PaymentGatewayInterface
 {
 	const API_KEY_SECRET = 'sec132369cd45cc3110707c785513c80d05';
+
 	const API_KEY_SECRET_TEST = 'secaba806820dac7678dfbf72bf2d97aabf';
+
 	const API_HOST = 'http://dev.addhash.com';
 
 	/**
@@ -20,9 +22,8 @@ class PaymentGatewayPayBear implements PaymentGatewayInterface
 	public function createPayment(StoreOrder $order, $params = []):? CryptoPayment
 	{
 		$currency = $params['currency'];
-		$callbackUrl = 'http://dev.addhash.com/api/v1/payments/order/' . $order->getId();
+		$callbackUrl = 'http://dev.addhash.com/api/v1/payments/crypto/callback/' . $order->getId();
 		$url = sprintf('https://api.paybear.io/v2/%s/payment/%s?token=%s', $currency, urlencode($callbackUrl), self::API_KEY_SECRET);
-
 
 		if ($response = @file_get_contents($url)) {
 			$response = json_decode($response);
@@ -37,16 +38,18 @@ class PaymentGatewayPayBear implements PaymentGatewayInterface
 
 			$cryptoPayment =  new CryptoPayment(
 				$response->data->invoice,
-				$response->data->address, $currencyData['title'],
-				$currencyData['code'], $currencyData['icon'],
-				$currencyData['rate'], $currencyData['maxConfirmations'],
-				$coinValue, self::API_HOST . '/api/v1/payments/crypto/new' . $currency,
+				$response->data->address,
+                $currencyData['title'],
+				$currencyData['code'],
+                $currencyData['icon'],
+				$currencyData['rate'],
+                $currencyData['maxConfirmations'],
+				$coinValue,
+                self::API_HOST . '/api/v1/payments/crypto/new/' . $currency,
 				self::API_HOST . '/api/v1/payments/crypto/state'
 			);
 
-
 			return $cryptoPayment;
-
 		}
 
 		return null;

@@ -46,3 +46,11 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\Payment\GetCryptoCurrenciesService: '@addhash.payment.crypto.currencies'
 
   App\AddHash\AdminPanel\Domain\Payment\Services\GetCryptoCurrenciesServiceInterface: '@addhash.payment.crypto.currencies'
+
+  addhash.payment.crypto.callback.service:
+    class:  App\AddHash\AdminPanel\Infrastructure\Services\Payment\CallbackCryptoPaymentService
+    public: true
+    arguments: ['@addhash.store.order.repository', '@addhash.payment.transaction.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Payment\CallbackCryptoPaymentService: '@addhash.payment.crypto.callback.service'
+
+  App\AddHash\AdminPanel\Domain\Payment\Services\CallbackCryptoPaymentServiceInterface: '@addhash.payment.crypto.callback.service'

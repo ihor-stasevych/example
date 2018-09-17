@@ -2,12 +2,12 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order;
 
-use App\AddHash\AdminPanel\Domain\User\Order\History\ListParam\Sort;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\NonUniqueResultException;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
+use App\AddHash\AdminPanel\Domain\User\Order\History\ListParam\Sort;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 
 class StoreOrderRepository extends AbstractRepository implements StoreOrderRepositoryInterface
@@ -16,7 +16,7 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
 	 * @param $id
 	 * @return null|object|StoreOrder
 	 */
-	public function findById($id)
+	public function findById(int $id)
 	{
 		return $this->entityRepository->find($id);
 	}
@@ -26,7 +26,7 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
 	 * @return mixed
 	 * @throws NonUniqueResultException
 	 */
-	public function findNewByUserId($userId)
+	public function findNewByUserId(int $userId): ?StoreOrder
 	{
 		return $this->entityRepository->createQueryBuilder('e')
 			->select('e')
@@ -39,10 +39,27 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
 	}
 
     /**
+     * @param int $id
+     * @return mixed
+     * @throws NonUniqueResultException
+     */
+	public function findNewById(int $id): ?StoreOrder
+    {
+        return $this->entityRepository->createQueryBuilder('e')
+            ->select('e')
+            ->where('e.id = :id')
+            ->andWhere('e.state = :stateNew')
+            ->setParameter('id', $id)
+            ->setParameter('stateNew', StoreOrder::STATE_NEW)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
      * @param \DateTime $updatedAt
      * @return mixed
      */
-	public function getNewByTime(\DateTime $updatedAt)
+	public function getNewByTime(\DateTime $updatedAt): array
     {
         return $this->entityRepository->createQueryBuilder('e')
             ->select('e')

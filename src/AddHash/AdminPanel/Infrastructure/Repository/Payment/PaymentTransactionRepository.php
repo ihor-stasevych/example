@@ -2,10 +2,12 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Repository\Payment;
 
-use App\AddHash\AdminPanel\Domain\Payment\Payment;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\NonUniqueResultException;
 use App\AddHash\AdminPanel\Domain\Payment\PaymentTransaction;
-use App\AddHash\AdminPanel\Domain\Payment\Repository\PaymentTransactionRepositoryInterface;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
+use App\AddHash\AdminPanel\Domain\Payment\Repository\PaymentTransactionRepositoryInterface;
 
 class PaymentTransactionRepository extends AbstractRepository implements PaymentTransactionRepositoryInterface
 {
@@ -18,10 +20,25 @@ class PaymentTransactionRepository extends AbstractRepository implements Payment
 		return $this->entityRepository->find($id);
 	}
 
+    /**
+     * @param string $externalId
+     * @return PaymentTransaction|null
+     * @throws NonUniqueResultException
+     */
+	public function findByExternalId(string $externalId): ?PaymentTransaction
+    {
+        return $this->entityRepository->createQueryBuilder('pt')
+            ->select('pt')
+            ->where('pt.externalId = :externalId')
+            ->setParameter('externalId', $externalId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 	/**
 	 * @param PaymentTransaction $paymentTransaction
-	 * @throws \Doctrine\ORM\ORMException
-	 * @throws \Doctrine\ORM\OptimisticLockException
+	 * @throws ORMException
+	 * @throws OptimisticLockException
 	 */
 	public function save(PaymentTransaction $paymentTransaction)
 	{

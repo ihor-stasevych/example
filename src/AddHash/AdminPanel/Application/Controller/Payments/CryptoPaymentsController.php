@@ -2,37 +2,41 @@
 
 namespace App\AddHash\AdminPanel\Application\Controller\Payments;
 
-
-use App\AddHash\AdminPanel\Application\Command\Payments\MakeCryptoPaymentCommand;
-use App\AddHash\AdminPanel\Domain\Payment\Services\GetCryptoCurrenciesServiceInterface;
-use App\AddHash\AdminPanel\Domain\Payment\Services\MakeCryptoPaymentServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\User;
-use App\AddHash\AdminPanel\Infrastructure\Repository\User\UserRepository;
-use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use App\AddHash\System\GlobalContext\ValueObject\CryptoPayment;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Swagger\Annotations as SWG;
+use App\AddHash\AdminPanel\Domain\User\User;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\AddHash\System\GlobalContext\ValueObject\CryptoPayment;
+use App\AddHash\System\GlobalContext\Common\BaseServiceController;
+use App\AddHash\AdminPanel\Application\Command\Payments\MakeCryptoPaymentCommand;
+use App\AddHash\AdminPanel\Application\Command\Payments\CallbackCryptoPaymentCommand;
+use App\AddHash\AdminPanel\Domain\Payment\Services\MakeCryptoPaymentServiceInterface;
+use App\AddHash\AdminPanel\Domain\Payment\Services\GetCryptoCurrenciesServiceInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\AddHash\AdminPanel\Domain\Payment\Services\CallbackCryptoPaymentServiceInterface;
 
 class CryptoPaymentsController extends BaseServiceController
 {
 	private $cryptoPaymentService;
+
 	private $tokenStorage;
+
 	private $currenciesService;
+
+	private $callbackCryptoPaymentService;
 
 	public function __construct(
 		MakeCryptoPaymentServiceInterface $cryptoPaymentService,
 		TokenStorageInterface $tokenStorage,
-		GetCryptoCurrenciesServiceInterface $currenciesService
+		GetCryptoCurrenciesServiceInterface $currenciesService,
+        CallbackCryptoPaymentServiceInterface $callbackCryptoPaymentService
 	)
 	{
 		$this->cryptoPaymentService = $cryptoPaymentService;
 		$this->tokenStorage = $tokenStorage;
 		$this->currenciesService = $currenciesService;
+		$this->callbackCryptoPaymentService = $callbackCryptoPaymentService;
 	}
-
 
 	/**
 	 * @SWG\Parameter(
@@ -79,7 +83,6 @@ class CryptoPaymentsController extends BaseServiceController
 	}
 
 	/**
-	 *
 	 * @SWG\Tag(name="Payments")
 	 *
 	 * @SWG\Response(
@@ -90,17 +93,40 @@ class CryptoPaymentsController extends BaseServiceController
 	 */
 	public function getCurrencies()
 	{
-		$data = $this->currenciesService->execute();
-		return $this->json($data);
+		return $this->json($this->currenciesService->execute());
 	}
 
 	public function getState()
 	{
 		return $this->json([
-			'success' => false,
-			'error' => null,
+			'success'   => false,
+			'error'     => null,
 			'coinsPaid' => 0
 		]);
 	}
 
+	public function callback(int $orderId)
+    {
+        $command = new CallbackCryptoPaymentCommand(
+            $orderId,
+            file_get_contents('php://input')
+        );
+
+//        if (!$this->commandIsValid($command)) {
+//            return $this->json([
+//                'errors' => $this->getLastValidationErrors()
+//            ], Response::HTTP_BAD_REQUEST);
+//        }
+
+
+        try{
+            $data = $this->callbackCryptoPaymentService->execute($command);
+        } catch (\Exception $e) {
+            return $this->json([
+                'errors' => $e->getMessage()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json($data);
+    }
 }

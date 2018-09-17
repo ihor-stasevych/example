@@ -68,6 +68,11 @@ payments.crypto.state:
     methods: GET
     controller: App\AddHash\AdminPanel\Application\Controller\Payments\CryptoPaymentsController::getState
 
+payments.crypto.callback:
+    path: "/api/v1/payments/crypto/callback/{orderId}"
+    methods: GET
+    controller: App\AddHash\AdminPanel\Application\Controller\Payments\CryptoPaymentsController::callback
+
 admin.store.category.create:
     path: "/api/v1/admin/store/category/create"
     methods: POST

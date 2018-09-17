@@ -9,5 +9,7 @@ interface PaymentTransactionRepositoryInterface
 {
 	public function findById($id);
 
+    public function findByExternalId(string $externalId): ?PaymentTransaction;
+
 	public function save(PaymentTransaction $paymentTransaction);
 }
