@@ -2,6 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Payment;
 
+use Psr\Log\LoggerInterface;
 use App\AddHash\AdminPanel\Domain\Payment\Payment;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
@@ -19,13 +20,17 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
 
     private $paymentTransactionRepository;
 
+    private $logger;
+
     public function __construct(
         StoreOrderRepositoryInterface $storeOrderRepository,
-        PaymentTransactionRepositoryInterface $paymentTransactionRepository
+        PaymentTransactionRepositoryInterface $paymentTransactionRepository,
+        LoggerInterface $logger
     )
     {
         $this->storeOrderRepository = $storeOrderRepository;
         $this->paymentTransactionRepository = $paymentTransactionRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -39,16 +44,28 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
     public function execute(CallbackCryptoPaymentCommandInterface $command): string
     {
         $orderId = $command->getOrderId();
+
+        $this->logger->info('Start Callback crypto payment order # ' . $orderId);
+
         /** @var StoreOrder $order */
         $order = $this->storeOrderRepository->findNewById($orderId);
 
         if (null === $order) {
+            $this->logger->error('Callback crypto payment invalid order # ' . $orderId);
+
             throw new InvalidOrderErrorException('Invalid order');
         }
 
         $inputData = json_decode($command->getInputData());
 
-        if (null === $inputData || !$inputData) {
+        if (null === $inputData ||
+            !$inputData ||
+            empty($inputData->confirmations) ||
+            empty($inputData->maxConfirmations) ||
+            empty($inputData->invoice)
+        ) {
+            $this->logger->error('Callback crypto payment invalid input data order # ' . $orderId, (array) $inputData);
+
             throw new InvalidInputDataErrorException('Invalid input data');
         }
 
@@ -58,14 +75,19 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
 
 
         if ($inputData->confirmations < $inputData->maxConfirmations) {
+            $this->logger->info('Callback crypto payment - Waiting for confirmations order # ' . $orderId, [
+                'confirmation'    => $inputData->confirmations,
+                'maxConfirmation' => $inputData->maxConfirmations,
+            ]);
+
             throw new WaitingConfirmationsException('Waiting for confirmations');
         }
 
-        $invoice = $inputData->invoice;
-
-        $paymentTransaction = $this->paymentTransactionRepository->findByExternalId($invoice);
+        $paymentTransaction = $this->paymentTransactionRepository->findByExternalId($inputData->invoice);
 
         if (null === $paymentTransaction) {
+            $this->logger->error('Callback crypto payment invalid invoice order # ' . $orderId, (array) $inputData);
+
             throw new InvalidInvoiceErrorException('Invalid invoice');
         }
 
@@ -73,6 +95,8 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
         $payment = $paymentTransaction->getPayment();
 
         if ($payment->getUser()->getId() != $order->getUser()->getId()) {
+            $this->logger->error('Callback crypto payment invalid invoice order # ' . $orderId, (array) $inputData);
+
             throw new InvalidInvoiceErrorException('Invalid invoice');
         }
 
@@ -82,6 +106,8 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
         $order->setPayment($payment);
         $this->storeOrderRepository->save($order);
 
-        return $invoice;
+        $this->logger->info('Finish Callback crypto payment order # ' . $orderId, (array) $inputData);
+
+        return $inputData->invoice;
     }
 }
