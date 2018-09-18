@@ -52,7 +52,10 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
             throw new InvalidInputDataErrorException('Invalid input data');
         }
 
-        //save confirmations and maxConfirmations to DB
+        $order->setConfirmation($inputData->confirmations);
+        $order->setMaxConfirmation($inputData->maxConfirmations);
+        $this->storeOrderRepository->save($order);
+
 
         if ($inputData->confirmations < $inputData->maxConfirmations) {
             throw new WaitingConfirmationsException('Waiting for confirmations');

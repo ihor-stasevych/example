@@ -54,3 +54,11 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\Payment\CallbackCryptoPaymentService: '@addhash.payment.crypto.callback.service'
 
   App\AddHash\AdminPanel\Domain\Payment\Services\CallbackCryptoPaymentServiceInterface: '@addhash.payment.crypto.callback.service'
+
+  addhash.payment.crypto.state.service:
+    class:  App\AddHash\AdminPanel\Infrastructure\Services\Payment\GetStateCryptoPaymentService
+    public: true
+    arguments: ['@addhash.store.order.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\Payment\GetStateCryptoPaymentService: '@addhash.payment.crypto.state.service'
+
+  App\AddHash\AdminPanel\Domain\Payment\Services\GetStateCryptoPaymentServiceInterface: '@addhash.payment.crypto.state.service'

@@ -28,6 +28,14 @@ App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder:
             column: state
             type: smallint
 
+        confirmation:
+            column: confirmation
+            type: integer
+
+        maxConfirmation:
+            column: maxConfirmation
+            type: integer
+
     oneToMany:
         items:
             targetEntity: App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem

@@ -9,11 +9,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\ValueObject\CryptoPayment;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\AdminPanel\Application\Command\Payments\MakeCryptoPaymentCommand;
+use App\AddHash\AdminPanel\Application\Command\Payments\GetStateCryptoPaymentCommand;
 use App\AddHash\AdminPanel\Application\Command\Payments\CallbackCryptoPaymentCommand;
 use App\AddHash\AdminPanel\Domain\Payment\Services\MakeCryptoPaymentServiceInterface;
 use App\AddHash\AdminPanel\Domain\Payment\Services\GetCryptoCurrenciesServiceInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\AddHash\AdminPanel\Domain\Payment\Services\GetStateCryptoPaymentServiceInterface;
 use App\AddHash\AdminPanel\Domain\Payment\Services\CallbackCryptoPaymentServiceInterface;
+
 
 class CryptoPaymentsController extends BaseServiceController
 {
@@ -25,17 +28,21 @@ class CryptoPaymentsController extends BaseServiceController
 
 	private $callbackCryptoPaymentService;
 
+	private $getStateCryptoPaymentService;
+
 	public function __construct(
 		MakeCryptoPaymentServiceInterface $cryptoPaymentService,
 		TokenStorageInterface $tokenStorage,
 		GetCryptoCurrenciesServiceInterface $currenciesService,
-        CallbackCryptoPaymentServiceInterface $callbackCryptoPaymentService
+        CallbackCryptoPaymentServiceInterface $callbackCryptoPaymentService,
+        GetStateCryptoPaymentServiceInterface $getStateCryptoPaymentService
 	)
 	{
 		$this->cryptoPaymentService = $cryptoPaymentService;
 		$this->tokenStorage = $tokenStorage;
 		$this->currenciesService = $currenciesService;
 		$this->callbackCryptoPaymentService = $callbackCryptoPaymentService;
+		$this->getStateCryptoPaymentService = $getStateCryptoPaymentService;
 	}
 
 	/**
@@ -96,13 +103,31 @@ class CryptoPaymentsController extends BaseServiceController
 		return $this->json($this->currenciesService->execute());
 	}
 
-	public function getState()
+	public function getState(int $orderId)
 	{
-		return $this->json([
-			'success'   => false,
-			'error'     => null,
-			'coinsPaid' => 0
-		]);
+        $command = new GetStateCryptoPaymentCommand($orderId);
+
+        if (!$this->commandIsValid($command)) {
+            return $this->json([
+                'errors' => $this->getLastValidationErrors()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        try{
+            $data = $this->getStateCryptoPaymentService->execute($command);
+        } catch (\Exception $e) {
+            return $this->json([
+                'errors' => $e->getMessage()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json($data);
+
+//		return $this->json([
+//			'success'   => false,
+//			'error'     => null,
+//			'coinsPaid' => 0
+//		]);
 	}
 
 	public function callback(int $orderId)
@@ -112,12 +137,11 @@ class CryptoPaymentsController extends BaseServiceController
             file_get_contents('php://input')
         );
 
-//        if (!$this->commandIsValid($command)) {
-//            return $this->json([
-//                'errors' => $this->getLastValidationErrors()
-//            ], Response::HTTP_BAD_REQUEST);
-//        }
-
+        if (!$this->commandIsValid($command)) {
+            return $this->json([
+                'errors' => $this->getLastValidationErrors()
+            ], Response::HTTP_BAD_REQUEST);
+        }
 
         try{
             $data = $this->callbackCryptoPaymentService->execute($command);

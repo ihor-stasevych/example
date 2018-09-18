@@ -45,6 +45,10 @@ class StoreOrder
 
 	private $payment;
 
+	private $confirmation;
+
+	private $maxConfirmation;
+
 
     /**
      * StoreOrder constructor.
@@ -317,4 +321,24 @@ class StoreOrder
 	{
 		$this->payment = $payment;
 	}
+
+	public function setConfirmation($confirmation)
+    {
+        $this->confirmation = $confirmation;
+    }
+
+    public function setMaxConfirmation($maxConfirmation)
+    {
+        $this->maxConfirmation = $maxConfirmation;
+    }
+
+    public function getConfirmation(): int
+    {
+        return $this->confirmation;
+    }
+
+    public function getMaxConfirmation(): int
+    {
+        return $this->maxConfirmation;
+    }
 }

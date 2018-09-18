@@ -64,7 +64,7 @@ payments.crypto.currencies:
     controller: App\AddHash\AdminPanel\Application\Controller\Payments\CryptoPaymentsController::getCurrencies
 
 payments.crypto.state:
-    path: "/api/v1/payments/crypto/state"
+    path: "/api/v1/payments/crypto/state/{orderId}"
     methods: GET
     controller: App\AddHash\AdminPanel\Application\Controller\Payments\CryptoPaymentsController::getState
 
