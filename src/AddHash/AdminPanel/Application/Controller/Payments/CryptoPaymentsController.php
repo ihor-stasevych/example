@@ -122,12 +122,6 @@ class CryptoPaymentsController extends BaseServiceController
         }
 
         return $this->json($data);
-
-//		return $this->json([
-//			'success'   => false,
-//			'error'     => null,
-//			'coinsPaid' => 0
-//		]);
 	}
 
 	public function callback(int $orderId)

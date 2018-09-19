@@ -69,20 +69,6 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
             throw new InvalidInputDataErrorException('Invalid input data');
         }
 
-        $order->setConfirmation($inputData->confirmations);
-        $order->setMaxConfirmation($inputData->maxConfirmations);
-        $this->storeOrderRepository->save($order);
-
-
-        if ($inputData->confirmations < $inputData->maxConfirmations) {
-            $this->logger->info('Callback crypto payment - Waiting for confirmations order # ' . $orderId, [
-                'confirmation'    => $inputData->confirmations,
-                'maxConfirmation' => $inputData->maxConfirmations,
-            ]);
-
-            throw new WaitingConfirmationsException('Waiting for confirmations');
-        }
-
         $paymentTransaction = $this->paymentTransactionRepository->findByExternalId($inputData->invoice);
 
         if (null === $paymentTransaction) {
@@ -90,6 +76,10 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
 
             throw new InvalidInvoiceErrorException('Invalid invoice');
         }
+
+        $paymentTransaction->setConfirmation($inputData->confirmations);
+        $paymentTransaction->setMaxConfirmation($inputData->maxConfirmations);
+        $this->paymentTransactionRepository->save($paymentTransaction);
 
         /** @var Payment $payment */
         $payment = $paymentTransaction->getPayment();
@@ -101,6 +91,15 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
         }
 
         //$amountPaid = $inputData->inTransaction->amount / pow(10, $inputData->inTransaction->exp);
+
+        if ($inputData->confirmations < $inputData->maxConfirmations) {
+            $this->logger->info('Callback crypto payment - Waiting for confirmations order # ' . $orderId, [
+                'confirmation'    => $inputData->confirmations,
+                'maxConfirmation' => $inputData->maxConfirmations,
+            ]);
+
+            throw new WaitingConfirmationsException('Waiting for confirmations');
+        }
 
         $order->setPayedState();
         $order->setPayment($payment);
