@@ -55,6 +55,8 @@ class User implements UserInterface
 
 	private $orderMain;
 
+	private $rigs;
+
 
 	public function __construct(
 		int $id = null,
@@ -121,6 +123,11 @@ class User implements UserInterface
     public function getPhoneNumber()
     {
         return $this->phone;
+    }
+
+    public function getRigs()
+    {
+	    return $this->rigs;
     }
 
 	private function setUserName(string $userName)

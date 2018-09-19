@@ -112,22 +112,6 @@ services:
 
   App\AddHash\AdminPanel\Domain\User\Services\Miner\Strategy\UserMinerControlStrategyInterface: '@addhash.user.miner.control.strategy'
 
-  addhash.user.miner.control.get.pool.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolGetService
-    public: true
-    arguments: ['@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolGetService: '@addhash.user.miner.control.get.pool.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolGetServiceInterface: '@addhash.user.miner.control.get.pool.service'
-
-  addhash.user.miner.control.create.pool.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolCreateService
-    public: true
-    arguments: ['@monolog.logger.db', '@addhash.miner.allowed.url.repository']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolCreateService: '@addhash.user.miner.control.create.pool.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolCreateServiceInterface: '@addhash.user.miner.control.create.pool.service'
-
   addhash.user.order.history.list.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryListService
     public: true
@@ -143,3 +127,30 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryGetService: '@addhash.user.order.history.get.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryGetServiceInterface: '@addhash.user.order.history.get.service'
+
+  user.miner.pool.context:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolContext
+    public: true
+    arguments: ['@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolContext: '@user.miner.pool.context'
+
+  App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolContextInterface: '@user.miner.pool.context'
+
+  user.miner.pool.create.strategy:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\Strategy\UserMinerControlPoolCreateStrategy
+    arguments: ['@addhash.miner.allowed.url.repository']
+    tags:
+      - { name: user.miner.pool.strategy }
+
+  user.miner.pool.get.strategy:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\Strategy\UserMinerControlPoolGetStrategy
+    tags:
+      - { name: user.miner.pool.strategy }
+
+  addhash.user.miner.control.rig.create.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Rig\UserMinerControlRigCreateService
+    public: true
+    arguments: ['@security.token_storage']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Rig\UserMinerControlRigCreateService: '@addhash.user.miner.control.rig.create.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\Miner\Rig\UserMinerControlRigCreateServiceInterface: '@addhash.user.miner.control.rig.create.service'
