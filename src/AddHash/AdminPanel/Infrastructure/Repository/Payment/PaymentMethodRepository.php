@@ -2,19 +2,19 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Repository\Payment;
 
-
+use Doctrine\ORM\NonUniqueResultException;
 use App\AddHash\AdminPanel\Domain\Payment\PaymentMethod;
-use App\AddHash\AdminPanel\Domain\Payment\Repository\PaymentMethodRepositoryInterface;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
+use App\AddHash\AdminPanel\Domain\Payment\Repository\PaymentMethodRepositoryInterface;
 
 class PaymentMethodRepository extends AbstractRepository implements PaymentMethodRepositoryInterface
 {
 	/**
 	 * @param string $name
 	 * @return mixed
-	 * @throws \Doctrine\ORM\NonUniqueResultException
+	 * @throws NonUniqueResultException
 	 */
-	public function getByName(string $name)
+	public function getByName(string $name): ?PaymentMethod
 	{
 		$res = $this->entityRepository->createQueryBuilder('pmr')
 			->select('pmr')
