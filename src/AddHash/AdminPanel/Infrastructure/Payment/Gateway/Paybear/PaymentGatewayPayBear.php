@@ -3,27 +3,46 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Payment\Gateway\Paybear;
 
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use App\AddHash\System\GlobalContext\ValueObject\CryptoPayment;
 use App\AddHash\AdminPanel\Domain\Payment\Gateway\PaymentGatewayInterface;
 
 class PaymentGatewayPayBear implements PaymentGatewayInterface
 {
-	const API_KEY_SECRET = 'sec132369cd45cc3110707c785513c80d05';
+    const API_KEY_SECRET = 'sec132369cd45cc3110707c785513c80d05';
 
-	const API_KEY_SECRET_TEST = 'secaba806820dac7678dfbf72bf2d97aabf';
+    const API_KEY_SECRET_TEST = 'secaba806820dac7678dfbf72bf2d97aabf';
 
-	const API_HOST = 'http://dev.addhash.com';
+    const API_HOST = 'http://dev.addhash.com';
+
+
+    private $urlGenerator;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator)
+    {
+        $this->urlGenerator = $urlGenerator;
+    }
 
 	/**
 	 * @param StoreOrder $order
 	 * @param array $params
 	 * @return CryptoPayment|null
 	 */
-	public function createPayment(StoreOrder $order, $params = []):? CryptoPayment
+	public function createPayment(StoreOrder $order, $params = []): ?CryptoPayment
 	{
-		$currency = $params['currency'];
-		$callbackUrl = 'http://dev.addhash.com/api/v1/payments/crypto/callback/' . $order->getId();
-		$url = sprintf('https://api.paybear.io/v2/%s/payment/%s?token=%s', $currency, urlencode($callbackUrl), self::API_KEY_SECRET);
+	    $orderId = $order->getId();
+	    $currencies = $this->getCurrencies($orderId);
+        $currency = $params['currency'];
+
+	    if (true === empty($currencies[$currency])) {
+	        return null;
+        }
+
+		$callbackUrl = static::API_HOST . $this->urlGenerator->generate('payments.crypto.callback', [
+            'orderId' => $orderId,
+        ]);
+
+		$url = sprintf('https://api.paybear.io/v2/%s/payment/%s?token=%s', $currency, urlencode($callbackUrl), static::API_KEY_SECRET);
 
 		if ($response = @file_get_contents($url)) {
 			$response = json_decode($response);
@@ -32,9 +51,8 @@ class PaymentGatewayPayBear implements PaymentGatewayInterface
 				return null;
 			}
 
-			$currencies = $this->getCurrencies();
 			$coinValue = $this->getCryptoAmountByUsd($order->getItemsPriceTotal(), $currency);
-			$currencyData = $currencies[$currency] ?? [];
+			$currencyData = $currencies[$currency];
 
 			$cryptoPayment =  new CryptoPayment(
 				$response->data->invoice,
@@ -45,8 +63,13 @@ class PaymentGatewayPayBear implements PaymentGatewayInterface
 				$currencyData['rate'],
                 $currencyData['maxConfirmations'],
 				$coinValue,
-                self::API_HOST . '/api/v1/payments/crypto/new/' . $currency,
-				self::API_HOST . '/api/v1/payments/crypto/state'
+                static::API_HOST . $this->urlGenerator->generate('payments.crypto', [
+                    'orderId'  => $orderId,
+                    'currency' => $currency,
+                ]),
+				static::API_HOST . $this->urlGenerator->generate('payments.crypto.state', [
+                    'orderId' => $orderId,
+                ])
 			);
 
 			return $cryptoPayment;
@@ -55,12 +78,13 @@ class PaymentGatewayPayBear implements PaymentGatewayInterface
 		return null;
 	}
 
-	/**
-	 * @return array|null
-	 */
-	public function getCurrencies()
+    /**
+     * @param int $orderId
+     * @return null|array
+     */
+	public function getCurrencies(int $orderId)
 	{
-		$url = sprintf('https://api.paybear.io/v2/currencies?token=%s', self::API_KEY_SECRET);
+		$url = sprintf('https://api.paybear.io/v2/currencies?token=%s', static::API_KEY_SECRET);
 
 		if ($response = file_get_contents($url)) {
 			$response = json_decode($response, true);
@@ -70,7 +94,10 @@ class PaymentGatewayPayBear implements PaymentGatewayInterface
 		}
 
 		foreach ($response['data'] as $currency => &$data) {
-			$response['data'][$currency]['currencyUrl'] = self::API_HOST . '/api/v1/payments/crypto/new/' . $currency;
+            $response['data'][$currency]['currencyUrl'] = static::API_HOST . $this->urlGenerator->generate('payments.crypto', [
+                'orderId'  => $orderId,
+                'currency' => $currency,
+            ]);
 		}
 
 		return $response['data'];

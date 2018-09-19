@@ -11,11 +11,22 @@ App\AddHash\AdminPanel\Domain\Payment\PaymentTransaction:
             type: string
             column: externalId
             length: 255
+
         amount:
             column: amount
             type: float
+
         state:
             type: smallint
+
+        confirmation:
+            column: confirmation
+            type: integer
+
+        maxConfirmation:
+            column: maxConfirmation
+            type: integer
+
         createdAt:
             column: createdAt
             type: datetime
@@ -23,10 +34,9 @@ App\AddHash\AdminPanel\Domain\Payment\PaymentTransaction:
 
     oneToOne:
         payment:
-          targetEntity: App\AddHash\AdminPanel\Domain\Payment\Payment
-          #inversedBy: payment
-          joinColumn:
-            name: paymentId
-            referencedColumnName: id
+            targetEntity: App\AddHash\AdminPanel\Domain\Payment\Payment
+            joinColumn:
+                name: paymentId
+                referencedColumnName: id
 
 

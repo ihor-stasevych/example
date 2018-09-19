@@ -61,6 +61,16 @@ security:
               anonymous: true
               security: false
 
+        api_public_crypto_currencies:
+              pattern: ^/api/v1/payments/crypto/currencies
+              anonymous: true
+              security: false
+
+        api_public_crypto_new:
+              pattern: ^/api/v1/payments/crypto/new
+              anonymous: true
+              security: false
+
         api_doc:
               pattern: ^/api/doc
               anonymous: true
