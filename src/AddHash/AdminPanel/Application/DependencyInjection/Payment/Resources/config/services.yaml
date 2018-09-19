@@ -35,7 +35,7 @@ services:
   addhash.payment.crypto.service:
     class:  App\AddHash\AdminPanel\Infrastructure\Services\Payment\MakeCryptoPaymentService
     public: true
-    arguments: ['@addhash.payment.repository', '@addhash.payment.method.repository', '@addhash.payment.transaction.repository', '@addhash.store.order.repository']
+    arguments: ['@addhash.payment.repository', '@addhash.payment.method.repository', '@addhash.payment.transaction.repository', '@addhash.store.order.repository', '@addhash.payment.gateway.paybear']
   App\AddHash\AdminPanel\Infrastructure\Services\Payment\MakeCryptoPaymentService: '@addhash.order.checkout.payment.service'
 
   App\AddHash\AdminPanel\Domain\Payment\Services\MakeCryptoPaymentServiceInterface: '@addhash.payment.crypto.service'
@@ -43,6 +43,7 @@ services:
   addhash.payment.crypto.currencies:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Payment\GetCryptoCurrenciesService
     public: true
+    arguments: ['@addhash.payment.gateway.paybear']
   App\AddHash\AdminPanel\Infrastructure\Services\Payment\GetCryptoCurrenciesService: '@addhash.payment.crypto.currencies'
 
   App\AddHash\AdminPanel\Domain\Payment\Services\GetCryptoCurrenciesServiceInterface: '@addhash.payment.crypto.currencies'
@@ -62,3 +63,11 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\Payment\GetStateCryptoPaymentService: '@addhash.payment.crypto.state.service'
 
   App\AddHash\AdminPanel\Domain\Payment\Services\GetStateCryptoPaymentServiceInterface: '@addhash.payment.crypto.state.service'
+
+  addhash.payment.gateway.paybear:
+    class:  App\AddHash\AdminPanel\Infrastructure\Payment\Gateway\Paybear\PaymentGatewayPayBear
+    public: true
+    arguments: ['@router.default']
+  App\AddHash\AdminPanel\Infrastructure\Payment\Gateway\Paybear\PaymentGatewayPayBear: '@addhash.payment.gateway.paybear'
+
+  App\AddHash\AdminPanel\Domain\Payment\Gateway\PaymentGatewayInterface: '@addhash.payment.gateway.paybear'

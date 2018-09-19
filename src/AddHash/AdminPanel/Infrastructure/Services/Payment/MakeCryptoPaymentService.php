@@ -2,70 +2,84 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Payment;
 
-
-use App\AddHash\AdminPanel\Domain\Payment\Command\MakeCryptoPaymentCommandInterface;
 use App\AddHash\AdminPanel\Domain\Payment\Payment;
-use App\AddHash\AdminPanel\Domain\Payment\PaymentTransaction;
-use App\AddHash\AdminPanel\Domain\Payment\Repository\PaymentMethodRepositoryInterface;
-use App\AddHash\AdminPanel\Domain\Payment\Repository\PaymentRepositoryInterface;
-use App\AddHash\AdminPanel\Domain\Payment\Repository\PaymentTransactionRepositoryInterface;
-use App\AddHash\AdminPanel\Domain\Payment\Services\MakeCryptoPaymentServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
-use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
-use App\AddHash\AdminPanel\Domain\User\User;
-use App\AddHash\AdminPanel\Infrastructure\Payment\Gateway\Paybear\PaymentGatewayPayBear;
+use App\AddHash\AdminPanel\Domain\Payment\PaymentTransaction;
 use App\AddHash\System\GlobalContext\ValueObject\CryptoPayment;
+use App\AddHash\AdminPanel\Domain\Payment\Gateway\PaymentGatewayInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\Payment\Repository\PaymentRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\Payment\Exceptions\CantFindNewOrderErrorException;
+use App\AddHash\AdminPanel\Domain\Payment\Command\MakeCryptoPaymentCommandInterface;
+use App\AddHash\AdminPanel\Domain\Payment\Services\MakeCryptoPaymentServiceInterface;
+use App\AddHash\AdminPanel\Domain\Payment\Exceptions\CantCreatePaymentErrorException;
+use App\AddHash\AdminPanel\Domain\Payment\Repository\PaymentMethodRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\Payment\Exceptions\CantFindPaymentMethodErrorException;
+use App\AddHash\AdminPanel\Domain\Payment\Repository\PaymentTransactionRepositoryInterface;
 
 class MakeCryptoPaymentService implements MakeCryptoPaymentServiceInterface
 {
+    const PAYMENT_METHOD_NAME = 'Crypto';
+
 	private $paymentRepository;
+
 	private $paymentMethodRepository;
+
 	private $paymentTransactionRepository;
+
 	private $orderRepository;
+
+	private $paymentGateway;
 
 	public function __construct(
 		PaymentRepositoryInterface $paymentRepository,
 		PaymentMethodRepositoryInterface $paymentMethodRepository,
 		PaymentTransactionRepositoryInterface $paymentTransactionRepository,
-		StoreOrderRepositoryInterface $orderRepository
+		StoreOrderRepositoryInterface $orderRepository,
+        PaymentGatewayInterface $paymentGateway
 	)
 	{
 		$this->paymentRepository = $paymentRepository;
 		$this->paymentMethodRepository = $paymentMethodRepository;
 		$this->paymentTransactionRepository = $paymentTransactionRepository;
 		$this->orderRepository = $orderRepository;
+		$this->paymentGateway = $paymentGateway;
+
 	}
 
-	/**
-	 * @param User $user
-	 * @param MakeCryptoPaymentCommandInterface $command
-	 * @return CryptoPayment
-	 * @throws \Exception
-	 */
-	public function execute(User $user, MakeCryptoPaymentCommandInterface $command)
+    /**
+     * @param MakeCryptoPaymentCommandInterface $command
+     * @return CryptoPayment
+     * @throws CantCreatePaymentErrorException
+     * @throws CantFindNewOrderErrorException
+     * @throws CantFindPaymentMethodErrorException
+     */
+	public function execute(MakeCryptoPaymentCommandInterface $command)
 	{
 		/** @var StoreOrder $order */
-		$order = $this->orderRepository->findNewByUserId($user->getId());
+		$order = $this->orderRepository->findById($command->getOrderId());
 
-		if (!$order) {
-			throw new \Exception('Cant find new order');
+		if (null === $order) {
+			throw new CantFindNewOrderErrorException('Cant find new order');
 		}
 
-		$method = $this->paymentMethodRepository->getByName('Crypto');
+		$method = $this->paymentMethodRepository->getByName(static::PAYMENT_METHOD_NAME);
 
-		if (!$method) {
-			throw new \Exception('Cant find payment method');
+		if (null === $method) {
+			throw new CantFindPaymentMethodErrorException('Cant find payment method');
 		}
 
-		$payment = new Payment(0, $command->getCurrency(), $user);
+		$payment = new Payment(0, $command->getCurrency(), $order->getUser());
 		$payment->setPaymentMethod($method);
-		$payment->setPaymentGateway(new PaymentGatewayPayBear());
+		$payment->setPaymentGateway($this->paymentGateway);
 
 		/** @var CryptoPayment $cryptoPayment */
-		$cryptoPayment = $payment->createPayment($order, ['currency' => $command->getCurrency()]);
+		$cryptoPayment = $payment->createPayment($order, [
+		    'currency' => $command->getCurrency(),
+        ]);
 
-		if (!$cryptoPayment){
-			throw new \Exception('Cant create payment');
+		if (null === $cryptoPayment) {
+			throw new CantCreatePaymentErrorException('Cant create payment');
 		}
 
 		$payment->setPrice($cryptoPayment->getPrice());
@@ -76,6 +90,5 @@ class MakeCryptoPaymentService implements MakeCryptoPaymentServiceInterface
 		$this->paymentTransactionRepository->save($transaction);
 
 		return $cryptoPayment;
-
 	}
 }
