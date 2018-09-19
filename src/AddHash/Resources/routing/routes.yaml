@@ -54,12 +54,12 @@ store.order.checkout:
     controller: App\AddHash\AdminPanel\Application\Controller\StoreOrderController::checkout
 
 payments.crypto:
-    path: "/api/v1/payments/crypto/new/{currency}"
+    path: "/api/v1/payments/crypto/new/{orderId}/{currency}"
     methods: GET
     controller: App\AddHash\AdminPanel\Application\Controller\Payments\CryptoPaymentsController::createNewPayment
 
 payments.crypto.currencies:
-    path: "/api/v1/payments/crypto/currencies"
+    path: "/api/v1/payments/crypto/currencies/{orderId}"
     methods: GET
     controller: App\AddHash\AdminPanel\Application\Controller\Payments\CryptoPaymentsController::getCurrencies
 
