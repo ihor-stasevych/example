@@ -112,9 +112,10 @@ class StoreOrderController extends BaseServiceController
 		}
 
 		return $this->json([
-			'price' => $order->getItemsPriceTotal(),
+		    'id'        => $order->getId(),
+			'price'     => $order->getItemsPriceTotal(),
 			'userEmail' => $order->getUser()->getEmail(),
-			'apiKey' => PaymentGatewayStripe::getPublicKey()
+			'apiKey'    => PaymentGatewayStripe::getPublicKey()
 		]);
 	}
 
