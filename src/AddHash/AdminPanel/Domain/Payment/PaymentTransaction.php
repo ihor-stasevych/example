@@ -6,7 +6,13 @@ namespace App\AddHash\AdminPanel\Domain\Payment;
 class PaymentTransaction implements TransactionInterface
 {
 	const STATE_NEW = 1;
+
 	const STAT_PROCESSED = 2;
+
+	const DEFAULT_CONFIRMATION = 0;
+
+	const DEFAULT_MAX_CONFIRMATION = 0;
+
 
 	private $id;
 
@@ -19,6 +25,10 @@ class PaymentTransaction implements TransactionInterface
 	private $createdAt;
 
 	private $amount;
+
+    private $confirmation = self::DEFAULT_CONFIRMATION;
+
+    private $maxConfirmation = self::DEFAULT_MAX_CONFIRMATION;
 
 	public function __construct(PaymentInterface $payment, $externalId)
 	{
@@ -43,6 +53,26 @@ class PaymentTransaction implements TransactionInterface
 	{
 		return $this->payment;
 	}
+
+    public function getConfirmation(): int
+    {
+        return $this->confirmation;
+    }
+
+    public function getMaxConfirmation(): int
+    {
+        return $this->maxConfirmation;
+    }
+
+    public function setConfirmation($confirmation)
+    {
+        $this->confirmation = $confirmation;
+    }
+
+    public function setMaxConfirmation($maxConfirmation)
+    {
+        $this->maxConfirmation = $maxConfirmation;
+    }
 
 	public function processTransaction()
 	{
