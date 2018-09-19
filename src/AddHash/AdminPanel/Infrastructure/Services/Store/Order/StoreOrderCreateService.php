@@ -75,6 +75,8 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 
                 $this->minerStockRepository->save($miner);
             }
+
+			$this->storeOrderItemRepository->save($item);
 		}
 
 		$order->calculateItems();
