@@ -61,12 +61,11 @@ class GetStateCryptoPaymentService implements GetStateCryptoPaymentServiceInterf
             $confirmation = $paymentTransaction->getConfirmation();
             $maxConfirmation = $paymentTransaction->getMaxConfirmation();
 
+            if (null !== $confirmation) {
+                if (null !== $maxConfirmation && $confirmation >= $maxConfirmation) {
+                    $data['success'] = true;
+                }
 
-            if (null !== $confirmation && null !== $maxConfirmation && $confirmation >= $maxConfirmation) {
-                $paymentTransaction->setMaxConfirmation($maxConfirmation);
-                $this->paymentTransactionRepository->save($paymentTransaction);
-
-                $data['success'] = true;
                 $data['confirmations'] = $confirmation;
             }
         }

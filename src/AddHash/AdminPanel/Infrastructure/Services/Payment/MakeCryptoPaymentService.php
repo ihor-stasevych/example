@@ -89,6 +89,9 @@ class MakeCryptoPaymentService implements MakeCryptoPaymentServiceInterface
 		$this->paymentRepository->save($payment);
 		$this->paymentTransactionRepository->save($transaction);
 
+        $order->setPayment($payment);
+        $this->orderRepository->save($order);
+
 		return $cryptoPayment;
 	}
 }

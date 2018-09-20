@@ -50,12 +50,12 @@ class PaymentTransaction implements TransactionInterface
 		return $this->payment;
 	}
 
-    public function getConfirmation(): int
+    public function getConfirmation(): ?int
     {
         return $this->confirmation;
     }
 
-    public function getMaxConfirmation(): int
+    public function getMaxConfirmation(): ?int
     {
         return $this->maxConfirmation;
     }

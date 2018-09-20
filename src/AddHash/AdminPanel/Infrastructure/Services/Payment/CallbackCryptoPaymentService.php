@@ -39,7 +39,6 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
      * @throws InvalidInputDataErrorException
      * @throws InvalidInvoiceErrorException
      * @throws InvalidOrderErrorException
-     * @throws WaitingConfirmationsException
      */
     public function execute(CallbackCryptoPaymentCommandInterface $command): string
     {
@@ -98,7 +97,8 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
                 'maxConfirmation' => $inputData->maxConfirmations,
             ]);
 
-            throw new WaitingConfirmationsException('Waiting for confirmations');
+            die("waiting for confirmations");
+            //throw new WaitingConfirmationsException('Waiting for confirmations');
         }
 
         $order->setPayedState();
