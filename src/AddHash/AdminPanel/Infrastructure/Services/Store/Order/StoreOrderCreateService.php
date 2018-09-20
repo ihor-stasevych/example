@@ -54,6 +54,8 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 			$order = new StoreOrder($command->getUser());
 		}
 
+		$order->removeItems();
+
 		foreach ($command->getProducts() as $productId => $quantity) {
 			/** @var StoreProduct $product */
 			$product = $this->storeProductRepository->findById($productId);

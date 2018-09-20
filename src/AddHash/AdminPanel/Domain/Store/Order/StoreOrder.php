@@ -289,6 +289,7 @@ class StoreOrder
 	{
 		/** @var StoreOrderItem  $item */
 		foreach ($this->getItems() as $item) {
+			$item->getProduct()->unReserveMiner();
 			$this->items->removeElement($item);
 		}
 	}
