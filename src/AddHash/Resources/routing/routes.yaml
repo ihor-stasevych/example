@@ -70,7 +70,7 @@ payments.crypto.state:
 
 payments.crypto.callback:
     path: "/api/v1/payments/crypto/callback/{orderId}"
-    methods: GET
+    methods: POST
     controller: App\AddHash\AdminPanel\Application\Controller\Payments\CryptoPaymentsController::callback
 
 admin.store.category.create:
