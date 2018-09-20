@@ -60,8 +60,8 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
 
         if (null === $inputData ||
             !$inputData ||
-            empty($inputData->confirmations) ||
-            empty($inputData->maxConfirmations) ||
+            isset($inputData->confirmations) ||
+            isset($inputData->maxConfirmations) ||
             empty($inputData->invoice)
         ) {
             $this->logger->error('Callback crypto payment invalid input data order # ' . $orderId, (array) $inputData);
