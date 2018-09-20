@@ -50,28 +50,25 @@ class GetStateCryptoPaymentService implements GetStateCryptoPaymentServiceInterf
 
         $payment = $order->getPayment();
 
-        $confirmation = 0;
-        $maxConfirmation = 0;
+        $confirmation = null;
+        $maxConfirmation = null;
+
+        $data = ['success' => false];
 
         if (null !== $payment) {
             $paymentTransaction = $this->paymentTransactionRepository->findByPaymentId($payment->getId());
 
             $confirmation = $paymentTransaction->getConfirmation();
             $maxConfirmation = $paymentTransaction->getMaxConfirmation();
-        }
 
-        $this->logger->info('Get state crypto payment confirmations order# ' . $orderId, [
-            'confirmation'    => $confirmation,
-            'maxConfirmation' => $maxConfirmation,
-        ]);
 
-        $data = [
-            'success'       => true,
-            'confirmations' => $confirmation,
-        ];
+            if (null !== $confirmation && null !== $maxConfirmation && $confirmation >= $maxConfirmation) {
+                $paymentTransaction->setMaxConfirmation($maxConfirmation);
+                $this->paymentTransactionRepository->save($paymentTransaction);
 
-        if ($confirmation < $maxConfirmation || $maxConfirmation == 0) {
-            $data['success'] = false;
+                $data['success'] = true;
+                $data['confirmations'] = $confirmation;
+            }
         }
 
         $this->logger->info('Finish Get state crypto payment order# ' . $orderId, $data);

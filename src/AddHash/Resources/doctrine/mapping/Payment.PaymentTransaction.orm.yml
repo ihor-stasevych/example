@@ -21,11 +21,15 @@ App\AddHash\AdminPanel\Domain\Payment\PaymentTransaction:
 
         confirmation:
             column: confirmation
-            type: integer
+            type: string
+            length: 3
+            nullable: true
 
         maxConfirmation:
             column: maxConfirmation
-            type: integer
+            type: string
+            length: 3
+            nullable: true
 
         createdAt:
             column: createdAt

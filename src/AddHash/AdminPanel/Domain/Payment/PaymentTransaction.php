@@ -9,10 +9,6 @@ class PaymentTransaction implements TransactionInterface
 
 	const STAT_PROCESSED = 2;
 
-	const DEFAULT_CONFIRMATION = 0;
-
-	const DEFAULT_MAX_CONFIRMATION = 0;
-
 
 	private $id;
 
@@ -26,9 +22,9 @@ class PaymentTransaction implements TransactionInterface
 
 	private $amount;
 
-    private $confirmation = self::DEFAULT_CONFIRMATION;
+    private $confirmation = null;
 
-    private $maxConfirmation = self::DEFAULT_MAX_CONFIRMATION;
+    private $maxConfirmation = null;
 
 	public function __construct(PaymentInterface $payment, $externalId)
 	{
