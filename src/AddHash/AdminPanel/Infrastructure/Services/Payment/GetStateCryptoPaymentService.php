@@ -8,19 +8,24 @@ use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Payment\Exceptions\InvalidOrderErrorException;
 use App\AddHash\AdminPanel\Domain\Payment\Command\GetStateCryptoPaymentCommandInterface;
 use App\AddHash\AdminPanel\Domain\Payment\Services\GetStateCryptoPaymentServiceInterface;
+use App\AddHash\AdminPanel\Domain\Payment\Repository\PaymentTransactionRepositoryInterface;
 
 class GetStateCryptoPaymentService implements GetStateCryptoPaymentServiceInterface
 {
     private $storeOrderRepository;
 
+    private $paymentTransactionRepository;
+
     private $logger;
 
     public function __construct(
         StoreOrderRepositoryInterface $storeOrderRepository,
+        PaymentTransactionRepositoryInterface $paymentTransactionRepository,
         LoggerInterface $logger
     )
     {
         $this->storeOrderRepository = $storeOrderRepository;
+        $this->paymentTransactionRepository = $paymentTransactionRepository;
         $this->logger = $logger;
     }
 
@@ -43,8 +48,17 @@ class GetStateCryptoPaymentService implements GetStateCryptoPaymentServiceInterf
             throw new InvalidOrderErrorException('Invalid order');
         }
 
-        $confirmation = $order->getConfirmation();
-        $maxConfirmation = $order->getMaxConfirmation();
+        $payment = $order->getPayment();
+
+        $confirmation = 0;
+        $maxConfirmation = 0;
+
+        if (null !== $payment) {
+            $paymentTransaction = $this->paymentTransactionRepository->findByPaymentId($payment->getId());
+
+            $confirmation = $paymentTransaction->getConfirmation();
+            $maxConfirmation = $paymentTransaction->getMaxConfirmation();
+        }
 
         $this->logger->info('Get state crypto payment confirmations order# ' . $orderId, [
             'confirmation'    => $confirmation,

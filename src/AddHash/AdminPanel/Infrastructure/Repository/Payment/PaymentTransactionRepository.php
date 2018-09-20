@@ -35,6 +35,21 @@ class PaymentTransactionRepository extends AbstractRepository implements Payment
             ->getOneOrNullResult();
     }
 
+    /**
+     * @param int $paymentId
+     * @return mixed
+     * @throws NonUniqueResultException
+     */
+    public function findByPaymentId(int $paymentId): PaymentTransaction
+    {
+        return $this->entityRepository->createQueryBuilder('pt')
+            ->select('pt')
+            ->where('pt.payment = :paymentId')
+            ->setParameter('paymentId', $paymentId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 	/**
 	 * @param PaymentTransaction $paymentTransaction
 	 * @throws ORMException

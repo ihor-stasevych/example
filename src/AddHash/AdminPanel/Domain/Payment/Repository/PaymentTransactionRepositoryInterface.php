@@ -11,5 +11,7 @@ interface PaymentTransactionRepositoryInterface
 
     public function findByExternalId(string $externalId): ?PaymentTransaction;
 
+    public function findByPaymentId(int $paymentId): PaymentTransaction;
+
 	public function save(PaymentTransaction $paymentTransaction);
 }
