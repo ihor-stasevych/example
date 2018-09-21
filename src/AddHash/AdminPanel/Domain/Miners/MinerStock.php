@@ -2,8 +2,6 @@
 
 namespace App\AddHash\AdminPanel\Domain\Miners;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 class MinerStock
 {
     const STATE_UNAVAILABLE = 0;
@@ -15,6 +13,8 @@ class MinerStock
 	const STATE_RESERVED = 3;
 
 	const STATE_DEFAULT = self::STATE_AVAILABLE;
+
+	const DEFAULT_USER = 'root';
 
 
 	private $id;
@@ -41,7 +41,7 @@ class MinerStock
 		self::STATE_RESERVED    => 'reserved',
 	];
 
-	public function __construct($priority, $ip, $port, $user, $id = null)
+	public function __construct($priority, $ip, $port, $user = self::DEFAULT_USER, $id = null)
 	{
 	    $this->id = $id;
 		$this->state = static::STATE_DEFAULT;
