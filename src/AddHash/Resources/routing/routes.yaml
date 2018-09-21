@@ -1,3 +1,8 @@
+info.currencies:
+  path: "/api/v1/info/currencies"
+  methods: GET
+  controller: App\AddHash\AdminPanel\Application\Controller\InfoController::getCryptoCurrencies
+
 user.register:
   path: "/api/v1/user/register"
   methods: POST

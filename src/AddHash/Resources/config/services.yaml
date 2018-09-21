@@ -43,3 +43,6 @@ imports:
 
   ## PromoContact Services ##
   - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/PromoContact/Resources/config/services.yaml"}
+
+  ## Info Services
+  - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Info/Resources/config/services.yaml"}

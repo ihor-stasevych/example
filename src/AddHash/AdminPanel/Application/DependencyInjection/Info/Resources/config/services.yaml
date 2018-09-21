@@ -1,0 +1,7 @@
+services:
+    addhash.info.currencies.service:
+      class: App\AddHash\AdminPanel\Infrastructure\Info\Services\GetCryptoCurrenciesService
+      arguments: ['@addhash.cache']
+    App\AddHash\AdminPanel\Infrastructure\Info\Services\GetCryptoCurrenciesService: '@addhash.info.currencies.service'
+
+    App\AddHash\AdminPanel\Domain\Info\Services\GetCryptoCurrenciesServiceInterface: '@addhash.info.currencies.service'

@@ -31,6 +31,11 @@ security:
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
 
 
+        api_info_crypto_currencies:
+              pattern: ^/api/v1/info/currencies
+              anonymous: true
+              security: false
+
         api_user_register:
               pattern: ^/api/v1/user/register
               anonymous: true
