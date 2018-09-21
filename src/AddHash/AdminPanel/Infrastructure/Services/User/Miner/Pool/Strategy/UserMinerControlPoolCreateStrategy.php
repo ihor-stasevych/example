@@ -8,7 +8,11 @@ use App\AddHash\AdminPanel\Infrastructure\Miners\SSH2\SSH2AuthPubKey;
 use App\AddHash\AdminPanel\Infrastructure\Miners\SSH2\SSH2Connection;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Commands\MinerCommand;
+use App\AddHash\AdminPanel\Domain\Miners\Exceptions\NoEnvKeyErrorException;
+use App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2SCPFailException;
+use App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2AuthFailException;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketDefaultParser;
+use App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2ConnectionFailException;
 use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerAllowedUrlRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2AuthKeyIsNotExistsException;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\Miner\Pool\UserMinerNoValidUrlPoolException;
@@ -45,21 +49,26 @@ class UserMinerControlPoolCreateStrategy implements UserMinerControlPoolStrategy
      * @return array
      * @throws SSH2AuthKeyIsNotExistsException
      * @throws UserMinerNoValidUrlPoolException
-     * @throws \App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2AuthFailException
-     * @throws \App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2ConnectionFailException
-     * @throws \App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2SCPFailException
+     * @throws SSH2AuthFailException
+     * @throws SSH2ConnectionFailException
+     * @throws SSH2SCPFailException
+     * @throws NoEnvKeyErrorException
      */
     public function process(MinerStock $minerStock, UserMinerControlPoolCommandInterface $command): array
     {
         $data = [];
 
-        $minerStockId = $minerStock->getId();
-
         $newPools = $command->getPools();
 
         $this->checkAllowedUrl($newPools);
 
-        $pathLocalConfigDir = getenv('PATH_CONFIG_POOLS') . $minerStockId . '/';
+        $dirConfigPools = getenv('DIR_CONFIG_POOLS');
+
+        if (false === $dirConfigPools) {
+            throw new NoEnvKeyErrorException('No variable DIR_CONFIG_POOLS in .env');
+        }
+
+        $pathLocalConfigDir = $dirConfigPools . $minerStock->getId() . '/';
         $pathLocalConfigFile = $pathLocalConfigDir . static::DEFAULT_CONFIG_NAME;
 
         $oldPools = $this->getOldPools($pathLocalConfigFile);
@@ -70,9 +79,16 @@ class UserMinerControlPoolCreateStrategy implements UserMinerControlPoolStrategy
             return $data;
         }
 
-        $pathKeys = getenv('PATH_SSH_KEYS') . $minerStockId . '/';
-        $pathPublicKey = $pathKeys . getenv('DEFAULT_NAME_RSA_PUBLIC_KEY');
-        $pathPrivateKey = $pathKeys . getenv('DEFAULT_NAME_RSA_PRIVATE_KEY');
+        $pathPublicKey = getenv('PATH_RSA_PUBLIC_KEY');
+        $pathPrivateKey = getenv('PATH_RSA_PRIVATE_KEY');
+
+        if (false === $pathPublicKey) {
+            throw new NoEnvKeyErrorException('No variable PATH_RSA_PUBLIC_KEY in .env');
+        }
+
+        if (false === $pathPrivateKey) {
+            throw new NoEnvKeyErrorException('No variable PATH_RSA_PRIVATE_KEY in .env');
+        }
 
         if (!file_exists($pathPublicKey) || !file_exists($pathPrivateKey)) {
             throw new SSH2AuthKeyIsNotExistsException('Auth key is not exists');
@@ -194,7 +210,7 @@ class UserMinerControlPoolCreateStrategy implements UserMinerControlPoolStrategy
         return $newFormatPools;
     }
 
-    private function getUniqueUrls(array $pools)
+    private function getUniqueUrls(array $pools): array
     {
         $urls = [];
 
