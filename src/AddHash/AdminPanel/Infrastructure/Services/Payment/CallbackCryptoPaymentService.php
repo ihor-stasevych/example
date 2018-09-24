@@ -44,8 +44,6 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
     {
         $orderId = $command->getOrderId();
 
-        $this->logger->info('Start Callback crypto payment order # ' . $orderId);
-
         /** @var StoreOrder $order */
         $order = $this->storeOrderRepository->findNewById($orderId);
 
@@ -104,8 +102,6 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
         $order->setPayedState();
         $order->setPayment($payment);
         $this->storeOrderRepository->save($order);
-
-        $this->logger->info('Finish Callback crypto payment order # ' . $orderId, (array) $inputData);
 
         return $inputData->invoice;
     }
