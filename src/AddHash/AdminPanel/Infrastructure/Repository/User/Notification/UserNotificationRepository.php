@@ -34,6 +34,7 @@ class UserNotificationRepository extends AbstractRepository implements UserNotif
 			->andWhere('un.user = :userId')
 			->setMaxResults($limit)
 			->setParameter('status', UserNotification::STATUS_NEW)
+			->orderBy('un.created', 'desc')
 			->setParameter('userId', $user->getId())
 			->getQuery()
 			->getResult();
