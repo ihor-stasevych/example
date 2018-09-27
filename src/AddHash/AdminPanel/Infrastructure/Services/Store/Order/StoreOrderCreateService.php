@@ -2,6 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
+use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
@@ -50,11 +51,12 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 		/** @var StoreOrder $order */
 		$order = $this->storeOrderRepository->findNewByUserId($command->getUser()->getId());
 
+		$flagExistOrder = true;
+
 		if (empty($order)) {
 			$order = new StoreOrder($command->getUser());
+            $flagExistOrder = false;
 		}
-
-		$order->removeItems();
 
 		foreach ($command->getProducts() as $productId => $quantity) {
 			/** @var StoreProduct $product */
@@ -64,9 +66,29 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 				throw new StoreOrderException('No available product: ' . $productId);
 			}
 
-			if (!$item = $order->addProductItem($product, $quantity)) {
-				throw new StoreOrderException('Cant add ' . $product->getTitle() . ' to cart. No available miners.');
-			}
+			if (true === $flagExistOrder) {
+                $key = $order->indexOfProduct($product);
+
+                if (false !== $key) {
+                    if ($product->getAvailableMinersQuantity() < $quantity) {
+                        throw new StoreOrderException('Cant add ' . $product->getTitle() . ' to cart. No available miners.');
+                    }
+
+                    /** @var StoreOrderItem $item */
+                    $item = $order->getItems()->get($key);
+
+                    $item->setQuantity($item->getQuantity() + $quantity);
+                    $item->calculateTotalPrice();
+                } else {
+                    if (!$item = $order->addProductItem($product, $quantity)) {
+                        throw new StoreOrderException('Cant add ' . $product->getTitle() . ' to cart. No available miners.');
+                    }
+                }
+            } else {
+                if (!$item = $order->addProductItem($product, $quantity)) {
+                    throw new StoreOrderException('Cant add ' . $product->getTitle() . ' to cart. No available miners.');
+                }
+            }
 
             for ($i = 0; $i < $quantity; $i++) {
                 $miner = $product->reserveMiner();
@@ -77,9 +99,14 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 
                 $this->minerStockRepository->save($miner);
             }
-
-			#$this->storeOrderItemRepository->save($item);
 		}
+
+        if (true === $flagExistOrder) {
+            foreach ($order->getItems() as $item) {
+                $this->storeOrderItemRepository->save($item);
+            }
+        }
+
 
 		$order->calculateItems();
 		$this->storeOrderRepository->save($order);
