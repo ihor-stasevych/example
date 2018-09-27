@@ -92,10 +92,7 @@ class StoreOrderController extends BaseServiceController
 	 */
 	public function create(Request $request)
 	{
-		$command = new StoreOrderCreateCommand(
-			$request->get('products'),
-			$this->tokenStorage->getToken()->getUser()
-		);
+		$command = new StoreOrderCreateCommand($request->get('products'));
 
 		if (!$this->commandIsValid($command)) {
 			return $this->json([

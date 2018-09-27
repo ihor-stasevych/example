@@ -17,12 +17,9 @@ class StoreOrderCreateCommand implements StoreOrderCreateCommandInterface
 	 */
 	private $products;
 
-	private $user;
-
-	public function __construct($products = [], User $user)
+	public function __construct($products = [])
 	{
 		$this->products = $products;
-		$this->user = $user;
 	}
 
 	public function getProducts()
@@ -33,10 +30,5 @@ class StoreOrderCreateCommand implements StoreOrderCreateCommandInterface
 	public function getItemsPriceTotal()
 	{
 		// TODO: Implement getItemsPriceTotal() method.
-	}
-
-	public function getUser() : User
-	{
-		return $this->user;
 	}
 }
