@@ -198,6 +198,11 @@ user.miner.control.rig.delete:
   methods: DELETE
   controller: App\AddHash\AdminPanel\Application\Controller\User\Miner\Rig\UserMinerControlRigController::delete
 
+user.notifications:
+  path: "/api/v1/user/notifications"
+  methods: GET
+  controller: App\AddHash\AdminPanel\Application\Controller\User\Notification\UserNotificationController::getNewNotifications
+
 user.miner.test.query:
   path: "/api/v1/user/miner/test/query"
   methods: GET
