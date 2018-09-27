@@ -29,6 +29,6 @@ class StoreOrderGetService implements StoreOrderGetServiceInterface
 	public function execute(User $user)
 	{
 		$this->logger->info('Try get new order from user: ' . $user->getId());
-		$this->storeOrderRepository->findNewByUserId($user->getId());
+		return $this->storeOrderRepository->findNewByUserId($user->getId());
 	}
 }

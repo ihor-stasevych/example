@@ -31,8 +31,6 @@ class SchedulerTaskWorkerService implements SchedulerTaskWorkerServiceInterface
      */
     public function execute(Application $application, OutputInterface $output)
     {
-        $this->logger->info('Scheduler start');
-
         $tasks = $this->repository->findAllActive();
         $countTasks = count($tasks);
 
@@ -54,8 +52,6 @@ class SchedulerTaskWorkerService implements SchedulerTaskWorkerServiceInterface
             $tasks[$i]->setStatus(SchedulerTask::STATUS_IN_PROGRESS);
             $this->repository->update($tasks[$i]);
 
-            $this->logger->info('Change status scheduler command in progress',(array) $tasks[$i]);
-
             $statusTask = $application->find($consoleCommand)->run(
                 new ArrayInput($tasks[$i]->getArgumentsArray()),
                 $output
@@ -64,7 +60,6 @@ class SchedulerTaskWorkerService implements SchedulerTaskWorkerServiceInterface
             if ($statusTask == 1) {
                 $tasks[$i]->setStatus(SchedulerTask::STATUS_DONE);
                 $tasks[$i]->setLastExecution(new \DateTime());
-                $this->logger->info('Change status scheduler command done and change execution date',(array) $tasks[$i]);
             } else {
                 $tasks[$i]->setStatus(SchedulerTask::STATUS_FAILED);
                 $this->logger->error('Change status scheduler command failed',(array) $tasks[$i]);
@@ -72,8 +67,6 @@ class SchedulerTaskWorkerService implements SchedulerTaskWorkerServiceInterface
 
             $this->repository->update($tasks[$i]);
         }
-
-        $this->logger->info('Scheduler end');
     }
 
     private function isTimeCronExpression(SchedulerTask $task): bool

@@ -38,8 +38,6 @@ class GetStateCryptoPaymentService implements GetStateCryptoPaymentServiceInterf
     {
         $orderId = $command->getOrderId();
 
-        $this->logger->info('Start Get state crypto payment order # ' . $orderId);
-
         /** @var StoreOrder $order */
         $order = $this->storeOrderRepository->findById($orderId);
 
@@ -69,8 +67,6 @@ class GetStateCryptoPaymentService implements GetStateCryptoPaymentServiceInterf
                 $data['confirmations'] = $confirmation;
             }
         }
-
-        $this->logger->info('Finish Get state crypto payment order# ' . $orderId, $data);
 
         return $data;
     }
