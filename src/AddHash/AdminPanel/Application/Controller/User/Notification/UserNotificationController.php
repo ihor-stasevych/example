@@ -50,7 +50,7 @@ class UserNotificationController extends BaseServiceController
 
 	/**
 	 *
-	 * Mark as new notifications
+	 * Mark as read notifications
 	 *
 	 * @SWG\Parameter(
 	 *     name="notifications",
