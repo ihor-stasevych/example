@@ -19,7 +19,7 @@ services:
   addhash.store.order.create.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCreateService
     public: true
-    arguments: ['@addhash.store.product.repository','@addhash.store.order.repository', '@security.token_storage', '@addhash.miner.stock.repository', '@addhash.']
+    arguments: ['@addhash.store.product.repository','@addhash.store.order.repository', '@security.token_storage', '@addhash.miner.stock.repository', '@addhash.user.notification.send.service']
   App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCreateService: '@addhash.store.order.create.service'
 
   App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface: '@addhash.store.order.create.service'
