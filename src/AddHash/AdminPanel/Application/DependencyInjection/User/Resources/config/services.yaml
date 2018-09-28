@@ -172,6 +172,14 @@ services:
 
   App\AddHash\AdminPanel\Domain\User\Services\Notification\GetUserNotificationServiceInterface: '@addhash.user.notification.get.service'
 
+  addhash.user.notification.send.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\SendUserNotificationService
+    public: true
+    arguments: ['@security.token_storage', '@addhash.user.notification.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\SendUserNotificationService: '@addhash.user.notification.send.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\Notification\SendUserNotificationServiceInterface: '@addhash.user.notification.send.service'
+
   addhash.user.notification.markread.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\MarkAsReadNotificationService
     public: true
