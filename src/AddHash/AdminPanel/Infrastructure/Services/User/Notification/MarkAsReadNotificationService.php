@@ -6,6 +6,7 @@ use App\AddHash\AdminPanel\Domain\User\Command\Notification\MarkAsReadNotificati
 use App\AddHash\AdminPanel\Domain\User\Notification\UserNotification;
 use App\AddHash\AdminPanel\Domain\User\Notification\UserNotificationRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Notification\MarkAsReadNotificationServiceInterface;
+use App\AddHash\AdminPanel\Domain\User\User;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class MarkAsReadNotificationService implements MarkAsReadNotificationServiceInterface
@@ -20,10 +21,12 @@ class MarkAsReadNotificationService implements MarkAsReadNotificationServiceInte
 	 * @param UserNotificationRepositoryInterface $notificationRepository
 	 */
 	public function __construct(
-		UserNotificationRepositoryInterface $notificationRepository
+		UserNotificationRepositoryInterface $notificationRepository,
+		TokenStorageInterface $tokenStorage
 	)
 	{
 		$this->notificationRepository = $notificationRepository;
+		$this->tokenStorage = $tokenStorage;
 	}
 
 	/**
@@ -32,7 +35,9 @@ class MarkAsReadNotificationService implements MarkAsReadNotificationServiceInte
 	 */
 	public function execute(MarkAsReadNotificationCommandInterface $command)
 	{
-		$notifications = $this->notificationRepository->findById($command->getNotifications());
+		/** @var User $user */
+		$user = $this->tokenStorage->getToken()->getUser();
+		$notifications = $this->notificationRepository->findById($user, $command->getNotifications());
 
 		if (empty($notifications)) {
 			return [];

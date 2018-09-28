@@ -183,7 +183,7 @@ services:
   addhash.user.notification.markread.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\MarkAsReadNotificationService
     public: true
-    arguments: ['@addhash.user.notification.repository']
+    arguments: ['@addhash.user.notification.repository', '@security.token_storage']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\MarkAsReadNotificationService: '@addhash.user.notification.markread.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Notification\MarkAsReadNotificationServiceInterface: '@addhash.user.notification.markread.service'

@@ -34,9 +34,9 @@ class UserNotificationRepository extends AbstractRepository implements UserNotif
 			->getResult();
 	}
 
-	public function findById($id)
+	public function findById(User $user, $id)
 	{
-		return $this->entityRepository->findBy(['id' => $id]);
+		return $this->entityRepository->findBy(['id' => $id, 'user' => $user->getId()]);
 	}
 
 	protected function getEntityName()

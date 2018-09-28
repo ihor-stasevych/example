@@ -11,5 +11,5 @@ interface UserNotificationRepositoryInterface
 
 	public function load(User $user, ?int $limit);
 
-	public function findById($id);
+	public function findById(User $user, $id);
 }
