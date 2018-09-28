@@ -29,14 +29,15 @@ class SendUserNotificationService implements SendUserNotificationServiceInterfac
 	}
 
 	/**
+	 * @param string $title
 	 * @param string $message
 	 * @return bool
 	 */
-	public function execute(string $message)
+	public function execute(string $title, string $message)
 	{
 		/** @var User $user */
 		$user = $this->tokenStorage->getToken()->getUser();
-		$notification = new UserNotification($user, $message);
+		$notification = new UserNotification($user, $title, $message);
 		$this->notificationRepository->save($notification);
 
 		return true;

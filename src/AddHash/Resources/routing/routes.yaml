@@ -203,6 +203,11 @@ user.notifications:
   methods: GET
   controller: App\AddHash\AdminPanel\Application\Controller\User\Notification\UserNotificationController::getNewNotifications
 
+user.notifications.markAsRead:
+  path: "/api/v1/user/notifications"
+  methods: POST
+  controller: App\AddHash\AdminPanel\Application\Controller\User\Notification\UserNotificationController::markAsRead
+
 user.miner.test.query:
   path: "/api/v1/user/miner/test/query"
   methods: GET

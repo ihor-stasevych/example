@@ -9,5 +9,7 @@ interface UserNotificationRepositoryInterface
 {
 	public function save(UserNotification $notification);
 
-	public function getNew(User $user, int $limit);
+	public function load(User $user, ?int $limit);
+
+	public function findById($id);
 }

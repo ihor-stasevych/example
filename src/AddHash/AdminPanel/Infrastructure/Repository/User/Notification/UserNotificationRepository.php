@@ -21,23 +21,22 @@ class UserNotificationRepository extends AbstractRepository implements UserNotif
 		$this->entityManager->flush();
 	}
 
-	/**
-	 * @param User $user
-	 * @param int $limit
-	 * @return mixed
-	 */
-	public function getNew(User $user, ?int $limit = 25)
+
+	public function load(User $user, ?int $limit = 100)
 	{
 		return $this->entityRepository->createQueryBuilder('un')
 			->select('un')
-			->where('un.status = :status')
-			->andWhere('un.user = :userId')
+			->where('un.user = :userId')
 			->setMaxResults($limit)
-			->setParameter('status', UserNotification::STATUS_NEW)
 			->orderBy('un.created', 'desc')
 			->setParameter('userId', $user->getId())
 			->getQuery()
 			->getResult();
+	}
+
+	public function findById($id)
+	{
+		return $this->entityRepository->findBy(['id' => $id]);
 	}
 
 	protected function getEntityName()

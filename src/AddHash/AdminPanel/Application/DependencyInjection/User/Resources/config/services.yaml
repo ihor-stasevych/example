@@ -171,3 +171,11 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\GetUserNotificationService: '@addhash.user.notification.get.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Notification\GetUserNotificationServiceInterface: '@addhash.user.notification.get.service'
+
+  addhash.user.notification.markread.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\MarkAsReadNotificationService
+    public: true
+    arguments: ['@addhash.user.notification.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\MarkAsReadNotificationService: '@addhash.user.notification.markread.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\Notification\MarkAsReadNotificationServiceInterface: '@addhash.user.notification.markread.service'

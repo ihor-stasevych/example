@@ -3,7 +3,6 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Notification;
 
 use App\AddHash\AdminPanel\Domain\User\Command\Notification\GetUserNotificationCommandInterface;
-use App\AddHash\AdminPanel\Domain\User\Notification\UserNotification;
 use App\AddHash\AdminPanel\Domain\User\Notification\UserNotificationRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Notification\GetUserNotificationServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\User;
@@ -37,6 +36,6 @@ class GetUserNotificationService implements GetUserNotificationServiceInterface
 	{
 		/** @var User $user */
 		$user = $this->tokenStorage->getToken()->getUser();
-		return $this->notificationRepository->getNew($user, $command->getLimit());
+		return $this->notificationRepository->load($user, $command->getLimit());
 	}
 }

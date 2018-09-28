@@ -6,6 +6,9 @@ App\AddHash\AdminPanel\Domain\User\Notification\UserNotification:
           type: integer
           generator: { strategy: AUTO }
     fields:
+      title:
+          type: string
+          length: 255
       message:
           type: string
       status:
