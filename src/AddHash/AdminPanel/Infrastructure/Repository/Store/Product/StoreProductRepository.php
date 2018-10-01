@@ -4,6 +4,7 @@ namespace App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product;
 
 use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\HttpFoundation\Request;
+use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
 use App\AddHash\AdminPanel\Domain\Store\Product\ListParam\Sort;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
@@ -49,13 +50,25 @@ class StoreProductRepository extends AbstractRepository implements StoreProductR
      */
 	public function listAllProducts(Sort $sort)
 	{
+	    $aliasSort = ($sort->getSort() != 'avail') ? 'p.' : '';
+
 		$res = $this->entityRepository
-			->createQueryBuilder('t')
-			->select('t', 'm')
-			->join('t.miner', 'm')
-			->where('t.state = :state')
+			->createQueryBuilder('p')
+			->select('p', 'm')
+            ->addSelect('(
+                SELECT
+                    COUNT(ms.id)
+                FROM
+                    ' . MinerStock::class . ' AS ms
+                WHERE
+                    ms.miner = m.id
+                AND
+                    ms.state = ' . MinerStock::STATE_AVAILABLE . '
+            ) AS avail')
+			->join('p.miner', 'm')
+			->where('p.state = :state')
 			->setParameter('state', StoreProduct::STATE_AVAILABLE)
-            ->orderBy('t.' . $sort->getSort(), $sort->getOrder())
+            ->orderBy($aliasSort . $sort->getSort(), $sort->getOrder())
 		    ->getQuery()
 			->getResult();
 

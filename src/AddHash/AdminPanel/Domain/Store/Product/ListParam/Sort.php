@@ -8,7 +8,7 @@ use App\AddHash\System\GlobalContext\Queries\Interfaces\SortInterface;
 class Sort extends SortList implements SortInterface
 {
     const SORTED_FIELDS = [
-        'createdAt', 'price',
+        'createdAt', 'price', 'avail'
     ];
 
     protected function getDefaultOrder()
