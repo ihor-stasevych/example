@@ -19,6 +19,8 @@ use App\AddHash\AdminPanel\Domain\User\Exceptions\Miner\Pool\UserMinerNoValidUrl
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCreateCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\Strategy\UserMinerControlPoolStrategyInterface;
+use App\AddHash\AdminPanel\Infrastructure\Repository\User\Miner\UserMinerRepository;
+use App\AddHash\System\Lib\Cache\CacheInterface;
 
 class UserMinerControlPoolCreateStrategy implements UserMinerControlPoolStrategyInterface
 {
@@ -32,10 +34,14 @@ class UserMinerControlPoolCreateStrategy implements UserMinerControlPoolStrategy
 
 
     private $allowedUrlRepository;
+    private $cache;
 
-    public function __construct(MinerAllowedUrlRepositoryInterface $allowedUrlRepository)
+    public function __construct(
+    	MinerAllowedUrlRepositoryInterface $allowedUrlRepository,
+	    CacheInterface $cache)
     {
         $this->allowedUrlRepository = $allowedUrlRepository;
+        $this->cache = $cache;
     }
 
     public function canProcess(string $strategyAlias)
@@ -104,6 +110,8 @@ class UserMinerControlPoolCreateStrategy implements UserMinerControlPoolStrategy
         $this->changeLocalConfig($pathLocalConfigFile, $newPools);
 
         $scp->send($pathLocalConfigFile, static::PATH_CONFIG_REMOTE_SERVER);
+
+        $this->cache->unsetKey(UserMinerRepository::MINER_SUMMARY_KEY);
 
         $this->minerRestart($minerStock);
 
