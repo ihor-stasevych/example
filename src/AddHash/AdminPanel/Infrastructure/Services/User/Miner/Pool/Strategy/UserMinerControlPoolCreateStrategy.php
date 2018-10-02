@@ -111,7 +111,7 @@ class UserMinerControlPoolCreateStrategy implements UserMinerControlPoolStrategy
 
         $scp->send($pathLocalConfigFile, static::PATH_CONFIG_REMOTE_SERVER);
 
-        $this->cache->unsetKey(UserMinerRepository::MINER_SUMMARY_KEY);
+        $this->cache->clear();
 
         $this->minerRestart($minerStock);
 
