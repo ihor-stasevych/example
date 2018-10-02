@@ -64,7 +64,7 @@ class StoreProductRepository extends AbstractRepository implements StoreProductR
                     ms.miner = m.id
                 AND
                     ms.state = ' . MinerStock::STATE_AVAILABLE . '
-            ) AS avail')
+            ) AS HIDDEN avail')
 			->join('p.miner', 'm')
 			->where('p.state = :state')
 			->setParameter('state', StoreProduct::STATE_AVAILABLE)
