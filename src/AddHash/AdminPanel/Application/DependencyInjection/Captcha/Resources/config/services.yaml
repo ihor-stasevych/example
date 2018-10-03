@@ -1,0 +1,24 @@
+services:
+  addhash.re.captcha.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Captcha\ReCaptchaService
+    public: true
+    arguments: ['@addhash.show.captcha.service']
+  App\AddHash\AdminPanel\Infrastructure\Services\Captcha\ReCaptchaService: '@addhash.re.captcha.service'
+
+  App\AddHash\AdminPanel\Domain\Captcha\Services\ReCaptchaServiceInterface: '@addhash.re.captcha.service'
+
+  addhash.show.captcha.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Captcha\ShowCaptchaService
+    public: true
+    arguments: ['@addhash.cache']
+  App\AddHash\AdminPanel\Infrastructure\Services\Captcha\ShowCaptchaService: '@addhash.show.captcha.service'
+
+  App\AddHash\AdminPanel\Domain\Captcha\Services\ShowCaptchaServiceInterface: '@addhash.show.captcha.service'
+
+  addhash.delete.cache.captcha.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\Captcha\DeleteCacheService
+    public: true
+    arguments: ['@addhash.cache']
+  App\AddHash\AdminPanel\Infrastructure\Services\Captcha\DeleteCacheService: '@addhash.delete.cache.captcha.service'
+
+  App\AddHash\AdminPanel\Domain\Captcha\Services\DeleteCacheServiceInterface: '@addhash.delete.cache.captcha.service'
