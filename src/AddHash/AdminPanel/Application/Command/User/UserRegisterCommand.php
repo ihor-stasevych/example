@@ -36,9 +36,7 @@ class UserRegisterCommand implements UserRegisterCommandInterface
 
 	private $roles;
 
-    private $ip;
-
-    private $userAgent;
+    private $responseCaptcha;
 
 	public function __construct(
 		$userName,
@@ -46,21 +44,15 @@ class UserRegisterCommand implements UserRegisterCommandInterface
 		$backupEmail,
 		$password,
 		$roles,
-        $ip,
-        $userAgent
+        $responseCaptcha
 	)
 	{
 		$this->userName = $userName;
 		$this->email = $email;
 		$this->backupEmail = $backupEmail;
 		$this->password = $password;
-		#$this->confirmPassword = $confirmPassword;
-		#$this->firstName = $firstName;
-		#$this->lastName = $lastName;
-		#$this->phone = $phone;
 		$this->roles = $roles;
-		$this->ip = $ip;
-		$this->userAgent = $userAgent;
+		$this->responseCaptcha = $responseCaptcha;
 	}
 
 	public function comparePasswords(): bool
@@ -108,13 +100,8 @@ class UserRegisterCommand implements UserRegisterCommandInterface
 		return new Phone($this->phone);
 	}
 
-	public function getIp(): string
+    public function getResponseCaptcha(): ?string
     {
-        return $this->ip;
-    }
-
-    public function getUserAgent(): string
-    {
-        return $this->userAgent;
+        return $this->responseCaptcha;
     }
 }

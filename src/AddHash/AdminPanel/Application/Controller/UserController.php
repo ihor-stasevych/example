@@ -6,31 +6,17 @@ use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use App\AddHash\AdminPanel\Application\Command\Captcha\ReCaptchaCommand;
 use App\AddHash\AdminPanel\Application\Command\User\UserRegisterCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface;
-use App\AddHash\AdminPanel\Domain\Captcha\Services\ReCaptchaServiceInterface;
 
 class UserController extends BaseServiceController
 {
 	private $userRegisterService;
 
-	private $container;
-
-	private $captchaService;
-
-	public function __construct(
-		UserRegisterServiceInterface $userRegisterService,
-		ContainerInterface $container,
-        ReCaptchaServiceInterface $captchaService
-	)
+	public function __construct(UserRegisterServiceInterface $userRegisterService)
 	{
-		$this->container = $container;
 		$this->userRegisterService = $userRegisterService;
-		$this->captchaService = $captchaService;
 	}
 
 	/**
@@ -101,44 +87,29 @@ class UserController extends BaseServiceController
 	 */
 	public function register(Request $request)
 	{
-        $reCaptchaCommand = new ReCaptchaCommand(
-            $request->get('g-recaptcha-response'),
-            $request->getClientIp(),
-            $request->headers->get('User-Agent')
-        );
-
-		$userRegisterCommand = new UserRegisterCommand(
+		$command = new UserRegisterCommand(
 			$request->get('email'),
 			$request->get('email'),
 			$request->get('email'),
 			$request->get('password'),
 			$request->get('roles', ['ROLE_USER']),
-            $request->getClientIp(),
-            $request->headers->get('User-Agent')
+            $request->get('g-recaptcha-response')
 		);
 
-		if (false === $this->commandIsValid($userRegisterCommand)) {
+		if (false === $this->commandIsValid($command)) {
 			return $this->json([
 				'errors' => $this->getLastValidationErrors()
 			], Response::HTTP_BAD_REQUEST);
 		}
 
 		try {
-            $this->captchaService->execute($reCaptchaCommand);
-			$user = $this->userRegisterService->execute($userRegisterCommand);
+			$token = $this->userRegisterService->execute($command);
 		} catch (\Exception $e) {
 			return $this->json([
 			    'message' => $e->getMessage()
             ], Response::HTTP_BAD_REQUEST);
 		}
 
-		return $this->json($this->getHashByUser($user));
-	}
-
-	protected function getHashByUser(UserInterface $user)
-	{
-		$jwtManager = $this->container->get('lexik_jwt_authentication.jwt_manager');
-
-		return ['token' => $jwtManager->create($user)];
+		return $this->json($token);
 	}
 }

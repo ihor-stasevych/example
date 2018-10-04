@@ -23,7 +23,5 @@ interface UserRegisterCommandInterface
 
 	public function getRoles(): array;
 
-	public function getIp(): string;
-
-	public function getUserAgent(): string;
+    public function getResponseCaptcha(): ?string;
 }
