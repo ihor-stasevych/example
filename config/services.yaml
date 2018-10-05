@@ -72,6 +72,12 @@ services:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
 
+    acme_api.event.authentication_success_listener:
+        class: App\AddHash\Authentication\Infrastructure\Events\Jwt\AuthenticationSuccessListener
+        arguments: ['@request_stack', '@addhash.captcha.cache']
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
+
     ##Authentification
     addhash.user.repository:
       class: App\AddHash\AdminPanel\Infrastructure\Repository\User\UserRepository
@@ -83,13 +89,13 @@ services:
     ##User Authentication (ADMIN PANEL CONTEXT TEMPORARY)
     addhash.user_authentificator:
       class: App\AddHash\AdminPanel\Infrastructure\Auth\UserAuthenticator
-      arguments: ['@addhash.user.repository', '@lexik_jwt_authentication.encoder.lcobucci']
+      arguments: ['@addhash.user.repository', '@lexik_jwt_authentication.encoder.lcobucci', '@addhash.re.captcha.service', '@addhash.captcha.cache']
     App\AddHash\AdminPanel\Infrastructure\Auth\UserAuthenticator: '@addhash.user_authentificator'
 
     ##User Provider2
     addhash.user_provider:
       class: App\AddHash\AdminPanel\Infrastructure\Auth\UserAuthProvider
-      arguments: ['@addhash.user.repository']
+      arguments: ['@addhash.user.repository', '@request_stack', '@addhash.re.captcha.service']
     App\AddHash\AdminPanel\Infrastructure\Auth\UserAuthProvider: '@addhash.user_provider'
 
 imports:

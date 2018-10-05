@@ -9,11 +9,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\AddHash\AdminPanel\Domain\User\UserRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Captcha\CaptchaCacheInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use App\AddHash\AdminPanel\Domain\Captcha\ReCaptcha\ReCaptchaInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\UserRegisterCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterEmailExistException;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterUserNameExistException;
+use App\AddHash\AdminPanel\Domain\Captcha\Services\ReCaptcha\ReCaptchaServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterInvalidVerificationCaptchaException;
 
 class UserRegisterService implements UserRegisterServiceInterface
@@ -24,7 +24,7 @@ class UserRegisterService implements UserRegisterServiceInterface
 
     private $captchaCache;
 
-    private $reCaptcha;
+    private $reCaptchaService;
 
     private $container;
 
@@ -34,7 +34,7 @@ class UserRegisterService implements UserRegisterServiceInterface
 		UserRepositoryInterface $userRepository,
 		EncoderFactoryInterface $encoderFactory,
         CaptchaCacheInterface $captchaCache,
-        ReCaptchaInterface $reCaptcha,
+        ReCaptchaServiceInterface $reCaptchaService,
         ContainerInterface $container,
         RequestStack $requestStack
 	)
@@ -42,7 +42,7 @@ class UserRegisterService implements UserRegisterServiceInterface
 		$this->userRepository = $userRepository;
 		$this->encoderFactory = $encoderFactory;
         $this->captchaCache = $captchaCache;
-        $this->reCaptcha = $reCaptcha;
+        $this->reCaptchaService = $reCaptchaService;
         $this->container = $container;
         $this->requestStack = $requestStack;
 	}
@@ -56,16 +56,10 @@ class UserRegisterService implements UserRegisterServiceInterface
      */
 	public function execute(UserRegisterCommandInterface $command): array
 	{
-        $request = $this->requestStack->getCurrentRequest();
-	    $ip = $request->getClientIp();
-	    $userAgent = $request->headers->get('User-Agent');
+        $isVerify = $this->reCaptchaService->execute($command->getResponseCaptcha());
 
-        if (true === $this->captchaCache->isShow($ip, $userAgent)) {
-            $isVerify = $this->reCaptcha->isVerify($command->getResponseCaptcha());
-
-            if (false === $isVerify) {
-                throw new UserRegisterInvalidVerificationCaptchaException('Invalid verification captcha ');
-            }
+        if (false === $isVerify) {
+            throw new UserRegisterInvalidVerificationCaptchaException('Invalid verification captcha');
         }
 
 		$email = new Email($command->getEmail());
@@ -97,6 +91,10 @@ class UserRegisterService implements UserRegisterServiceInterface
         $user->setPassword($encodedPassword);
 
 		$this->userRepository->create($user);
+
+        $request = $this->requestStack->getCurrentRequest();
+        $ip = $request->getClientIp();
+        $userAgent = $request->headers->get('User-Agent');
 
         $this->captchaCache->clear($ip, $userAgent);
 
