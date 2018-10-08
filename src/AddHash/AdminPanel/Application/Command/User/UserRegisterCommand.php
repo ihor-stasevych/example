@@ -2,16 +2,13 @@
 
 namespace App\AddHash\AdminPanel\Application\Command\User;
 
-
-use App\AddHash\AdminPanel\Domain\User\Command\UserRegisterCommandInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
 use App\AddHash\System\GlobalContext\ValueObject\Phone;
-
-use Symfony\Component\Validator\Constraints as Assert;
+use App\AddHash\AdminPanel\Domain\User\Command\UserRegisterCommandInterface;
 
 class UserRegisterCommand implements UserRegisterCommandInterface
 {
-
 	private $userName;
 
 	/**
@@ -29,48 +26,36 @@ class UserRegisterCommand implements UserRegisterCommandInterface
 	 */
 	private $password;
 
-
 	private $confirmPassword;
-
 
 	private $firstName;
 
-
 	private $lastName;
-
 
 	private $phone;
 
-	/**
-	 * @var array
-	 */
 	private $roles;
 
-
+    private $responseCaptcha;
 
 	public function __construct(
-		$userName = '',
-		$email = '',
-		$backupEmail = '',
-		$password = '',
-		$roles = []
+		$userName,
+		$email,
+		$backupEmail,
+		$password,
+		$roles,
+        $responseCaptcha
 	)
 	{
 		$this->userName = $userName;
 		$this->email = $email;
 		$this->backupEmail = $backupEmail;
 		$this->password = $password;
-		#$this->confirmPassword = $confirmPassword;
-		#$this->firstName = $firstName;
-		#$this->lastName = $lastName;
-		#$this->phone = $phone;
 		$this->roles = $roles;
+		$this->responseCaptcha = $responseCaptcha;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function comparePasswords()
+	public function comparePasswords(): bool
 	{
 		return $this->password == $this->confirmPassword;
 	}
@@ -112,6 +97,11 @@ class UserRegisterCommand implements UserRegisterCommandInterface
 
 	public function getPhone(): Phone
 	{
-		return  new Phone($this->phone);
+		return new Phone($this->phone);
 	}
+
+    public function getResponseCaptcha(): ?string
+    {
+        return $this->responseCaptcha;
+    }
 }

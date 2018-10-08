@@ -2,30 +2,20 @@
 
 namespace App\AddHash\AdminPanel\Application\Controller;
 
-use App\AddHash\AdminPanel\Domain\User\User;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\AddHash\AdminPanel\Application\Command\User\UserRegisterCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterEmailExistException;
-use App\AddHash\AdminPanel\Domain\User\Exceptions\UserRegisterUserNameExistException;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserController extends BaseServiceController
 {
 	private $userRegisterService;
-	private $container;
 
-	public function __construct(
-		UserRegisterServiceInterface $userRegisterService,
-		ContainerInterface $container
-	)
+	public function __construct(UserRegisterServiceInterface $userRegisterService)
 	{
-		$this->container = $container;
 		$this->userRegisterService = $userRegisterService;
 	}
 
@@ -97,32 +87,29 @@ class UserController extends BaseServiceController
 	 */
 	public function register(Request $request)
 	{
-		$userRegisterCommand = new UserRegisterCommand(
+		$command = new UserRegisterCommand(
 			$request->get('email'),
 			$request->get('email'),
 			$request->get('email'),
 			$request->get('password'),
-			$request->get('roles', ['ROLE_USER'])
+			$request->get('roles', ['ROLE_USER']),
+            $request->get('g-recaptcha-response')
 		);
 
-		if (!$this->commandIsValid($userRegisterCommand)) {
+		if (false === $this->commandIsValid($command)) {
 			return $this->json([
 				'errors' => $this->getLastValidationErrors()
 			], Response::HTTP_BAD_REQUEST);
 		}
 
 		try {
-			$user = $this->userRegisterService->execute($userRegisterCommand);
-		} catch (UserRegisterEmailExistException | UserRegisterUserNameExistException $e) {
-			return $this->json(['message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+			$token = $this->userRegisterService->execute($command);
+		} catch (\Exception $e) {
+			return $this->json([
+			    'message' => $e->getMessage()
+            ], Response::HTTP_BAD_REQUEST);
 		}
 
-		return $this->json($this->getHashByUser($user));
-	}
-
-	protected function getHashByUser(UserInterface $user)
-	{
-		$jwtManager = $this->container->get('lexik_jwt_authentication.jwt_manager');
-		return ['token' => $jwtManager->create($user)];
+		return $this->json($token);
 	}
 }

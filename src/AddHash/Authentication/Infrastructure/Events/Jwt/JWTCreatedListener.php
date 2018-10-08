@@ -2,15 +2,18 @@
 
 namespace App\AddHash\Authentication\Infrastructure\Events\Jwt;
 
+use Symfony\Component\HttpFoundation\RequestStack;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 
-class onJWTCreatedEvent
+class JWTCreatedListener
 {
-	/**
-	 * @param JWTCreatedEvent $event
-	 *
-	 * @return void
-	 */
+    private $requestStack;
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
+
 	public function onJWTCreated(JWTCreatedEvent $event)
 	{
 		$expiration = new \DateTime('+1 day');

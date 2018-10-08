@@ -2,7 +2,7 @@ services:
   addhash.user.register.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\UserRegisterService
     public: true
-    arguments: ['@addhash.user.repository', '@security.encoder_factory']
+    arguments: ['@addhash.user.repository', '@security.encoder_factory', '@addhash.captcha.cache', '@addhash.re.captcha.service', '@service_container', '@request_stack']
   App\AddHash\AdminPanel\Infrastructure\Services\User\UserRegisterService: '@addhash.user.register.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface: '@addhash.user.register.service'

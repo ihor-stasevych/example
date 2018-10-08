@@ -46,3 +46,6 @@ imports:
 
   ## Info Services
   - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Info/Resources/config/services.yaml"}
+
+    ## Captcha Services
+  - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Captcha/Resources/config/services.yaml"}

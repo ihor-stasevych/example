@@ -8,11 +8,20 @@ use App\AddHash\System\GlobalContext\ValueObject\Phone;
 interface UserRegisterCommandInterface
 {
 	public function getEmail(): Email;
+
 	public function getUserName(): string;
+
 	public function getPassword(): string;
+
 	public function getFirstName(): string;
+
 	public function getLastName(): string;
+
 	public function getBackupEmail(): Email;
+
 	public function getPhone(): Phone;
+
 	public function getRoles(): array;
+
+    public function getResponseCaptcha(): ?string;
 }
