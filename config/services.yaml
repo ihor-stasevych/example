@@ -78,6 +78,11 @@ services:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
 
+    acme_api.event.authentication_failure_listener:
+        class: App\AddHash\Authentication\Infrastructure\Events\Jwt\AuthenticationFailureListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onAuthenticationFailureResponse }
+
     ##Authentification
     addhash.user.repository:
       class: App\AddHash\AdminPanel\Infrastructure\Repository\User\UserRepository
