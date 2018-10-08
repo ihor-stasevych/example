@@ -11,6 +11,8 @@ class CaptchaCache implements CaptchaCacheInterface
 
     private const PREFIX = 'captcha_';
 
+    private const LIFE_TIME = 2592000; //30 days
+
 
     private $cache;
 
@@ -40,7 +42,7 @@ class CaptchaCache implements CaptchaCacheInterface
 
     private function increment(string $key, int $value)
     {
-        $this->cache->add($key, $value + 1);
+        $this->cache->add($key, $value + 1, static::LIFE_TIME);
     }
 
     private function generateKey(string $ip, string $userAgent): string
