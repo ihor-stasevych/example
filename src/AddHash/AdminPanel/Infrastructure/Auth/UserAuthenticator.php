@@ -41,7 +41,7 @@ class UserAuthenticator extends JwtAuthenticator
         $isVerify = $this->reCaptchaService->execute($request->get('g-recaptcha-response'));
 
         if (false === $isVerify) {
-            return new JsonResponse(['error' => 'Invalid verification captcha'], 401);
+            throw new AuthenticationException('Invalid verification captcha', 401);
         }
 
         return parent::getCredentials($request);

@@ -34,7 +34,7 @@ abstract class JwtAuthenticator extends AbstractGuardAuthenticator
 	public function getCredentials(Request $request)
 	{
 		if (!$request->headers->has('Authorization')) {
-            return new JsonResponse(['error' => 'Auth header required'], 401);
+            throw new AuthenticationException('Auth header required', 401);
 		}
 
 		$extractor = new AuthorizationHeaderTokenExtractor(
@@ -45,7 +45,7 @@ abstract class JwtAuthenticator extends AbstractGuardAuthenticator
 		$token = $extractor->extract($request);
 
 		if (!$token) {
-            return new JsonResponse(['error' => 'Invalid token'], 401);
+            throw new AuthenticationException('Invalid token', 401);
 		}
 
 		return $token;
