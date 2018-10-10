@@ -1,0 +1,91 @@
+App\AddHash\Authentication\Domain\Model\User:
+    type: entity
+    table: User
+    id:
+        id:
+            type: integer
+            generator:
+                { strategy: AUTO }
+
+    embedded:
+        email:
+            class: App\AddHash\System\GlobalContext\ValueObject\Email
+            columnPrefix: false
+
+    fields:
+        backupEmail:
+            type: string
+            length: 255
+            nullable: true
+            options:
+                default: null
+
+        firstName:
+            column: firstName
+            type: string
+            length: 255
+            nullable: true
+            options:
+                default: null
+
+        lastName:
+            column: lastName
+            type: string
+            length: 255
+            nullable: true
+            options:
+                default: null
+
+        password:
+            column: password
+            type: string
+            length: 255
+
+        roles:
+            column: roles
+            type: json
+            nullable: true
+            options:
+                default: null
+
+        phone:
+            column: phone
+            type: string
+            length: 255
+            nullable: true
+            options:
+                default: null
+
+        createdAt:
+            column: createdAt
+            type: datetime
+            nullable: false
+            options:
+                default: CURRENT_TIMESTAMP
+
+        updatedAt:
+            column: updatedAt
+            type: datetime
+            nullable: false
+            options:
+                default: CURRENT_TIMESTAMP
+
+        token:
+            type: guid
+
+    oneToMany:
+        order:
+            targetEntity: App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder
+            mappedBy: user
+
+        wallet:
+            targetEntity: App\AddHash\AdminPanel\Domain\User\UserWallet
+            mappedBy: user
+
+        vote:
+            targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProductUserVote
+            mappedBy: user
+
+        orderMain:
+            targetEntity: App\AddHash\AdminPanel\Domain\User\Order\UserOrderMiner
+            mappedBy: user

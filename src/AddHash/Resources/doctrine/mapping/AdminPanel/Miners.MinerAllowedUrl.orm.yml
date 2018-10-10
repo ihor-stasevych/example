@@ -1,0 +1,16 @@
+App\AddHash\AdminPanel\Domain\Miners\MinerAllowedUrl:
+    minerDetails:
+    type: entity
+    table: Miner_Allowed_Url
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        value:
+            type: string
+            length: 255
+
+        status:
+            type: smallint
+            default: 1

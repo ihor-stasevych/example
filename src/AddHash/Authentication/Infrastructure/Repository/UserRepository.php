@@ -2,39 +2,47 @@
 
 namespace App\AddHash\Authentication\Infrastructure\Repository;
 
-use App\AddHash\Authentication\Infrastructure\User;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\NonUniqueResultException;
+use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query;
+use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
+use App\AddHash\Authentication\Domain\Repository\UserRepositoryInterface;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository extends AbstractRepository implements UserRepositoryInterface
 {
-	private $entityManager;
+    /**
+     * @param Email $email
+     * @return User|null
+     * @throws NonUniqueResultException
+     */
+    public function getByEmail(Email $email): ?User
+    {
+        return $this->entityRepository->createQueryBuilder('u')
+            ->select('u')
+            ->where('u.email.email = :email')
+            ->setParameter('email', $email->getEmail())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
-	public function __construct(EntityManager $entityManager)
-	{
-		$this->entityManager = $entityManager;
-	}
+    /**
+     * @param User $user
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function save(User $user)
+    {
+        $this->entityManager->persist($user);
+        $this->entityManager->flush($user);
+    }
 
-	public function getByEmail(Email $email): ?User
-	{
-		$user = $this->entityManager->getRepository(User::class);
-
-		$res = $user->createQueryBuilder('u')
-			->select('u')
-			->where('email = ?1')
-			->setParameter(1, $email)
-			->getQuery()
-			->getResult(Query::HYDRATE_ARRAY);
-
-		var_dump($res);
-
-		if (!$res) {
-			return null;
-		}
-
-
-
-		return $res;
-	}
+    /**
+     * @return string
+     */
+    protected function getEntityName()
+    {
+        return User::class;
+    }
 }

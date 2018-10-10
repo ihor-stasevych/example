@@ -2,17 +2,18 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
+use Psr\Log\LoggerInterface;
+use App\AddHash\Authentication\Domain\Model\User;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\User;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class StoreOrderGetService implements StoreOrderGetServiceInterface
 {
-
 	private $storeOrderRepository;
+
 	private $dispatcher;
+
 	private $logger;
 
 	public function __construct(

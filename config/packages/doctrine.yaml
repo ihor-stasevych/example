@@ -24,6 +24,22 @@ doctrine:
             AddHash:
                 is_bundle: false
                 type: yml
-                dir: '%kernel.project_dir%/src/AddHash/Resources/doctrine/mapping'
+                dir: '%kernel.project_dir%/src/AddHash/Resources/doctrine/mapping/AdminPanel'
                 prefix: 'App\AddHash\AdminPanel\Domain'
                 alias: App
+
+            Authentication:
+                is_bundle: false
+                type: yml
+                dir: '%kernel.project_dir%/src/AddHash/Resources/doctrine/mapping/Authentication'
+                prefix: 'App\AddHash\Authentication\Domain'
+                alias: Authentication
+
+            GlobalValueObject:
+                is_bundle: false
+                type: yml
+                dir: '%kernel.project_dir%/src/AddHash/Resources/doctrine/mapping/GlobalValueObject'
+                prefix: 'App\AddHash\System\GlobalContext\ValueObject'
+                alias: GlobalValueObject
+
+
