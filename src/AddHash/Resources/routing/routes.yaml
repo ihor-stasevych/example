@@ -8,6 +8,16 @@ user.register:
   methods: POST
   controller: App\AddHash\AdminPanel\Application\Controller\UserController::register
 
+user.password.reset:
+  path: "/api/v1/user/password/reset"
+  methods: GET
+  controller: App\AddHash\AdminPanel\Application\Controller\User\PasswordRecoveryController::sendEmailToResetPassword
+
+user.password.recovery:
+  path: "/api/v1/user/password/recovery/{hash}"
+  methods: GET
+  controller: App\AddHash\AdminPanel\Application\Controller\User\PasswordRecoveryController::recovery
+
 store.category.list:
     path: "/api/v1/store/categories"
     methods: GET
