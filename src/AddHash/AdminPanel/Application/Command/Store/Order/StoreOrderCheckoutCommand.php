@@ -2,8 +2,8 @@
 
 namespace App\AddHash\AdminPanel\Application\Command\Store\Order;
 
-use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCheckoutCommandInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCheckoutCommandInterface;
 
 class StoreOrderCheckoutCommand implements StoreOrderCheckoutCommandInterface
 {
@@ -13,7 +13,6 @@ class StoreOrderCheckoutCommand implements StoreOrderCheckoutCommandInterface
 	 * @Assert\NotNull()
 	 */
 	private $token;
-
 
 	public function __construct($token)
 	{

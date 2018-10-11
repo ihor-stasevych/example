@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool;
 
-use App\AddHash\AdminPanel\Domain\User\User;
+use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;

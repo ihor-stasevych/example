@@ -2,8 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\Store\Order\Services;
 
-
-use App\AddHash\AdminPanel\Domain\User\User;
+use App\AddHash\Authentication\Domain\Model\User;
 
 interface StoreOrderGetServiceInterface
 {

@@ -125,7 +125,7 @@ security:
 
     encoders:
       Symfony\Component\Security\Core\User\User: plaintext
-      App\AddHash\AdminPanel\Domain\User\User:
+      App\AddHash\Authentication\Domain\Model\User:
          algorithm: bcrypt
          cost: 12
 

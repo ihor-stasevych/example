@@ -1,0 +1,46 @@
+App\AddHash\AdminPanel\Domain\Scheduler\Task\SchedulerTask:
+    type: entity
+    table: Scheduler_Task
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string
+            nullable: false
+
+        command:
+            type: string
+
+        arguments:
+            type: string
+            nullable: true
+
+        cronExpression:
+            type: string
+            nullable: true
+            column: cronExpression
+
+        lastExecution:
+            type: datetime
+            nullable: true
+            default: null
+            column: lastExecution
+
+        status:
+            type: integer
+
+        type:
+            type: integer
+
+        disabled:
+            type: boolean
+            default: false
+
+        repeatAfterFail:
+            type: boolean
+            default: true
+            column: repeatAfterFail

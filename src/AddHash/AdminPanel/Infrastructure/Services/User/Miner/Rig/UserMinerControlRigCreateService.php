@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Rig;
 
-use App\AddHash\AdminPanel\Domain\User\User;
+use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Rig\UserMinerControlRigCreateCommandInterface;

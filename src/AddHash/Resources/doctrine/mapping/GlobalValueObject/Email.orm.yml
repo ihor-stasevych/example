@@ -1,0 +1,8 @@
+App\AddHash\System\GlobalContext\ValueObject\Email:
+    type: embeddable
+    fields:
+        email:
+            column: email
+            type: string
+            length: 255
+            unique: true

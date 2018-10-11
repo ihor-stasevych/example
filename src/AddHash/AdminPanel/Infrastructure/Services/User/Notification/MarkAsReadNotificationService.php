@@ -2,11 +2,11 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Notification;
 
+use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\AdminPanel\Domain\User\Command\Notification\MarkAsReadNotificationCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Notification\UserNotification;
 use App\AddHash\AdminPanel\Domain\User\Notification\UserNotificationRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Notification\MarkAsReadNotificationServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\User;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class MarkAsReadNotificationService implements MarkAsReadNotificationServiceInterface

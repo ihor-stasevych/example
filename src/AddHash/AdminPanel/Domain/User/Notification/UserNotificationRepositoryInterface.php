@@ -2,8 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\User\Notification;
 
-
-use App\AddHash\AdminPanel\Domain\User\User;
+use App\AddHash\Authentication\Domain\Model\User;
 
 interface UserNotificationRepositoryInterface
 {

@@ -2,10 +2,8 @@
 
 namespace App\AddHash\AdminPanel\Application\Command\Store\Order;
 
-use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCreateCommandInterface;
-use App\AddHash\AdminPanel\Domain\User\User;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCreateCommandInterface;
 
 class StoreOrderCreateCommand implements StoreOrderCreateCommandInterface
 {
