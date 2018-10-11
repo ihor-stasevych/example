@@ -76,6 +76,11 @@ security:
               anonymous: true
               security: false
 
+        api_public_public_information:
+              pattern: ^/api/v1/public/information
+              anonymous: true
+              security: false
+
         api_doc:
               pattern: ^/api/doc
               anonymous: true
