@@ -209,7 +209,7 @@ user.notifications.markAsRead:
   controller: App\AddHash\AdminPanel\Application\Controller\User\Notification\UserNotificationController::markAsRead
 
 public.information.re.captcha.key.get:
-  path: "/api/v1/public/information/recaptcha/key"
+  path: "/api/v1/info/recaptcha"
   methods: GET
   controller: App\AddHash\AdminPanel\Application\Controller\PublicInformationController::getPublicKeyReCaptcha
 

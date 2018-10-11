@@ -77,7 +77,7 @@ security:
               security: false
 
         api_public_public_information:
-              pattern: ^/api/v1/public/information
+              pattern: ^/api/v1/info/recaptcha
               anonymous: true
               security: false
 
