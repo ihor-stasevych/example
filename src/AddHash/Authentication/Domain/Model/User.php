@@ -28,13 +28,13 @@ class User implements UserInterface
 
     private $roles;
 
-	private $backupEmail;
+	private $backupEmail = '';
 
-	private $firstName;
+	private $firstName = '';
 
-	private $lastName;
+	private $lastName = '';
 
-	private $phone;
+	private $phone = '';
 
 	private $token;
 
@@ -71,12 +71,12 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function getEmail(): Email
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    public function getUserName(): Email
+    public function getUserName(): string
     {
         return $this->email;
     }
@@ -91,22 +91,22 @@ class User implements UserInterface
         return $this->roles;
     }
 
-    public function getBackupEmail(): ?Email
+    public function getBackupEmail(): string
     {
         return $this->backupEmail;
     }
 
-    public function getFirstName(): ?string
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
 
-    public function getLastName(): ?string
+    public function getLastName(): string
     {
         return $this->lastName;
     }
 
-    public function getPhoneNumber(): ?Phone
+    public function getPhoneNumber(): ?string
     {
         return $this->phone;
     }
@@ -124,6 +124,11 @@ class User implements UserInterface
     public function getSalt(): string
     {
         return static::SALT;
+    }
+
+    public function setEmail(Email $email)
+    {
+        $this->email = $email;
     }
 
     public function setPassword(string $password)

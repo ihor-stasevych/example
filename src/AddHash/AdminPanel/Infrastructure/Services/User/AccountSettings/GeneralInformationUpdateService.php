@@ -2,9 +2,9 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings;
 
-use App\AddHash\AdminPanel\Domain\User\User;
+use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
-use App\AddHash\AdminPanel\Domain\User\UserRepositoryInterface;
+use App\AddHash\Authentication\Domain\Repository\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\GeneralInformationUpdateCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\AccountSettings\GeneralInformationEmailExistException;
@@ -34,6 +34,7 @@ class GeneralInformationUpdateService implements GeneralInformationUpdateService
         $email = new Email($user->getEmail());
 
         if (false === $email->equals($command->getEmail())) {
+
             if (null !== $this->userRepository->getByEmail($command->getEmail())) {
                 throw new GeneralInformationEmailExistException('This email is already taken');
             }
@@ -45,7 +46,7 @@ class GeneralInformationUpdateService implements GeneralInformationUpdateService
         $user->setLastName($command->getLastName());
         $user->setPhoneNumber($command->getPhoneNumber());
 
-        $this->userRepository->update();
+        $this->userRepository->save($user);
 
         return [
             'email'       => $command->getEmail()->getEmail(),

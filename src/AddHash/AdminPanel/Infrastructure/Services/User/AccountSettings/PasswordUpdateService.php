@@ -2,9 +2,9 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings;
 
-use App\AddHash\AdminPanel\Domain\User\User;
-use App\AddHash\AdminPanel\Domain\User\UserRepositoryInterface;
+use App\AddHash\Authentication\Domain\Model\User;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use App\AddHash\Authentication\Domain\Repository\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\PasswordUpdateCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\AccountSettings\PasswordIsNotValidException;
@@ -35,6 +35,7 @@ class PasswordUpdateService implements PasswordUpdateServiceInterface
      */
 	public function execute(PasswordUpdateCommandInterface $command)
 	{
+	    /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
         $isValidPassword = $this->encoderFactory->getEncoder(User::class)->isPasswordValid(
@@ -53,6 +54,6 @@ class PasswordUpdateService implements PasswordUpdateServiceInterface
         );
 
         $user->setPassword($encodedNewPassword);
-        $this->userRepository->update();
+        $this->userRepository->save($user);
 	}
 }

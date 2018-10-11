@@ -1,15 +1,8 @@
 services:
-  addhash.authentication.user.register.service:
+  addhash.user.register.service:
     class: App\AddHash\Authentication\Infrastructure\Services\UserRegisterService
     public: true
-    arguments: ['@security.encoder_factory', '@service_container', '@addhash.authentication.user.repository']
-  App\AddHash\Authentication\Infrastructure\Services\UserRegisterService: '@addhash.authentication.user.register.service'
+    arguments: ['@security.encoder_factory', '@service_container', '@addhash.user.repository']
+  App\AddHash\Authentication\Infrastructure\Services\UserRegisterService: '@addhash.user.register.service'
 
-  App\AddHash\Authentication\Domain\Services\UserRegisterServiceInterface: '@addhash.authentication.user.register.service'
-
-  addhash.authentication.user.repository:
-    class: App\AddHash\Authentication\Infrastructure\Repository\UserRepository
-    arguments: ['@doctrine.orm.entity_manager']
-  App\AddHash\Authentication\Infrastructure\Repository\UserRepository: '@addhash.authentication.user.repository'
-
-  App\AddHash\Authentication\Domain\Repository\UserRepositoryInterface: '@addhash.authentication.user.repository'
+  App\AddHash\Authentication\Domain\Services\UserRegisterServiceInterface: '@addhash.user.register.service'

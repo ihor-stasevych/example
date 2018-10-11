@@ -2,10 +2,10 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Notification;
 
+use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\AdminPanel\Domain\User\Notification\UserNotification;
 use App\AddHash\AdminPanel\Domain\User\Notification\UserNotificationRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Notification\SendUserNotificationServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\User;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SendUserNotificationService implements SendUserNotificationServiceInterface

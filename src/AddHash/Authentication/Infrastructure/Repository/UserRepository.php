@@ -21,7 +21,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
     {
         return $this->entityRepository->createQueryBuilder('u')
             ->select('u')
-            ->where('u.email.email = :email')
+            ->where('u.email = :email')
             ->setParameter('email', $email->getEmail())
             ->getQuery()
             ->getOneOrNullResult();

@@ -7,13 +7,15 @@ App\AddHash\Authentication\Domain\Model\User:
             generator:
                 { strategy: AUTO }
 
-    embedded:
-        email:
-            class: App\AddHash\System\GlobalContext\ValueObject\Email
-            columnPrefix: false
-
     fields:
+        email:
+            column: email
+            type: string
+            length: 255
+            unique: true
+
         backupEmail:
+            column: backupEmail
             type: string
             length: 255
             nullable: true
