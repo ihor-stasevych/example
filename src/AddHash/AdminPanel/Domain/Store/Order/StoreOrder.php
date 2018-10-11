@@ -5,7 +5,7 @@ namespace App\AddHash\AdminPanel\Domain\Store\Order;
 use App\AddHash\AdminPanel\Domain\Payment\Payment;
 use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
-use App\AddHash\AdminPanel\Domain\User\User;
+use App\AddHash\Authentication\Domain\Model\User;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class StoreOrder

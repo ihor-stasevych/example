@@ -1,12 +1,4 @@
 services:
-  addhash.user.register.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\UserRegisterService
-    public: true
-    arguments: ['@addhash.user.repository', '@security.encoder_factory']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\UserRegisterService: '@addhash.user.register.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\UserRegisterServiceInterface: '@addhash.user.register.service'
-
   addhash.user.wallet.repository:
     class: App\AddHash\AdminPanel\Infrastructure\Repository\User\UserWalletRepository
     public: true
@@ -38,7 +30,6 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationUpdateService: '@addhash.user.account.settings.general.information.update.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationUpdateServiceInterface: '@addhash.user.account.settings.general.information.update.service'
-
 
   addhash.user.account.settings.general.information.get.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationGetService
@@ -104,14 +95,6 @@ services:
 
   App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface: '@addhash.user.miner.control.get.service'
 
-  addhash.user.miner.control.strategy:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Strategy\UserMinerControlStrategy
-    public: true
-    arguments: ['@security.token_storage']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Strategy\UserMinerControlStrategy: '@addhash.user.miner.control.strategy'
-
-  App\AddHash\AdminPanel\Domain\User\Services\Miner\Strategy\UserMinerControlStrategyInterface: '@addhash.user.miner.control.strategy'
-
   addhash.user.order.history.list.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryListService
     public: true
@@ -162,7 +145,6 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Repository\User\Notification\UserNotificationRepository: '@addhash.user.notification.repository'
 
   App\AddHash\AdminPanel\Domain\User\Notification\UserNotificationRepositoryInterface: '@addhash.user.notification.repository'
-
 
   addhash.user.notification.get.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\GetUserNotificationService

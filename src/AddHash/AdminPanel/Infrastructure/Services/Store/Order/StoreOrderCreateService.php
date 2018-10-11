@@ -3,7 +3,8 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
 use App\AddHash\AdminPanel\Domain\User\Services\Notification\SendUserNotificationServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\User;
+
+use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;

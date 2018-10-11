@@ -1,0 +1,27 @@
+App\AddHash\AdminPanel\Domain\Store\Product\StoreProductUserVote:
+    product:
+    type: entity
+    table: Store_Product_User_Vote
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        value:
+            type: string
+            length: 100
+
+    manyToOne:
+        user:
+            targetEntity: App\AddHash\Authentication\Domain\Model\User
+            inversedBy: product
+            joinColumn:
+                name: userId
+                referencedColumnName: id
+
+        product:
+            targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct
+            inversedBy: product
+            joinColumn:
+                name: productId
+                referencedColumnName: id

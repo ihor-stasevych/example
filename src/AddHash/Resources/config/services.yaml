@@ -1,19 +1,19 @@
 services:
 
   addhash.store.order.event.subscriber:
-     class: App\AddHash\AdminPanel\Infrastructure\EventSubscribers\Store\Order\StoreOrderEventSubscriber
-     tags:
-         - { name: kernel.event_subscriber, event: store.order.payed }
+      class: App\AddHash\AdminPanel\Infrastructure\EventSubscribers\Store\Order\StoreOrderEventSubscriber
+      tags:
+          - { name: kernel.event_subscriber, event: store.order.payed }
 
   App\AddHash\AdminPanel\Application\ConsoleCommand\CreateOrderClearCommand:
-    public: false
-    arguments: ['@addhash.store.order.un.reserve.miner.service']
-    tags: ['console.command']
+      public: false
+      arguments: ['@addhash.store.order.un.reserve.miner.service']
+      tags: ['console.command']
 
   App\AddHash\AdminPanel\Application\ConsoleCommand\ProcessSchedulerTask:
-    public: false
-    arguments: ['@addhash.scheduler.task.worker.service']
-    tags: ['console.command']
+      public: false
+      arguments: ['@addhash.scheduler.task.worker.service']
+      tags: ['console.command']
 
 imports:
 
@@ -23,10 +23,10 @@ imports:
   ## Wallet Services ##
   - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Wallet/Resources/config/services.yaml"}
 
-  ## Srore.Order Services ##
+  ## Store Order Services ##
   - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Store/Order/Resources/config/services.yaml"}
 
-  ## Srore.Product Services ##
+  ## Store Product Services ##
   - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Store/Product/Resources/config/services.yaml"}
 
   ## Srore.Category Services ##
@@ -35,7 +35,7 @@ imports:
   ## Miner Services ##
   - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Miner/Resources/config/services.yaml"}
 
-    ## Payment Services ##
+  ## Payment Services ##
   - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Payment/Resources/config/services.yaml"}
 
   ## Scheduler Services ##
@@ -44,5 +44,8 @@ imports:
   ## PromoContact Services ##
   - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/PromoContact/Resources/config/services.yaml"}
 
-  ## Info Services
+  ## Info Services ##
   - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Info/Resources/config/services.yaml"}
+
+  ## Authentication ##
+  - { resource: "../../../AddHash/Authentication/Application/DependencyInjection/Resources/config/services.yaml"}

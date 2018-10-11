@@ -6,7 +6,7 @@ info.currencies:
 user.register:
   path: "/api/v1/user/register"
   methods: POST
-  controller: App\AddHash\AdminPanel\Application\Controller\UserController::register
+  controller: App\AddHash\Authentication\Application\Controller\UserController::register
 
 user.password.reset:
   path: "/api/v1/user/password/reset"
@@ -217,6 +217,11 @@ user.notifications.markAsRead:
   path: "/api/v1/user/notifications"
   methods: POST
   controller: App\AddHash\AdminPanel\Application\Controller\User\Notification\UserNotificationController::markAsRead
+
+public.information.re.captcha.key.get:
+  path: "/api/v1/info/recaptcha"
+  methods: GET
+  controller: App\AddHash\AdminPanel\Application\Controller\PublicInformationController::getPublicKeyReCaptcha
 
 user.miner.test.query:
   path: "/api/v1/user/miner/test/query"

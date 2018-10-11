@@ -1,0 +1,27 @@
+App\AddHash\AdminPanel\Domain\User\Miner\Rig\UserMinerRig:
+    type: entity
+    table: User_Miner_Rig
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+            name:
+                type: string
+
+            worker:
+                type: string
+
+            url:
+                type: string
+
+            password:
+                type: string
+
+    manyToOne:
+        user:
+            targetEntity: App\AddHash\Authentication\Domain\Model\User
+            inversedBy: user
+            joinColumn:
+                name: userId
+                referencedColumnName: id

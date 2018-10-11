@@ -2,8 +2,8 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings;
 
-use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Domain\Wallet\Wallet;
+use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\AdminPanel\Domain\User\UserWallet;
 use App\AddHash\AdminPanel\Domain\Wallet\WalletRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface;

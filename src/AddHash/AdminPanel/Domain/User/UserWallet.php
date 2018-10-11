@@ -3,6 +3,7 @@
 namespace App\AddHash\AdminPanel\Domain\User;
 
 use App\AddHash\AdminPanel\Domain\Wallet\Wallet;
+use App\AddHash\Authentication\Domain\Model\User;
 
 class UserWallet
 {

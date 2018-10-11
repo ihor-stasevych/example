@@ -80,6 +80,11 @@ security:
               anonymous: true
               security: false
 
+        api_public_public_information:
+              pattern: ^/api/v1/info/recaptcha
+              anonymous: true
+              security: false
+
         api_doc:
               pattern: ^/api/doc
               anonymous: true
@@ -124,7 +129,7 @@ security:
 
     encoders:
       Symfony\Component\Security\Core\User\User: plaintext
-      App\AddHash\AdminPanel\Domain\User\User:
+      App\AddHash\Authentication\Domain\Model\User:
          algorithm: bcrypt
          cost: 12
 

@@ -2,14 +2,14 @@
 
 namespace App\AddHash\System\GlobalContext\Auth;
 
-use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
 
 /**
  * Class JwtAuthenticator
@@ -34,7 +34,7 @@ abstract class JwtAuthenticator extends AbstractGuardAuthenticator
 	public function getCredentials(Request $request)
 	{
 		if (!$request->headers->has('Authorization')) {
-			return null;
+            throw new AuthenticationException('Auth header required', 401);
 		}
 
 		$extractor = new AuthorizationHeaderTokenExtractor(
@@ -45,7 +45,7 @@ abstract class JwtAuthenticator extends AbstractGuardAuthenticator
 		$token = $extractor->extract($request);
 
 		if (!$token) {
-			return null;
+            throw new AuthenticationException('Invalid token', 401);
 		}
 
 		return $token;
@@ -57,7 +57,6 @@ abstract class JwtAuthenticator extends AbstractGuardAuthenticator
 	 * @return null
 	 */
 	abstract public function getUser($credentials, UserProviderInterface $userProvider);
-
 
 	/**
 	 * @param mixed $credentials
@@ -77,9 +76,10 @@ abstract class JwtAuthenticator extends AbstractGuardAuthenticator
 	public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
 	{
 		$responseData = [
-				'message' => $exception->getMessage(),
-				'code' => $exception->getCode()
+            'message' => $exception->getMessage(),
+            'code'    => $exception->getCode()
 		];
+
 		return new JsonResponse($responseData, 401);
 	}
 
@@ -101,5 +101,4 @@ abstract class JwtAuthenticator extends AbstractGuardAuthenticator
 	{
 		return false;
 	}
-
 }

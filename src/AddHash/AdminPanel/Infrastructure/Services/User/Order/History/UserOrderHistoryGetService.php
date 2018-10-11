@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History;
 
-use App\AddHash\AdminPanel\Domain\User\User;
+use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\AdminPanel\Domain\Payment\Payment;
 use App\AddHash\AdminPanel\Domain\Payment\PaymentMethod;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
