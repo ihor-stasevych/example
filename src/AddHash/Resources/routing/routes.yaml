@@ -208,6 +208,11 @@ user.notifications.markAsRead:
   methods: POST
   controller: App\AddHash\AdminPanel\Application\Controller\User\Notification\UserNotificationController::markAsRead
 
+public.information.re.captcha.key.get:
+  path: "/api/v1/public/information/recaptcha/key"
+  methods: GET
+  controller: App\AddHash\AdminPanel\Application\Controller\PublicInformationController::getPublicKeyReCaptcha
+
 user.miner.test.query:
   path: "/api/v1/user/miner/test/query"
   methods: GET
