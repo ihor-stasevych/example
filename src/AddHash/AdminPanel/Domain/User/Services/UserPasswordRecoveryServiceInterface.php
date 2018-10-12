@@ -7,4 +7,5 @@ use App\AddHash\AdminPanel\Domain\User\Command\PasswordRecovery\UserPasswordReco
 interface UserPasswordRecoveryServiceInterface
 {
 	public function execute(UserPasswordRecoveryCommandInterface $command);
+	public function ensureHash(string $hash);
 }

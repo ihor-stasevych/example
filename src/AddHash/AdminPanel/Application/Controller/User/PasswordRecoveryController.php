@@ -3,6 +3,7 @@
 namespace App\AddHash\AdminPanel\Application\Controller\User;
 
 use App\AddHash\AdminPanel\Application\Command\User\PaswordRecovery\UserPasswordRecoveryCommand;
+use App\AddHash\AdminPanel\Application\Command\User\PaswordRecovery\UserPasswordRecoveryHashCommand;
 use App\AddHash\AdminPanel\Application\Command\User\PaswordRecovery\UserPasswordRecoveryRequestCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\Notification\Email\SendUserResetPasswordEmailServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\UserPasswordRecoveryServiceInterface;
@@ -72,16 +73,18 @@ class PasswordRecoveryController extends BaseServiceController
 	/**
 	 * Changes user password by token
 	 *
+	 *
 	 * @SWG\Parameter(
 	 *     name="hash",
 	 *     in="query",
 	 *     type="string",
 	 *     required=true,
-	 *     description="Hash"
+	 *     description="Hash string"
 	 * )
+	 *
 	 * @SWG\Parameter(
 	 *     name="password",
-	 *     in="body",
+	 *     in="query",
 	 *     type="string",
 	 *     required=true,
 	 *     description="New password"
@@ -89,7 +92,7 @@ class PasswordRecoveryController extends BaseServiceController
 	 *
 	 * @SWG\Parameter(
 	 *     name="confirmPassword",
-	 *     in="body",
+	 *     in="query",
 	 *     type="string",
 	 *     required=true,
 	 *     description="Confirm new password"
@@ -102,14 +105,13 @@ class PasswordRecoveryController extends BaseServiceController
 	 *
 	 * @SWG\Tag(name="User")
 	 *
-	 * @param string $hash
 	 * @param Request $request
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 */
-	public function recoveryPassword($hash, Request $request)
+	public function recoveryPassword(Request $request)
 	{
 		$command = new UserPasswordRecoveryCommand(
-			$hash,
+			$request->get('hash'),
 			$request->get('password'),
 			$request->get('confirmPassword')
 		);
@@ -131,10 +133,45 @@ class PasswordRecoveryController extends BaseServiceController
 		return $this->json([]);
 	}
 
-	public function checkRecoveryHash($hash)
+	/**
+	 * Checking hash for password recovery
+	 *
+	 * @SWG\Parameter(
+	 *     name="hash",
+	 *     in="query",
+	 *     type="string",
+	 *     required=true,
+	 *     description="Hash string"
+	 * )
+	 *
+	 * @SWG\Response(
+	 *     response=200,
+	 *     description="Checking hash for password recovery"
+	 * )
+	 *
+	 * @SWG\Tag(name="User")
+	 *
+	 * @param $request Request
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse
+	 */
+	public function checkRecoveryHash(Request $request)
 	{
+		$command = new UserPasswordRecoveryHashCommand($request->get('hash'));
 
+		if (!$this->commandIsValid($command)) {
+			return $this->json([
+				'errors' => $this->getLastValidationErrors()
+			], Response::HTTP_BAD_REQUEST);
+		}
+
+		try {
+			$this->passwordRecoveryService->ensureHash($command->getHash());
+		} catch (\Exception $e) {
+			return $this->json([
+				'errors' => $e->getMessage()
+			], Response::HTTP_BAD_REQUEST);
+		}
+
+		return $this->json([]);
 	}
-
-	//public function validateHash()
 }

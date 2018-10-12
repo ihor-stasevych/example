@@ -21,11 +21,11 @@ class UserPasswordRecoveryRepository extends AbstractRepository implements UserP
 
 	/**
 	 * @param null|string $hash
-	 * @return array|object[]
+	 * @return null|object
 	 */
 	public function findByHash(?string $hash)
 	{
-		return $this->entityRepository->findBy(['hash' => $hash]);
+		return $this->entityRepository->findOneBy(['hash' => $hash]);
 	}
 
 	/**

@@ -6,8 +6,8 @@ use App\AddHash\AdminPanel\Domain\User\Command\PasswordRecovery\UserPasswordReco
 use App\AddHash\AdminPanel\Domain\User\Password\UserPasswordRecovery;
 use App\AddHash\AdminPanel\Domain\User\Password\UserPasswordRecoveryRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Notification\Email\SendUserResetPasswordEmailServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\User;
-use App\AddHash\AdminPanel\Domain\User\UserRepositoryInterface;
+use App\AddHash\Authentication\Domain\Model\User;
+use App\AddHash\Authentication\Domain\Repository\UserRepositoryInterface;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
 use App\AddHash\System\Lib\MailSender\MailSenderInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -53,10 +53,8 @@ class SendUserResetPasswordEmailService implements SendUserResetPasswordEmailSer
 
 		$passwordRecovery = new UserPasswordRecovery($user);
 
-		$link = $this->urlGenerator->generate(
-			'user.password.recovery', ['hash' => $passwordRecovery->getHash()],
-			UrlGeneratorInterface::ABSOLUTE_URL
-		);
+		//TODO::Change this shit
+		$link = 'http://dev.addhash.com/change-password?token_id=' . $passwordRecovery->getHash();
 
 		try {
 			$template = $this->templating->render(

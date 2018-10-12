@@ -10,13 +10,18 @@ user.register:
 
 user.password.reset:
   path: "/api/v1/user/password/reset"
-  methods: GET
+  methods: POST
   controller: App\AddHash\AdminPanel\Application\Controller\User\PasswordRecoveryController::sendEmailToResetPassword
 
 user.password.recovery:
-  path: "/api/v1/user/password/recovery/{hash}"
-  methods: GET
-  controller: App\AddHash\AdminPanel\Application\Controller\User\PasswordRecoveryController::recovery
+  path: "/api/v1/user/password/recovery"
+  methods: POST
+  controller: App\AddHash\AdminPanel\Application\Controller\User\PasswordRecoveryController::recoveryPassword
+
+user.password.recovery.chechhash:
+  path: "/api/v1/user/password/recovery/hash"
+  methods: POST
+  controller: App\AddHash\AdminPanel\Application\Controller\User\PasswordRecoveryController::checkRecoveryHash
 
 store.category.list:
     path: "/api/v1/store/categories"

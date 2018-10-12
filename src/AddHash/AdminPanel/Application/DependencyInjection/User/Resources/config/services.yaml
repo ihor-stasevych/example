@@ -185,3 +185,11 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\Email\SendUserResetPasswordEmailService: '@addhash.user.email.send.resetpassword.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Notification\Email\SendUserResetPasswordEmailServiceInterface: '@addhash.user.email.send.resetpassword.service'
+
+  addhash.user.passwordrecovery.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\UserPasswordRecoveryService
+    public: true
+    arguments: ['@addhash.user.passwordrecovery.repository', '@addhash.user.repository', '@security.encoder_factory']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\UserPasswordRecoveryService: '@addhash.user.passwordrecovery.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\UserPasswordRecoveryServiceInterface: '@addhash.user.passwordrecovery.service'

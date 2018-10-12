@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\User\Password;
 
-use App\AddHash\AdminPanel\Domain\User\User;
+use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\System\Lib\Uuid;
 
 class UserPasswordRecovery

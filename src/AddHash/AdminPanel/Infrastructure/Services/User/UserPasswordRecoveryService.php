@@ -6,8 +6,8 @@ use App\AddHash\AdminPanel\Domain\User\Command\PasswordRecovery\UserPasswordReco
 use App\AddHash\AdminPanel\Domain\User\Password\UserPasswordRecovery;
 use App\AddHash\AdminPanel\Domain\User\Password\UserPasswordRecoveryRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\UserPasswordRecoveryServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\User;
-use App\AddHash\AdminPanel\Domain\User\UserRepositoryInterface;
+use App\AddHash\Authentication\Domain\Model\User;
+use App\AddHash\Authentication\Domain\Repository\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class UserPasswordRecoveryService implements UserPasswordRecoveryServiceInterface
@@ -34,18 +34,10 @@ class UserPasswordRecoveryService implements UserPasswordRecoveryServiceInterfac
 	 */
 	public function execute(UserPasswordRecoveryCommandInterface $command)
 	{
-		/** @var UserPasswordRecovery $passwordRecovery */
-		$passwordRecovery = $this->recoveryRepository->findByHash($command->getHash());
-
-		if (!$passwordRecovery) {
-			throw new \Exception('Incorrect hash');
-		}
-
-		$dateTime = new \DateTime();
-		$dateTime->setTimestamp($dateTime->getTimestamp());
-
-		if ($passwordRecovery->getExpirationDate() < $dateTime) {
-			throw new \Exception('Your hash has been expired');
+		try {
+			$passwordRecovery = $this->ensureHash($command->getHash());
+		} catch (\Exception $e) {
+			throw new $e;
 		}
 
 		/** @var User $user */
@@ -60,8 +52,32 @@ class UserPasswordRecoveryService implements UserPasswordRecoveryServiceInterfac
 			->encodePassword($command->getPassword(), $user->getSalt());
 
 		$user->setPassword($encodedPassword);
-		$this->userRepository->update();
+		$this->userRepository->save($user);
 
 		return true;
+	}
+
+	/**
+	 * @param string $hash
+	 * @return UserPasswordRecovery
+	 * @throws \Exception
+	 */
+	public function ensureHash(string $hash)
+	{
+		/** @var UserPasswordRecovery $passwordRecovery */
+		$passwordRecovery = $this->recoveryRepository->findByHash($hash);
+
+		if (!$passwordRecovery) {
+			throw new \Exception('Incorrect hash');
+		}
+
+		$dateTime = new \DateTime();
+		$dateTime->setTimestamp($dateTime->getTimestamp());
+
+		if ($passwordRecovery->getExpirationDate() < $dateTime) {
+			throw new \Exception('Your hash has been expired');
+		}
+
+		return $passwordRecovery;
 	}
 }

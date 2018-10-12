@@ -123,7 +123,7 @@ class User implements UserInterface
 
     public function getSalt(): string
     {
-        return static::SALT;
+        return self::SALT;
     }
 
     public function setEmail(Email $email)
