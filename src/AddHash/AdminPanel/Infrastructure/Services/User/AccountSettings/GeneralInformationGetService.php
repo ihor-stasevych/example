@@ -2,6 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings;
 
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationGetServiceInterface;
 
@@ -9,21 +10,27 @@ class GeneralInformationGetService implements GeneralInformationGetServiceInterf
 {
     private $tokenStorage;
 
-    public function __construct(TokenStorageInterface $tokenStorage)
+    private $authenticationService;
+
+    public function __construct(TokenStorageInterface $tokenStorage, UserGetAuthenticationServiceInterface $authenticationService)
     {
         $this->tokenStorage = $tokenStorage;
+        $this->authenticationService = $authenticationService;
     }
 
     public function execute(): array
 	{
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->authenticationService->execute();
 
-        return [
-            'email'       => $user->getEmail(),
-            'backupEmail' => $user->getBackupEmail(),
-            'firstName'   => $user->getFirstName(),
-            'lastName'    => $user->getLastName(),
-            'phone'       => $user->getPhoneNumber(),
-        ];
+//        dd($user);
+//
+//
+//        return [
+//            'email'       => $user->getEmail(),
+//            'backupEmail' => $user->getBackupEmail(),
+//            'firstName'   => $user->getFirstName(),
+//            'lastName'    => $user->getLastName(),
+//            'phone'       => $user->getPhoneNumber(),
+//        ];
 	}
 }

@@ -48,4 +48,10 @@ imports:
   - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/Info/Resources/config/services.yaml"}
 
   ## Authentication ##
-  - { resource: "../../../AddHash/Authentication/Application/DependencyInjection/Resources/config/services.yaml"}
+  - { resource: "../../../AddHash/Authentication/Application/DependencyInjection/User/Resources/config/services.yaml"}
+
+  ## Authentication OpenHost ##
+  - { resource: "../../../AddHash/Authentication/Application/DependencyInjection/OpenHost/Resources/config/services.yaml"}
+
+  ## AdminPanel OpenHost ##
+  - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/OpenHost/Resources/config/services.yaml"}

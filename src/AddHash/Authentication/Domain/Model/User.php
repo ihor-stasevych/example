@@ -6,7 +6,6 @@ use App\AddHash\System\Lib\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\AddHash\AdminPanel\Domain\User\UserWallet;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
-use App\AddHash\System\GlobalContext\ValueObject\Phone;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class User implements UserInterface
@@ -28,14 +27,6 @@ class User implements UserInterface
 
     private $roles;
 
-	private $backupEmail = '';
-
-	private $firstName = '';
-
-	private $lastName = '';
-
-	private $phone = '';
-
 	private $token;
 
 	private $createdAt;
@@ -50,8 +41,9 @@ class User implements UserInterface
 
 	private $orderMain;
 
-    public function __construct(Email $email, string $password, array $roles)
+    public function __construct(Email $email, string $password, array $roles, $id = null)
     {
+        $this->id = $id;
         $this->email = $email;
         $this->password = $password;
         $this->roles = $roles;
@@ -91,24 +83,14 @@ class User implements UserInterface
         return $this->roles;
     }
 
-    public function getBackupEmail(): string
+    public function getOrder()
     {
-        return $this->backupEmail;
+        return $this->order;
     }
 
-    public function getFirstName(): string
+    public function getVote()
     {
-        return $this->firstName;
-    }
-
-    public function getLastName(): string
-    {
-        return $this->lastName;
-    }
-
-    public function getPhoneNumber(): ?string
-    {
-        return $this->phone;
+        return $this->vote;
     }
 
     public function getUserWallets()
@@ -134,26 +116,6 @@ class User implements UserInterface
     public function setPassword(string $password)
     {
         $this->password = $password;
-    }
-
-    public function setBackupEmail(Email $email)
-    {
-        $this->backupEmail = $email;
-    }
-
-    public function setFirstName(string $firstName)
-    {
-        $this->firstName = $firstName;
-    }
-
-    public function setLastName(string $lastName)
-    {
-        $this->lastName = $lastName;
-    }
-
-    public function setPhoneNumber(Phone $phoneNumber)
-    {
-        $this->phone = $phoneNumber;
     }
 
     public function setUserWallet(UserWallet $wallet)

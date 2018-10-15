@@ -1,4 +1,28 @@
 services:
+  addhash.user.create.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\UserCreateService
+    public: true
+    arguments: ['@addhash.authentication.adapter.open.host', '@addhash.user.info.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\UserCreateService: '@addhash.user.create.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\UserCreateServiceInterface: '@addhash.user.create.service'
+
+  addhash.user.get.authentication.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\UserGetAuthenticationService
+    public: true
+    arguments: ['@addhash.authentication.adapter.open.host', '@addhash.user.info.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\UserGetAuthenticationService: '@addhash.user.get.authentication.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface: '@addhash.user.get.authentication.service'
+
+  addhash.user.info.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\User\UserRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\User\UserRepository: '@addhash.user.info.repository'
+
+  App\AddHash\AdminPanel\Domain\User\UserRepositoryInterface: '@addhash.user.info.repository'
+
   addhash.user.wallet.repository:
     class: App\AddHash\AdminPanel\Infrastructure\Repository\User\UserWalletRepository
     public: true
@@ -34,7 +58,7 @@ services:
   addhash.user.account.settings.general.information.get.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationGetService
     public: true
-    arguments: ['@security.token_storage']
+    arguments: ['@security.token_storage', '@addhash.user.get.authentication.service']
   App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings\GeneralInformationGetService: '@addhash.user.account.settings.general.information.get.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationGetServiceInterface: '@addhash.user.account.settings.general.information.get.service'

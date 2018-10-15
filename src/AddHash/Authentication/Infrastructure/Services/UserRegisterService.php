@@ -3,14 +3,12 @@
 namespace App\AddHash\Authentication\Infrastructure\Services;
 
 use App\AddHash\Authentication\Domain\Model\User;
-use App\AddHash\System\Lib\Captcha\ReCaptcha\Captcha;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use App\AddHash\Authentication\Application\Command\UserRegisterCommand;
 use App\AddHash\Authentication\Domain\Repository\UserRepositoryInterface;
 use App\AddHash\Authentication\Domain\Services\UserRegisterServiceInterface;
 use App\AddHash\Authentication\Domain\Exceptions\UserRegister\UserRegisterUserAlreadyExistsException;
-use App\AddHash\Authentication\Domain\Exceptions\UserRegister\UserRegisterInvalidVerifyCaptchaException;
 
 final class UserRegisterService implements UserRegisterServiceInterface
 {
@@ -37,17 +35,10 @@ final class UserRegisterService implements UserRegisterServiceInterface
     /**
      * @param UserRegisterCommand $command
      * @return array
-     * @throws UserRegisterInvalidVerifyCaptchaException
      * @throws UserRegisterUserAlreadyExistsException
      */
     public function execute(UserRegisterCommand $command): array
     {
-        $isVerifyCaptcha = (new Captcha())->isVerify($command->getCaptcha());
-
-        if (false === $isVerifyCaptcha) {
-            throw new UserRegisterInvalidVerifyCaptchaException('Invalid verify captcha');
-        }
-
         $email = $command->getEmail();
 
         $user = $this->userRepository->getByEmail($email);
@@ -67,9 +58,10 @@ final class UserRegisterService implements UserRegisterServiceInterface
 
         $this->userRepository->save($user);
 
-        $token = $this->createToken($user);
-
-        return ['token' => $token];
+        return [
+            'id'    => $user->getId(),
+            'token' => $this->createToken($user),
+        ];
     }
 
     private function createToken(User $user): string

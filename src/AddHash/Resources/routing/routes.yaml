@@ -6,7 +6,7 @@ info.currencies:
 user.register:
   path: "/api/v1/user/register"
   methods: POST
-  controller: App\AddHash\Authentication\Application\Controller\UserController::register
+  controller: App\AddHash\AdminPanel\Application\Controller\User\UserController::create
 
 store.category.list:
     path: "/api/v1/store/categories"

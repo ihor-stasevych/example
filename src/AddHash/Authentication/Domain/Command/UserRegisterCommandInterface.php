@@ -12,7 +12,5 @@ interface UserRegisterCommandInterface
 
     public function getRoles(): array;
 
-    public function getCaptcha(): ?string;
-
     public function isValidRoles(): bool;
 }

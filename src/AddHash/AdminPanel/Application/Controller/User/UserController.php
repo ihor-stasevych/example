@@ -1,22 +1,22 @@
 <?php
-namespace App\AddHash\Authentication\Application\Controller;
+
+namespace App\AddHash\AdminPanel\Application\Controller\User;
 
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\AddHash\Authentication\Domain\Model\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use App\AddHash\Authentication\Application\Command\UserRegisterCommand;
-use App\AddHash\Authentication\Domain\Services\UserRegisterServiceInterface;
+use App\AddHash\AdminPanel\Application\Command\User\UserCreateCommand;
+use App\AddHash\AdminPanel\Domain\User\Services\UserCreateServiceInterface;
 
 class UserController extends BaseServiceController
 {
-    private $userRegisterService;
+    private $createService;
 
-    public function __construct(UserRegisterServiceInterface $userRegisterService)
+    public function __construct(UserCreateServiceInterface $createService)
     {
-        $this->userRegisterService = $userRegisterService;
+        $this->createService = $createService;
     }
 
     /**
@@ -85,12 +85,11 @@ class UserController extends BaseServiceController
      * @return JsonResponse
      * @SWG\Tag(name="User")
      */
-    public function register(Request $request)
+    public function create(Request $request)
     {
-        $command = new UserRegisterCommand(
+        $command = new UserCreateCommand(
             $request->get('email'),
             $request->get('password'),
-            [User::ROLE_USER],
             $request->get('g-recaptcha-response')
         );
 
@@ -101,7 +100,7 @@ class UserController extends BaseServiceController
         }
 
         try {
-            $token = $this->userRegisterService->execute($command);
+            $token = $this->createService->execute($command);
         } catch (\Exception $e) {
             return $this->json([
                 'message' => $e->getMessage()

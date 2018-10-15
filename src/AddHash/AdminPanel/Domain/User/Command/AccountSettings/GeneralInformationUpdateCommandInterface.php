@@ -9,13 +9,13 @@ interface GeneralInformationUpdateCommandInterface
 {
 	public function getEmail(): Email;
 
-    public function getBackupEmail(): Email;
+    public function getBackupEmail(): ?Email;
 
-    public function getFirstName():? string;
+    public function getFirstName(): string;
 
-    public function getLastName():? string;
+    public function getLastName(): string;
 
-    public function getPhoneNumber():? Phone;
+    public function getPhoneNumber(): ?Phone;
 
     public function isMonthlyNewsletter(): bool;
 }

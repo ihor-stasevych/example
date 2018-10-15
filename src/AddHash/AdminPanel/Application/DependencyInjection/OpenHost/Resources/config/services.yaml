@@ -1,0 +1,7 @@
+services:
+  addhash.authentication.adapter.open.host:
+    class: App\AddHash\AdminPanel\Infrastructure\AdapterOpenHost\AuthenticationAdapter
+    arguments: ['@addhash.authentication.open.host']
+  App\AddHash\AdminPanel\Infrastructure\AdapterOpenHost\AuthenticationAdapter: '@addhash.authentication.adapter.open.host'
+
+  App\AddHash\AdminPanel\Domain\AdapterOpenHost\AuthenticationAdapterInterface: '@addhash.authentication.adapter.open.host'
