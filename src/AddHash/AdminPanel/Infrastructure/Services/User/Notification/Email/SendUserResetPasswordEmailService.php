@@ -14,6 +14,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SendUserResetPasswordEmailService implements SendUserResetPasswordEmailServiceInterface
 {
+	const REQUESTED_DURATION = 600;
+
 	private $mailSender;
 	private $templating;
 	private $userRepository;
@@ -52,6 +54,13 @@ class SendUserResetPasswordEmailService implements SendUserResetPasswordEmailSer
 		}
 
 		$passwordRecovery = new UserPasswordRecovery($user);
+
+		$dateTime = new \DateTime();
+		$dateTime->setTimestamp($dateTime->getTimestamp() - self::REQUESTED_DURATION);
+
+		if ($passwordRecovery->getRequestedDate() < $dateTime) {
+			throw new \Exception('Please wait 10 minutes to try again!');
+		}
 
 		//TODO::Change this shit
 		$link = 'http://dev.addhash.com/change-password?token_id=' . $passwordRecovery->getHash();

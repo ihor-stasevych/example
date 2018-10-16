@@ -29,6 +29,17 @@ class UserPasswordRecoveryRepository extends AbstractRepository implements UserP
 	}
 
 	/**
+	 * @param UserPasswordRecovery $passwordRecovery
+	 * @throws \Doctrine\ORM\ORMException
+	 * @throws \Doctrine\ORM\OptimisticLockException
+	 */
+	public function remove(UserPasswordRecovery $passwordRecovery)
+	{
+		$this->entityManager->remove($passwordRecovery);
+		$this->entityManager->flush();
+	}
+
+	/**
 	 * @return string
 	 */
 	protected function getEntityName()
