@@ -30,6 +30,10 @@ security:
                 success_handler:          lexik_jwt_authentication.handler.authentication_success
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
 
+        api_user_passwordrecover:
+              pattern: ^/api/v1/user/password
+              anonymous: true
+              security: false
 
         api_info_crypto_currencies:
               pattern: ^/api/v1/info/currencies

@@ -25,7 +25,7 @@ class UserMinerControlPoolGetStrategy implements UserMinerControlPoolStrategyInt
             new MinerSocket($minerStock),
             new MinerSocketParser()
         );
-
+		$period = $minerStock;
         return $minerCommand->getPools() + [
             'minerTitle'   => $minerStock->infoMiner()->getTitle(),
             'minerId'      => $minerStock->infoMiner()->getId(),

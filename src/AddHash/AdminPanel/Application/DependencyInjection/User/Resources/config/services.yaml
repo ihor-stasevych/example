@@ -193,3 +193,27 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\MarkAsReadNotificationService: '@addhash.user.notification.markread.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Notification\MarkAsReadNotificationServiceInterface: '@addhash.user.notification.markread.service'
+
+  addhash.user.passwordrecovery.repository:
+    class: App\AddHash\AdminPanel\Infrastructure\Repository\User\Password\UserPasswordRecoveryRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\AdminPanel\Infrastructure\Repository\User\Password\UserPasswordRecoveryRepository: '@addhash.user.passwordrecovery.repository'
+
+  App\AddHash\AdminPanel\Domain\User\Password\UserPasswordRecoveryRepositoryInterface: '@addhash.user.passwordrecovery.repository'
+
+  addhash.user.email.send.resetpassword.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\Email\SendUserResetPasswordEmailService
+    public: true
+    arguments: ['@addhash.mailer', '@twig', '@addhash.user.repository', '@addhash.user.passwordrecovery.repository', '@router.default']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\Email\SendUserResetPasswordEmailService: '@addhash.user.email.send.resetpassword.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\Notification\Email\SendUserResetPasswordEmailServiceInterface: '@addhash.user.email.send.resetpassword.service'
+
+  addhash.user.passwordrecovery.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\UserPasswordRecoveryService
+    public: true
+    arguments: ['@addhash.user.passwordrecovery.repository', '@addhash.user.repository', '@security.encoder_factory']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\UserPasswordRecoveryService: '@addhash.user.passwordrecovery.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\UserPasswordRecoveryServiceInterface: '@addhash.user.passwordrecovery.service'

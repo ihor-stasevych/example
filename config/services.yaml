@@ -71,6 +71,13 @@ services:
     App\AddHash\System\Lib\Cache\RedisCache: '@addhash.cache'
     App\AddHash\System\Lib\Cache\CacheInterface: '@addhash.cache'
 
+    addhash.mailer:
+      class: App\AddHash\System\Lib\MailSender\MailSender
+      arguments: ['@swiftmailer.mailer']
+    App\AddHash\System\Lib\MailSender: '@addhash.mailer'
+
+    App\AddHash\System\Lib\MailSender\MailSenderInterface: '@addhash.mailer'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
