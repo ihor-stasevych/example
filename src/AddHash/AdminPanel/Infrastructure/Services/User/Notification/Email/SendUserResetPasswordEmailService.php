@@ -60,8 +60,8 @@ class SendUserResetPasswordEmailService implements SendUserResetPasswordEmailSer
 			$dateTime = new \DateTime();
 			$dateTime->setTimestamp($dateTime->getTimestamp() - self::REQUESTED_DURATION);
 
-			if ($passwordRecovery->getRequestedDate() < $dateTime) {
-				throw new \Exception('Please wait 10 minutes to try again!');
+			if ($passwordRecovery->getRequestedDate() > $dateTime) {
+				throw new \Exception('Please wait several minutes to try again!');
 			}
 		} else {
 			$passwordRecovery = new UserPasswordRecovery($user);
