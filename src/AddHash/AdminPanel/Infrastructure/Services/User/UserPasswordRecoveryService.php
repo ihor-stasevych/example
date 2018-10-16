@@ -54,6 +54,8 @@ class UserPasswordRecoveryService implements UserPasswordRecoveryServiceInterfac
 		$user->setPassword($encodedPassword);
 		$this->userRepository->save($user);
 
+		$this->recoveryRepository->remove($passwordRecovery);
+
 		return true;
 	}
 
@@ -68,14 +70,14 @@ class UserPasswordRecoveryService implements UserPasswordRecoveryServiceInterfac
 		$passwordRecovery = $this->recoveryRepository->findByHash($hash);
 
 		if (!$passwordRecovery) {
-			throw new \Exception('Incorrect hash');
+			throw new \Exception('Token is expired or not valid');
 		}
 
 		$dateTime = new \DateTime();
 		$dateTime->setTimestamp($dateTime->getTimestamp());
 
 		if ($passwordRecovery->getExpirationDate() < $dateTime) {
-			throw new \Exception('Your hash has been expired');
+			throw new \Exception('Your token has been expired');
 		}
 
 		return $passwordRecovery;

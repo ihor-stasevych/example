@@ -15,6 +15,8 @@ class UserPasswordRecovery
 
 	private $hash;
 
+	private $requestedDate;
+
 	private $expirationDate;
 
 	public function __construct(User $user)
@@ -22,6 +24,7 @@ class UserPasswordRecovery
 		$this->user = $user;
 		$dataTime = new \DateTime();
 		$this->expirationDate = $dataTime->setTimestamp($dataTime->getTimestamp() + self::DURATION_TIME);
+		$this->requestedDate = new \DateTime();
 		$this->hash = Uuid::generate();
 	}
 
@@ -33,6 +36,11 @@ class UserPasswordRecovery
 	public function getHash()
 	{
 		return $this->hash;
+	}
+
+	public function getRequestedDate()
+	{
+		return $this->requestedDate;
 	}
 
 	public function getExpirationDate()
