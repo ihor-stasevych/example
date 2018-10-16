@@ -53,13 +53,18 @@ class SendUserResetPasswordEmailService implements SendUserResetPasswordEmailSer
 			throw new \Exception('User with such email does not exists');
 		}
 
-		$passwordRecovery = new UserPasswordRecovery($user);
+		/** @var UserPasswordRecovery $passwordRecovery */
+		$passwordRecovery = $this->passwordRecoveryRepository->findByUser($user);
 
-		$dateTime = new \DateTime();
-		$dateTime->setTimestamp($dateTime->getTimestamp() - self::REQUESTED_DURATION);
+		if ($passwordRecovery) {
+			$dateTime = new \DateTime();
+			$dateTime->setTimestamp($dateTime->getTimestamp() - self::REQUESTED_DURATION);
 
-		if ($passwordRecovery->getRequestedDate() < $dateTime) {
-			throw new \Exception('Please wait 10 minutes to try again!');
+			if ($passwordRecovery->getRequestedDate() < $dateTime) {
+				throw new \Exception('Please wait 10 minutes to try again!');
+			}
+		} else {
+			$passwordRecovery = new UserPasswordRecovery($user);
 		}
 
 		//TODO::Change this shit
