@@ -10,13 +10,13 @@ class User
 {
     private $id;
 
-    private $firstName;
+    private $firstName = '';
 
-    private $lastName;
+    private $lastName = '';
 
-    private $backupEmail;
+    private $backupEmail = '';
 
-    private $phone;
+    private $phone = '';
 
     private $updatedAt;
 
@@ -44,7 +44,7 @@ class User
         return $this->id;
     }
 
-    public function getBackupEmail(): ?string
+    public function getBackupEmail(): string
     {
         return $this->backupEmail;
     }
@@ -59,7 +59,7 @@ class User
         return $this->lastName;
     }
 
-    public function getPhoneNumber(): ?string
+    public function getPhoneNumber(): string
     {
         return $this->phone;
     }

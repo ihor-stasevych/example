@@ -19,7 +19,8 @@ use App\AddHash\AdminPanel\Domain\Payment\Repository\PaymentTransactionRepositor
 
 class MakeCryptoPaymentService implements MakeCryptoPaymentServiceInterface
 {
-    const PAYMENT_METHOD_NAME = 'Crypto';
+    private const PAYMENT_METHOD_NAME = 'Crypto';
+
 
 	private $paymentRepository;
 
@@ -44,17 +45,16 @@ class MakeCryptoPaymentService implements MakeCryptoPaymentServiceInterface
 		$this->paymentTransactionRepository = $paymentTransactionRepository;
 		$this->orderRepository = $orderRepository;
 		$this->paymentGateway = $paymentGateway;
-
 	}
 
     /**
      * @param MakeCryptoPaymentCommandInterface $command
-     * @return CryptoPayment
+     * @return array
      * @throws CantCreatePaymentErrorException
      * @throws CantFindNewOrderErrorException
      * @throws CantFindPaymentMethodErrorException
      */
-	public function execute(MakeCryptoPaymentCommandInterface $command)
+	public function execute(MakeCryptoPaymentCommandInterface $command): array
 	{
 		/** @var StoreOrder $order */
 		$order = $this->orderRepository->findById($command->getOrderId());
@@ -92,6 +92,6 @@ class MakeCryptoPaymentService implements MakeCryptoPaymentServiceInterface
         $order->setPayment($payment);
         $this->orderRepository->save($order);
 
-		return $cryptoPayment;
+		return $cryptoPayment->getData();
 	}
 }

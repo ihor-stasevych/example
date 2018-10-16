@@ -2,7 +2,7 @@ services:
   addhash.authentication.open.host:
     class: App\AddHash\Authentication\Infrastructure\OpenHost\AuthenticationOpenHost
     public: true
-    arguments: ['@security.token_storage','@addhash.user.register.service', '@validator']
+    arguments: ['@security.token_storage','@addhash.user.register.service', '@validator', '@addhash.authentication.user.email.update.service', '@addhash.authentication.user.password.update.service']
   App\AddHash\Authentication\Infrastructure\OpenHost\AuthenticationOpenHost: '@addhash.authentication.open.host'
 
   App\AddHash\Authentication\Domain\OpenHost\AuthenticationOpenHostInterface: '@addhash.authentication.open.host'

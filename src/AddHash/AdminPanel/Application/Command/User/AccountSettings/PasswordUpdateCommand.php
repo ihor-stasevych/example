@@ -47,11 +47,6 @@ class PasswordUpdateCommand implements PasswordUpdateCommandInterface
         return $this->newPassword;
     }
 
-    public function getConfirmNewPassword(): string
-    {
-        return $this->confirmNewPassword;
-    }
-
     public function comparePasswords(): bool
     {
         return $this->newPassword == $this->confirmNewPassword;

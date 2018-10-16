@@ -41,7 +41,7 @@ App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder:
 
     manyToOne:
         user:
-            targetEntity: App\AddHash\Authentication\Domain\Model\User
+            targetEntity: App\AddHash\AdminPanel\Domain\User\User
             mappedBy: order
             joinColumn:
                 name: userId

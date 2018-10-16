@@ -60,7 +60,7 @@ class GeneralInformationUpdateCommand implements GeneralInformationUpdateCommand
      */
     private $isMonthlyNewsletter;
 
-	public function __construct($email, $backupEmail, $firstName, $lastName, $phone, $isMonthlyNewsletter)
+	public function __construct($email, $backupEmail, $firstName, $lastName, $phone, $isMonthlyNewsletter = false)
 	{
 		$this->email = $email;
 		$this->backupEmail = $backupEmail;

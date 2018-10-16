@@ -4,6 +4,7 @@ namespace App\AddHash\AdminPanel\Infrastructure\Repository\User;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\NonUniqueResultException;
+use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Domain\User\UserWallet;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
 use App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface;
@@ -12,18 +13,31 @@ class UserWalletRepository extends AbstractRepository implements UserWalletRepos
 {
     /**
      * @param array $ids
-     * @param int $userId
+     * @param User $user
      * @return array
      */
-    public function getByIdsAndUserId(array $ids, int $userId): array
+    public function getByIdsAndUserId(array $ids, User $user): array
     {
         return $this->entityManager->getRepository($this->getEntityName())
             ->createQueryBuilder('uw')
             ->select('uw')
             ->andWhere('uw.id IN (:ids)')
-            ->andWhere('uw.user = :userId')
+            ->andWhere('uw.user = :user')
             ->setParameter('ids', $ids)
-            ->setParameter('userId', $userId)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getByUserId(User $user): array
+    {
+        return $this->entityManager->getRepository($this->getEntityName())
+            ->createQueryBuilder('uw')
+            ->select('uw')
+            ->join('uw.wallet', 'w')
+            ->join('w.type', 't')
+            ->where('uw.user = :user')
+            ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
     }

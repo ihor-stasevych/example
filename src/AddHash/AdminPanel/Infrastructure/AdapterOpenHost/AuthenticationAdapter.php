@@ -17,7 +17,34 @@ class AuthenticationAdapter implements AuthenticationAdapterInterface
 
     public function getUserId(): ?int
     {
-        return $this->authenticationOpenHost->getAuthenticationUserId();
+        return $this->authenticationOpenHost->getUserId();
+    }
+
+    public function getCredentials(): array
+    {
+        return $this->authenticationOpenHost->getCredentials();
+    }
+
+    /**
+     * @param Email $email
+     * @throws \Exception
+     */
+    public function changeEmail(Email $email)
+    {
+        try {
+            $this->authenticationOpenHost->changeEmail($email->getEmail());
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function changePassword(string $currentPassword, string $newPassword)
+    {
+        try {
+            $this->authenticationOpenHost->changePassword($currentPassword, $newPassword);
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
     /**

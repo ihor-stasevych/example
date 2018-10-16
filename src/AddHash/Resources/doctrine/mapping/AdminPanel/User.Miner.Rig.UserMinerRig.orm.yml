@@ -20,7 +20,7 @@ App\AddHash\AdminPanel\Domain\User\Miner\Rig\UserMinerRig:
 
     manyToOne:
         user:
-            targetEntity: App\AddHash\Authentication\Domain\Model\User
+            targetEntity: App\AddHash\AdminPanel\Domain\User\User
             inversedBy: user
             joinColumn:
                 name: userId

@@ -6,3 +6,19 @@ services:
   App\AddHash\Authentication\Infrastructure\Services\UserRegisterService: '@addhash.user.register.service'
 
   App\AddHash\Authentication\Domain\Services\UserRegisterServiceInterface: '@addhash.user.register.service'
+
+  addhash.authentication.user.email.update.service:
+    class: App\AddHash\Authentication\Infrastructure\Services\UserEmailUpdateService
+    public: true
+    arguments: ['@addhash.user.repository', '@security.token_storage']
+  App\AddHash\Authentication\Infrastructure\Services\UserEmailUpdateService: '@addhash.authentication.user.email.update.service'
+
+  App\AddHash\Authentication\Domain\Services\UserEmailUpdateServiceInterface: '@addhash.authentication.user.email.update.service'
+
+  addhash.authentication.user.password.update.service:
+    class: App\AddHash\Authentication\Infrastructure\Services\UserPasswordUpdateService
+    public: true
+    arguments: ['@addhash.user.repository', '@security.token_storage', '@security.encoder_factory']
+  App\AddHash\Authentication\Infrastructure\Services\UserPasswordUpdateService: '@addhash.authentication.user.password.update.service'
+
+  App\AddHash\Authentication\Domain\Services\UserPasswordUpdateServiceInterface: '@addhash.authentication.user.password.update.service'

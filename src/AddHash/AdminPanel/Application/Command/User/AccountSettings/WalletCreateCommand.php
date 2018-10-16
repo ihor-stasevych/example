@@ -16,6 +16,7 @@ class WalletCreateCommand implements WalletCreateCommandInterface
     /**
      * @var int
      * @Assert\NotBlank()
+     * @Assert\Type("integer")
      */
     private $typeId;
 

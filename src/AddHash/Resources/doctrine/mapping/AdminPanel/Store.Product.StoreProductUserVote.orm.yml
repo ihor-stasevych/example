@@ -13,7 +13,7 @@ App\AddHash\AdminPanel\Domain\Store\Product\StoreProductUserVote:
 
     manyToOne:
         user:
-            targetEntity: App\AddHash\Authentication\Domain\Model\User
+            targetEntity: App\AddHash\AdminPanel\Domain\User\User
             inversedBy: product
             joinColumn:
                 name: userId

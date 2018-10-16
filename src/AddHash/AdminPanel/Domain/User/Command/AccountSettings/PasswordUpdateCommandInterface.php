@@ -8,7 +8,5 @@ interface PasswordUpdateCommandInterface
 
     public function getNewPassword(): string;
 
-    public function getConfirmNewPassword(): string;
-
     public function comparePasswords(): bool;
 }

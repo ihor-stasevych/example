@@ -2,15 +2,16 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings;
 
+use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Domain\Wallet\Wallet;
-use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\AdminPanel\Domain\User\UserWallet;
 use App\AddHash\AdminPanel\Domain\Wallet\WalletRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Wallet\WalletTypeRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Wallet\Exceptions\WalletIsExistException;
 use App\AddHash\AdminPanel\Domain\Wallet\Exceptions\WalletTypeIsNotExistException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
+use App\AddHash\AdminPanel\Infrastructure\Transformers\User\AccountSettings\WalletTransform;
 use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\WalletCreateCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletCreateServiceInterface;
 
@@ -22,19 +23,19 @@ class WalletCreateService implements WalletCreateServiceInterface
 
     private $walletTypeRepository;
 
-    private $tokenStorage;
+    private $authenticationService;
 
 	public function __construct(
         WalletRepositoryInterface $walletRepository,
 	    UserWalletRepositoryInterface $userWalletRepository,
         WalletTypeRepositoryInterface $walletTypeRepository,
-        TokenStorageInterface $tokenStorage
+        UserGetAuthenticationServiceInterface $authenticationService
     )
 	{
 	    $this->walletRepository = $walletRepository;
         $this->userWalletRepository = $userWalletRepository;
         $this->walletTypeRepository = $walletTypeRepository;
-        $this->tokenStorage = $tokenStorage;
+        $this->authenticationService = $authenticationService;
 	}
 
     /**
@@ -64,7 +65,7 @@ class WalletCreateService implements WalletCreateServiceInterface
         $this->walletRepository->create($wallet);
 
         /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->authenticationService->execute();
 
         $userWallet = new UserWallet();
         $userWallet->setWallet($wallet);
@@ -72,10 +73,6 @@ class WalletCreateService implements WalletCreateServiceInterface
 
         $this->userWalletRepository->create($userWallet);
 
-        return [
-            'id'     => $userWallet->getId(),
-            'typeId' => $walletType->getId(),
-            'value'  => $value,
-        ];
+        return (new WalletTransform())->transform($userWallet);
 	}
 }

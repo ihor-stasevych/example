@@ -8,13 +8,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\AdminPanel\Domain\Wallet\Exceptions\WalletIsExistException;
-use App\AddHash\AdminPanel\Domain\Wallet\Exceptions\WalletTypeIsNotExistException;
 use App\AddHash\AdminPanel\Application\Command\User\AccountSettings\WalletCreateCommand;
 use App\AddHash\AdminPanel\Application\Command\User\AccountSettings\WalletUpdateCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletGetServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletUpdateServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletCreateServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\Exceptions\AccountSettings\UserWalletIsNotValidException;
 
 class WalletController extends BaseServiceController
 {
@@ -57,8 +55,7 @@ class WalletController extends BaseServiceController
      */
     public function get()
     {
-    	$user = $this->getService->execute();
-        return $this->json($user);
+        return $this->json($this->getService->execute());
     }
 
     /**
@@ -106,24 +103,27 @@ class WalletController extends BaseServiceController
 	{
         $command = new WalletUpdateCommand($request->get('wallets'));
 
-        if (!$this->commandIsValid($command)) {
+        if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
             ], Response::HTTP_BAD_REQUEST);
         }
 
         try {
-            return $this->json($this->updateService->execute($command));
-        } catch (UserWalletIsNotValidException | WalletTypeIsNotExistException | WalletIsExistException $e) {
+            $data = $this->updateService->execute($command);
+        } catch (\Exception $e) {
             $errors = $e->getMessage();
 
             if ($e instanceof WalletIsExistException) {
                 $errors = json_decode($errors, true);
             }
+
             return $this->json([
                 'errors' => $errors,
             ], Response::HTTP_BAD_REQUEST);
         }
+
+        return $this->json($data);
 	}
 
     /**
@@ -168,21 +168,23 @@ class WalletController extends BaseServiceController
     {
         $command = new WalletCreateCommand(
             $request->get('value'),
-            (int)$request->get('typeId')
+            (int) $request->get('typeId')
         );
 
-        if (!$this->commandIsValid($command)) {
+        if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
             ], Response::HTTP_BAD_REQUEST);
         }
 
         try {
-            return $this->json($this->createService->execute($command));
-        } catch (WalletIsExistException | WalletTypeIsNotExistException $e) {
+            $data = $this->createService->execute($command);
+        } catch (\Exception $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
             ], Response::HTTP_BAD_REQUEST);
         }
+
+        return $this->json($data);
     }
 }
