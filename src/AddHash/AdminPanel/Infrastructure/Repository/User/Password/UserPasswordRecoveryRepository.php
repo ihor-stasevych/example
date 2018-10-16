@@ -22,7 +22,7 @@ class UserPasswordRecoveryRepository extends AbstractRepository implements UserP
 
 	public function findByUser(User $user)
 	{
-		return $this->entityRepository->findOneBy(['userId' => $user->getId()]);
+		return $this->entityRepository->findOneBy(['user' => $user->getId()]);
 	}
 
 	/**
