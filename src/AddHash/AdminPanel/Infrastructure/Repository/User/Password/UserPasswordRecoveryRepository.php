@@ -4,6 +4,7 @@ namespace App\AddHash\AdminPanel\Infrastructure\Repository\User\Password;
 
 use App\AddHash\AdminPanel\Domain\User\Password\UserPasswordRecovery;
 use App\AddHash\AdminPanel\Domain\User\Password\UserPasswordRecoveryRepositoryInterface;
+use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
 
 class UserPasswordRecoveryRepository extends AbstractRepository implements UserPasswordRecoveryRepositoryInterface
@@ -17,6 +18,11 @@ class UserPasswordRecoveryRepository extends AbstractRepository implements UserP
 	{
 		$this->entityManager->persist($passwordRecovery);
 		$this->entityManager->flush();
+	}
+
+	public function findByUser(User $user)
+	{
+		return $this->entityRepository->findOneBy(['userId' => $user->getId()]);
 	}
 
 	/**
