@@ -114,7 +114,7 @@ services:
   addhash.user.miner.control.get.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetService
     public: true
-    arguments: ['@security.token_storage','@addhash.user.miner.repository']
+    arguments: ['@addhash.user.get.authentication.service','@addhash.user.miner.repository']
   App\AddHash\AdminPanel\Infrastructure\Services\User\MinerControlGetService: '@addhash.user.miner.control.get.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface: '@addhash.user.miner.control.get.service'
@@ -122,7 +122,7 @@ services:
   addhash.user.order.history.list.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryListService
     public: true
-    arguments: ['@security.token_storage', '@addhash.store.order.repository']
+    arguments: ['@addhash.user.get.authentication.service', '@addhash.store.order.repository']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryListService: '@addhash.user.order.history.list.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryListServiceInterface: '@addhash.user.order.history.list.service'
@@ -130,7 +130,7 @@ services:
   addhash.user.order.history.get.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryGetService
     public: true
-    arguments: ['@security.token_storage', '@addhash.store.order.repository']
+    arguments: ['@addhash.user.get.authentication.service', '@addhash.store.order.repository']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History\UserOrderHistoryGetService: '@addhash.user.order.history.get.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryGetServiceInterface: '@addhash.user.order.history.get.service'
@@ -138,7 +138,7 @@ services:
   user.miner.pool.context:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolContext
     public: true
-    arguments: ['@security.token_storage']
+    arguments: ['@addhash.user.get.authentication.service']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerControlPoolContext: '@user.miner.pool.context'
 
   App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolContextInterface: '@user.miner.pool.context'
@@ -157,7 +157,7 @@ services:
   addhash.user.miner.control.rig.create.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Rig\UserMinerControlRigCreateService
     public: true
-    arguments: ['@security.token_storage']
+    arguments: ['@addhash.user.get.authentication.service']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Rig\UserMinerControlRigCreateService: '@addhash.user.miner.control.rig.create.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Miner\Rig\UserMinerControlRigCreateServiceInterface: '@addhash.user.miner.control.rig.create.service'
@@ -173,7 +173,7 @@ services:
   addhash.user.notification.get.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\GetUserNotificationService
     public: true
-    arguments: ['@security.token_storage', '@addhash.user.notification.repository']
+    arguments: ['@addhash.user.get.authentication.service', '@addhash.user.notification.repository']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\GetUserNotificationService: '@addhash.user.notification.get.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Notification\GetUserNotificationServiceInterface: '@addhash.user.notification.get.service'
@@ -181,7 +181,7 @@ services:
   addhash.user.notification.send.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\SendUserNotificationService
     public: true
-    arguments: ['@security.token_storage', '@addhash.user.notification.repository']
+    arguments: ['@addhash.user.get.authentication.service', '@addhash.user.notification.repository']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\SendUserNotificationService: '@addhash.user.notification.send.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Notification\SendUserNotificationServiceInterface: '@addhash.user.notification.send.service'
@@ -189,31 +189,7 @@ services:
   addhash.user.notification.markread.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\MarkAsReadNotificationService
     public: true
-    arguments: ['@addhash.user.notification.repository', '@security.token_storage']
+    arguments: ['@addhash.user.notification.repository', '@addhash.user.get.authentication.service']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\MarkAsReadNotificationService: '@addhash.user.notification.markread.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Notification\MarkAsReadNotificationServiceInterface: '@addhash.user.notification.markread.service'
-
-  addhash.user.passwordrecovery.repository:
-    class: App\AddHash\AdminPanel\Infrastructure\Repository\User\Password\UserPasswordRecoveryRepository
-    public: true
-    arguments: ['@doctrine.orm.entity_manager']
-  App\AddHash\AdminPanel\Infrastructure\Repository\User\Password\UserPasswordRecoveryRepository: '@addhash.user.passwordrecovery.repository'
-
-  App\AddHash\AdminPanel\Domain\User\Password\UserPasswordRecoveryRepositoryInterface: '@addhash.user.passwordrecovery.repository'
-
-  addhash.user.email.send.resetpassword.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\Email\SendUserResetPasswordEmailService
-    public: true
-    arguments: ['@addhash.mailer', '@twig', '@addhash.user.repository', '@addhash.user.passwordrecovery.repository', '@router.default']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\Email\SendUserResetPasswordEmailService: '@addhash.user.email.send.resetpassword.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\Notification\Email\SendUserResetPasswordEmailServiceInterface: '@addhash.user.email.send.resetpassword.service'
-
-  addhash.user.passwordrecovery.service:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\UserPasswordRecoveryService
-    public: true
-    arguments: ['@addhash.user.passwordrecovery.repository', '@addhash.user.repository', '@security.encoder_factory']
-  App\AddHash\AdminPanel\Infrastructure\Services\User\UserPasswordRecoveryService: '@addhash.user.passwordrecovery.service'
-
-  App\AddHash\AdminPanel\Domain\User\Services\UserPasswordRecoveryServiceInterface: '@addhash.user.passwordrecovery.service'

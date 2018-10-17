@@ -3,8 +3,6 @@
 namespace App\AddHash\Authentication\Domain\Model;
 
 use App\AddHash\System\Lib\Uuid;
-use Doctrine\Common\Collections\ArrayCollection;
-use App\AddHash\AdminPanel\Domain\User\UserWallet;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -33,14 +31,6 @@ class User implements UserInterface
 
 	private $updatedAt;
 
-	private $order;
-
-	private $wallet;
-
-	private $vote;
-
-	private $orderMain;
-
     public function __construct(Email $email, string $password, array $roles, $id = null)
     {
         $this->id = $id;
@@ -51,11 +41,6 @@ class User implements UserInterface
         $this->token = Uuid::generate();
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
-
-        $this->order = new ArrayCollection();
-        $this->wallet = new ArrayCollection();
-        $this->vote = new ArrayCollection();
-        $this->orderMain = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -83,26 +68,6 @@ class User implements UserInterface
         return $this->roles;
     }
 
-    public function getOrder()
-    {
-        return $this->order;
-    }
-
-    public function getVote()
-    {
-        return $this->vote;
-    }
-
-    public function getUserWallets()
-    {
-        return $this->wallet;
-    }
-
-    public function getOrderMiner()
-    {
-        return $this->orderMain;
-    }
-
     public function getSalt(): string
     {
         return self::SALT;
@@ -116,11 +81,6 @@ class User implements UserInterface
     public function setPassword(string $password)
     {
         $this->password = $password;
-    }
-
-    public function setUserWallet(UserWallet $wallet)
-    {
-        $this->wallet = $wallet;
     }
 
     public function eraseCredentials() {}

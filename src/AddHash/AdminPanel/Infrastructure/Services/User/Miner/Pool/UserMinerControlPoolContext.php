@@ -2,10 +2,9 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool;
 
-use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolContextInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\Strategy\UserMinerControlPoolStrategyInterface;
@@ -14,11 +13,11 @@ class UserMinerControlPoolContext implements UserMinerControlPoolContextInterfac
 {
     private $strategies = [];
 
-    private $tokenStorage;
+    private $authenticationService;
 
-    public function __construct(TokenStorageInterface $tokenStorage)
+    public function __construct(UserGetAuthenticationServiceInterface $authenticationService)
     {
-        $this->tokenStorage = $tokenStorage;
+        $this->authenticationService = $authenticationService;
     }
 
     public function addStrategy(UserMinerControlPoolStrategyInterface $strategy)
@@ -34,8 +33,7 @@ class UserMinerControlPoolContext implements UserMinerControlPoolContextInterfac
      */
     public function handle(string $strategyAlias, UserMinerControlPoolCommandInterface $command): array
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->authenticationService->execute();
         $data = [];
 
         if (!count($user->getOrderMiner())) {

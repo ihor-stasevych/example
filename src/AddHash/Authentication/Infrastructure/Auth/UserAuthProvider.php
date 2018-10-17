@@ -31,9 +31,15 @@ class UserAuthProvider implements UserProviderInterface
     {
         $this->isVerifyCaptcha();
 
-        return $this->userRepository->getByEmail(
+        $user = $this->userRepository->getByEmail(
             new Email($username)
         );
+
+        if (null === $user) {
+            throw new \Exception('Bad credentials.');
+        }
+
+        return $user;
     }
 
     /**

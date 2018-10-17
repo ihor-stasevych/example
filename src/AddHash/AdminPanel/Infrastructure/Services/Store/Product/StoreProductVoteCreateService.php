@@ -4,7 +4,7 @@ namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Product;
 
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductUserVote;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductRepositoryInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\Exceptions\Vote\UserVoteExistException;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductUserVoteRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\Exceptions\Vote\ProductIsNotExistException;
@@ -22,17 +22,17 @@ class StoreProductVoteCreateService implements StoreProductVoteCreateServiceInte
 
     private $productUserVoteRepository;
 
-    private $tokenStorage;
+    private $authenticationService;
 
 	public function __construct(
 	    StoreProductRepositoryInterface $productRepository,
         StoreProductUserVoteRepositoryInterface $productUserVoteRepository,
-        TokenStorageInterface $tokenStorage
+        UserGetAuthenticationServiceInterface $authenticationService
     )
 	{
         $this->productRepository = $productRepository;
         $this->productUserVoteRepository = $productUserVoteRepository;
-        $this->tokenStorage = $tokenStorage;
+        $this->authenticationService = $authenticationService;
 	}
 
     /**
@@ -53,7 +53,7 @@ class StoreProductVoteCreateService implements StoreProductVoteCreateServiceInte
             throw new ProductIsNotExistException('Product id is not valid');
         }
 
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->authenticationService->execute();
 
         $userVote = $this->productUserVoteRepository->getByUserIdAndProductId($user->getId(), $command->getProductId());
 

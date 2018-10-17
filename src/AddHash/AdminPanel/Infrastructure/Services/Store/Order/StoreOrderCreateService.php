@@ -2,18 +2,17 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
-use App\AddHash\AdminPanel\Domain\User\Services\Notification\SendUserNotificationServiceInterface;
-
-use App\AddHash\Authentication\Domain\Model\User;
+use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerStockRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCreateCommandInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\Notification\SendUserNotificationServiceInterface;
 
 class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 {
@@ -23,21 +22,21 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 
 	private $minerStockRepository;
 
-	private $tokenStorage;
+	private $authenticationService;
 
 	private $notificationService;
 
 	public function __construct(
 		StoreProductRepositoryInterface $productRepository,
 		StoreOrderRepositoryInterface $orderRepository,
-		TokenStorageInterface $tokenStorage,
+        UserGetAuthenticationServiceInterface $authenticationService,
         MinerStockRepositoryInterface $minerStockRepository,
 		SendUserNotificationServiceInterface $notificationService
 	)
 	{
 		$this->storeProductRepository = $productRepository;
 		$this->storeOrderRepository = $orderRepository;
-		$this->tokenStorage = $tokenStorage;
+		$this->authenticationService = $authenticationService;
 		$this->minerStockRepository = $minerStockRepository;
 		$this->notificationService = $notificationService;
 	}
@@ -49,8 +48,7 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 	 */
 	public function execute(StoreOrderCreateCommandInterface $command): StoreOrder
 	{
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->authenticationService->execute();
 
         $this->closeOldOrderAndUnReserveMiners($user);
 

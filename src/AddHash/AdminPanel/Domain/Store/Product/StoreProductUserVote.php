@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\Store\Product;
 
-use App\AddHash\Authentication\Domain\Model\User;
+use App\AddHash\AdminPanel\Domain\User\User;
 
 class StoreProductUserVote
 {

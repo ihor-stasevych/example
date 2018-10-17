@@ -2,7 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Domain\User\Notification;
 
-use App\AddHash\Authentication\Domain\Model\User;
+use App\AddHash\AdminPanel\Domain\User\User;
 
 class UserNotification
 {

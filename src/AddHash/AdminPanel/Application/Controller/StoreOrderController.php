@@ -299,16 +299,6 @@ class StoreOrderController extends BaseServiceController
 	 */
 	public function get()
 	{
-		$result = [];
-		$order = $this->storeOrderGetService->execute($this->tokenStorage->getToken()->getUser());
-
-		if ($order) {
-			$transformer = new StoreOrderTransformer();
-			$result = $transformer->transform($order);
-		}
-
-		return $this->json(
-			$result
-		);
+		return $this->json($this->storeOrderGetService->execute());
 	}
 }

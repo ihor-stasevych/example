@@ -2,25 +2,23 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Rig;
 
-use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Rig\UserMinerControlRigCreateCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Rig\UserMinerControlRigCreateServiceInterface;
 
 class UserMinerControlRigCreateService implements UserMinerControlRigCreateServiceInterface
 {
-    private $tokenStorage;
+    private $authenticationService;
 
-    public function __construct(TokenStorageInterface $tokenStorage)
+    public function __construct(UserGetAuthenticationServiceInterface $authenticationService)
     {
-        $this->tokenStorage = $tokenStorage;
+        $this->authenticationService = $authenticationService;
     }
 
     public function execute(UserMinerControlRigCreateCommandInterface $command): array
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->authenticationService->execute();
 
         foreach ($user->getOrderMiner() as $orderMiners) {
             /** @var MinerStock $minerStock */

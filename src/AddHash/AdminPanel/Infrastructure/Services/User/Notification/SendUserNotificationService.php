@@ -2,29 +2,23 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Notification;
 
-use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\AdminPanel\Domain\User\Notification\UserNotification;
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Notification\UserNotificationRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Notification\SendUserNotificationServiceInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SendUserNotificationService implements SendUserNotificationServiceInterface
 {
-	private $tokenStorage;
+	private $authenticationService;
+
 	private $notificationRepository;
 
-	/**
-	 * SendUserNotificationService constructor.
-	 *
-	 * @param TokenStorageInterface $tokenStorage
-	 * @param UserNotificationRepositoryInterface $notificationRepository
-	 */
 	public function __construct(
-		TokenStorageInterface $tokenStorage,
+        UserGetAuthenticationServiceInterface $authenticationService,
 		UserNotificationRepositoryInterface $notificationRepository
 	)
 	{
-		$this->tokenStorage = $tokenStorage;
+		$this->authenticationService = $authenticationService;
 		$this->notificationRepository = $notificationRepository;
 	}
 
@@ -35,8 +29,8 @@ class SendUserNotificationService implements SendUserNotificationServiceInterfac
 	 */
 	public function execute(string $title, string $message)
 	{
-		/** @var User $user */
-		$user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->authenticationService->execute();
+
 		$notification = new UserNotification($user, $title, $message);
 		$this->notificationRepository->save($notification);
 
