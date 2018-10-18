@@ -57,7 +57,12 @@ class UserPasswordRecovery
         $this->user = $user;
     }
 
-    private function setExpirationDate()
+    public function setRequestedDate(\DateTime $dateTime)
+    {
+    	$this->requestedDate = $dateTime;
+    }
+
+    public function setExpirationDate()
     {
         $dataTime = new \DateTime();
         $newDate = $dataTime->getTimestamp() + self::DURATION_TIME;

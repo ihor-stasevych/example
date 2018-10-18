@@ -62,22 +62,26 @@ final class UserSendResetPasswordEmailService implements UserSendResetPasswordEm
         /** @var User $user */
         $user = $this->userRepository->getByEmail($email);
 
-        if (null === $user) {
+        if (!$user) {
             throw new UserResetPasswordUserNotExistsException('User with such email does not exists');
         }
 
         $passwordRecovery = $this->passwordRecoveryRepository->findByUser($user);
 
-        if (null !== $passwordRecovery) {
-            $dateTime = new \DateTime();
-            $dateTime->setTimestamp($dateTime->getTimestamp() - self::REQUESTED_DURATION);
+        if ($passwordRecovery) {
+            $duration = new \DateTime();
+	        $duration->setTimestamp($passwordRecovery->getRequestedDate()->getTimestamp() + self::REQUESTED_DURATION);
+            $now = new \DateTime();
 
-            if ($passwordRecovery->getRequestedDate() > $dateTime) {
+            if ($now < $duration) {
                 throw new UserResetPasswordManySendsResetException('Please wait several minutes to try again!');
             }
+
+            $passwordRecovery->setExpirationDate();
+            $passwordRecovery->setRequestedDate($now);
         }
 
-        if (null === $passwordRecovery) {
+        if (!$passwordRecovery) {
             $passwordRecovery = new UserPasswordRecovery($user);
         }
 
