@@ -126,7 +126,7 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
 	public function save(StoreOrder $order)
 	{
 		$this->entityManager->persist($order);
-		$this->entityManager->flush($order);
+		$this->entityManager->flush();
 	}
 
 	/**
