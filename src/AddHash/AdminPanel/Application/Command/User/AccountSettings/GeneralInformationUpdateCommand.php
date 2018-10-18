@@ -60,13 +60,13 @@ class GeneralInformationUpdateCommand implements GeneralInformationUpdateCommand
      */
     private $isMonthlyNewsletter;
 
-	public function __construct($email, $backupEmail, $firstName, $lastName, $phone, $isMonthlyNewsletter)
+	public function __construct($email, $backupEmail, $firstName, $lastName, $phone, $isMonthlyNewsletter = false)
 	{
 		$this->email = $email;
-		$this->backupEmail = $backupEmail ?? '';
-		$this->firstName = $firstName ?? '';
-		$this->lastName = $lastName ?? '';
-		$this->phone = $phone ?? '';
+		$this->backupEmail = $backupEmail;
+		$this->firstName = $firstName;
+		$this->lastName = $lastName;
+		$this->phone = $phone;
 		$this->isMonthlyNewsletter = $isMonthlyNewsletter;
 	}
 
@@ -75,24 +75,28 @@ class GeneralInformationUpdateCommand implements GeneralInformationUpdateCommand
 		return new Email($this->email);
 	}
 
-	public function getBackupEmail(): Email
+	public function getBackupEmail(): ?Email
 	{
-        return new Email($this->backupEmail);
+        return (null !== $this->backupEmail)
+            ? new Email($this->backupEmail)
+            : null;
     }
 
-    public function getFirstName():? string
+    public function getFirstName(): string
     {
         return $this->firstName ?? '';
     }
 
-    public function getLastName():? string
+    public function getLastName(): string
     {
         return $this->lastName ?? '';
     }
 
-	public function getPhoneNumber():? Phone
+	public function getPhoneNumber(): ?Phone
 	{
-		return new Phone($this->phone);
+		return (null !== $this->phone)
+           ? new Phone($this->phone)
+           : null;
 	}
 
 	public function isMonthlyNewsletter(): bool

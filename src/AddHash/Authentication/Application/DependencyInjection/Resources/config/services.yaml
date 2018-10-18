@@ -1,8 +1,0 @@
-services:
-  addhash.user.register.service:
-    class: App\AddHash\Authentication\Infrastructure\Services\UserRegisterService
-    public: true
-    arguments: ['@security.encoder_factory', '@service_container', '@addhash.user.repository']
-  App\AddHash\Authentication\Infrastructure\Services\UserRegisterService: '@addhash.user.register.service'
-
-  App\AddHash\Authentication\Domain\Services\UserRegisterServiceInterface: '@addhash.user.register.service'

@@ -6,5 +6,5 @@ use App\AddHash\AdminPanel\Domain\Payment\Command\MakeCryptoPaymentCommandInterf
 
 interface MakeCryptoPaymentServiceInterface
 {
-	public function execute(MakeCryptoPaymentCommandInterface $command);
+	public function execute(MakeCryptoPaymentCommandInterface $command): array;
 }

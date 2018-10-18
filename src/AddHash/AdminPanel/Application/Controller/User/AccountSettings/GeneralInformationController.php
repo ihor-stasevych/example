@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\AdminPanel\Application\Command\User\AccountSettings\GeneralInformationUpdateCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationGetServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\Exceptions\AccountSettings\GeneralInformationEmailExistException;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationUpdateServiceInterface;
 
 class GeneralInformationController extends BaseServiceController
@@ -117,7 +116,7 @@ class GeneralInformationController extends BaseServiceController
             $request->get('isMonthlyNewsletter', 0)
         );
 
-        if (!$this->commandIsValid($command)) {
+        if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
             ], Response::HTTP_BAD_REQUEST);
@@ -125,7 +124,7 @@ class GeneralInformationController extends BaseServiceController
 
         try {
             $user = $this->updateService->execute($command);
-        } catch (GeneralInformationEmailExistException $e) {
+        } catch (\Exception $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
             ], Response::HTTP_BAD_REQUEST);

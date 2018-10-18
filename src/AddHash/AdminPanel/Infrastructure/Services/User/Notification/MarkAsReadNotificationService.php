@@ -2,31 +2,26 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Notification;
 
-use App\AddHash\Authentication\Domain\Model\User;
-use App\AddHash\AdminPanel\Domain\User\Command\Notification\MarkAsReadNotificationCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Notification\UserNotification;
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Domain\User\Notification\UserNotificationRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Notification\MarkAsReadNotificationServiceInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\AddHash\AdminPanel\Domain\User\Command\Notification\MarkAsReadNotificationCommandInterface;
 
 class MarkAsReadNotificationService implements MarkAsReadNotificationServiceInterface
 {
-	private $tokenStorage;
-	private $notificationRepository;
+    private $notificationRepository;
 
-	/**
-	 * SendUserNotificationService constructor.
-	 *
-	 * @param TokenStorageInterface $tokenStorage
-	 * @param UserNotificationRepositoryInterface $notificationRepository
-	 */
+    private $authenticationService;
+
 	public function __construct(
 		UserNotificationRepositoryInterface $notificationRepository,
-		TokenStorageInterface $tokenStorage
+        UserGetAuthenticationServiceInterface $authenticationService
 	)
 	{
 		$this->notificationRepository = $notificationRepository;
-		$this->tokenStorage = $tokenStorage;
+		$this->authenticationService = $authenticationService;
 	}
 
 	/**
@@ -35,8 +30,8 @@ class MarkAsReadNotificationService implements MarkAsReadNotificationServiceInte
 	 */
 	public function execute(MarkAsReadNotificationCommandInterface $command)
 	{
-		/** @var User $user */
-		$user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->authenticationService->execute();
+
 		$notifications = $this->notificationRepository->findById($user, $command->getNotifications());
 
 		if (empty($notifications)) {

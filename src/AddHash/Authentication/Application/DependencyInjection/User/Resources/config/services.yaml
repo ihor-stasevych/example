@@ -1,0 +1,56 @@
+services:
+  addhash.user.register.service:
+    class: App\AddHash\Authentication\Infrastructure\Services\UserRegisterService
+    public: true
+    arguments: ['@security.encoder_factory', '@service_container', '@addhash.user.repository']
+  App\AddHash\Authentication\Infrastructure\Services\UserRegisterService: '@addhash.user.register.service'
+
+  App\AddHash\Authentication\Domain\Services\UserRegisterServiceInterface: '@addhash.user.register.service'
+
+  addhash.authentication.user.email.update.service:
+    class: App\AddHash\Authentication\Infrastructure\Services\UserEmailUpdateService
+    public: true
+    arguments: ['@addhash.user.repository', '@security.token_storage']
+  App\AddHash\Authentication\Infrastructure\Services\UserEmailUpdateService: '@addhash.authentication.user.email.update.service'
+
+  App\AddHash\Authentication\Domain\Services\UserEmailUpdateServiceInterface: '@addhash.authentication.user.email.update.service'
+
+  addhash.authentication.user.password.update.service:
+    class: App\AddHash\Authentication\Infrastructure\Services\UserPasswordUpdateService
+    public: true
+    arguments: ['@addhash.user.repository', '@security.token_storage', '@security.encoder_factory']
+  App\AddHash\Authentication\Infrastructure\Services\UserPasswordUpdateService: '@addhash.authentication.user.password.update.service'
+
+  App\AddHash\Authentication\Domain\Services\UserPasswordUpdateServiceInterface: '@addhash.authentication.user.password.update.service'
+
+  addhash.authentication.user.password.recovery.repository:
+    class: App\AddHash\Authentication\Infrastructure\Repository\UserPasswordRecoveryRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\Authentication\Infrastructure\Repository\UserPasswordRecoveryRepository: '@addhash.authentication.user.password.recovery.repository'
+
+  App\AddHash\Authentication\Domain\Repository\UserPasswordRecoveryRepositoryInterface: '@addhash.authentication.user.password.recovery.repository'
+
+  addhash.authentication.user.send.reset.password.email.service:
+    class: App\AddHash\Authentication\Infrastructure\Services\UserSendResetPasswordEmailService
+    public: true
+    arguments: ['@addhash.mailer', '@twig', '@request_stack', '@addhash.user.repository', '@addhash.authentication.user.password.recovery.repository']
+  App\AddHash\Authentication\Infrastructure\Services\UserSendResetPasswordEmailService: '@addhash.authentication.user.send.reset.password.email.service'
+
+  App\AddHash\Authentication\Domain\Services\UserSendResetPasswordEmailServiceInterface: '@addhash.authentication.user.send.reset.password.email.service'
+
+  addhash.authentication.user.check.recovery.hash.service:
+    class: App\AddHash\Authentication\Infrastructure\Services\UserCheckRecoveryHashService
+    public: true
+    arguments: ['@addhash.authentication.user.password.recovery.repository']
+  App\AddHash\Authentication\Infrastructure\Services\UserCheckRecoveryHashService: '@addhash.authentication.user.check.recovery.hash.service'
+
+  App\AddHash\Authentication\Domain\Services\UserCheckRecoveryHashServiceInterface: '@addhash.authentication.user.check.recovery.hash.service'
+
+  addhash.authentication.user.recovery.password.service:
+    class: App\AddHash\Authentication\Infrastructure\Services\UserRecoveryPasswordService
+    public: true
+    arguments: ['@addhash.authentication.user.password.recovery.repository', '@addhash.user.repository', '@security.encoder_factory', '@addhash.authentication.user.check.recovery.hash.service']
+  App\AddHash\Authentication\Infrastructure\Services\UserRecoveryPasswordService: '@addhash.authentication.user.recovery.password.service'
+
+  App\AddHash\Authentication\Domain\Services\UserRecoveryPasswordServiceInterface: '@addhash.authentication.user.recovery.password.service'

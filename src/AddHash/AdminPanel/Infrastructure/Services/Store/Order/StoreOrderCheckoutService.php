@@ -3,31 +3,31 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
 use App\AddHash\AdminPanel\Domain\Payment\Payment;
-use App\AddHash\AdminPanel\Domain\Payment\PaymentInterface;
 use App\AddHash\AdminPanel\Domain\Payment\Services\MakePaymentForOrderServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCheckoutCommandInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
-use App\AddHash\AdminPanel\Infrastructure\Repository\Store\Order\StoreOrderRepository;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 
 class StoreOrderCheckoutService implements StoreOrderCheckoutServiceInterface
 {
 	private $orderRepository;
-	private $tokenStorage;
+
 	private $payment;
+
+	private $authenticationService;
 
 	public function __construct(
 		StoreOrderRepositoryInterface $orderRepository,
 		MakePaymentForOrderServiceInterface $makePaymentForOrderService,
-		TokenStorageInterface $tokenStorage
+        UserGetAuthenticationServiceInterface $authenticationService
 	)
 	{
 		$this->orderRepository = $orderRepository;
 		$this->payment = $makePaymentForOrderService;
-		$this->tokenStorage = $tokenStorage;
+		$this->authenticationService = $authenticationService;
 	}
 
 	/**
@@ -37,13 +37,7 @@ class StoreOrderCheckoutService implements StoreOrderCheckoutServiceInterface
 	 */
 	public function execute(StoreOrderCheckoutCommandInterface $commandOrder): StoreOrder
 	{
-		$token = $this->tokenStorage->getToken();
-
-		if (empty($token)) {
-			throw new StoreOrderException('Unauthorized');
-		}
-
-		$user = $token->getUser();
+        $user = $this->authenticationService->execute();
 
 		/** @var StoreOrder $order */
 		$order = $this->orderRepository->findNewByUserId($user->getId());

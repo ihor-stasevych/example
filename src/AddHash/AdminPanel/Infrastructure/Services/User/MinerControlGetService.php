@@ -2,25 +2,24 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User;
 
-
-use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Domain\User\Order\UserOrderMiner;
 use App\AddHash\AdminPanel\Domain\User\Miner\UserMinerRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 
 class MinerControlGetService implements MinerControlGetServiceInterface
 {
-    private $tokenStorage;
+    private $authenticationService;
+
     private $userMinerRepository;
 
     public function __construct(
-    	TokenStorageInterface $tokenStorage,
+        UserGetAuthenticationServiceInterface $authenticationService,
 	    UserMinerRepositoryInterface $userMinerRepository)
     {
-        $this->tokenStorage = $tokenStorage;
+        $this->authenticationService = $authenticationService;
         $this->userMinerRepository = $userMinerRepository;
     }
 
@@ -30,8 +29,7 @@ class MinerControlGetService implements MinerControlGetServiceInterface
      */
     public function execute(): array
 	{
-	    /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->authenticationService->execute();
 
         if (!count($user->getOrderMiner())) {
             return [];

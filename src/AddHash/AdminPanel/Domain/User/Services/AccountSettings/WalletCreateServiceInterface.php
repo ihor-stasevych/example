@@ -6,5 +6,5 @@ use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\WalletCreateComma
 
 interface WalletCreateServiceInterface
 {
-	public function execute(WalletCreateCommandInterface $command): array ;
+	public function execute(WalletCreateCommandInterface $command): array;
 }

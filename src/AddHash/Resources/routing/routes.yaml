@@ -1,27 +1,27 @@
 info.currencies:
-  path: "/api/v1/info/currencies"
-  methods: GET
-  controller: App\AddHash\AdminPanel\Application\Controller\InfoController::getCryptoCurrencies
+    path: "/api/v1/info/currencies"
+    methods: GET
+    controller: App\AddHash\AdminPanel\Application\Controller\InfoController::getCryptoCurrencies
 
 user.register:
-  path: "/api/v1/user/register"
-  methods: POST
-  controller: App\AddHash\Authentication\Application\Controller\UserController::register
+    path: "/api/v1/user/register"
+    methods: POST
+    controller: App\AddHash\AdminPanel\Application\Controller\User\UserController::create
 
 user.password.reset:
-  path: "/api/v1/user/password/reset"
-  methods: POST
-  controller: App\AddHash\AdminPanel\Application\Controller\User\PasswordRecoveryController::sendEmailToResetPassword
+    path: "/api/v1/user/password/reset"
+    methods: POST
+    controller: App\AddHash\Authentication\Application\Controller\PasswordRecoveryController::sendEmailToResetPassword
 
 user.password.recovery:
-  path: "/api/v1/user/password/recovery"
-  methods: POST
-  controller: App\AddHash\AdminPanel\Application\Controller\User\PasswordRecoveryController::recoveryPassword
+    path: "/api/v1/user/password/recovery"
+    methods: POST
+    controller: App\AddHash\Authentication\Application\Controller\PasswordRecoveryController::recoveryPassword
 
-user.password.recovery.chechhash:
-  path: "/api/v1/user/password/recovery/hash"
-  methods: POST
-  controller: App\AddHash\AdminPanel\Application\Controller\User\PasswordRecoveryController::checkRecoveryHash
+user.password.recovery.chech.hash:
+    path: "/api/v1/user/password/recovery/hash"
+    methods: POST
+    controller: App\AddHash\Authentication\Application\Controller\PasswordRecoveryController::checkRecoveryHash
 
 store.category.list:
     path: "/api/v1/store/categories"
@@ -152,21 +152,6 @@ user.miner.control.pools.create:
   path: "/api/v1/user/miners/{id}/pools"
   methods: POST
   controller: App\AddHash\AdminPanel\Application\Controller\User\Miner\Pool\UserMinerControlPoolController::create
-
-user.miner.control.pools.delete:
-  path: "/api/v1/user/miners/{id}/pools"
-  methods: DELETE
-  controller: App\AddHash\AdminPanel\Application\Controller\User\Miner\Pool\UserMinerControlPoolController::delete
-
-user.miner.control.pools.update:
-  path: "/api/v1/user/miners/{id}/pools"
-  methods: PUT
-  controller: App\AddHash\AdminPanel\Application\Controller\User\Miner\Pool\UserMinerControlPoolController::update
-
-user.miner.control.pools.status.update:
-  path: "/api/v1/user/miners/{id}/pools/status"
-  methods: PUT
-  controller: App\AddHash\AdminPanel\Application\Controller\User\Miner\Pool\UserMinerControlPoolController::statusUpdate
 
 user.order.history.list:
   path: "/api/v1/user/orders"

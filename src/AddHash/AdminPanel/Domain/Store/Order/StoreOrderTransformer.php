@@ -1,16 +1,17 @@
 <?php
 
 namespace App\AddHash\AdminPanel\Domain\Store\Order;
+
 use League\Fractal\TransformerAbstract;
 
-class StoreOrderTransformer extends  TransformerAbstract
+class StoreOrderTransformer extends TransformerAbstract
 {
-	public function transform(StoreOrder $storeOrder)
+	public function transform(StoreOrder $storeOrder): array
 	{
 		return [
-			'id' => $storeOrder->getId(),
+			'id'         => $storeOrder->getId(),
 			'totalPrice' => $storeOrder->getItemsPriceTotal(),
-			'items' => $storeOrder->getItems()
+			'items'      => $storeOrder->getItems()
 		];
 	}
 }

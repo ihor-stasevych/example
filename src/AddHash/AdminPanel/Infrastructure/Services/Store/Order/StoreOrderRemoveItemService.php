@@ -12,6 +12,7 @@ use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 use App\AddHash\AdminPanel\Infrastructure\Repository\Store\Product\StoreProductRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -21,21 +22,21 @@ class StoreOrderRemoveItemService implements StoreOrderRemoveItemServiceInterfac
 	private $productRepository;
 	private $storeOrderItemRepository;
 	private $minerRepository;
-	private $tokenStorage;
+	private $authenticationService;
 
 	public function __construct(
 		StoreOrderRepositoryInterface $storeOrderRepository,
 		StoreProductRepository $productRepository,
 		StoreOrderItemRepositoryInterface $orderItemRepository,
 		MinerRepositoryInterface $minerRepository,
-		TokenStorageInterface $tokenStorage
+        UserGetAuthenticationServiceInterface $authenticationService
 	)
 	{
 		$this->storeOrderRepository = $storeOrderRepository;
 		$this->productRepository = $productRepository;
 		$this->storeOrderItemRepository = $orderItemRepository;
 		$this->minerRepository = $minerRepository;
-		$this->tokenStorage = $tokenStorage;
+        $this->authenticationService = $authenticationService;
 	}
 
 	/**
@@ -45,8 +46,9 @@ class StoreOrderRemoveItemService implements StoreOrderRemoveItemServiceInterfac
 	 */
 	public function execute($id)
 	{
-		/** @var StoreOrder $order */
-		$order = $this->storeOrderRepository->findNewByUserId($this->tokenStorage->getToken()->getUser());
+        $user = $this->authenticationService->execute();
+
+		$order = $this->storeOrderRepository->findNewByUserId($user->getId());
 
 		if (!$order) {
 			throw new StoreOrderException('Order not found');

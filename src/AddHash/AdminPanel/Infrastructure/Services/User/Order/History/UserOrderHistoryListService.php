@@ -2,26 +2,25 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History;
 
-use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\AdminPanel\Domain\Payment\Payment;
 use App\AddHash\AdminPanel\Domain\Payment\PaymentMethod;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
 use App\AddHash\AdminPanel\Domain\User\Order\History\ListParam\Sort;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryListServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Order\History\UserOrderHistoryListCommandInterface;
 
 class UserOrderHistoryListService implements UserOrderHistoryListServiceInterface
 {
-    private $tokenStorage;
+    private $authenticationService;
 
     private $orderRepository;
 
-    public function __construct(TokenStorageInterface $tokenStorage, StoreOrderRepositoryInterface $orderRepository)
+    public function __construct(UserGetAuthenticationServiceInterface $authenticationService, StoreOrderRepositoryInterface $orderRepository)
     {
-        $this->tokenStorage = $tokenStorage;
+        $this->authenticationService = $authenticationService;
         $this->orderRepository = $orderRepository;
     }
 
@@ -38,8 +37,7 @@ class UserOrderHistoryListService implements UserOrderHistoryListServiceInterfac
             $command->getOrder()
         );
 
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->authenticationService->execute();
 
         $orders = $this->orderRepository->getOrdersByUserId($user->getId(), $sort, $state);
 

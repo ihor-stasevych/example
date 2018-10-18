@@ -4,5 +4,5 @@ namespace App\AddHash\AdminPanel\Domain\Store\Order\Services;
 
 interface StoreOrderPrepareCheckoutServiceInterface
 {
-	public function execute();
+	public function execute(): array;
 }

@@ -23,7 +23,7 @@ App\AddHash\AdminPanel\Domain\User\Order\UserOrderMiner:
 
     manyToOne:
           user:
-              targetEntity: App\AddHash\Authentication\Domain\Model\User
+              targetEntity: App\AddHash\AdminPanel\Domain\User\User
               mappedBy: User_Order_Miner
               joinColumn:
                   name: userId

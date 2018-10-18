@@ -3,30 +3,35 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings;
 
 use App\AddHash\AdminPanel\Domain\User\UserWallet;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletGetServiceInterface;
+use App\AddHash\AdminPanel\Infrastructure\Transformers\User\AccountSettings\WalletTransform;
 
 class WalletGetService implements WalletGetServiceInterface
 {
-    private $tokenStorage;
+    private $authenticationService;
 
-	public function __construct(TokenStorageInterface $tokenStorage)
+    private $userWalletRepository;
+
+	public function __construct(
+	    UserGetAuthenticationServiceInterface $authenticationService,
+        UserWalletRepositoryInterface $userWalletRepository
+    )
 	{
-        $this->tokenStorage = $tokenStorage;
+        $this->authenticationService = $authenticationService;
+        $this->userWalletRepository = $userWalletRepository;
 	}
 
 	public function execute(): array
 	{
-	    $user = $this->tokenStorage->getToken()->getUser();
-	    $data = [];
+	    $user = $this->authenticationService->execute();
+        $data = [];
+        $userWallets = $this->userWalletRepository->getByUserId($user);
 
-	    /** @var UserWallet $userWallet */
-        foreach ($user->getUserWallets() as $userWallet) {
-	        $data[] = [
-	            'id'     => $userWallet->getId(),
-                'typeId' => $userWallet->getWallet()->getType()->getId(),
-                'value'  => $userWallet->getWallet()->getValue(),
-            ];
+        /** @var UserWallet $userWallet */
+        foreach ($userWallets as $userWallet) {
+	        $data[] = (new WalletTransform())->transform($userWallet);
         }
 
         return $data;

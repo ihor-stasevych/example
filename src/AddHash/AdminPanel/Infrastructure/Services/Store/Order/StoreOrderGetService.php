@@ -2,34 +2,36 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
-use Psr\Log\LoggerInterface;
-use App\AddHash\Authentication\Domain\Model\User;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderTransformer;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 
 class StoreOrderGetService implements StoreOrderGetServiceInterface
 {
 	private $storeOrderRepository;
 
-	private $dispatcher;
-
-	private $logger;
+    private $authenticationService;
 
 	public function __construct(
 		StoreOrderRepositoryInterface $orderRepository,
-		EventDispatcher $dispatcher,
-		LoggerInterface $logger
+        UserGetAuthenticationServiceInterface $authenticationService
 	)
 	{
 		$this->storeOrderRepository = $orderRepository;
-		$this->dispatcher = $dispatcher;
-		$this->logger = $logger;
+        $this->authenticationService = $authenticationService;
 	}
 
-	public function execute(User $user)
+	public function execute(): array
 	{
-		$this->logger->info('Try get new order from user: ' . $user->getId());
-		return $this->storeOrderRepository->findNewByUserId($user->getId());
+        $user = $this->authenticationService->execute();
+        $order = $this->storeOrderRepository->findNewByUserId($user->getId());
+        $result = [];
+
+        if (null !== $order) {
+            $result = (new StoreOrderTransformer())->transform($order);
+        }
+
+        return $result;
 	}
 }

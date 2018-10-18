@@ -45,14 +45,11 @@ final class UserRegisterCommand implements UserRegisterCommandInterface
      */
     private $roles;
 
-    private $captcha;
-
-    public function __construct($email, $password, $roles, $captcha = null)
+    public function __construct($email, $password, $roles)
     {
         $this->email = $email;
         $this->password = $password;
         $this->roles = $roles;
-        $this->captcha = $captcha;
     }
 
     public function getEmail(): Email
@@ -68,11 +65,6 @@ final class UserRegisterCommand implements UserRegisterCommandInterface
     public function getRoles(): array
     {
         return $this->roles;
-    }
-
-    public function getCaptcha(): ?string
-    {
-        return $this->captcha;
     }
 
     public function isValidRoles(): bool

@@ -16,12 +16,9 @@ class PasswordController extends BaseServiceController
 {
     private $updateService;
 
-    private $tokenStorage;
-
-    public function __construct(PasswordUpdateServiceInterface $updateService, TokenStorageInterface $tokenStorage)
+    public function __construct(PasswordUpdateServiceInterface $updateService)
     {
         $this->updateService = $updateService;
-        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -67,7 +64,7 @@ class PasswordController extends BaseServiceController
             $request->get('confirmNewPassword')
         );
 
-        if (!$this->commandIsValid($command)) {
+        if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
             ], Response::HTTP_BAD_REQUEST);
@@ -75,7 +72,7 @@ class PasswordController extends BaseServiceController
 
         try {
             $this->updateService->execute($command);
-        } catch (PasswordIsNotValidException $e) {
+        } catch (\Exception $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
             ], Response::HTTP_BAD_REQUEST);

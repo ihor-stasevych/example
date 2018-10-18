@@ -55,8 +55,7 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
 
         $inputData = json_decode($command->getInputData());
 
-        if (null === $inputData ||
-            !$inputData ||
+        if (true === empty($inputData) ||
             !isset($inputData->confirmations) ||
             !isset($inputData->maxConfirmations) ||
             empty($inputData->invoice)
@@ -87,8 +86,6 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
             throw new InvalidInvoiceErrorException('Invalid invoice');
         }
 
-        //$amountPaid = $inputData->inTransaction->amount / pow(10, $inputData->inTransaction->exp);
-
         if ($inputData->confirmations < $inputData->maxConfirmations) {
             $this->logger->info('Callback crypto payment - Waiting for confirmations order # ' . $orderId, [
                 'confirmation'    => $inputData->confirmations,
@@ -96,7 +93,6 @@ class CallbackCryptoPaymentService implements CallbackCryptoPaymentServiceInterf
             ]);
 
             die("waiting for confirmations");
-            //throw new WaitingConfirmationsException('Waiting for confirmations');
         }
 
         $order->setPayedState();

@@ -8,20 +8,20 @@ use App\AddHash\AdminPanel\Domain\Payment\PaymentMethod;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Exceptions\StoreOrderNoOrderErrorException;
 use App\AddHash\AdminPanel\Domain\User\Command\Order\History\UserOrderHistoryGetCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryGetServiceInterface;
 
 class UserOrderHistoryGetService implements UserOrderHistoryGetServiceInterface
 {
-    private $tokenStorage;
+    private $authenticationService;
 
     private $orderRepository;
 
-    public function __construct(TokenStorageInterface $tokenStorage, StoreOrderRepositoryInterface $orderRepository)
+    public function __construct(UserGetAuthenticationServiceInterface $authenticationService, StoreOrderRepositoryInterface $orderRepository)
     {
-        $this->tokenStorage = $tokenStorage;
+        $this->authenticationService = $authenticationService;
         $this->orderRepository = $orderRepository;
     }
 
@@ -32,8 +32,7 @@ class UserOrderHistoryGetService implements UserOrderHistoryGetServiceInterface
      */
     public function execute(UserOrderHistoryGetCommandInterface $command): array
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->authenticationService->execute();
 
         $order = $orders = $this->orderRepository->getOrderByIdAndUserId(
             $command->getOrderId(),

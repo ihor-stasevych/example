@@ -19,7 +19,7 @@ services:
   addhash.store.order.create.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCreateService
     public: true
-    arguments: ['@addhash.store.product.repository','@addhash.store.order.repository', '@security.token_storage', '@addhash.miner.stock.repository', '@addhash.user.notification.send.service']
+    arguments: ['@addhash.store.product.repository','@addhash.store.order.repository', '@addhash.user.get.authentication.service', '@addhash.miner.stock.repository', '@addhash.user.notification.send.service', '@addhash.authentication.adapter.open.host']
   App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCreateService: '@addhash.store.order.create.service'
 
   App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface: '@addhash.store.order.create.service'
@@ -35,7 +35,7 @@ services:
   addhash.store.order.removeitem.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveItemService
     public: true
-    arguments: ['@addhash.store.order.repository', '@addhash.store.product.repository', '@addhash.store.order.item.repository', '@addhash.miner.repository', '@security.token_storage']
+    arguments: ['@addhash.store.order.repository', '@addhash.store.product.repository', '@addhash.store.order.item.repository', '@addhash.miner.repository', '@addhash.user.get.authentication.service']
   App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveItemService: '@addhash.store.order.removeitem.service'
 
   App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderRemoveItemServiceInterface: '@addhash.store.order.removeitem.service'
@@ -44,7 +44,7 @@ services:
   addhash.store.order.get.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderGetService
     public: true
-    arguments: ['@addhash.store.order.repository', '@debug.event_dispatcher.inner', '@monolog.logger.db']
+    arguments: ['@addhash.store.order.repository', '@addhash.user.get.authentication.service']
   App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderGetService: '@addhash.store.order.get.service'
 
   App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface: '@addhash.store.order.get.service'
@@ -52,7 +52,7 @@ services:
   addhash.store.order.checkout.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCheckoutService
     public: true
-    arguments: ['@addhash.store.order.repository', '@addhash.order.checkout.payment.service', '@security.token_storage']
+    arguments: ['@addhash.store.order.repository', '@addhash.order.checkout.payment.service', '@addhash.user.get.authentication.service']
   App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderCheckoutService: '@addhash.store.order.checkout.service'
 
   App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface: '@addhash.store.order.checkout.service'
@@ -60,7 +60,7 @@ services:
   addhash.store.order.checkout.prepare.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderPrepareCheckoutService
     public: true
-    arguments: ['@addhash.store.order.repository', '@security.token_storage']
+    arguments: ['@addhash.store.order.repository', '@addhash.user.get.authentication.service', '@addhash.authentication.adapter.open.host']
   App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderPrepareCheckoutService: '@addhash.store.order.checkout.prepare.service'
 
   App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderPrepareCheckoutServiceInterface: '@addhash.store.order.checkout.prepare.service'

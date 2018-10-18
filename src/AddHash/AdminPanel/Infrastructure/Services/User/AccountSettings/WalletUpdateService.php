@@ -9,7 +9,8 @@ use App\AddHash\AdminPanel\Domain\User\UserWalletRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Wallet\WalletTypeRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Wallet\Exceptions\WalletIsExistException;
 use App\AddHash\AdminPanel\Domain\Wallet\Exceptions\WalletTypeIsNotExistException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
+use App\AddHash\AdminPanel\Infrastructure\Transformers\User\AccountSettings\WalletTransform;
 use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\WalletUpdateCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletUpdateServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\AccountSettings\UserWalletIsNotValidException;
@@ -22,19 +23,19 @@ class WalletUpdateService implements WalletUpdateServiceInterface
 
     private $walletTypeRepository;
 
-    private $tokenStorage;
+    private $authenticationService;
 
 	public function __construct(
 	    UserWalletRepositoryInterface $userWalletRepository,
         WalletRepositoryInterface $walletRepository,
         WalletTypeRepositoryInterface $walletTypeRepository,
-        TokenStorageInterface $tokenStorage
+        UserGetAuthenticationServiceInterface $authenticationService
     )
 	{
         $this->userWalletRepository = $userWalletRepository;
         $this->walletRepository = $walletRepository;
         $this->walletTypeRepository = $walletTypeRepository;
-        $this->tokenStorage = $tokenStorage;
+        $this->authenticationService = $authenticationService;
 	}
 
     /**
@@ -66,8 +67,8 @@ class WalletUpdateService implements WalletUpdateServiceInterface
             }
         }
 
-        $userId = $this->tokenStorage->getToken()->getUser()->getId();
-        $userWallets = $this->userWalletRepository->getByIdsAndUserId($userWalletsId, $userId);
+        $user = $this->authenticationService->execute();
+        $userWallets = $this->userWalletRepository->getByIdsAndUserId($userWalletsId, $user);
 
 	    if (count($userWalletsId) != count($userWallets)) {
             throw new UserWalletIsNotValidException('User wallet is not valid');
@@ -87,7 +88,7 @@ class WalletUpdateService implements WalletUpdateServiceInterface
             }
         }
 
-        if (!empty($errorsNotUnique)) {
+        if (false === empty($errorsNotUnique)) {
             throw new WalletIsExistException(json_encode($errorsNotUnique));
         }
 
@@ -102,7 +103,7 @@ class WalletUpdateService implements WalletUpdateServiceInterface
             }
         }
 
-        if (!empty($errorsNotUnique)) {
+        if (false === empty($errorsNotUnique)) {
             throw new WalletIsExistException(json_encode($errorsNotUnique));
         }
 
@@ -129,11 +130,7 @@ class WalletUpdateService implements WalletUpdateServiceInterface
 
             $this->walletRepository->update();
 
-            $result[] = [
-                'id'     => $userWallet->getId(),
-                'typeId' => $data['typeId'],
-                'value'  => $data['value'],
-            ];
+            $result[] = (new WalletTransform())->transform($userWallet);
         }
 
         return $result;

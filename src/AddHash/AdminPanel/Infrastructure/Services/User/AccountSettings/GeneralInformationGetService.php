@@ -2,28 +2,31 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\AccountSettings;
 
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\AddHash\AdminPanel\Domain\AdapterOpenHost\AuthenticationAdapterInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationGetServiceInterface;
+use App\AddHash\AdminPanel\Infrastructure\Transformers\User\AccountSettings\GeneralInformationTransform;
 
 class GeneralInformationGetService implements GeneralInformationGetServiceInterface
 {
-    private $tokenStorage;
+    private $authenticationAdapter;
 
-    public function __construct(TokenStorageInterface $tokenStorage)
+    private $authenticationService;
+
+    public function __construct(
+        AuthenticationAdapterInterface $authenticationAdapter,
+        UserGetAuthenticationServiceInterface $authenticationService
+    )
     {
-        $this->tokenStorage = $tokenStorage;
+        $this->authenticationAdapter = $authenticationAdapter;
+        $this->authenticationService = $authenticationService;
     }
 
     public function execute(): array
 	{
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->authenticationService->execute();
+        $credentials = $this->authenticationAdapter->getCredentials();
 
-        return [
-            'email'       => $user->getEmail(),
-            'backupEmail' => $user->getBackupEmail(),
-            'firstName'   => $user->getFirstName(),
-            'lastName'    => $user->getLastName(),
-            'phone'       => $user->getPhoneNumber(),
-        ];
+        return (new GeneralInformationTransform)->transform($credentials, $user);
 	}
 }

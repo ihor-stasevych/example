@@ -73,7 +73,7 @@ class CryptoPaymentsController extends BaseServiceController
 	{
 		$command = new MakeCryptoPaymentCommand($orderId, $currency);
 
-		if (!$this->commandIsValid($command)) {
+		if (false === $this->commandIsValid($command)) {
 			return $this->json([
 				'errors' => $this->getLastValidationErrors()
 			], Response::HTTP_BAD_REQUEST);
@@ -88,7 +88,7 @@ class CryptoPaymentsController extends BaseServiceController
 			], Response::HTTP_BAD_REQUEST);
 		}
 
-		return $this->json($cryptoPayment->getData());
+		return $this->json($cryptoPayment);
 	}
 
 	/**
@@ -107,7 +107,7 @@ class CryptoPaymentsController extends BaseServiceController
 	{
         $command = new GetCurrenciesCryptoPaymentCommand($orderId);
 
-        if (!$this->commandIsValid($command)) {
+        if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors()
             ], Response::HTTP_BAD_REQUEST);
@@ -132,7 +132,7 @@ class CryptoPaymentsController extends BaseServiceController
 	{
         $command = new GetStateCryptoPaymentCommand($orderId);
 
-        if (!$this->commandIsValid($command)) {
+        if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors()
             ], Response::HTTP_BAD_REQUEST);
@@ -168,7 +168,7 @@ class CryptoPaymentsController extends BaseServiceController
             file_get_contents('php://input')
         );
 
-        if (!$this->commandIsValid($command)) {
+        if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors()
             ], Response::HTTP_BAD_REQUEST);

@@ -1,0 +1,63 @@
+App\AddHash\AdminPanel\Domain\User\User:
+    type: entity
+    table: User
+    id:
+        id:
+            type: integer
+
+    fields:
+        firstName:
+            column: firstName
+            type: string
+            length: 255
+            nullable: true
+            options:
+                default: null
+
+        lastName:
+            column: lastName
+            type: string
+            length: 255
+            nullable: true
+            options:
+                default: null
+
+        backupEmail:
+            column: backupEmail
+            type: string
+            length: 255
+            nullable: true
+            options:
+                default: null
+
+        phone:
+            column: phone
+            type: string
+            length: 255
+            nullable: true
+            options:
+                default: null
+
+        updatedAt:
+            column: updatedAt
+            type: datetime
+            nullable: false
+            options:
+                default: CURRENT_TIMESTAMP
+
+    oneToMany:
+        order:
+            targetEntity: App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder
+            mappedBy: user
+
+        wallet:
+            targetEntity: App\AddHash\AdminPanel\Domain\User\UserWallet
+            mappedBy: user
+
+        vote:
+            targetEntity: App\AddHash\AdminPanel\Domain\Store\Product\StoreProductUserVote
+            mappedBy: user
+
+        orderMain:
+            targetEntity: App\AddHash\AdminPanel\Domain\User\Order\UserOrderMiner
+            mappedBy: user
