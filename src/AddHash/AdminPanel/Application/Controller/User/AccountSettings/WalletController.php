@@ -182,7 +182,7 @@ class WalletController extends BaseServiceController
         } catch (\Exception $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], $e->getCode());
         }
 
         return $this->json($data);
