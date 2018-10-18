@@ -120,7 +120,7 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
                 }
             }
 
-            $this->storeOrderRepository->save($order);
+            $this->storeOrderRepository->remove($order);
         }
     }
 }

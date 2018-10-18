@@ -19,4 +19,6 @@ interface StoreOrderRepositoryInterface
     public function getOrderByIdAndUserId(int $id, int $userId): ?StoreOrder;
 
     public function save(StoreOrder $order);
+
+    public function remove(StoreOrder $order);
 }

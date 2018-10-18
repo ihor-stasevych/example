@@ -130,6 +130,15 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
 	}
 
 	/**
+	 * @param StoreOrder $order
+	 * @throws ORMException
+	 */
+	public function remove(StoreOrder $order)
+	{
+		$this->entityManager->remove($order);
+	}
+
+	/**
 	 * @return string
 	 */
 	protected function getEntityName()
