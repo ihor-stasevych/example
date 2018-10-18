@@ -7,12 +7,14 @@ use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
+use App\AddHash\AdminPanel\Infrastructure\AdapterOpenHost\AuthenticationAdapter;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerStockRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCreateCommandInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Notification\SendUserNotificationServiceInterface;
+use App\AddHash\AdminPanel\Infrastructure\Payment\Gateway\Stripe\PaymentGatewayStripe;
 
 class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 {
@@ -26,12 +28,15 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 
 	private $notificationService;
 
+	private $authenticationAdapter;
+
 	public function __construct(
 		StoreProductRepositoryInterface $productRepository,
 		StoreOrderRepositoryInterface $orderRepository,
         UserGetAuthenticationServiceInterface $authenticationService,
         MinerStockRepositoryInterface $minerStockRepository,
-		SendUserNotificationServiceInterface $notificationService
+		SendUserNotificationServiceInterface $notificationService,
+        AuthenticationAdapter $authenticationAdapter
 	)
 	{
 		$this->storeProductRepository = $productRepository;
@@ -39,14 +44,15 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 		$this->authenticationService = $authenticationService;
 		$this->minerStockRepository = $minerStockRepository;
 		$this->notificationService = $notificationService;
+		$this->authenticationAdapter = $authenticationAdapter;
 	}
 
-	/**
-	 * @param StoreOrderCreateCommandInterface $command
-	 * @return StoreOrder
-	 * @throws StoreOrderException
-	 */
-	public function execute(StoreOrderCreateCommandInterface $command): StoreOrder
+    /**
+     * @param StoreOrderCreateCommandInterface $command
+     * @return array
+     * @throws StoreOrderException
+     */
+	public function execute(StoreOrderCreateCommandInterface $command): array
 	{
         $user = $this->authenticationService->execute();
 
@@ -82,7 +88,14 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 
 		$this->notificationService->execute('System notification', 'Order was created #' . $order->getId());
 
-		return $order;
+        $credentials = $this->authenticationAdapter->getCredentials();
+
+		return [
+            'id'        => $order->getId(),
+            'price'     => $order->getItemsPriceTotal(),
+            'userEmail' => $credentials['email'],
+            'apiKey'    => PaymentGatewayStripe::getPublicKey()
+        ];
 	}
 
 	private function closeOldOrderAndUnReserveMiners(User $user)

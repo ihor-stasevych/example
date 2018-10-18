@@ -4,7 +4,7 @@ namespace App\AddHash\AdminPanel\Infrastructure\Repository\User\Notification;
 
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
-use App\AddHash\Authentication\Domain\Model\User;
+use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
 use App\AddHash\AdminPanel\Domain\User\Notification\UserNotification;
 use App\AddHash\AdminPanel\Domain\User\Notification\UserNotificationRepositoryInterface;

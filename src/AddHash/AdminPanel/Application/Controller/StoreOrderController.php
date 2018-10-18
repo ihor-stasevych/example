@@ -101,19 +101,14 @@ class StoreOrderController extends BaseServiceController
 		}
 
 		try {
-			$order = $this->storeOrderCreateService->execute($command);
+			$data = $this->storeOrderCreateService->execute($command);
 		} catch (\Exception $e) {
 			return $this->json([
 				'errors' => $e->getMessage()
 			], Response::HTTP_BAD_REQUEST);
 		}
 
-		return $this->json([
-		    'id'        => $order->getId(),
-			'price'     => $order->getItemsPriceTotal(),
-			'userEmail' => $order->getUser()->getEmail(),
-			'apiKey'    => PaymentGatewayStripe::getPublicKey()
-		]);
+		return $this->json($data);
 	}
 
 	/**
