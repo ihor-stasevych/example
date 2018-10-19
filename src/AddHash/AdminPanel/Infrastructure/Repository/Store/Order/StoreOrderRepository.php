@@ -128,19 +128,25 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
 	}
 
 
+	/**
+	 * @param StoreOrder $order
+	 * @throws ORMException
+	 * @throws OptimisticLockException
+	 */
 	public function remove(StoreOrder $order)
 	{
-		/**
+
 		$this->entityManager->remove($order);
 		$this->entityManager->flush();
-		 **/
 
+		/**
 		$isDeleted = $this->entityRepository->createQueryBuilder('order')
 			->delete()
 			->where('order.id  = :orderId')->setParameter('orderId', $order->getId())
 			->getQuery()->execute();
 
 		return $isDeleted;
+		 * */
 	}
 
 	protected function getNewByUserId($userId)
