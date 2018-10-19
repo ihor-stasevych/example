@@ -38,6 +38,11 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
 			->getOneOrNullResult();
 	}
 
+	public function getAllNewById()
+	{
+
+	}
+
     /**
      * @param int $id
      * @return mixed

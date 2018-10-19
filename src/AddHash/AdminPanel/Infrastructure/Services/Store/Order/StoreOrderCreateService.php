@@ -2,6 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
+use App\AddHash\AdminPanel\Domain\Store\Order\Item\StoreOrderItem;
 use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct;
@@ -100,27 +101,32 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 
 	private function closeOldOrderAndUnReserveMiners(User $user)
     {
-        $order = $this->storeOrderRepository->findNewByUserId($user->getId());
+       $order = $this->storeOrderRepository->findNewByUserId($user->getId());
 
-        if (null !== $order) {
-            $order->closeOrder();
-            $items = $order->getItems();
+	   if (empty($order)) {
+	    	return true;
+	   }
 
-            foreach ($items as $item) {
-                $quantity = $item->getQuantity();
+       $order->closeOrder();
+       $items = $order->getItems();
 
-                for ($i = 0; $i < $quantity; $i++) {
-                    $minerStock = $item->getProduct()->unReserveMiner();
+       /** @var StoreOrderItem $item */
+       foreach ($items as $item) {
+	       $quantity = $item->getQuantity();
 
-                    if (!$minerStock) {
-                        break;
-                    }
+	       for ($i = 0; $i < $quantity; $i++) {
+		       $minerStock = $item->getProduct()->unReserveMiner();
 
-                    $this->minerStockRepository->save($minerStock);
-                }
-            }
+		       if (!$minerStock) {
+			       break;
+		       }
 
-            $this->storeOrderRepository->remove($order);
-        }
+		       $this->minerStockRepository->save($minerStock);
+	       }
+       }
+
+       $this->storeOrderRepository->remove($order);
+
+       return true;
     }
 }
