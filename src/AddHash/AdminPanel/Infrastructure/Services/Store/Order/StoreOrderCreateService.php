@@ -101,31 +101,34 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 
 	private function closeOldOrderAndUnReserveMiners(User $user)
     {
-       $order = $this->storeOrderRepository->findNewByUserId($user->getId());
+       $orders = $this->storeOrderRepository->findAllNewByUserId($user->getId());
 
-	   if (empty($order)) {
+	   if (empty($orders)) {
 	    	return true;
 	   }
 
-       $order->closeOrder();
-       $items = $order->getItems();
+	   /** @var StoreOrder $order */
+	    foreach ($orders as $order) {
+		   $order->closeOrder();
+		   $items = $order->getItems();
 
-       /** @var StoreOrderItem $item */
-       foreach ($items as $item) {
-	       $quantity = $item->getQuantity();
+		   /** @var StoreOrderItem $item */
+		   foreach ($items as $item) {
+			   $quantity = $item->getQuantity();
 
-	       for ($i = 0; $i < $quantity; $i++) {
-		       $minerStock = $item->getProduct()->unReserveMiner();
+			   for ($i = 0; $i < $quantity; $i++) {
+				   $minerStock = $item->getProduct()->unReserveMiner();
 
-		       if (!$minerStock) {
-			       break;
-		       }
+				   if (!$minerStock) {
+					   break;
+				   }
 
-		       $this->minerStockRepository->save($minerStock);
-	       }
-       }
+				   $this->minerStockRepository->save($minerStock);
+			   }
+		   }
 
-       $this->storeOrderRepository->remove($order);
+		   $this->storeOrderRepository->remove($order);
+	   }
 
        return true;
     }

@@ -10,6 +10,8 @@ interface StoreOrderRepositoryInterface
 
     public function findNewByUserId(int $userId): ?StoreOrder;
 
+    public function findAllNewByUserId(int $userId): array;
+
     public function findNewById(int $id): ?StoreOrder;
 
     public function getNewByTime(\DateTime $updatedAt): array;

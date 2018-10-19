@@ -28,19 +28,12 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
 	 */
 	public function findNewByUserId(int $userId): ?StoreOrder
 	{
-		return $this->entityRepository->createQueryBuilder('e')
-			->select('e')
-			->where('e.user = :id')
-			->andWhere('e.state = :stateNew')
-			->setParameter('id', $userId)
-			->setParameter('stateNew', StoreOrder::STATE_NEW)
-			->getQuery()
-			->getOneOrNullResult();
+		return $this->getNewByUserId($userId)->getOneOrNullResult();
 	}
 
-	public function getAllNewById()
+	public function findAllNewByUserId(int $userId): array
 	{
-
+		return $this->getNewByUserId($userId)->getResult();
 	}
 
     /**
@@ -141,6 +134,17 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
 	public function remove(StoreOrder $order)
 	{
 		$this->entityManager->remove($order);
+	}
+
+	protected function getNewByUserId($userId)
+	{
+		return $this->entityRepository->createQueryBuilder('e')
+			->select('e')
+			->where('e.user = :id')
+			->andWhere('e.state = :stateNew')
+			->setParameter('id', $userId)
+			->setParameter('stateNew', StoreOrder::STATE_NEW)
+			->getQuery();
 	}
 
 	/**
