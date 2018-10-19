@@ -28,6 +28,20 @@ class MinerAllowedUrlRepository extends AbstractRepository implements MinerAllow
             ->getSingleScalarResult();
     }
 
+    public function getByValuesEnabledUrl(array $values): array
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('a')
+            ->select('a')
+            ->andWhere('a.value IN (:values)')
+            ->andWhere('a.status = :status')
+            ->setParameter('values', $values)
+            ->setParameter('status', MinerAllowedUrl::ENABLE)
+            ->getQuery()
+            ->getResult();
+    }
+
 	/**
 	 * @return string
 	 */

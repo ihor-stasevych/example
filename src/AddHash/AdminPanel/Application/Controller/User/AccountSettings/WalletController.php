@@ -106,21 +106,15 @@ class WalletController extends BaseServiceController
         if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
         try {
             $data = $this->updateService->execute($command);
         } catch (\Exception $e) {
-            $errors = $e->getMessage();
-
-            if ($e instanceof WalletIsExistException) {
-                $errors = json_decode($errors, true);
-            }
-
             return $this->json([
-                'errors' => $errors,
-            ], Response::HTTP_BAD_REQUEST);
+                'errors' => $e->getMessage(),
+            ], $e->getCode());
         }
 
         return $this->json($data);
@@ -174,7 +168,7 @@ class WalletController extends BaseServiceController
         if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
         try {

@@ -89,7 +89,7 @@ class WalletUpdateService implements WalletUpdateServiceInterface
         }
 
         if (false === empty($errorsNotUnique)) {
-            throw new WalletIsExistException(json_encode($errorsNotUnique));
+            throw new WalletIsExistException(['id' => $errorsNotUnique]);
         }
 
         $errorsNotUnique = [];
@@ -104,7 +104,7 @@ class WalletUpdateService implements WalletUpdateServiceInterface
         }
 
         if (false === empty($errorsNotUnique)) {
-            throw new WalletIsExistException(json_encode($errorsNotUnique));
+            throw new WalletIsExistException(['id' => $errorsNotUnique]);
         }
 
         $walletsType = $this->walletTypeRepository->getByIds($walletsTypeId);

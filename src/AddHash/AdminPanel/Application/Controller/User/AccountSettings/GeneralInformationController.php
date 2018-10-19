@@ -119,7 +119,7 @@ class GeneralInformationController extends BaseServiceController
         if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
         try {
@@ -127,7 +127,7 @@ class GeneralInformationController extends BaseServiceController
         } catch (\Exception $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], $e->getCode());
         }
 
 		return $this->json($user);

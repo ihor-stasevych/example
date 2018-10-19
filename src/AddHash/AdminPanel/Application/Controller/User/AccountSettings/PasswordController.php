@@ -7,9 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\AdminPanel\Application\Command\User\AccountSettings\PasswordUpdateCommand;
-use App\AddHash\AdminPanel\Domain\User\Exceptions\AccountSettings\PasswordIsNotValidException;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\PasswordUpdateServiceInterface;
 
 class PasswordController extends BaseServiceController
@@ -67,7 +65,7 @@ class PasswordController extends BaseServiceController
         if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
         try {
@@ -75,7 +73,7 @@ class PasswordController extends BaseServiceController
         } catch (\Exception $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], $e->getCode());
         }
 
         return $this->json([]);

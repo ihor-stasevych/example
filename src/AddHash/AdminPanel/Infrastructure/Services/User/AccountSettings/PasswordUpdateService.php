@@ -15,7 +15,7 @@ class PasswordUpdateService implements PasswordUpdateServiceInterface
         $this->authenticationAdapter = $authenticationAdapter;
 	}
 
-	public function execute(PasswordUpdateCommandInterface $command)
+	public function execute(PasswordUpdateCommandInterface $command): void
 	{
         $this->authenticationAdapter->changePassword(
             $command->getCurrentPassword(),

@@ -6,5 +6,5 @@ use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\PasswordUpdateCom
 
 interface PasswordUpdateServiceInterface
 {
-	public function execute(PasswordUpdateCommandInterface $command);
+	public function execute(PasswordUpdateCommandInterface $command): void;
 }

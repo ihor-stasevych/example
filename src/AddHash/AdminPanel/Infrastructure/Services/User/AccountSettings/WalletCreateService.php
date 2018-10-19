@@ -50,14 +50,14 @@ class WalletCreateService implements WalletCreateServiceInterface
         $walletType = $this->walletTypeRepository->getById($type);
 
         if (null === $walletType) {
-            throw new WalletTypeIsNotExistException(['typeId' => ['Invalid type Id']]);
+            throw new WalletTypeIsNotExistException('Invalid type Id');
         }
 
         $value = $command->getValue();
         $wallet = $this->walletRepository->getByValueAndType($value, $type);
 
         if (null !== $wallet) {
-            throw new WalletIsExistException(['value' => ['Wallet already exist']]);
+            throw new WalletIsExistException('Wallet already exist');
         }
 
         $wallet = new Wallet($value);

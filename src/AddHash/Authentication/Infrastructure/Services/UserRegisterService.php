@@ -44,7 +44,7 @@ final class UserRegisterService implements UserRegisterServiceInterface
         $user = $this->userRepository->getByEmail($email);
 
         if (null !== $user) {
-            throw new UserRegisterUserAlreadyExistsException('User ' . $email . ' already exists');
+            throw new UserRegisterUserAlreadyExistsException(['email' => ['User ' . $email . ' already exists']]);
         }
 
         $user = new User($email, '', $command->getRoles());

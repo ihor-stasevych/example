@@ -46,7 +46,7 @@ class UserMinerControlPoolController extends BaseServiceController
     {
         $command = new UserMinerControlPoolCommand($id);
 
-        if (!$this->commandIsValid($command)) {
+        if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
             ], Response::HTTP_BAD_REQUEST);
@@ -57,7 +57,7 @@ class UserMinerControlPoolController extends BaseServiceController
         } catch (\Exception $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], $e->getCode());
         }
 
         return $this->json($data);
@@ -105,10 +105,10 @@ class UserMinerControlPoolController extends BaseServiceController
     {
         $command = new UserMinerControlPoolCreateCommand($id, $request->get('pools'));
 
-        if (!$this->commandIsValid($command)) {
+        if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
         try {
@@ -116,7 +116,7 @@ class UserMinerControlPoolController extends BaseServiceController
         } catch (\Exception $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], $e->getCode());
         }
 
         return $this->json($data);
