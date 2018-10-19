@@ -134,6 +134,7 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
 	public function remove(StoreOrder $order)
 	{
 		$this->entityManager->remove($order);
+		$this->entityManager->flush();
 	}
 
 	protected function getNewByUserId($userId)
