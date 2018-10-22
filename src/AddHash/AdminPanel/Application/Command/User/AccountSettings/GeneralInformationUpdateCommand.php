@@ -7,7 +7,7 @@ use App\AddHash\System\GlobalContext\ValueObject\Email;
 use App\AddHash\System\GlobalContext\ValueObject\Phone;
 use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\GeneralInformationUpdateCommandInterface;
 
-class GeneralInformationUpdateCommand implements GeneralInformationUpdateCommandInterface
+final class GeneralInformationUpdateCommand implements GeneralInformationUpdateCommandInterface
 {
     /**
      * @var string
@@ -25,8 +25,8 @@ class GeneralInformationUpdateCommand implements GeneralInformationUpdateCommand
     /**
      * @var string
      * @Assert\Length(
-     *      min = 1,
-     *      max = 255,
+     *      min = 2,
+     *      max = 50,
      *      minMessage = "Your first name must be at least {{ limit }} characters long",
      *      maxMessage = "Your first name cannot be longer than {{ limit }} characters"
      * )
@@ -36,8 +36,8 @@ class GeneralInformationUpdateCommand implements GeneralInformationUpdateCommand
     /**
      * @var string
      * @Assert\Length(
-     *      min = 1,
-     *      max = 255,
+     *      min = 2,
+     *      max = 50,
      *      minMessage = "Your last name must be at least {{ limit }} characters long",
      *      maxMessage = "Your last name cannot be longer than {{ limit }} characters"
      * )
@@ -47,7 +47,7 @@ class GeneralInformationUpdateCommand implements GeneralInformationUpdateCommand
     /**
      * @var string
      * @Assert\Length(
-     *      min = 1,
+     *      min = 3,
      *      max = 30,
      *      minMessage = "Your phone must be at least {{ limit }} characters long",
      *      maxMessage = "Your phone cannot be longer than {{ limit }} characters"

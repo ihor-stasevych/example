@@ -15,7 +15,7 @@ use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\WalletUpdateComma
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletUpdateServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\AccountSettings\UserWalletIsNotValidException;
 
-class WalletUpdateService implements WalletUpdateServiceInterface
+final class WalletUpdateService implements WalletUpdateServiceInterface
 {
     private $userWalletRepository;
 
@@ -53,7 +53,7 @@ class WalletUpdateService implements WalletUpdateServiceInterface
         $userWalletsId = [];
         $uniqueWallets = [];
 
-        foreach ($walletsCommand as $walletCommand) {
+        foreach ($walletsCommand as $position => $walletCommand) {
             $walletsValue[$walletCommand['id']] = [
                 'value'  => $walletCommand['value'],
                 'typeId' => $walletCommand['typeId'],
@@ -61,10 +61,7 @@ class WalletUpdateService implements WalletUpdateServiceInterface
 
             $userWalletsId[] = $walletCommand['id'];
             $uniqueWallets[] = $walletCommand['value'] . $walletCommand['typeId'];
-
-            if (false === array_search($walletCommand['typeId'], $walletsTypeId)) {
-                $walletsTypeId[] = $walletCommand['typeId'];
-            }
+            $walletsTypeId[] = $walletCommand['typeId'];
         }
 
         $user = $this->authenticationService->execute();
@@ -74,44 +71,16 @@ class WalletUpdateService implements WalletUpdateServiceInterface
             throw new UserWalletIsNotValidException('User wallet is not valid');
         }
 
-        $errorsNotUnique = [];
-
-        $countValueWallets = array_count_values($uniqueWallets);
-
-        foreach ($countValueWallets as $walletValue => $walletCount) {
-            if ($walletCount > 1) {
-                foreach ($walletsCommand as $walletCommand) {
-                    if ($walletCommand['value'] . $walletCommand['typeId'] == $walletValue) {
-                        $errorsNotUnique[$walletCommand['id']] = "Not unique value: " . $walletCommand['value'];
-                    }
-                }
-            }
-        }
-
-        if (false === empty($errorsNotUnique)) {
-            throw new WalletIsExistException(['id' => $errorsNotUnique]);
-        }
-
-        $errorsNotUnique = [];
-
-        foreach ($walletsValue as $walletId => $walletValue) {
-
-            $uw = $this->userWalletRepository->getByUnique($userWalletsId, $walletValue['typeId'], $walletValue['value']);
-
-            if (null !== $uw) {
-                $errorsNotUnique[$walletId] = "Not unique value: " . $walletValue['value'];
-            }
-        }
-
-        if (false === empty($errorsNotUnique)) {
-            throw new WalletIsExistException(['id' => $errorsNotUnique]);
-        }
-
+        $walletsTypeId = array_unique($walletsTypeId);
         $walletsType = $this->walletTypeRepository->getByIds($walletsTypeId);
 
         if (count($walletsType) != count($walletsTypeId)) {
             throw new WalletTypeIsNotExistException('Invalid type Id');
         }
+
+        $this->checkNotUniqueValue($uniqueWallets, $walletsCommand);
+
+        $this->checkNotUniqueValueInRepository($walletsValue, $userWalletsId, $walletsCommand);
 
         $walletsTypeObject = [];
 
@@ -135,4 +104,59 @@ class WalletUpdateService implements WalletUpdateServiceInterface
 
         return $result;
 	}
+
+    /**
+     * @param array $uniqueWallets
+     * @param array $walletsCommand
+     * @throws WalletIsExistException
+     */
+	private function checkNotUniqueValue(array $uniqueWallets, array $walletsCommand)
+    {
+        $errorsNotUnique = [];
+        $countValueWallets = array_count_values($uniqueWallets);
+
+        foreach ($countValueWallets as $walletValue => $walletCount) {
+            if ($walletCount > 1) {
+                foreach ($walletsCommand as $keyWalletCommand => $walletCommand) {
+                    if ($walletCommand['value'] . $walletCommand['typeId'] == $walletValue) {
+                        $errorsNotUnique['wallets['. $keyWalletCommand .'][value]'] = ['Not unique value'];
+                    }
+                }
+            }
+        }
+
+        if (false === empty($errorsNotUnique)) {
+            throw new WalletIsExistException($errorsNotUnique);
+        }
+    }
+
+    /**
+     * @param array $walletsValue
+     * @param array $userWalletsId
+     * @param array $walletsCommand
+     * @throws WalletIsExistException
+     */
+    private function checkNotUniqueValueInRepository(array $walletsValue, array $userWalletsId, array $walletsCommand)
+    {
+        $errorsNotUnique = [];
+        $errorsValue = [];
+
+        foreach ($walletsValue as $walletId => $walletValue) {
+            $uw = $this->userWalletRepository->getByUnique($userWalletsId, $walletValue['typeId'], $walletValue['value']);
+
+            if (null !== $uw) {
+                $errorsValue[] = $uw->getWallet()->getValue();
+            }
+        }
+
+        foreach ($walletsCommand as $position => $walletCommand) {
+            if (true === in_array($walletCommand['value'], $errorsValue)) {
+                $errorsNotUnique['wallets['. $position .'][value]'] = ['Not unique value'];
+            }
+        }
+
+        if (false === empty($errorsNotUnique)) {
+            throw new WalletIsExistException($errorsNotUnique);
+        }
+    }
 }

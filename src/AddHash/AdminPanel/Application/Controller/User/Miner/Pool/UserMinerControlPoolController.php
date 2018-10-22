@@ -29,13 +29,18 @@ class UserMinerControlPoolController extends BaseServiceController
      *     response=200,
      *     description="Returns the miner pools",
      *     @SWG\Schema(
-     *             type="array",
-     *             @SWG\Items(
-     *                 type="object",
-     *                 @SWG\Property(property="Status", type="string"),
-     *                 @SWG\Property(property="Priority", type="integer")
-     *             )
+     *          type="array",
+     *          @SWG\Items(
+     *              type="object",
+     *              @SWG\Property(property="Status", type="string"),
+     *              @SWG\Property(property="Priority", type="integer")
+     *          )
      *     ),
+     * )
+     *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Returns validation errors"
      * )
      *
      * @param int $id
@@ -45,12 +50,6 @@ class UserMinerControlPoolController extends BaseServiceController
     public function get(int $id)
     {
         $command = new UserMinerControlPoolCommand($id);
-
-        if (false === $this->commandIsValid($command)) {
-            return $this->json([
-                'errors' => $this->getLastValidationErrors(),
-            ], Response::HTTP_BAD_REQUEST);
-        }
 
         try {
             $data = $this->contextPool->handle(UserMinerControlPoolGetStrategy::STRATEGY_ALIAS, $command);
@@ -87,13 +86,23 @@ class UserMinerControlPoolController extends BaseServiceController
      *     response=200,
      *     description="Returns the miner pools",
      *     @SWG\Schema(
-     *             type="array",
-     *             @SWG\Items(
-     *                 type="object",
-     *                 @SWG\Property(property="Status", type="string"),
-     *                 @SWG\Property(property="Priority", type="integer")
-     *             )
+     *          type="array",
+     *          @SWG\Items(
+     *              type="object",
+     *              @SWG\Property(property="Status", type="string"),
+     *              @SWG\Property(property="Priority", type="integer")
+     *          )
      *     ),
+     * )
+     *
+     * @SWG\Response(
+     *     response=406,
+     *     description="Returns validation errors"
+     * )
+     *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Returns validation errors"
      * )
      *
      * @param int $id

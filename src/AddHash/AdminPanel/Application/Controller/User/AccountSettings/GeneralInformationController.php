@@ -97,6 +97,11 @@ class GeneralInformationController extends BaseServiceController
      *     )
      * )
      * @SWG\Response(
+     *     response=406,
+     *     description="Returns validation errors"
+     * )
+     *
+     * @SWG\Response(
      *     response=400,
      *     description="Returns validation errors"
      * )

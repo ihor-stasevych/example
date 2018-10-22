@@ -9,10 +9,6 @@ class UserMinerControlPoolCreateCommand implements UserMinerControlPoolCreateCom
 {
     const MAX_COUNT_POOLS = 3;
 
-    /**
-     * @var int
-     * @Assert\NotBlank()
-     */
     private $minerId;
 
     /**

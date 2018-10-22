@@ -9,7 +9,7 @@ use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\GeneralInformatio
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationUpdateServiceInterface;
 use App\AddHash\AdminPanel\Infrastructure\Transformers\User\AccountSettings\GeneralInformationTransform;
 
-class GeneralInformationUpdateService implements GeneralInformationUpdateServiceInterface
+final class GeneralInformationUpdateService implements GeneralInformationUpdateServiceInterface
 {
     private $authenticationAdapter;
 

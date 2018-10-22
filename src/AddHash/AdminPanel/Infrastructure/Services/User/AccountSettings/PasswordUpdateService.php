@@ -6,7 +6,7 @@ use App\AddHash\AdminPanel\Domain\AdapterOpenHost\AuthenticationAdapterInterface
 use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\PasswordUpdateCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\PasswordUpdateServiceInterface;
 
-class PasswordUpdateService implements PasswordUpdateServiceInterface
+final class PasswordUpdateService implements PasswordUpdateServiceInterface
 {
     private $authenticationAdapter;
 

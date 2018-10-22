@@ -7,4 +7,6 @@ interface WalletCreateCommandInterface
 	public function getValue(): string;
 
     public function getTypeId(): int;
+
+    public function isInteger($value): bool;
 }
