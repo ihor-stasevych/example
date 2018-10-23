@@ -183,11 +183,6 @@ class StoreOrderController extends BaseServiceController
      *     description="Return validation errors"
      * )
      *
-     * @SWG\Response(
-     *     response=400,
-     *     description="Return validation errors"
-     * )
-     *
 	 * @SWG\Response(
 	 *     response=200,
 	 *     description="Returns information for checkout"
