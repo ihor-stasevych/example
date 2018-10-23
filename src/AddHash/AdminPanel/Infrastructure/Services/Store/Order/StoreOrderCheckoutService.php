@@ -3,13 +3,14 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Order;
 
 use App\AddHash\AdminPanel\Domain\Payment\Payment;
-use App\AddHash\AdminPanel\Domain\Payment\Services\MakePaymentForOrderServiceInterface;
-use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCheckoutCommandInterface;
-use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
-use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException;
+use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
+use App\AddHash\AdminPanel\Domain\Payment\Services\MakePaymentForOrderServiceInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCheckoutCommandInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\Notification\SendUserNotificationServiceInterface;
 
 class StoreOrderCheckoutService implements StoreOrderCheckoutServiceInterface
 {
@@ -19,15 +20,19 @@ class StoreOrderCheckoutService implements StoreOrderCheckoutServiceInterface
 
 	private $authenticationService;
 
+    private $notificationService;
+
 	public function __construct(
 		StoreOrderRepositoryInterface $orderRepository,
 		MakePaymentForOrderServiceInterface $makePaymentForOrderService,
-        UserGetAuthenticationServiceInterface $authenticationService
+        UserGetAuthenticationServiceInterface $authenticationService,
+        SendUserNotificationServiceInterface $notificationService
 	)
 	{
 		$this->orderRepository = $orderRepository;
 		$this->payment = $makePaymentForOrderService;
 		$this->authenticationService = $authenticationService;
+        $this->notificationService = $notificationService;
 	}
 
 	/**
@@ -66,10 +71,7 @@ class StoreOrderCheckoutService implements StoreOrderCheckoutServiceInterface
 
 		$this->orderRepository->save($order);
 
-		/**
-		$event = new StoreOrderPayedEvent($order, new Notification(new NotificationTransportTelegram()));
-		$this->dispatcher->dispatch(StoreOrderPayedEvent::NAME, $event);
-		 * */
+        $this->notificationService->execute('System notification', 'Payment by order #' . $order->getId() . ' was successful');
 
 		return $order;
 	}
