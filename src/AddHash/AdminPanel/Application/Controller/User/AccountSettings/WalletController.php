@@ -114,15 +114,7 @@ class WalletController extends BaseServiceController
             ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        try {
-            $data = $this->updateService->execute($command);
-        } catch (\Exception $e) {
-            return $this->json([
-                'errors' => $e->getMessage(),
-            ], $e->getCode());
-        }
-
-        return $this->json($data);
+        return $this->json($this->updateService->execute($command));
 	}
 
     /**
@@ -182,14 +174,6 @@ class WalletController extends BaseServiceController
             ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        try {
-            $data = $this->createService->execute($command);
-        } catch (\Exception $e) {
-            return $this->json([
-                'errors' => $e->getMessage(),
-            ], $e->getCode());
-        }
-
-        return $this->json($data);
+        return $this->json($this->createService->execute($command));
     }
 }

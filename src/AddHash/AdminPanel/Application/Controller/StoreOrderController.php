@@ -2,43 +2,37 @@
 
 namespace App\AddHash\AdminPanel\Application\Controller;
 
-use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderAddProductCommand;
-use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreCheckoutCommand;
-use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCheckoutCommand;
-use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderPrepareCheckoutCommand;
-use App\AddHash\AdminPanel\Domain\Payment\Services\MakeCryptoPaymentServiceInterface;
-use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderAddProductServiceInterface;
-use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface;
-use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface;
-use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface;
-use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCreateCommand;
-use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderPrepareCheckoutServiceInterface;
-use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderTransformer;
-use App\AddHash\AdminPanel\Domain\User\Services\Order\Miner\CreateUserOrderMinerServiceInterface;
-use App\AddHash\AdminPanel\Infrastructure\Payment\Gateway\Stripe\PaymentGatewayStripe;
-use App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveItemService;
-use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Monolog\Logger;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\AddHash\System\GlobalContext\Common\BaseServiceController;
+use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCreateCommand;
+use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderGetServiceInterface;
+use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderCheckoutCommand;
+use App\AddHash\AdminPanel\Application\Command\Store\Order\StoreOrderAddProductCommand;
+use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCheckoutServiceInterface;
+use App\AddHash\AdminPanel\Infrastructure\Services\Store\Order\StoreOrderRemoveItemService;
+use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderAddProductServiceInterface;
+use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderPrepareCheckoutServiceInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\Order\Miner\CreateUserOrderMinerServiceInterface;
 
 class StoreOrderController extends BaseServiceController
 {
 	private $storeOrderCreateService;
+
 	private $storeOrderGetService;
+
 	private $storeOrderCheckout;
+
 	private $storeOrderAddProduct;
+
 	private $storeOrderRemoveItem;
+
 	private $orderMinerService;
+
 	private $prepareCheckoutService;
-	private $cryptoPaymentService;
-	private $tokenStorage;
-	private $logger;
 
 	public function __construct(
 		StoreOrderCreateServiceInterface $storeOrderCreateService,
@@ -47,9 +41,7 @@ class StoreOrderController extends BaseServiceController
 		StoreOrderAddProductServiceInterface $orderAddProductService,
 		StoreOrderRemoveItemService $storeOrderRemoveItem,
 		CreateUserOrderMinerServiceInterface $orderMinerService,
-		StoreOrderPrepareCheckoutServiceInterface $prepareCheckoutService,
-		MakeCryptoPaymentServiceInterface $cryptoPaymentService,
-		TokenStorageInterface $tokenStorage
+		StoreOrderPrepareCheckoutServiceInterface $prepareCheckoutService
 	)
 	{
 		$this->storeOrderCreateService = $storeOrderCreateService;
@@ -59,8 +51,6 @@ class StoreOrderController extends BaseServiceController
 		$this->storeOrderRemoveItem = $storeOrderRemoveItem;
 		$this->orderMinerService = $orderMinerService;
 		$this->prepareCheckoutService = $prepareCheckoutService;
-		$this->cryptoPaymentService = $cryptoPaymentService;
-		$this->tokenStorage = $tokenStorage;
 	}
 
 
@@ -83,6 +73,11 @@ class StoreOrderController extends BaseServiceController
 	 * @SWG\Tag(name="Store Orders")
 	 * @param Request $request
 	 *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Return validation errors"
+     * )
+     *
 	 * @SWG\Response(
 	 *     response=200,
 	 *     description="Returns new order or existing"
@@ -94,21 +89,13 @@ class StoreOrderController extends BaseServiceController
 	{
 		$command = new StoreOrderCreateCommand($request->get('products'));
 
-		if (!$this->commandIsValid($command)) {
+		if (false === $this->commandIsValid($command)) {
 			return $this->json([
 				'errors' => $this->getLastValidationErrors()
 			], Response::HTTP_BAD_REQUEST);
 		}
 
-		try {
-			$data = $this->storeOrderCreateService->execute($command);
-		} catch (\Exception $e) {
-			return $this->json([
-				'errors' => $e->getMessage()
-			], Response::HTTP_BAD_REQUEST);
-		}
-
-		return $this->json($data);
+		return $this->json($this->storeOrderCreateService->execute($command));
 	}
 
 	/**
@@ -143,67 +130,47 @@ class StoreOrderController extends BaseServiceController
 	 */
 	public function addProduct(Request $request)
 	{
-		//var_dump($request->request->all());
 		$command = new StoreOrderAddProductCommand(
 			$request->get('orderId'),
 			$request->get('productId')
 		);
 
-		if (!$this->commandIsValid($command)) {
+		if (false === $this->commandIsValid($command)) {
 			return $this->json([
 				'errors' => $this->getLastValidationErrors()
 			], Response::HTTP_BAD_REQUEST);
 		}
 
-		try {
-			$this->storeOrderAddProduct->execute($command);
-		} catch (\Exception $e) {
-			return $this->json([
-				'errors' => $e->getMessage()
-			], Response::HTTP_BAD_REQUEST);
-		}
+        $this->storeOrderAddProduct->execute($command);
 
 		return $this->json([]);
 	}
 
-
-	public function clear()
+    /**
+     * Remove store order item from new order
+     *
+     * @param int $id
+     * @return JsonResponse
+     *
+     * @throws \App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderException
+     * @SWG\Tag(name="Store Orders")
+     *
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="path",
+     *     type="integer",
+     *     required=true,
+     *     description="id of the available item in order"
+     * )
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns ok"
+     *)
+     */
+	public function removeItem(int $id)
 	{
-
-	}
-
-
-	/**
-	 * Remove store order item from new order
-	 *
-	 * @param $id
-	 * @return JsonResponse
-	 *
-	 * @SWG\Tag(name="Store Orders")
-	 *
-	 * @SWG\Parameter(
-	 *     name="id",
-	 *     in="path",
-	 *     type="integer",
-	 *     required=true,
-	 *     description="id of the available item in order"
-	 * )
-	 *
-	 * @SWG\Response(
-	 *     response=200,
-	 *     description="Returns ok"
-	 *)
-	 *
-	 */
-	public function removeItem($id)
-	{
-		try {
-			$this->storeOrderRemoveItem->execute($id);
-		} catch (\Exception $e) {
-			return $this->json([
-				'errors' => $e->getMessage()
-			], Response::HTTP_BAD_REQUEST);
-		}
+        $this->storeOrderRemoveItem->execute($id);
 
 		return $this->json([]);
 	}
@@ -211,28 +178,27 @@ class StoreOrderController extends BaseServiceController
 	/**
 	 * Get pre checkout information by order
 	 *
-	 * @return JsonResponse
-	 *
-	 * @SWG\Tag(name="Store Orders")
-	 *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Return validation errors"
+     * )
+     *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Return validation errors"
+     * )
+     *
 	 * @SWG\Response(
 	 *     response=200,
 	 *     description="Returns information for checkout"
 	 *)
-	 *
+     *
+     * @return JsonResponse
+	 * @SWG\Tag(name="Store Orders")
 	 */
 	public function prepareCheckout()
 	{
-		try {
-			$result = $this->prepareCheckoutService->execute();
-		} catch(\Exception $e) {
-			return $this->json([
-				'errors' => $e->getMessage()
-			]);
-		}
-
-		return $this->json($result);
-
+		return $this->json($this->prepareCheckoutService->execute());
 	}
 
 	/**
@@ -247,6 +213,11 @@ class StoreOrderController extends BaseServiceController
 	 *     description="stripe front token"
 	 * )
 	 *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Return validation errors"
+     * )
+     *
 	 * @SWG\Response(
 	 *     response=200,
 	 *     description="Pay for products"
@@ -257,27 +228,18 @@ class StoreOrderController extends BaseServiceController
 	 */
 	public function checkout(Request $request)
 	{
-		$command = new StoreOrderCheckoutCommand(
-			$request->get('stripeToken')
-		);
+		$command = new StoreOrderCheckoutCommand($request->get('stripeToken'));
 
-		if (!$this->commandIsValid($command)) {
+		if (false === $this->commandIsValid($command)) {
 			return $this->json([
 				'errors' => $this->getLastValidationErrors()
 			], Response::HTTP_BAD_REQUEST);
 		}
 
-		try {
-			$order = $this->storeOrderCheckout->execute($command);
-			$this->orderMinerService->execute($order);
-		} catch (\Exception $e) {
-			return $this->json([
-				'errors' => $e->getMessage()
-			], Response::HTTP_BAD_REQUEST);
-		}
+        $order = $this->storeOrderCheckout->execute($command);
+        $this->orderMinerService->execute($order);
 
 		return $this->json([]);
-
 	}
 
 	/**

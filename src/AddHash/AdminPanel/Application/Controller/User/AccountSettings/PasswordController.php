@@ -74,13 +74,7 @@ class PasswordController extends BaseServiceController
             ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        try {
-            $this->updateService->execute($command);
-        } catch (\Exception $e) {
-            return $this->json([
-                'errors' => $e->getMessage(),
-            ], $e->getCode());
-        }
+        $this->updateService->execute($command);
 
         return $this->json([]);
 	}

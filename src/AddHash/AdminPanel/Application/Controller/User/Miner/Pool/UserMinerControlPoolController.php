@@ -51,15 +51,9 @@ class UserMinerControlPoolController extends BaseServiceController
     {
         $command = new UserMinerControlPoolCommand($id);
 
-        try {
-            $data = $this->contextPool->handle(UserMinerControlPoolGetStrategy::STRATEGY_ALIAS, $command);
-        } catch (\Exception $e) {
-            return $this->json([
-                'errors' => $e->getMessage(),
-            ], $e->getCode());
-        }
-
-        return $this->json($data);
+        return $this->json(
+            $this->contextPool->handle(UserMinerControlPoolGetStrategy::STRATEGY_ALIAS, $command)
+        );
     }
 
     /**
@@ -120,14 +114,6 @@ class UserMinerControlPoolController extends BaseServiceController
             ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        try {
-            $data = $this->contextPool->handle(UserMinerControlPoolCreateStrategy::STRATEGY_ALIAS, $command);
-        } catch (\Exception $e) {
-            return $this->json([
-                'errors' => $e->getMessage(),
-            ], $e->getCode());
-        }
-
-        return $this->json($data);
+        return $this->json($this->contextPool->handle(UserMinerControlPoolCreateStrategy::STRATEGY_ALIAS, $command));
     }
 }

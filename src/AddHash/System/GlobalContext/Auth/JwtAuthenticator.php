@@ -75,10 +75,7 @@ abstract class JwtAuthenticator extends AbstractGuardAuthenticator
 	 */
 	public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
 	{
-		$responseData = [
-            'message' => $exception->getMessage(),
-            'code'    => $exception->getCode()
-		];
+		$responseData = ['errors' => ['token' => [$exception->getMessage()]]];
 
 		return new JsonResponse($responseData, 401);
 	}

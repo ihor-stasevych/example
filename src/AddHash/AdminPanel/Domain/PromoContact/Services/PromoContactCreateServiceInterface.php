@@ -6,5 +6,5 @@ use App\AddHash\AdminPanel\Domain\PromoContact\Command\PromoContactCreateCommand
 
 interface PromoContactCreateServiceInterface
 {
-    public function execute(PromoContactCreateCommandInterface $command);
+    public function execute(PromoContactCreateCommandInterface $command): void;
 }

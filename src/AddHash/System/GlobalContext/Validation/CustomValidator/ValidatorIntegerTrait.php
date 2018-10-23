@@ -6,12 +6,6 @@ trait ValidatorIntegerTrait
 {
     public function isInteger($value): bool
     {
-        $isInteger = false;
-
-        if ((int) $value == $value) {
-            $isInteger = true;
-        }
-
-        return $isInteger;
+        return true === is_numeric($value) && (int) $value == $value;
     }
 }

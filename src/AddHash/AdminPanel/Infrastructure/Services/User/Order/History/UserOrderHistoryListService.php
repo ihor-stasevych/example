@@ -12,7 +12,7 @@ use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInte
 use App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryListServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Order\History\UserOrderHistoryListCommandInterface;
 
-class UserOrderHistoryListService implements UserOrderHistoryListServiceInterface
+final class UserOrderHistoryListService implements UserOrderHistoryListServiceInterface
 {
     private $authenticationService;
 

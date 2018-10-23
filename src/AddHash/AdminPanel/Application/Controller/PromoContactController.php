@@ -77,10 +77,10 @@ class PromoContactController extends BaseServiceController
             $request->get('gender')
         );
 
-        if (!$this->commandIsValid($command)) {
+        if (false === $this->commandIsValid($command)) {
 			return $this->json([
 				'errors' => $this->getLastValidationErrors()
-			], Response::HTTP_BAD_REQUEST);
+			], Response::HTTP_NOT_ACCEPTABLE);
 		}
 
         $this->createService->execute($command);

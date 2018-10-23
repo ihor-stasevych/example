@@ -127,14 +127,6 @@ class GeneralInformationController extends BaseServiceController
             ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        try {
-            $user = $this->updateService->execute($command);
-        } catch (\Exception $e) {
-            return $this->json([
-                'errors' => $e->getMessage(),
-            ], $e->getCode());
-        }
-
-		return $this->json($user);
+		return $this->json($this->updateService->execute($command));
 	}
 }
