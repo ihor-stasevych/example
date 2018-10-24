@@ -13,7 +13,7 @@ class AuthenticationFailureListener
         $response = new JWTAuthenticationFailureResponse();
         $exception = $event->getException()->getPrevious();
 
-        $errors = ['username' => ['Bad credentials']];
+        $errors = 'Bad credentials';
         $isCaptcha = $exception instanceof UserLoginInvalidVerificationCaptchaException;
 
         if (true === $isCaptcha) {

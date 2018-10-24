@@ -9,6 +9,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 
 class ApiResponseSubscriber implements EventSubscriberInterface
 {
@@ -25,22 +26,36 @@ class ApiResponseSubscriber implements EventSubscriberInterface
     {
         $exception = $event->getException();
 
-        $code = $exception->getCode()
-            ? $exception->getCode()
-            : Response::HTTP_BAD_REQUEST;
-
-        if (true === $this->isNoRouteFound($exception)) {
-            $code = Response::HTTP_NOT_FOUND;
-        }
+        $code = $this->getCode($exception);
 
         $event->setResponse(new JsonResponse(['errors' => $exception->getMessage()], $code));
     }
 
-    public function isNoRouteFound($exception): bool
+    private function getCode(\Throwable $exception): int
+    {
+        if (true === $this->isNoRouteFound($exception)) {
+            $code = Response::HTTP_NOT_FOUND;
+        } else if (true === $this->isUnauthorized($exception)) {
+            $code = Response::HTTP_UNAUTHORIZED;
+        } else {
+            $code = $exception->getCode()
+                ? $exception->getCode()
+                : Response::HTTP_BAD_REQUEST;
+        }
+
+        return $code;
+    }
+
+    private function isNoRouteFound($exception): bool
     {
         $isNotFound = $exception instanceof NotFoundHttpException;
         $isNotAllowed = $exception instanceof MethodNotAllowedHttpException;
 
         return true === $isNotFound || true === $isNotAllowed;
+    }
+
+    private function isUnauthorized($exception)
+    {
+        return $exception instanceof AuthenticationCredentialsNotFoundException;
     }
 }
