@@ -87,7 +87,7 @@ class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 		$order->calculateItems();
 		$this->storeOrderRepository->save($order);
 
-		$this->notificationService->execute('System notification', 'Order was created #' . $order->getId());
+		$this->notificationService->execute('System notification', 'Order was created #' . $order->getId(), $user);
 
         $credentials = $this->authenticationAdapter->getCredentials();
 

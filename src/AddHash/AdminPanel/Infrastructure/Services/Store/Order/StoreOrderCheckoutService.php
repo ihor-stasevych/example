@@ -71,7 +71,10 @@ class StoreOrderCheckoutService implements StoreOrderCheckoutServiceInterface
 
 		$this->orderRepository->save($order);
 
-        $this->notificationService->execute('System notification', 'Payment by order #' . $order->getId() . ' was successful');
+		$title = 'System notification';
+		$message = 'Payment by order #' . $order->getId() . ' was successful';
+
+        $this->notificationService->execute($title, $message, $user);
 
 		return $order;
 	}

@@ -70,7 +70,10 @@ class StoreOrderUnReserveMinerService implements StoreOrderUnReserveMinerService
                 }
             }
 
-            //$this->notificationService->execute('System notification', 'Order #' . $unPaidOrder->getId() . ' was closed');
+            $title = 'System notification';
+            $message = 'Order #' . $unPaidOrder->getId() . ' was closed';
+
+            $this->notificationService->execute($title, $message, $unPaidOrder->getUser());
 
             $this->storeOrderRepository->save($unPaidOrder);
         }
