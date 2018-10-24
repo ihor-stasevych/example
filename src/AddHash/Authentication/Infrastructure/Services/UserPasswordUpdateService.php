@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use App\AddHash\Authentication\Domain\Repository\UserRepositoryInterface;
 use App\AddHash\Authentication\Domain\Command\UserPasswordUpdateCommandInterface;
 use App\AddHash\Authentication\Domain\Services\UserPasswordUpdateServiceInterface;
+use App\AddHash\Authentication\Domain\Services\UserSendPasswordUpdateServiceInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use App\AddHash\Authentication\Domain\Exceptions\UserRegister\UserPasswordUpdateInvalidCurrentPasswordException;
 
@@ -18,15 +19,19 @@ final class UserPasswordUpdateService implements UserPasswordUpdateServiceInterf
 
     private $encoderFactory;
 
+    private $userSendPasswordUpdateService;
+
     public function __construct(
         UserRepositoryInterface $userRepository,
         TokenStorageInterface $tokenStorage,
-        EncoderFactoryInterface $encoderFactory
+        EncoderFactoryInterface $encoderFactory,
+        UserSendPasswordUpdateServiceInterface $userSendPasswordUpdateService
     )
     {
         $this->userRepository = $userRepository;
         $this->tokenStorage = $tokenStorage;
         $this->encoderFactory = $encoderFactory;
+        $this->userSendPasswordUpdateService = $userSendPasswordUpdateService;
     }
 
     /**
@@ -55,5 +60,7 @@ final class UserPasswordUpdateService implements UserPasswordUpdateServiceInterf
 
         $user->setPassword($encodedNewPassword);
         $this->userRepository->save($user);
+
+        $this->userSendPasswordUpdateService->execute($user);
     }
 }

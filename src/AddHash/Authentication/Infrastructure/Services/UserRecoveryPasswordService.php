@@ -8,6 +8,7 @@ use App\AddHash\Authentication\Domain\Repository\UserRepositoryInterface;
 use App\AddHash\Authentication\Application\Command\UserPasswordRecoveryHashCommand;
 use App\AddHash\Authentication\Domain\Command\UserPasswordRecoveryCommandInterface;
 use App\AddHash\Authentication\Domain\Services\UserRecoveryPasswordServiceInterface;
+use App\AddHash\Authentication\Domain\Services\UserSendPasswordUpdateServiceInterface;
 use App\AddHash\Authentication\Domain\Repository\UserPasswordRecoveryRepositoryInterface;
 use App\AddHash\Authentication\Domain\Exceptions\UserResetPassword\UserResetPasswordInvalidTokenException;
 use App\AddHash\Authentication\Domain\Exceptions\UserResetPassword\UserResetPasswordUserNotExistsException;
@@ -22,17 +23,21 @@ final class UserRecoveryPasswordService implements UserRecoveryPasswordServiceIn
 
     private $userCheckRecoveryHashService;
 
+    private $userSendPasswordUpdateService;
+
     public function __construct(
         UserPasswordRecoveryRepositoryInterface $userPasswordRecoveryRepository,
         UserRepositoryInterface $userRepository,
         EncoderFactoryInterface $encoderFactory,
-        UserCheckRecoveryHashService $userCheckRecoveryHashService
+        UserCheckRecoveryHashService $userCheckRecoveryHashService,
+        UserSendPasswordUpdateServiceInterface $userSendPasswordUpdateService
     )
     {
         $this->userPasswordRecoveryRepository = $userPasswordRecoveryRepository;
         $this->userRepository = $userRepository;
         $this->encoderFactory = $encoderFactory;
         $this->userCheckRecoveryHashService = $userCheckRecoveryHashService;
+        $this->userSendPasswordUpdateService = $userSendPasswordUpdateService;
     }
 
     /**
@@ -63,5 +68,7 @@ final class UserRecoveryPasswordService implements UserRecoveryPasswordServiceIn
         $this->userRepository->save($user);
 
         $this->userPasswordRecoveryRepository->remove($userPasswordRecovery);
+
+        $this->userSendPasswordUpdateService->execute($user);
     }
 }
