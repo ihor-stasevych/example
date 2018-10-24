@@ -11,13 +11,13 @@ use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Infrastructure\AdapterOpenHost\AuthenticationAdapter;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerStockRepositoryInterface;
+use App\AddHash\AdminPanel\Infrastructure\Payment\Gateway\Stripe\PaymentGatewayStripe;
 use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderCreateCommandInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderCreateServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Notification\SendUserNotificationServiceInterface;
-use App\AddHash\AdminPanel\Infrastructure\Payment\Gateway\Stripe\PaymentGatewayStripe;
 
-class StoreOrderCreateService implements StoreOrderCreateServiceInterface
+final class StoreOrderCreateService implements StoreOrderCreateServiceInterface
 {
 	private $storeProductRepository;
 

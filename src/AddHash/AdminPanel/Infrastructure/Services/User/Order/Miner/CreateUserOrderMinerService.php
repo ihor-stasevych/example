@@ -2,7 +2,6 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Order\Miner;
 
-
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerStockRepositoryInterface;

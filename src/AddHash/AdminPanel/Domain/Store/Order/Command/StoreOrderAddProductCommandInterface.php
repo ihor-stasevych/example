@@ -7,4 +7,6 @@ interface StoreOrderAddProductCommandInterface
 	public function getOrder();
 
 	public function getProduct();
+
+	public function isInteger($value): bool;
 }

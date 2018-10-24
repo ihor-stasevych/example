@@ -6,9 +6,8 @@ use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Extender\MinerSocket;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Commands\MinerCommand;
 use App\AddHash\AdminPanel\Infrastructure\Miners\Parsers\MinerSocketParser;
-use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\Strategy\UserMinerControlPoolStrategyInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCommandInterface;
-
+use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\Strategy\UserMinerControlPoolStrategyInterface;
 
 class UserMinerControlPoolGetStrategy implements UserMinerControlPoolStrategyInterface
 {
@@ -25,7 +24,7 @@ class UserMinerControlPoolGetStrategy implements UserMinerControlPoolStrategyInt
             new MinerSocket($minerStock),
             new MinerSocketParser()
         );
-		$period = $minerStock;
+
         return $minerCommand->getPools() + [
             'minerTitle'   => $minerStock->infoMiner()->getTitle(),
             'minerId'      => $minerStock->infoMiner()->getId(),

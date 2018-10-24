@@ -9,6 +9,8 @@ use App\AddHash\System\GlobalContext\ValueObject\Email;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use App\AddHash\Authentication\Domain\Repository\UserRepositoryInterface;
+use App\AddHash\Authentication\Domain\Exceptions\UserLogin\UserLoginEmailNotExistsException;
+use App\AddHash\Authentication\Domain\Exceptions\UserLogin\UserLoginInvalidVerificationCaptchaException;
 
 class UserAuthProvider implements UserProviderInterface
 {
@@ -25,7 +27,8 @@ class UserAuthProvider implements UserProviderInterface
     /**
      * @param string $username
      * @return User|null|UserInterface
-     * @throws \Exception
+     * @throws UserLoginEmailNotExistsException
+     * @throws UserLoginInvalidVerificationCaptchaException
      */
     public function loadUserByUsername($username)
     {
@@ -36,7 +39,7 @@ class UserAuthProvider implements UserProviderInterface
         );
 
         if (null === $user) {
-            throw new \Exception('Bad credentials.');
+            throw new UserLoginEmailNotExistsException('Bad credentials');
         }
 
         return $user;
@@ -60,7 +63,7 @@ class UserAuthProvider implements UserProviderInterface
     }
 
     /**
-     * @throws \Exception
+     * @throws UserLoginInvalidVerificationCaptchaException
      */
     private function isVerifyCaptcha()
     {
@@ -75,7 +78,7 @@ class UserAuthProvider implements UserProviderInterface
         $isVerifyCaptcha = (new Captcha())->isVerify($captchaResponse);
 
         if (false === $isVerifyCaptcha) {
-            throw new \Exception('Invalid verification captcha');
+            throw new UserLoginInvalidVerificationCaptchaException('Invalid verification captcha');
         }
     }
 }

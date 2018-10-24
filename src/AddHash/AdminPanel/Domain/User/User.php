@@ -101,11 +101,11 @@ class User
 
     public function setBackupEmail(?Email $email)
     {
-        $this->backupEmail = $email;
+        $this->backupEmail = $email ?? '';
     }
 
     public function setPhoneNumber(?Phone $phoneNumber)
     {
-        $this->phone = $phoneNumber;
+        $this->phone = $phoneNumber ?? '';
     }
 }

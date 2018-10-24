@@ -5,7 +5,7 @@ namespace App\AddHash\AdminPanel\Infrastructure\Services\Wallet\Type;
 use App\AddHash\AdminPanel\Domain\Wallet\WalletTypeRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Wallet\Services\Type\WalletTypeListServiceInterface;
 
-class WalletTypeListService implements WalletTypeListServiceInterface
+final class WalletTypeListService implements WalletTypeListServiceInterface
 {
     private $walletTypeRepository;
 

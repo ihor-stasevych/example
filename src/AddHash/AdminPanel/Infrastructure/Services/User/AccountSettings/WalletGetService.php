@@ -8,7 +8,7 @@ use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInte
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletGetServiceInterface;
 use App\AddHash\AdminPanel\Infrastructure\Transformers\User\AccountSettings\WalletTransform;
 
-class WalletGetService implements WalletGetServiceInterface
+final class WalletGetService implements WalletGetServiceInterface
 {
     private $authenticationService;
 

@@ -4,7 +4,7 @@ namespace App\AddHash\AdminPanel\Application\Command\Store\Product;
 
 use App\AddHash\AdminPanel\Domain\Store\Product\Command\StoreProductListCommandInterface;
 
-class StoreProductListCommand implements StoreProductListCommandInterface
+final class StoreProductListCommand implements StoreProductListCommandInterface
 {
 	private $sort;
 

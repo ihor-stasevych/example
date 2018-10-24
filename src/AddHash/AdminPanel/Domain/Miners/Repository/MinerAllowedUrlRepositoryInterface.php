@@ -4,5 +4,5 @@ namespace App\AddHash\AdminPanel\Domain\Miners\Repository;
 
 interface MinerAllowedUrlRepositoryInterface
 {
-	public function getCountByValuesEnabledUrl(array $values): int;
+    public function getByValuesEnabledUrl(array $values): array;
 }

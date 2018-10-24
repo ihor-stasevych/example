@@ -4,7 +4,7 @@ namespace App\AddHash\AdminPanel\Application\Command\User\Order\History;
 
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Order\History\UserOrderHistoryListCommandInterface;
 
-class UserOrderHistoryListCommand implements UserOrderHistoryListCommandInterface
+final class UserOrderHistoryListCommand implements UserOrderHistoryListCommandInterface
 {
     private $sort;
 

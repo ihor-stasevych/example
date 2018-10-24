@@ -50,7 +50,7 @@ final class UserPasswordUpdateService implements UserPasswordUpdateServiceInterf
         );
 
         if (false === $isValidPassword) {
-            throw new UserPasswordUpdateInvalidCurrentPasswordException('Invalid current password');
+            throw new UserPasswordUpdateInvalidCurrentPasswordException(['currentPassword' => ['Invalid current password']]);
         }
 
         $encodedNewPassword = $this->encoderFactory->getEncoder(User::class)->encodePassword(

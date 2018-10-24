@@ -3,19 +3,24 @@
 namespace App\AddHash\AdminPanel\Application\Command\Store\Order;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use App\AddHash\System\GlobalContext\Validation\CustomValidator\ValidatorIntegerTrait;
 use App\AddHash\AdminPanel\Domain\Store\Order\Command\StoreOrderAddProductCommandInterface;
 
-class StoreOrderAddProductCommand implements StoreOrderAddProductCommandInterface
+final class StoreOrderAddProductCommand implements StoreOrderAddProductCommandInterface
 {
+    use ValidatorIntegerTrait;
+
 	/**
-	 * @var string
-	 * @Assert\NotNull()
+	 * @var int
+	 * @Assert\NotNull(),
+     * @Assert\Expression(expression="this.isInteger(value)")
 	 */
 	private $product;
 
 	/**
-	 * @var string
-	 * @Assert\NotNull()
+	 * @var int
+	 * @Assert\NotNull(),
+     * @Assert\Expression(expression="this.isInteger(value)")
 	 */
 	private $order;
 

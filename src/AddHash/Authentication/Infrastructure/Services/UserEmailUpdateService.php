@@ -37,7 +37,7 @@ final class UserEmailUpdateService implements UserEmailUpdateServiceInterface
         if (false === $currentEmail->equals($newEmail)) {
 
             if (null !== $this->userRepository->getByEmail($newEmail)) {
-                throw new UserEmailUpdateEmailExistsException('This email is already taken');
+                throw new UserEmailUpdateEmailExistsException(['email' => ['This email is already taken']]);
             }
 
             $user->setEmail($newEmail);

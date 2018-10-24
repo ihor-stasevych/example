@@ -76,7 +76,12 @@ class UserController extends BaseServiceController
      *     description="Returns new user"
      * )
      *
-     *   @SWG\Response(
+     * @SWG\Response(
+     *     response=406,
+     *     description="Returns validation errors"
+     * )
+     *
+     * @SWG\Response(
      *     response=400,
      *     description="Returns validation errors"
      * )
@@ -96,17 +101,9 @@ class UserController extends BaseServiceController
         if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors()
-            ], Response::HTTP_BAD_REQUEST);
+            ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        try {
-            $token = $this->createService->execute($command);
-        } catch (\Exception $e) {
-            return $this->json([
-                'message' => $e->getMessage()
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        return $this->json($token);
+        return $this->json($this->createService->execute($command));
     }
 }
