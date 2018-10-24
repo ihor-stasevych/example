@@ -149,11 +149,6 @@ services:
     tags:
       - { name: user.miner.pool.strategy }
 
-  user.miner.pool.get.strategy:
-    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\Strategy\UserMinerControlPoolGetStrategy
-    tags:
-      - { name: user.miner.pool.strategy }
-
   addhash.user.miner.control.rig.create.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Rig\UserMinerControlRigCreateService
     public: true
@@ -193,3 +188,19 @@ services:
   App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\MarkAsReadNotificationService: '@addhash.user.notification.markread.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Notification\MarkAsReadNotificationServiceInterface: '@addhash.user.notification.markread.service'
+
+  addhash.user.miner.pool.get.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerPoolGetService
+    public: true
+    arguments: ['@addhash.user.get.authentication.service', '@addhash.user.order.miner.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\UserMinerPoolGetService: '@addhash.user.miner.pool.get.service'
+
+  App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerPoolGetServiceInterface: '@addhash.user.miner.pool.get.service'
+
+  addhash.un.reserve.miner.stock.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\UnReserveMinerStockService
+    public: true
+    arguments: ['@addhash.user.order.miner.repository', '@addhash.miner.stock.repository']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\UnReserveMinerStockService: '@addhash.un.reserve.miner.stock.service'
+
+  App\AddHash\AdminPanel\Domain\User\Miner\UnReserveMinerStockServiceInterface: '@addhash.un.reserve.miner.stock.service'

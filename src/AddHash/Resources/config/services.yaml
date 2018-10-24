@@ -10,6 +10,11 @@ services:
       arguments: ['@addhash.store.order.un.reserve.miner.service']
       tags: ['console.command']
 
+  App\AddHash\AdminPanel\Application\ConsoleCommand\UnReserveMinerStockCommand:
+      public: false
+      arguments: ['@addhash.un.reserve.miner.stock.service']
+      tags: ['console.command']
+
   App\AddHash\AdminPanel\Application\ConsoleCommand\ProcessSchedulerTask:
       public: false
       arguments: ['@addhash.scheduler.task.worker.service']
