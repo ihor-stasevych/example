@@ -18,7 +18,7 @@ services:
   addhash.authentication.user.password.update.service:
     class: App\AddHash\Authentication\Infrastructure\Services\UserPasswordUpdateService
     public: true
-    arguments: ['@addhash.user.repository', '@security.token_storage', '@security.encoder_factory']
+    arguments: ['@addhash.user.repository', '@security.token_storage', '@security.encoder_factory', '@addhash.authentication.user.send.password.update.service']
   App\AddHash\Authentication\Infrastructure\Services\UserPasswordUpdateService: '@addhash.authentication.user.password.update.service'
 
   App\AddHash\Authentication\Domain\Services\UserPasswordUpdateServiceInterface: '@addhash.authentication.user.password.update.service'
@@ -50,7 +50,15 @@ services:
   addhash.authentication.user.recovery.password.service:
     class: App\AddHash\Authentication\Infrastructure\Services\UserRecoveryPasswordService
     public: true
-    arguments: ['@addhash.authentication.user.password.recovery.repository', '@addhash.user.repository', '@security.encoder_factory', '@addhash.authentication.user.check.recovery.hash.service']
+    arguments: ['@addhash.authentication.user.password.recovery.repository', '@addhash.user.repository', '@security.encoder_factory', '@addhash.authentication.user.check.recovery.hash.service', '@addhash.authentication.user.send.password.update.service']
   App\AddHash\Authentication\Infrastructure\Services\UserRecoveryPasswordService: '@addhash.authentication.user.recovery.password.service'
 
   App\AddHash\Authentication\Domain\Services\UserRecoveryPasswordServiceInterface: '@addhash.authentication.user.recovery.password.service'
+
+  addhash.authentication.user.send.password.update.service:
+    class: App\AddHash\Authentication\Infrastructure\Services\UserSendPasswordUpdateService
+    public: true
+    arguments: ['@addhash.mailer', '@twig']
+  App\AddHash\Authentication\Infrastructure\Services\UserSendPasswordUpdateService: '@addhash.authentication.user.send.password.update.service'
+
+  App\AddHash\Authentication\Domain\Services\UserSendPasswordUpdateServiceInterface: '@addhash.authentication.user.send.password.update.service'

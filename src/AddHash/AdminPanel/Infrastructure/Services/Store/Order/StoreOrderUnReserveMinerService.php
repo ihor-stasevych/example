@@ -8,6 +8,7 @@ use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrderRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Miners\Repository\MinerStockRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Exceptions\StoreOrderNoUnPaidErrorException;
 use App\AddHash\AdminPanel\Domain\Store\Order\Services\StoreOrderUnReserveMinerServiceInterface;
+use App\AddHash\AdminPanel\Domain\User\Services\Notification\SendUserNotificationServiceInterface;
 use App\AddHash\AdminPanel\Domain\Store\Order\Exceptions\StoreOrderNoUnReserveMinersErrorException;
 
 class StoreOrderUnReserveMinerService implements StoreOrderUnReserveMinerServiceInterface
@@ -18,10 +19,17 @@ class StoreOrderUnReserveMinerService implements StoreOrderUnReserveMinerService
 
     private $minerStockRepository;
 
-	public function __construct(StoreOrderRepositoryInterface $storeOrderRepository, MinerStockRepositoryInterface $minerStockRepository)
+    private $notificationService;
+
+	public function __construct(
+	    StoreOrderRepositoryInterface $storeOrderRepository,
+        MinerStockRepositoryInterface $minerStockRepository,
+        SendUserNotificationServiceInterface $notificationService
+    )
 	{
         $this->storeOrderRepository = $storeOrderRepository;
         $this->minerStockRepository = $minerStockRepository;
+        $this->notificationService = $notificationService;
 	}
 
     /**
@@ -61,6 +69,11 @@ class StoreOrderUnReserveMinerService implements StoreOrderUnReserveMinerService
                     $this->minerStockRepository->save($minerStock);
                 }
             }
+
+            $title = 'System notification';
+            $message = 'Order #' . $unPaidOrder->getId() . ' was closed';
+
+            $this->notificationService->execute($title, $message, $unPaidOrder->getUser());
 
             $this->storeOrderRepository->save($unPaidOrder);
         }
