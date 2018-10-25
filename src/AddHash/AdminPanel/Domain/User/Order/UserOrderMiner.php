@@ -5,6 +5,7 @@ namespace App\AddHash\AdminPanel\Domain\User\Order;
 use App\AddHash\AdminPanel\Domain\Miners\Miner;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
+use App\AddHash\AdminPanel\Domain\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class UserOrderMiner
@@ -63,6 +64,11 @@ class UserOrderMiner
 	public function getMiners()
     {
         return $this->minerStock;
+    }
+
+    public function getUser(): User
+    {
+        return $this->user;
     }
 
     public function getRentPeriod()

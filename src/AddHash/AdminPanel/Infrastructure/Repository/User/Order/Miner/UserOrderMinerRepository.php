@@ -25,6 +25,20 @@ class UserOrderMinerRepository extends AbstractRepository implements UserOrderMi
             ->getResult();
     }
 
+    public function getByBetweenEndPeriod(\DateTime $start, \DateTime $end): array
+    {
+        return $this->entityManager->getRepository($this->getEntityName())
+            ->createQueryBuilder('uom')
+            ->select('uom')
+            ->join('uom.minerStock', 'ms')
+            ->join('uom.user', 'u')
+            ->where('uom.endPeriod BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @param User $user
      * @param int $minerStockId

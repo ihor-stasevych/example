@@ -200,7 +200,15 @@ services:
   addhash.un.reserve.miner.stock.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\UnReserveMinerStockService
     public: true
-    arguments: ['@addhash.user.order.miner.repository', '@addhash.miner.stock.repository']
+    arguments: ['@addhash.user.order.miner.repository', '@addhash.miner.stock.repository', '@addhash.user.notification.send.service']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\UnReserveMinerStockService: '@addhash.un.reserve.miner.stock.service'
 
   App\AddHash\AdminPanel\Domain\User\Miner\UnReserveMinerStockServiceInterface: '@addhash.un.reserve.miner.stock.service'
+
+  addhash.end.rent.period.miner.stock.notification.service:
+    class: App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\EndRentPeriodMinerStockNotificationService
+    public: true
+    arguments: ['@addhash.user.order.miner.repository', '@addhash.user.notification.send.service']
+  App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\EndRentPeriodMinerStockNotificationService: '@addhash.end.rent.period.miner.stock.notification.service'
+
+  App\AddHash\AdminPanel\Domain\User\Miner\EndRentPeriodMinerStockNotificationServiceInterface: '@addhash.end.rent.period.miner.stock.notification.service'

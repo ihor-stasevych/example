@@ -8,6 +8,8 @@ interface UserOrderMinerRepositoryInterface
 {
     public function getByEndPeriod(\DateTime $endPeriod): array;
 
+    public function getByBetweenEndPeriod(\DateTime $start, \DateTime $end): array;
+
     public function getByUserAndMinerStockId(User $user, int $minerStockId): ?UserOrderMiner;
 
 	public function save(UserOrderMiner $userOrderMiner);

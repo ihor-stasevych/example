@@ -5,13 +5,13 @@ namespace App\AddHash\AdminPanel\Application\ConsoleCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use App\AddHash\AdminPanel\Domain\User\Miner\UnReserveMinerStockServiceInterface;
+use App\AddHash\AdminPanel\Domain\User\Miner\EndRentPeriodMinerStockNotificationServiceInterface;
 
-class UnReserveMinerStockCommand extends Command
+class EndRentPeriodMinerStockNotificationCommand extends Command
 {
     private $service;
 
-    public function __construct(UnReserveMinerStockServiceInterface $service)
+    public function __construct(EndRentPeriodMinerStockNotificationServiceInterface $service)
     {
         $this->service = $service;
 
@@ -20,9 +20,9 @@ class UnReserveMinerStockCommand extends Command
 
     protected function configure()
     {
-        $this->setName('app:un-reserve-miner-stock')
-            ->setDescription('un reserve miner stock')
-            ->setHelp('Un reserve miner stock after the end of the rental period');
+        $this->setName('app:end-rent-period-miner-stock-notification')
+            ->setDescription('end rent period miner stock notification')
+            ->setHelp('Notification end of the rental period');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
