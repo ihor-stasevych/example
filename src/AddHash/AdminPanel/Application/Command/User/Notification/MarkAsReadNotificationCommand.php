@@ -2,10 +2,10 @@
 
 namespace App\AddHash\AdminPanel\Application\Command\User\Notification;
 
-use App\AddHash\AdminPanel\Domain\User\Command\Notification\MarkAsReadNotificationCommandInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\AddHash\AdminPanel\Domain\User\Command\Notification\MarkAsReadNotificationCommandInterface;
 
-class MarkAsReadNotificationCommand implements MarkAsReadNotificationCommandInterface
+final class MarkAsReadNotificationCommand implements MarkAsReadNotificationCommandInterface
 {
 	/**
 	 * @var array

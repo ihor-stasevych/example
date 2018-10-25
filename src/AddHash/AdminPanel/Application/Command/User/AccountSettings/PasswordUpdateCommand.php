@@ -5,7 +5,7 @@ namespace App\AddHash\AdminPanel\Application\Command\User\AccountSettings;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\PasswordUpdateCommandInterface;
 
-class PasswordUpdateCommand implements PasswordUpdateCommandInterface
+final class PasswordUpdateCommand implements PasswordUpdateCommandInterface
 {
     /**
      * @var string

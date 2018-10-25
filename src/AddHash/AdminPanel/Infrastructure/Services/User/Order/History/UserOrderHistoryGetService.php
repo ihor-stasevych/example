@@ -2,7 +2,6 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Order\History;
 
-use App\AddHash\Authentication\Domain\Model\User;
 use App\AddHash\AdminPanel\Domain\Payment\Payment;
 use App\AddHash\AdminPanel\Domain\Payment\PaymentMethod;
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
@@ -13,7 +12,7 @@ use App\AddHash\AdminPanel\Domain\Store\Order\Exceptions\StoreOrderNoOrderErrorE
 use App\AddHash\AdminPanel\Domain\User\Command\Order\History\UserOrderHistoryGetCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Order\History\UserOrderHistoryGetServiceInterface;
 
-class UserOrderHistoryGetService implements UserOrderHistoryGetServiceInterface
+final class UserOrderHistoryGetService implements UserOrderHistoryGetServiceInterface
 {
     private $authenticationService;
 

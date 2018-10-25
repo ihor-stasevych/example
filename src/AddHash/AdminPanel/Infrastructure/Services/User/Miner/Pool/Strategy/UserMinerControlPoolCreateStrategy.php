@@ -2,7 +2,9 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\Strategy;
 
+use App\AddHash\System\Lib\Cache\CacheInterface;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
+use App\AddHash\AdminPanel\Domain\Miners\MinerAllowedUrl;
 use App\AddHash\AdminPanel\Infrastructure\Miners\SSH2\SSH2SCP;
 use App\AddHash\AdminPanel\Infrastructure\Miners\SSH2\SSH2AuthPubKey;
 use App\AddHash\AdminPanel\Infrastructure\Miners\SSH2\SSH2Connection;
@@ -19,8 +21,6 @@ use App\AddHash\AdminPanel\Domain\User\Exceptions\Miner\Pool\UserMinerNoValidUrl
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCreateCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\Strategy\UserMinerControlPoolStrategyInterface;
-use App\AddHash\AdminPanel\Infrastructure\Repository\User\Miner\UserMinerRepository;
-use App\AddHash\System\Lib\Cache\CacheInterface;
 
 class UserMinerControlPoolCreateStrategy implements UserMinerControlPoolStrategyInterface
 {
@@ -168,10 +168,25 @@ class UserMinerControlPoolCreateStrategy implements UserMinerControlPoolStrategy
     {
         $uniqueUrls = $this->getUniqueUrls($pools);
 
-        $getCountAllowedUrl = $this->allowedUrlRepository->getCountByValuesEnabledUrl($uniqueUrls);
+        $allowedUrls = $this->allowedUrlRepository->getByValuesEnabledUrl($uniqueUrls);
 
-        if ($getCountAllowedUrl != count($uniqueUrls)) {
-            throw new UserMinerNoValidUrlPoolException('No valid url');
+        $allowedUrlsValue = [];
+
+        if (count($allowedUrls) != count($uniqueUrls)) {
+            /** @var MinerAllowedUrl $allowedUrl */
+            foreach ($allowedUrls as $allowedUrl) {
+                $allowedUrlsValue[] = $allowedUrl->getValue();
+            }
+
+            $errors = [];
+
+            foreach ($pools as $position => $pool) {
+                if (false === in_array($pool['url'], $allowedUrlsValue)) {
+                    $errors['pools[' . $position . '][url]'] = ['No valid url'];
+                }
+            }
+
+            throw new UserMinerNoValidUrlPoolException($errors);
         }
     }
 

@@ -10,7 +10,7 @@ use App\AddHash\AdminPanel\Domain\User\Services\UserCreateServiceInterface;
 use App\AddHash\AdminPanel\Domain\AdapterOpenHost\AuthenticationAdapterInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\UserCreateInvalidVerifyCaptchaException;
 
-class UserCreateService implements UserCreateServiceInterface
+final class UserCreateService implements UserCreateServiceInterface
 {
     private $authenticationAdapter;
 

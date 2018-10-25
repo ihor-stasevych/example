@@ -97,6 +97,11 @@ class GeneralInformationController extends BaseServiceController
      *     )
      * )
      * @SWG\Response(
+     *     response=406,
+     *     description="Returns validation errors"
+     * )
+     *
+     * @SWG\Response(
      *     response=400,
      *     description="Returns validation errors"
      * )
@@ -119,17 +124,9 @@ class GeneralInformationController extends BaseServiceController
         if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        try {
-            $user = $this->updateService->execute($command);
-        } catch (\Exception $e) {
-            return $this->json([
-                'errors' => $e->getMessage(),
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-		return $this->json($user);
+		return $this->json($this->updateService->execute($command));
 	}
 }

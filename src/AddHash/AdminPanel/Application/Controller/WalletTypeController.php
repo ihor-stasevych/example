@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\AdminPanel\Domain\Wallet\Services\Type\WalletTypeListServiceInterface;
 
-
 class WalletTypeController extends BaseServiceController
 {
     private $walletTypeListService;

@@ -6,10 +6,9 @@ use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
 use App\AddHash\AdminPanel\Domain\User\Order\UserOrderMiner;
 use App\AddHash\AdminPanel\Domain\User\Miner\UserMinerRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\MinerControlGetServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerException;
 use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 
-class MinerControlGetService implements MinerControlGetServiceInterface
+final class MinerControlGetService implements MinerControlGetServiceInterface
 {
     private $authenticationService;
 
@@ -25,7 +24,6 @@ class MinerControlGetService implements MinerControlGetServiceInterface
 
     /**
      * @return array
-     * @throws MinerControlNoMainerException
      */
     public function execute(): array
 	{

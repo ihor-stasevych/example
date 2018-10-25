@@ -85,6 +85,12 @@ services:
 
     App\AddHash\System\Lib\Mail\MailSendInterface: '@addhash.mail.send'
 
+    addhash.api_response_subscriber:
+        class: App\AddHash\System\Subscriber\ApiResponseSubscriber
+        tags:
+        - { name: kernel.event_subscriber }
+
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 

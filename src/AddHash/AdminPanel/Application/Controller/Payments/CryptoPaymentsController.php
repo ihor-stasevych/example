@@ -5,7 +5,6 @@ namespace App\AddHash\AdminPanel\Application\Controller\Payments;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use App\AddHash\System\GlobalContext\ValueObject\CryptoPayment;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\AdminPanel\Application\Command\Payments\MakeCryptoPaymentCommand;
 use App\AddHash\AdminPanel\Application\Command\Payments\GetStateCryptoPaymentCommand;
@@ -45,7 +44,7 @@ class CryptoPaymentsController extends BaseServiceController
 	 *     in="path",
 	 *     type="string",
 	 *     required=true,
-	 *     description="Type of cryptocurrency"
+	 *     description="Type of crypto currency"
 	 * )
      *
      * @SWG\Parameter(
@@ -64,10 +63,23 @@ class CryptoPaymentsController extends BaseServiceController
 	 *
 	 * @SWG\Response(
 	 *     response=200,
-	 *     description="Returns new order or existing"
+	 *     description="Returns new payment"
 	 * )
+     *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Return system errors",
+     *     @SWG\Schema(
+     *          @SWG\Property(
+     *          property="errors",
+     *              @SWG\Property(
+     *                  property="name_error",
+     *              ),
+     *          ),
+     *     ),
+     * )
 	 *
-	 * @return CryptoPayment|JsonResponse
+	 * @return JsonResponse
 	 */
 	public function createNewPayment(int $orderId, string $currency)
 	{
@@ -80,12 +92,11 @@ class CryptoPaymentsController extends BaseServiceController
 		}
 
 		try {
-			/** @var CryptoPayment $cryptoPayment */
 			$cryptoPayment = $this->cryptoPaymentService->execute($command);
 		} catch (\Exception $e) {
 			return $this->json([
 				'errors' => $e->getMessage()
-			], Response::HTTP_BAD_REQUEST);
+			], $e->getCode());
 		}
 
 		return $this->json($cryptoPayment);
@@ -143,7 +154,7 @@ class CryptoPaymentsController extends BaseServiceController
         } catch (\Exception $e) {
             return $this->json([
                 'errors' => $e->getMessage()
-            ], Response::HTTP_BAD_REQUEST);
+            ], $e->getCode());
         }
 
         return $this->json($data);
@@ -179,7 +190,7 @@ class CryptoPaymentsController extends BaseServiceController
         } catch (\Exception $e) {
             return $this->json([
                 'errors' => $e->getMessage()
-            ], Response::HTTP_BAD_REQUEST);
+            ], $e->getCode());
         }
 
         return $this->json($data);

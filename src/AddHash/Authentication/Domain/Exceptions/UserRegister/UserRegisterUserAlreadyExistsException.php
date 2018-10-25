@@ -2,7 +2,9 @@
 
 namespace App\AddHash\Authentication\Domain\Exceptions\UserRegister;
 
-class UserRegisterUserAlreadyExistsException extends \Exception
+use App\AddHash\System\GlobalContext\Exceptions\Error406Exception;
+
+class UserRegisterUserAlreadyExistsException extends Error406Exception
 {
-    protected $code = 400;
+
 }

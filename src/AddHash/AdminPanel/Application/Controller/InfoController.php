@@ -2,9 +2,10 @@
 
 namespace App\AddHash\AdminPanel\Application\Controller;
 
-use App\AddHash\AdminPanel\Domain\Info\Services\GetCryptoCurrenciesServiceInterface;
-use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\AddHash\System\GlobalContext\Common\BaseServiceController;
+use App\AddHash\AdminPanel\Domain\Info\Services\GetCryptoCurrenciesServiceInterface;
 
 class InfoController extends BaseServiceController
 {
@@ -16,15 +17,13 @@ class InfoController extends BaseServiceController
 	}
 
 	/**
-	 *
-	 *
 	 * @SWG\Response(
 	 *     response=200,
 	 *     description="Return list crypto currencies"
 	 * )
 	 *
 	 * @SWG\Tag(name="Information")
-	 * @return \Symfony\Component\HttpFoundation\JsonResponse
+	 * @return JsonResponse
 	 */
 	public function getCryptoCurrencies()
 	{
