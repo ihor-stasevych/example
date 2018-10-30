@@ -29,18 +29,13 @@ class UserMinerControlPoolController extends BaseServiceController
      *     response=200,
      *     description="Returns the miner pools",
      *     @SWG\Schema(
-     *          type="array",
-     *          @SWG\Items(
-     *              type="object",
-     *              @SWG\Property(property="Status", type="string"),
-     *              @SWG\Property(property="Priority", type="integer")
-     *          )
+     *             type="array",
+     *             @SWG\Items(
+     *                 type="object",
+     *                 @SWG\Property(property="Status", type="string"),
+     *                 @SWG\Property(property="Priority", type="integer")
+     *             )
      *     ),
-     * )
-     *
-     * @SWG\Response(
-     *     response=400,
-     *     description="Returns validation errors"
      * )
      *
      * @param int $id
@@ -51,9 +46,7 @@ class UserMinerControlPoolController extends BaseServiceController
     {
         $command = new UserMinerControlPoolCommand($id);
 
-        return $this->json(
-            $this->contextPool->handle(UserMinerControlPoolGetStrategy::STRATEGY_ALIAS, $command)
-        );
+        return $this->json($this->getService->execute($command));
     }
 
     /**
@@ -80,23 +73,13 @@ class UserMinerControlPoolController extends BaseServiceController
      *     response=200,
      *     description="Returns the miner pools",
      *     @SWG\Schema(
-     *          type="array",
-     *          @SWG\Items(
-     *              type="object",
-     *              @SWG\Property(property="Status", type="string"),
-     *              @SWG\Property(property="Priority", type="integer")
-     *          )
+     *             type="array",
+     *             @SWG\Items(
+     *                 type="object",
+     *                 @SWG\Property(property="Status", type="string"),
+     *                 @SWG\Property(property="Priority", type="integer")
+     *             )
      *     ),
-     * )
-     *
-     * @SWG\Response(
-     *     response=406,
-     *     description="Returns validation errors"
-     * )
-     *
-     * @SWG\Response(
-     *     response=400,
-     *     description="Returns validation errors"
      * )
      *
      * @param int $id
@@ -108,12 +91,20 @@ class UserMinerControlPoolController extends BaseServiceController
     {
         $command = new UserMinerControlPoolCreateCommand($id, $request->get('pools'));
 
-        if (false === $this->commandIsValid($command)) {
+        if (!$this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
-            ], Response::HTTP_NOT_ACCEPTABLE);
+            ], Response::HTTP_BAD_REQUEST);
         }
 
-        return $this->json($this->contextPool->handle(UserMinerControlPoolCreateStrategy::STRATEGY_ALIAS, $command));
+        try {
+            $data = $this->contextPool->handle(UserMinerControlPoolCreateStrategy::STRATEGY_ALIAS, $command);
+        } catch (\Exception $e) {
+            return $this->json([
+                'errors' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json($data);
     }
 }
