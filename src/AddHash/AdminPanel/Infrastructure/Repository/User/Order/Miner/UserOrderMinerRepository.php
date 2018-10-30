@@ -49,7 +49,7 @@ class UserOrderMinerRepository extends AbstractRepository implements UserOrderMi
     {
         return $this->entityManager->getRepository($this->getEntityName())
             ->createQueryBuilder('uom')
-            ->select('uom')
+            ->select('uom', 'ms')
             ->join('uom.minerStock', 'ms')
             ->join('ms.miner', 'm')
             ->where('uom.user = :user')
