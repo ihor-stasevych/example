@@ -24,6 +24,10 @@ App\AddHash\AdminPanel\Domain\Miners\MinerStock:
         user:
             type: string
 
+        configName:
+            column: configName
+            type: string
+
     manyToOne:
         miner:
             targetEntity: App\AddHash\AdminPanel\Domain\Miners\Miner

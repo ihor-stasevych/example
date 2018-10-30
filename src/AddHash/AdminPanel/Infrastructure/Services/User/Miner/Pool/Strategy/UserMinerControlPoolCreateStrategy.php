@@ -26,9 +26,7 @@ class UserMinerControlPoolCreateStrategy implements UserMinerControlPoolStrategy
 {
     const STRATEGY_ALIAS = 'pool_create';
 
-    const DEFAULT_CONFIG_NAME = 'bmminer.conf';
-
-    const PATH_CONFIG_REMOTE_SERVER = '/config/' . self::DEFAULT_CONFIG_NAME;
+    const PATH_CONFIG_REMOTE_SERVER = '/config/';
 
     const INDEX_POOLS = 'pools';
 
@@ -75,7 +73,7 @@ class UserMinerControlPoolCreateStrategy implements UserMinerControlPoolStrategy
         }
 
         $pathLocalConfigDir = $dirConfigPools . $minerStock->getId() . '/';
-        $pathLocalConfigFile = $pathLocalConfigDir . static::DEFAULT_CONFIG_NAME;
+        $pathLocalConfigFile = $pathLocalConfigDir . $minerStock->getConfigName();
 
         $oldPools = $this->getOldPools($pathLocalConfigFile);
 
@@ -104,12 +102,14 @@ class UserMinerControlPoolCreateStrategy implements UserMinerControlPoolStrategy
         new SSH2AuthPubKey($connection, $minerStock->getUser(), $pathPublicKey, $pathPrivateKey);
 
         @mkdir($pathLocalConfigDir, 0777, true);
+        $pathConfigRemoteServer = static::PATH_CONFIG_REMOTE_SERVER . $minerStock->getConfigName();
+
         $scp = new SSH2SCP($connection);
-        $scp->fetch($pathLocalConfigFile, static::PATH_CONFIG_REMOTE_SERVER);
+        $scp->fetch($pathLocalConfigFile, $pathConfigRemoteServer);
 
         $this->changeLocalConfig($pathLocalConfigFile, $newPools);
 
-        $scp->send($pathLocalConfigFile, static::PATH_CONFIG_REMOTE_SERVER);
+        $scp->send($pathLocalConfigFile, $pathConfigRemoteServer);
 
         $this->cache->clear();
 
