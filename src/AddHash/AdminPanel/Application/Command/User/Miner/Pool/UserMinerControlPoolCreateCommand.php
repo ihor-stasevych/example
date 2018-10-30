@@ -25,7 +25,7 @@ final class UserMinerControlPoolCreateCommand implements UserMinerControlPoolCre
      *      fields = {
      *          "user" = @Assert\Required({@Assert\NotBlank()}),
      *          "url" = @Assert\Required({@Assert\NotBlank()}),
-     *          "password" = @Assert\Blank()
+     *          "password" = @Assert\Type("string")
      *      }
      *   )
      * })
