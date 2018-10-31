@@ -94,20 +94,14 @@ class UserMinerControlPoolController extends BaseServiceController
     {
         $command = new UserMinerControlPoolCreateCommand($id, $request->get('pools'));
 
-        if (!$this->commandIsValid($command)) {
+        if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        try {
-            $data = $this->contextPool->handle(UserMinerControlPoolCreateStrategy::STRATEGY_ALIAS, $command);
-        } catch (\Exception $e) {
-            return $this->json([
-                'errors' => $e->getMessage(),
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        return $this->json($data);
+        return $this->json(
+            $this->contextPool->handle(UserMinerControlPoolCreateStrategy::STRATEGY_ALIAS, $command)
+        );
     }
 }
