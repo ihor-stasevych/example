@@ -28,6 +28,21 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
     }
 
     /**
+     * @param array $ids
+     * @return array
+     */
+    public function getByIds(array $ids): array
+    {
+        return $this->entityManager->getRepository($this->getEntityName())
+            ->createQueryBuilder('u')
+            ->select('u')
+            ->where('u.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param User $user
      * @throws ORMException
      * @throws OptimisticLockException

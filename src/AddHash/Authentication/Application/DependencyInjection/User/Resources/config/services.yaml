@@ -62,3 +62,11 @@ services:
   App\AddHash\Authentication\Infrastructure\Services\UserSendPasswordUpdateService: '@addhash.authentication.user.send.password.update.service'
 
   App\AddHash\Authentication\Domain\Services\UserSendPasswordUpdateServiceInterface: '@addhash.authentication.user.send.password.update.service'
+
+  addhash.authentication.user.emails.get.service:
+    class: App\AddHash\Authentication\Infrastructure\Services\UserData\UserEmailsGetService
+    public: true
+    arguments: ['@addhash.user.repository']
+  App\AddHash\Authentication\Infrastructure\Services\UserData\UserEmailsGetService: '@addhash.authentication.user.emails.get.service'
+
+  App\AddHash\Authentication\Domain\Services\UserData\UserEmailsGetServiceInterface: '@addhash.authentication.user.emails.get.service'

@@ -7,9 +7,6 @@ use App\AddHash\System\Lib\MailSender\MailSenderInterface;
 
 class MailSend implements MailSendInterface
 {
-    private const SUPPORT_EMAIL = 'support@addhash.com';
-
-
     private $mailSender;
 
     private $templating;
@@ -33,7 +30,7 @@ class MailSend implements MailSendInterface
         array $templateParam,
         string $subject,
         string $toEmail,
-        string $fromEmail = self::SUPPORT_EMAIL
+        string $fromEmail = MailSendInterface::SUPPORT_EMAIL
     ): void
     {
         try {
