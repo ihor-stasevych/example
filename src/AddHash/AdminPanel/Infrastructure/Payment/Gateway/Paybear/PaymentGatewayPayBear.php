@@ -32,7 +32,7 @@ class PaymentGatewayPayBear implements PaymentGatewayInterface
 	 */
 	public function createPayment(StoreOrder $order, $params = []): ?CryptoPayment
 	{
-        $host = $this->requestStack->getCurrentRequest()->getHost();
+        //$host = $this->requestStack->getCurrentRequest()->getHost();
 
 	    $orderId = $order->getId();
 	    $currencies = $this->getCurrencies($orderId);
@@ -42,7 +42,7 @@ class PaymentGatewayPayBear implements PaymentGatewayInterface
 	        return null;
         }
 
-		$callbackUrl = $host . $this->urlGenerator->generate('payments.crypto.callback', [
+		$callbackUrl = $this->urlGenerator->generate('payments.crypto.callback', [
             'orderId' => $orderId,
         ]);
 
@@ -67,11 +67,11 @@ class PaymentGatewayPayBear implements PaymentGatewayInterface
 				$currencyData['rate'],
                 $currencyData['maxConfirmations'],
 				$coinValue,
-                $host . $this->urlGenerator->generate('payments.crypto', [
+                $this->urlGenerator->generate('payments.crypto', [
                     'orderId'  => $orderId,
                     'currency' => $currency,
                 ]),
-                $host . $this->urlGenerator->generate('payments.crypto.state', [
+                $this->urlGenerator->generate('payments.crypto.state', [
                     'orderId' => $orderId,
                 ])
 			);
@@ -89,7 +89,7 @@ class PaymentGatewayPayBear implements PaymentGatewayInterface
 	public function getCurrencies(int $orderId)
 	{
 		$url = sprintf('https://api.paybear.io/v2/currencies?token=%s', static::API_KEY_SECRET);
-        $host = $this->requestStack->getCurrentRequest()->getHost();
+        //$host = $this->requestStack->getCurrentRequest()->getHost();
 
 		if ($response = file_get_contents($url)) {
 			$response = json_decode($response, true);
@@ -99,7 +99,7 @@ class PaymentGatewayPayBear implements PaymentGatewayInterface
 		}
 
 		foreach ($response['data'] as $currency => &$data) {
-            $response['data'][$currency]['currencyUrl'] = $host . $this->urlGenerator->generate('payments.crypto', [
+            $response['data'][$currency]['currencyUrl'] = $this->urlGenerator->generate('payments.crypto', [
                 'orderId'  => $orderId,
                 'currency' => $currency,
             ]);
