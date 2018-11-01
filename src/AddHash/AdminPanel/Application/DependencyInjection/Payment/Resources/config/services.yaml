@@ -67,7 +67,7 @@ services:
   addhash.payment.gateway.paybear:
     class:  App\AddHash\AdminPanel\Infrastructure\Payment\Gateway\Paybear\PaymentGatewayPayBear
     public: true
-    arguments: ['@router.default']
+    arguments: ['@router.default', '@request_stack']
   App\AddHash\AdminPanel\Infrastructure\Payment\Gateway\Paybear\PaymentGatewayPayBear: '@addhash.payment.gateway.paybear'
 
   App\AddHash\AdminPanel\Domain\Payment\Gateway\PaymentGatewayInterface: '@addhash.payment.gateway.paybear'

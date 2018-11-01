@@ -33,6 +33,22 @@ class AuthenticationAdapter implements AuthenticationAdapterInterface
     }
 
     /**
+     * @param array $ids
+     * @return array
+     * @throws AdapterOpenHostUnknownErrorException
+     */
+    public function getEmails(array $ids): array
+    {
+        try {
+            $emails = $this->authenticationOpenHost->getEmails($ids);
+        } catch (\Exception $e) {
+            throw new AdapterOpenHostUnknownErrorException($e->getMessage());
+        }
+
+        return $emails;
+    }
+
+    /**
      * @param Email $email
      * @throws AdapterOpenHostChangeEmailEmailExistsException
      * @throws AdapterOpenHostUnknownErrorException

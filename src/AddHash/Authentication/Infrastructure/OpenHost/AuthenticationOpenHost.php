@@ -10,8 +10,11 @@ use App\AddHash\Authentication\Domain\Services\UserRegisterServiceInterface;
 use App\AddHash\Authentication\Application\Command\UserPasswordUpdateCommand;
 use App\AddHash\Authentication\Domain\OpenHost\AuthenticationOpenHostInterface;
 use App\AddHash\Authentication\Domain\Services\UserEmailUpdateServiceInterface;
+use App\AddHash\Authentication\Application\Command\UserData\UserEmailsGetCommand;
 use App\AddHash\Authentication\Domain\Services\UserPasswordUpdateServiceInterface;
+use App\AddHash\Authentication\Domain\Services\UserData\UserEmailsGetServiceInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\AddHash\Authentication\Domain\Exceptions\UserData\UserEmailsGetInvalidInputDataExceptions;
 use App\AddHash\Authentication\Domain\Exceptions\UserRegister\UserRegisterInvalidInputDataException;
 use App\AddHash\Authentication\Domain\Exceptions\UserRegister\UserEmailUpdateInvalidInputDataException;
 use App\AddHash\Authentication\Domain\Exceptions\UserRegister\UserPasswordUpdateInvalidInputDataException;
@@ -26,6 +29,8 @@ class AuthenticationOpenHost implements AuthenticationOpenHostInterface
 
     private $passwordUpdateService;
 
+    private $userEmailsGetService;
+
     private $validator;
 
     public function __construct(
@@ -33,13 +38,15 @@ class AuthenticationOpenHost implements AuthenticationOpenHostInterface
         UserRegisterServiceInterface $userRegisterService,
         ValidatorInterface $validator,
         UserEmailUpdateServiceInterface $userEmailUpdateService,
-        UserPasswordUpdateServiceInterface $passwordUpdateService
+        UserPasswordUpdateServiceInterface $passwordUpdateService,
+        UserEmailsGetServiceInterface $userEmailsGetService
     )
     {
         $this->tokenStorage = $tokenStorage;
         $this->userRegisterService = $userRegisterService;
         $this->userEmailUpdateService = $userEmailUpdateService;
         $this->passwordUpdateService = $passwordUpdateService;
+        $this->userEmailsGetService = $userEmailsGetService;
         $this->validator = $validator;
     }
 
@@ -71,6 +78,24 @@ class AuthenticationOpenHost implements AuthenticationOpenHostInterface
         }
 
         return $data;
+    }
+
+    /**
+     * @param array $ids
+     * @return array
+     * @throws UserEmailsGetInvalidInputDataExceptions
+     */
+    public function getEmails(array $ids): array
+    {
+        $command = new UserEmailsGetCommand($ids);
+
+        $errors = $this->validator->validate($command);
+
+        if (count($errors) > 0) {
+            throw new UserEmailsGetInvalidInputDataExceptions('Invalid input data');
+        }
+
+        return $this->userEmailsGetService->execute($command);
     }
 
     /**
