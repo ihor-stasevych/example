@@ -19,7 +19,7 @@ use App\AddHash\AdminPanel\Domain\Payment\Repository\PaymentTransactionRepositor
 
 class MakeCryptoPaymentService implements MakeCryptoPaymentServiceInterface
 {
-    private const PAYMENT_METHOD_NAME = 'Crypto';
+    const PAYMENT_METHOD_NAME = 'Crypto';
 
 
 	private $paymentRepository;

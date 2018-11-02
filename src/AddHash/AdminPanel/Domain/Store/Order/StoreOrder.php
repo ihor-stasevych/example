@@ -107,6 +107,11 @@ class StoreOrder
         return $this->createdAt;
     }
 
+    public function getUpdatedAt(): \DateTime
+    {
+        return $this->updatedAt;
+    }
+
 	/**
 	 * @param StoreProduct $product
 	 * @return bool
