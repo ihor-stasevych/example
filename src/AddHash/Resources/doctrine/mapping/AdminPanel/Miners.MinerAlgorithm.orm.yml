@@ -1,0 +1,20 @@
+App\AddHash\AdminPanel\Domain\Miners\MinerAlgorithm:
+    minerAlgorithm:
+    type: entity
+    table: Miner_Algorithm
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        value:
+            type: string
+
+    oneToMany:
+        miner:
+            targetEntity: App\AddHash\AdminPanel\Domain\Miners\Miner
+            mappedBy: minerAlgorithm
+
+#        allowedUrl:
+#            targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerAllowedUrl
+#            mappedBy: minerAlgorithm

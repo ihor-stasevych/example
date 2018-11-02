@@ -15,24 +15,34 @@ App\AddHash\AdminPanel\Domain\Miners\Miner:
             type: json
 
         hashRate:
+            column: hashRate
             type: string
 
         powerRate:
+            column: powerRate
             type: string
 
         powerEfficiency:
+            column: powerEfficiency
             type: string
 
         ratedVoltage:
+            column: ratedVoltage
             type: string
 
         operatingTemperature:
-            type: string
-
-        algorithm:
+            column: operatingTemperature
             type: string
 
     oneToMany:
         stock:
             targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerStock
             mappedBy: miner
+
+    manyToOne:
+        algorithm:
+            targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerAlgorithm
+            inversedBy: minerAlgorithm
+            joinColumn:
+                name: algorithmId
+                referencedColumnName: id

@@ -1,5 +1,5 @@
 App\AddHash\AdminPanel\Domain\Miners\MinerAllowedUrl:
-    minerDetails:
+    minerAllowedUrl:
     type: entity
     table: Miner_Allowed_Url
     id:
@@ -14,3 +14,11 @@ App\AddHash\AdminPanel\Domain\Miners\MinerAllowedUrl:
         status:
             type: smallint
             default: 1
+
+#    manyToOne:
+#        algorithm:
+#            targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerAlgorithm
+#            inversedBy: minerAlgorithm
+#            joinColumn:
+#                name: algorithmId
+#                referencedColumnName: id

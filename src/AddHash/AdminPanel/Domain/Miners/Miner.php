@@ -25,19 +25,17 @@ class Miner
 
 	private $algorithm;
 
-	private $product;
-
     private $stock;
 
 	public function __construct(
-	     $title,
-         $description,
-         $hashRate,
-         $powerRate,
-         $powerEfficiency,
-         $ratedVoltage,
-         $operatingTemperature,
-         $algorithm,
+	     string $title,
+         string $description,
+         string $hashRate,
+         string $powerRate,
+         string $powerEfficiency,
+         string $ratedVoltage,
+         string $operatingTemperature,
+         MinerAlgorithm $algorithm,
          $id = null
     )
 	{
@@ -53,48 +51,51 @@ class Miner
 		$this->id = $id;
 	}
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-	public function getTitle()
+	public function getTitle(): string
 	{
 		return $this->title;
 	}
 
-	public function getHashRate()
+	public function getHashRate(): string
 	{
 		return $this->hashRate;
 	}
 
-	public function getPowerRate()
+	public function getPowerRate(): string
 	{
 		return $this->powerRate;
 	}
 
-	public function getPowerEfficiency()
+	public function getPowerEfficiency(): string
 	{
 		return $this->powerEfficiency;
 	}
 
-	public function getRatedVoltage()
+	public function getRatedVoltage(): string
 	{
 		return $this->ratedVoltage;
 	}
 
-	public function getOperatingTemperature()
+	public function getOperatingTemperature(): string
 	{
 		return $this->operatingTemperature;
 	}
 
-	public function getAlgorithm()
+	public function getAlgorithm(): MinerAlgorithm
 	{
 		return $this->algorithm;
 	}
 
     public function getStock(): PersistentCollection
     {
-        return $this->stock;
+        /** @var PersistentCollection $stock */
+        $stock = $this->stock;
+
+        return $stock;
     }
 }
