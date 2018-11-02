@@ -14,7 +14,7 @@ return new class extends DefaultDeployer
             // the URL of the Git repository where the project code is hosted
             ->repositoryUrl('git@bitbucket.org:tapgerine/equipmentcrm.git')
             // the repository branch to deploy
-            ->repositoryBranch('master')
+            ->repositoryBranch('testDeploy')
         ;
     }
 
