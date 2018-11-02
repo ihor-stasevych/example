@@ -41,7 +41,7 @@ task('php-fpm:restart', function () {
 after('deploy:symlink', 'php-fpm:restart');
 
 task('upload:env', function () {
-	upload('.env', '{{deploy_path}}/shared/.env');
+	upload('.env.dist', '{{deploy_path}}/shared/.env');
 })->desc('Environment setup');
 
 
