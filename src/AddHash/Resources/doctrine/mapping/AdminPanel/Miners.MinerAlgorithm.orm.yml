@@ -13,8 +13,8 @@ App\AddHash\AdminPanel\Domain\Miners\MinerAlgorithm:
     oneToMany:
         miner:
             targetEntity: App\AddHash\AdminPanel\Domain\Miners\Miner
-            mappedBy: minerAlgorithm
+            mappedBy: algorithm
 
-#        allowedUrl:
-#            targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerAllowedUrl
-#            mappedBy: minerAlgorithm
+        allowedUrl:
+            targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerAllowedUrl
+            mappedBy: algorithm

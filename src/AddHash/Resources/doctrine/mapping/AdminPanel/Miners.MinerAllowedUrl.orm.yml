@@ -15,10 +15,10 @@ App\AddHash\AdminPanel\Domain\Miners\MinerAllowedUrl:
             type: smallint
             default: 1
 
-#    manyToOne:
-#        algorithm:
-#            targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerAlgorithm
-#            inversedBy: minerAlgorithm
-#            joinColumn:
-#                name: algorithmId
-#                referencedColumnName: id
+    manyToOne:
+        algorithm:
+            targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerAlgorithm
+            inversedBy: algorithm
+            joinColumn:
+                name: algorithmId
+                referencedColumnName: id

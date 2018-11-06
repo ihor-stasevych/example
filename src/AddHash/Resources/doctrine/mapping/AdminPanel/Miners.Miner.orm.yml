@@ -42,7 +42,7 @@ App\AddHash\AdminPanel\Domain\Miners\Miner:
     manyToOne:
         algorithm:
             targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerAlgorithm
-            inversedBy: minerAlgorithm
+            inversedBy: miner
             joinColumn:
                 name: algorithmId
                 referencedColumnName: id

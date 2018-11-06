@@ -2,9 +2,9 @@
 
 namespace App\AddHash\AdminPanel\Application\Command\User\Miner\Pool;
 
-use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCommandInterface;
+use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolGetCommandInterface;
 
-final class UserMinerControlPoolCommand implements UserMinerControlPoolCommandInterface
+final class UserMinerControlPoolGetCommand implements UserMinerControlPoolGetCommandInterface
 {
 	private $minerId;
 

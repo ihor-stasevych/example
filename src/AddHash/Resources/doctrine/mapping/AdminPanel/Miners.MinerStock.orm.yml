@@ -17,21 +17,10 @@ App\AddHash\AdminPanel\Domain\Miners\MinerStock:
         ip:
             type: string
 
-        port:
-            type: integer
-            length: 6
-
-        user:
-            type: string
-
-        configName:
-            column: configName
-            type: string
-
     manyToOne:
         miner:
             targetEntity: App\AddHash\AdminPanel\Domain\Miners\Miner
-            inversedBy: miner
+            inversedBy: stock
             joinColumn:
                 name: minerId
                 referencedColumnName: id
@@ -42,3 +31,14 @@ App\AddHash\AdminPanel\Domain\Miners\MinerStock:
             joinColumn:
                 name: productId
                 referencedColumnName: id
+
+        config:
+            targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerStockConfig
+            joinColumn:
+                name: configId
+                referencedColumnName: id
+
+    oneToMany:
+        pool:
+            targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerStockPool
+            mappedBy: minerStock

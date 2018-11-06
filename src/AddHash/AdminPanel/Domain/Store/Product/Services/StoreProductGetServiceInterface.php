@@ -6,5 +6,5 @@ use App\AddHash\AdminPanel\Domain\Store\Product\Command\StoreProductGetCommandIn
 
 interface StoreProductGetServiceInterface
 {
-	public function execute(StoreProductGetCommandInterface $command);
+	public function execute(StoreProductGetCommandInterface $command): array;
 }

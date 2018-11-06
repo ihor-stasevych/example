@@ -39,27 +39,22 @@ class MinerAllowedUrl
         return $this->value;
     }
 
-    public function getAlgorithm(): MinerAlgorithm
-    {
-        return $this->algorithm;
-    }
-
     public function getStatus(): int
     {
         return $this->status;
     }
 
-    public function setValue(string $value)
+    public function setValue(string $value): void
     {
         $this->value = $value;
     }
 
-    public function setStatusEnabled()
+    public function setStatusEnabled(): void
     {
         $this->status = static::ENABLE;
     }
 
-    public function setStatusDisabled()
+    public function setStatusDisabled(): void
     {
         $this->status = static::DISABLE;
     }

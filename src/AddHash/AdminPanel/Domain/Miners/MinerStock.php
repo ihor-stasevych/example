@@ -2,6 +2,9 @@
 
 namespace App\AddHash\AdminPanel\Domain\Miners;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\PersistentCollection;
+
 class MinerStock
 {
     const STATE_UNAVAILABLE = 0;
@@ -14,8 +17,6 @@ class MinerStock
 
 	const STATE_DEFAULT = self::STATE_AVAILABLE;
 
-	const DEFAULT_USER = 'root';
-
 
 	private $id;
 
@@ -25,16 +26,13 @@ class MinerStock
 
 	private $ip;
 
-    private $port;
+    private $config;
 
-    private $user;
+    private $miner;
 
-    private $configName;
+    private $pool;
 
-    /** @var Miner */
-	private $miner;
-
-	private $product;
+    private $product;
 
 	private $stateAliases = [
         self::STATE_UNAVAILABLE => 'unavailable',
@@ -43,15 +41,14 @@ class MinerStock
 		self::STATE_RESERVED    => 'reserved',
 	];
 
-	public function __construct($priority, $ip, $port, $configName, $user = self::DEFAULT_USER, $id = null)
+	public function __construct(int $priority, string $ip, MinerStockConfig $config, int $id = null)
 	{
 	    $this->id = $id;
 		$this->state = static::STATE_DEFAULT;
         $this->priority = $priority;
 		$this->ip = $ip;
-		$this->port = $port;
-        $this->user = $user;
-        $this->configName = $configName;
+        $this->config = $config;
+        $this->pool = new ArrayCollection();
 	}
 
 	public function getId(): ?int
@@ -59,58 +56,56 @@ class MinerStock
 		return $this->id;
 	}
 
-	public function getState()
+	public function getState(): int
 	{
 		return $this->state;
 	}
 
-    public function getPriority()
+    public function getPriority(): int
     {
         return $this->priority;
     }
 
-	public function getStateAlias()
+	public function getStateAlias(): string
 	{
 		return $this->stateAliases[$this->state];
 	}
 
-    public function getIp()
+    public function getIp(): string
     {
         return $this->ip;
     }
 
-	public function getPort()
+    public function getConfig(): MinerStockConfig
     {
-        return $this->port;
+        return $this->config;
     }
 
-    public function getUser()
+    public function getPool(): PersistentCollection
     {
-        return $this->user;
+        /** @var PersistentCollection $pool */
+        $pool = $this->pool;
+
+        return $pool;
     }
 
-    public function getConfigName()
+    public function infoMiner(): Miner
     {
-        return $this->configName;
+        return $this->miner;
     }
 
-	public function reserveMiner()
+	public function reserveMiner(): void
 	{
 		$this->state = self::STATE_RESERVED;
 	}
 
-	public function setAvailable()
+	public function setAvailable(): void
 	{
 		$this->state = self::STATE_AVAILABLE;
 	}
 
-	public function setBusy()
+	public function setBusy(): void
 	{
 		$this->state = self::STATE_BUSY;
-	}
-
-	public function infoMiner()
-	{
-		return $this->miner;
 	}
 }

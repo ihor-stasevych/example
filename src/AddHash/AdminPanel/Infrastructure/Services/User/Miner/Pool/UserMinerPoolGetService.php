@@ -10,7 +10,7 @@ use App\AddHash\AdminPanel\Domain\User\Order\UserOrderMinerRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\MinerControlNoMainerException;
 use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerPoolGetServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCommandInterface;
+use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolGetCommandInterface;
 
 final class UserMinerPoolGetService implements UserMinerPoolGetServiceInterface
 {
@@ -28,11 +28,11 @@ final class UserMinerPoolGetService implements UserMinerPoolGetServiceInterface
     }
 
     /**
-     * @param UserMinerControlPoolCommandInterface $command
+     * @param UserMinerControlPoolGetCommandInterface $command
      * @return array
      * @throws MinerControlNoMainerException
      */
-    public function execute(UserMinerControlPoolCommandInterface $command): array
+    public function execute(UserMinerControlPoolGetCommandInterface $command): array
     {
         $user = $this->authenticationService->execute();
 
