@@ -19,4 +19,4 @@ App\AddHash\AdminPanel\Domain\Role\Role:
             type: integer
 
         permissions:
-            type: json
+            type: text
