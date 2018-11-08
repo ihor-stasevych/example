@@ -1,0 +1,18 @@
+
+old_sound_rabbit_mq:
+    connections:
+        default:
+            url: '%env(RABBITMQ_URL)%'
+    producers:
+#        # use 'old_sound_rabbit_mq.task_producer' service to send data.
+        userNotification:
+            connection:       default
+            exchange_options: { name: 'user.notification', type: direct }
+            queue_options:    { name: 'user.notification'}
+    consumers:
+        userNotification:
+            connection:       default
+            exchange_options: { name: 'user.notification', type: direct }
+            queue_options:    { name: 'user.notification'}
+            callback: addhash.queue.user.notification
+#            callback:         App\Consumer\TaskConsumer
