@@ -125,6 +125,9 @@ services:
       arguments: ['@addhash.user.repository', '@request_stack']
     App\AddHash\Authentication\Infrastructure\Auth\UserAuthProvider: '@addhash.user_provider'
 
+    addhash.queue.user.notification:
+      class: App\AddHash\AdminPanel\Infrastructure\Queue\User\Notification\QueueUserNotificationConsumer
+
 imports:
   - { resource: "../src/AddHash/Resources/config/services.yaml"}
   - { resource: "../src/AddHash/Resources/config/fixtures.yaml"}

@@ -91,6 +91,14 @@ class UserNotification
 		return $this->created;
 	}
 
+	/**
+	 * @return User
+	 */
+	public function ensureUser()
+	{
+		return $this->user;
+	}
+
 	public function updateStatus(int $status)
 	{
 		if ($status === self::STATUS_NEW) {
