@@ -1,0 +1,16 @@
+App\AddHash\AdminPanel\Domain\Miners\MinerStockConfig:
+    minerStockConfig:
+    type: entity
+    table: Miner_Stock_Config
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        dir:
+            type: string
+            length: 255
+        fileName:
+            column: fileName
+            type: string
+            length: 255

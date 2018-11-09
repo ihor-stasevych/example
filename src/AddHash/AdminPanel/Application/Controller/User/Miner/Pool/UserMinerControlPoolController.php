@@ -7,22 +7,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerPoolGetServiceInterface;
-use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolContextInterface;
+use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolGetCommand;
+use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerPoolCreateServiceInterface;
 use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolCreateCommand;
-use App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\Strategy\UserMinerControlPoolCreateStrategy;
 
 class UserMinerControlPoolController extends BaseServiceController
 {
-    private $contextPool;
-
     private $getService;
 
-    public function __construct(UserMinerControlPoolContextInterface $contextPool, UserMinerPoolGetServiceInterface $getService)
+    private $createService;
+
+    public function __construct(UserMinerPoolGetServiceInterface $getService, UserMinerPoolCreateServiceInterface $createService)
     {
-        $this->contextPool = $contextPool;
         $this->getService = $getService;
+        $this->createService = $createService;
     }
 
     /**
@@ -47,7 +46,7 @@ class UserMinerControlPoolController extends BaseServiceController
      */
     public function get(int $id)
     {
-        $command = new UserMinerControlPoolCommand($id);
+        $command = new UserMinerControlPoolGetCommand($id);
 
         return $this->json($this->getService->execute($command));
     }
@@ -100,8 +99,8 @@ class UserMinerControlPoolController extends BaseServiceController
             ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        return $this->json(
-            $this->contextPool->handle(UserMinerControlPoolCreateStrategy::STRATEGY_ALIAS, $command)
-        );
+        $this->createService->execute($command);
+
+        return $this->json([]);
     }
 }

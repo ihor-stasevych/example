@@ -21,7 +21,7 @@ App\AddHash\Authentication\Domain\Model\User:
 
         roles:
             column: roles
-            type: json
+            type: text
             nullable: true
             options:
                 default: null

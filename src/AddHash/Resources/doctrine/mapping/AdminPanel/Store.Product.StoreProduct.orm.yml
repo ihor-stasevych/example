@@ -12,10 +12,10 @@ App\AddHash\AdminPanel\Domain\Store\Product\StoreProduct:
             length: 100
 
         description:
-            type: json
+            type: text
 
         techDetails:
-            type: json
+            type: text
             column: techDetails
 
         price:
