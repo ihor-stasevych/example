@@ -94,7 +94,7 @@ class UserNotification
 	/**
 	 * @return User
 	 */
-	public function getUser()
+	public function ensureUser()
 	{
 		return $this->user;
 	}

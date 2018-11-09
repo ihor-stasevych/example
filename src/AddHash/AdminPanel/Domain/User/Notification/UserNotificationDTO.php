@@ -25,7 +25,7 @@ final class UserNotificationDTO
 			'title' => $this->notification->getTitle(),
 			'message' => $this->notification->getMessage(),
 			'time' => $this->notification->getCreated(),
-			'userId' => $this->notification->getUser()->getId()
+			'userId' => $this->notification->ensureUser()->getId()
 		]);
 	}
 }
