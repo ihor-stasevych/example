@@ -49,9 +49,12 @@ class UserOrderMinerRepository extends AbstractRepository implements UserOrderMi
     {
         return $this->entityManager->getRepository($this->getEntityName())
             ->createQueryBuilder('uom')
-            ->select('uom', 'ms')
+            ->select('uom', 'ms', 'm', 'a', 'c', 'p')
             ->join('uom.minerStock', 'ms')
             ->join('ms.miner', 'm')
+            ->join('m.algorithm', 'a')
+            ->join('ms.config', 'c')
+            ->leftJoin('ms.pool', 'p')
             ->where('uom.user = :user')
             ->andWhere('ms.id = :minerStockId')
             ->setParameter('user', $user)
@@ -68,7 +71,7 @@ class UserOrderMinerRepository extends AbstractRepository implements UserOrderMi
 	public function save(UserOrderMiner $userOrderMiner)
 	{
 		$this->entityManager->persist($userOrderMiner);
-		$this->entityManager->flush($userOrderMiner);
+		$this->entityManager->flush();
 	}
 
     /**

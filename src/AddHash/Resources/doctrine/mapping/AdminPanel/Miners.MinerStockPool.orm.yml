@@ -1,0 +1,27 @@
+App\AddHash\AdminPanel\Domain\Miners\MinerStockPool:
+    minerStockPool:
+    type: entity
+    table: Miner_Stock_Pool
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        userName:
+            column: userName
+            type: string
+            length: 255
+        url:
+            type: string
+            length: 255
+        password:
+            type: string
+            length: 255
+
+    manyToOne:
+        minerStock:
+            targetEntity: App\AddHash\AdminPanel\Domain\Miners\MinerStock
+            inversedBy: pool
+            joinColumn:
+                name: minerStockId
+                referencedColumnName: id

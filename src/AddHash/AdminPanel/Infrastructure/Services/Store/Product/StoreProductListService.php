@@ -6,31 +6,32 @@ use App\AddHash\AdminPanel\Domain\Store\Product\ListParam\Sort;
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\Command\StoreProductListCommandInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductListServiceInterface;
-use App\AddHash\System\Lib\Cache\CacheInterface;
+use App\AddHash\AdminPanel\Infrastructure\Transformers\Store\Product\StoreProductListTransform;
 
 class StoreProductListService implements StoreProductListServiceInterface
 {
-	const PRODUCTS_KEY = 'listProducts';
 	private $productRepository;
-	private $cache;
 
-	public function __construct(StoreProductRepositoryInterface $storeProductRepository, CacheInterface $cache)
+	public function __construct(StoreProductRepositoryInterface $storeProductRepository)
 	{
 		$this->productRepository = $storeProductRepository;
-		$this->cache = $cache;
 	}
 
-	public function execute(StoreProductListCommandInterface $command)
+	public function execute(StoreProductListCommandInterface $command): array
 	{
         $sort = new Sort(
             $command->getSort(),
             $command->getOrder()
         );
 
-        #$res = $this->productRepository->listAllProducts($sort);
+        $data = [];
+		$products = $this->productRepository->listAllProducts($sort);
+        $storeProductListTransform = new StoreProductListTransform();
 
-        #$this->cache->add('listProducts', $res);
+		foreach ($products as $product) {
+            $data[] = $storeProductListTransform->transform($product);
+        }
 
-		return $this->productRepository->listAllProducts($sort);
+        return $data;
 	}
 }

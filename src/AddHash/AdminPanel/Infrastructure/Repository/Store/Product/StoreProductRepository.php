@@ -48,31 +48,31 @@ class StoreProductRepository extends AbstractRepository implements StoreProductR
      * @param Sort $sort
      * @return mixed
      */
-	public function listAllProducts(Sort $sort)
+	public function listAllProducts(Sort $sort): array
 	{
 	    $aliasSort = ($sort->getSort() != 'avail') ? 'p.' : '';
 
-		$res = $this->entityRepository
+		return $this->entityRepository
 			->createQueryBuilder('p')
 			->select('p', 'm')
-            ->addSelect('(
-                SELECT
-                    COUNT(ms.id)
-                FROM
-                    ' . MinerStock::class . ' AS ms
-                WHERE
-                    ms.miner = m.id
-                AND
-                    ms.state = ' . MinerStock::STATE_AVAILABLE . '
-            ) AS HIDDEN avail')
+            ->addSelect('
+                (
+                    SELECT
+                        COUNT(ms.id)
+                    FROM
+                        ' . MinerStock::class . ' AS ms
+                    WHERE
+                        ms.miner = m.id
+                    AND
+                        ms.state = ' . MinerStock::STATE_AVAILABLE . '
+                ) AS HIDDEN avail'
+            )
 			->join('p.miner', 'm')
 			->where('p.state = :state')
 			->setParameter('state', StoreProduct::STATE_AVAILABLE)
             ->orderBy($aliasSort . $sort->getSort(), $sort->getOrder())
 		    ->getQuery()
 			->getResult();
-
-		return $res;
 	}
 
 	/**
@@ -91,9 +91,12 @@ class StoreProductRepository extends AbstractRepository implements StoreProductR
 		return $qb->getQuery()->getResult();
 	}
 
-	public function findById($id)
+	public function findById(int $id): ?StoreProduct
 	{
-		return $this->entityRepository->find($id);
+	    /** @var StoreProduct $storeProduct */
+	    $storeProduct = $this->entityRepository->find($id);
+
+		return $storeProduct;
 	}
 
 	public function findByIds(array $ids)

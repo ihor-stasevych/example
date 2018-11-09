@@ -6,6 +6,8 @@ use App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2AuthFailException;
 
 class SSH2AuthPubKey
 {
+    private const DEFAULT_USER = 'root';
+
     /**
      * SSH2AuthPubKey constructor.
      * @param $connection
@@ -17,9 +19,9 @@ class SSH2AuthPubKey
      */
     public function __construct(
         $connection,
-        string $user,
         string $publicKey,
         string $privateKey,
+        string $user = self::DEFAULT_USER,
         string $passPhrase = ''
     ) {
         $auth = @ssh2_auth_pubkey_file(

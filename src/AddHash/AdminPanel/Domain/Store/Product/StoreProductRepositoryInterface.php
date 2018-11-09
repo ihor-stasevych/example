@@ -11,11 +11,11 @@ interface StoreProductRepositoryInterface
 
 	public function save(StoreProduct $product);
 
-	public function listAllProducts(Sort $sort);
+	public function listAllProducts(Sort $sort): array;
 
 	public function searchProducts(Request $request);
 
-	public function findById($id);
+	public function findById(int $id): ?StoreProduct;
 
 	public function findByIds(array $ids);
 }

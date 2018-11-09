@@ -13,12 +13,19 @@ class MinerAllowedUrl
 
     private $value;
 
+    private $algorithm;
+
     private $status;
 
-	public function __construct(string $value, $id = null)
+	public function __construct(
+	    string $value,
+        MinerAlgorithm $algorithm,
+        $id = null
+    )
 	{
 	    $this->id = $id;
 		$this->value = $value;
+		$this->algorithm = $algorithm;
 		$this->status = static::ENABLE;
 	}
 
@@ -37,17 +44,17 @@ class MinerAllowedUrl
         return $this->status;
     }
 
-    public function setValue(string $value)
+    public function setValue(string $value): void
     {
         $this->value = $value;
     }
 
-    public function setStatusEnabled()
+    public function setStatusEnabled(): void
     {
         $this->status = static::ENABLE;
     }
 
-    public function setStatusDisabled()
+    public function setStatusDisabled(): void
     {
         $this->status = static::DISABLE;
     }

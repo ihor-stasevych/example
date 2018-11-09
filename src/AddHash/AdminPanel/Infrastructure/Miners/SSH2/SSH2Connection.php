@@ -7,11 +7,14 @@ use App\AddHash\AdminPanel\Domain\Miners\SSH2\Exceptions\SSH2ConnectionFailExcep
 
 class SSH2Connection implements SSH2ConnectionInterface
 {
+    private const DEFAULT_SSH_PORT = 22;
+
+
     private $host;
 
     private $port;
 
-    public function __construct(string $host, int $port = 22)
+    public function __construct(string $host, int $port = self::DEFAULT_SSH_PORT)
     {
         $this->host = $host;
         $this->port = $port;
