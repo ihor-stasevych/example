@@ -42,7 +42,7 @@ class UserOrderMiner
 		$this->user = $order->getUser();
 		$this->createdAt = new \DateTime();
 		$this->endPeriod = $endPeriod;
-		$this->details = $details;
+		$this->details = json_encode($details);
 		$this->minerStock = new ArrayCollection();
 		$this->setMiners($minerStocks);
 	}
