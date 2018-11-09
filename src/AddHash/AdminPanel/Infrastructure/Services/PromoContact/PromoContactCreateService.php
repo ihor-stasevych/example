@@ -7,7 +7,7 @@ use App\AddHash\AdminPanel\Domain\PromoContact\PromoContactRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\PromoContact\Command\PromoContactCreateCommandInterface;
 use App\AddHash\AdminPanel\Domain\PromoContact\Services\PromoContactCreateServiceInterface;
 
-class PromoContactCreateService implements PromoContactCreateServiceInterface
+final class PromoContactCreateService implements PromoContactCreateServiceInterface
 {
     private $promoContactRepository;
 
@@ -16,7 +16,7 @@ class PromoContactCreateService implements PromoContactCreateServiceInterface
         $this->promoContactRepository = $promoContactRepository;
     }
 
-    public function execute(PromoContactCreateCommandInterface $command)
+    public function execute(PromoContactCreateCommandInterface $command): void
     {
         $promoContact = new PromoContact(
             $command->getEmail(),

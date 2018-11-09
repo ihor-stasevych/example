@@ -7,7 +7,7 @@ use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInte
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\GeneralInformationGetServiceInterface;
 use App\AddHash\AdminPanel\Infrastructure\Transformers\User\AccountSettings\GeneralInformationTransform;
 
-class GeneralInformationGetService implements GeneralInformationGetServiceInterface
+final class GeneralInformationGetService implements GeneralInformationGetServiceInterface
 {
     private $authenticationAdapter;
 

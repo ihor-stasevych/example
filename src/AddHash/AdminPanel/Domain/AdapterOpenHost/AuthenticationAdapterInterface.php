@@ -10,6 +10,8 @@ interface AuthenticationAdapterInterface
 
     public function getCredentials(): array;
 
+    public function getEmails(array $ids): array;
+
     public function changeEmail(Email $email);
 
     public function changePassword(string $currentPassword, string $newPassword);

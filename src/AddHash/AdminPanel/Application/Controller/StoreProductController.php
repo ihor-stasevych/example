@@ -59,7 +59,6 @@ class StoreProductController extends BaseServiceController
      *     description="Order product (asc or desc)",
      * )
      *
-     *
 	 * @SWG\Tag(name="Store products")
 	 * @SWG\Response(
 	 *     response=200,
@@ -88,15 +87,9 @@ class StoreProductController extends BaseServiceController
 	 *
 	 * @return JsonResponse
 	 */
-	public function get($id)
+	public function get(int $id)
 	{
 		$command = new StoreProductGetCommand($id);
-
-        if (!$this->commandIsValid($command)) {
-            return $this->json([
-                'errors' => $this->getLastValidationErrors()
-            ], Response::HTTP_BAD_REQUEST);
-        }
 
 		return $this->json($this->productGetService->execute($command));
 	}

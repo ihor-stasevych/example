@@ -61,6 +61,12 @@ class StoreOrderRepository extends AbstractRepository implements StoreOrderRepos
     {
         return $this->entityRepository->createQueryBuilder('e')
             ->select('e')
+            ->leftJoin('e.payment', 'p')
+            ->leftJoin('p.paymentMethod', 'pm')
+            ->leftJoin('e.items', 'i')
+            ->leftJoin('i.product', 'pr')
+            ->leftJoin('pr.miner', 'm')
+            ->leftJoin('m.stock', 'ms')
             ->where('e.state = :stateNew')
             ->andWhere('e.updatedAt < :updatedAt')
             ->setParameter('stateNew', StoreOrder::STATE_NEW)

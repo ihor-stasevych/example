@@ -15,7 +15,7 @@ use App\AddHash\AdminPanel\Infrastructure\Transformers\User\AccountSettings\Wall
 use App\AddHash\AdminPanel\Domain\User\Command\AccountSettings\WalletCreateCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletCreateServiceInterface;
 
-class WalletCreateService implements WalletCreateServiceInterface
+final class WalletCreateService implements WalletCreateServiceInterface
 {
     private $walletRepository;
 
@@ -57,7 +57,7 @@ class WalletCreateService implements WalletCreateServiceInterface
         $wallet = $this->walletRepository->getByValueAndType($value, $type);
 
         if (null !== $wallet) {
-            throw new WalletIsExistException('Wallet already exist');
+            throw new WalletIsExistException(['value' => ['Wallet already exist']]);
         }
 
         $wallet = new Wallet($value);

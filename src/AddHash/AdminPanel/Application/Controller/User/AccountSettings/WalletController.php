@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use App\AddHash\AdminPanel\Domain\Wallet\Exceptions\WalletIsExistException;
 use App\AddHash\AdminPanel\Application\Command\User\AccountSettings\WalletCreateCommand;
 use App\AddHash\AdminPanel\Application\Command\User\AccountSettings\WalletUpdateCommand;
 use App\AddHash\AdminPanel\Domain\User\Services\AccountSettings\WalletGetServiceInterface;
@@ -90,6 +89,12 @@ class WalletController extends BaseServiceController
      *             )
      *     ),
      * )
+     *
+     * @SWG\Response(
+     *     response=406,
+     *     description="Returns validation errors"
+     * )
+     *
      * @SWG\Response(
      *     response=400,
      *     description="Returns validation errors"
@@ -106,24 +111,10 @@ class WalletController extends BaseServiceController
         if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        try {
-            $data = $this->updateService->execute($command);
-        } catch (\Exception $e) {
-            $errors = $e->getMessage();
-
-            if ($e instanceof WalletIsExistException) {
-                $errors = json_decode($errors, true);
-            }
-
-            return $this->json([
-                'errors' => $errors,
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        return $this->json($data);
+        return $this->json($this->updateService->execute($command));
 	}
 
     /**
@@ -155,6 +146,12 @@ class WalletController extends BaseServiceController
      *              @SWG\Property(property="value", type="string"),
      *     )
      * )
+     *
+     * @SWG\Response(
+     *     response=406,
+     *     description="Returns validation errors"
+     * )
+     *
      * @SWG\Response(
      *     response=400,
      *     description="Returns validation errors"
@@ -168,23 +165,15 @@ class WalletController extends BaseServiceController
     {
         $command = new WalletCreateCommand(
             $request->get('value'),
-            (int) $request->get('typeId')
+            $request->get('typeId')
         );
 
         if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        try {
-            $data = $this->createService->execute($command);
-        } catch (\Exception $e) {
-            return $this->json([
-                'errors' => $e->getMessage(),
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        return $this->json($data);
+        return $this->json($this->createService->execute($command));
     }
 }

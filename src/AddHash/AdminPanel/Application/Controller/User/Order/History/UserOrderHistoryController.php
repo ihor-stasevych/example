@@ -123,6 +123,11 @@ class UserOrderHistoryController extends BaseServiceController
      *     )
      * )
      *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Returns validation errors"
+     * )
+     *
      * @param int $id
      * @return JsonResponse
      * @SWG\Tag(name="User")
@@ -131,18 +136,12 @@ class UserOrderHistoryController extends BaseServiceController
     {
         $command = new UserOrderHistoryGetCommand($id);
 
-        if (!$this->commandIsValid($command)) {
-            return $this->json([
-                'errors' => $this->getLastValidationErrors(),
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
         try {
             $order = $this->getService->execute($command);
-        } catch (StoreOrderNoOrderErrorException $e) {
+        } catch (\Exception $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], $e->getCode());
         }
 
         return $this->json($order);

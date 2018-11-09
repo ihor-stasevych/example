@@ -2,7 +2,9 @@
 
 namespace App\AddHash\AdminPanel\Domain\Wallet\Exceptions;
 
-class WalletIsExistException extends \Exception
+use App\AddHash\System\GlobalContext\Exceptions\Error406Exception;
+
+class WalletIsExistException extends Error406Exception
 {
-	protected $code = 400;
+
 }

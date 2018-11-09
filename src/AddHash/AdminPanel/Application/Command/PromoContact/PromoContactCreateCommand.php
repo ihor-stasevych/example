@@ -5,7 +5,7 @@ namespace App\AddHash\AdminPanel\Application\Command\PromoContact;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\AddHash\AdminPanel\Domain\PromoContact\Command\PromoContactCreateCommandInterface;
 
-class PromoContactCreateCommand implements PromoContactCreateCommandInterface
+final class PromoContactCreateCommand implements PromoContactCreateCommandInterface
 {
     /**
      * @var string

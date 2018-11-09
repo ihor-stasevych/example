@@ -2,7 +2,9 @@
 
 namespace App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\Strategy;
 
+use App\AddHash\System\Lib\Cache\CacheInterface;
 use App\AddHash\AdminPanel\Domain\Miners\MinerStock;
+use App\AddHash\AdminPanel\Domain\Miners\MinerAllowedUrl;
 use App\AddHash\AdminPanel\Infrastructure\Miners\SSH2\SSH2SCP;
 use App\AddHash\AdminPanel\Infrastructure\Miners\SSH2\SSH2AuthPubKey;
 use App\AddHash\AdminPanel\Infrastructure\Miners\SSH2\SSH2Connection;
@@ -19,16 +21,12 @@ use App\AddHash\AdminPanel\Domain\User\Exceptions\Miner\Pool\UserMinerNoValidUrl
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCreateCommandInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\Strategy\UserMinerControlPoolStrategyInterface;
-use App\AddHash\AdminPanel\Infrastructure\Repository\User\Miner\UserMinerRepository;
-use App\AddHash\System\Lib\Cache\CacheInterface;
 
 class UserMinerControlPoolCreateStrategy implements UserMinerControlPoolStrategyInterface
 {
     const STRATEGY_ALIAS = 'pool_create';
 
-    const DEFAULT_CONFIG_NAME = 'bmminer.conf';
-
-    const PATH_CONFIG_REMOTE_SERVER = '/config/' . self::DEFAULT_CONFIG_NAME;
+    const PATH_CONFIG_REMOTE_SERVER = '/config/';
 
     const INDEX_POOLS = 'pools';
 
@@ -75,7 +73,7 @@ class UserMinerControlPoolCreateStrategy implements UserMinerControlPoolStrategy
         }
 
         $pathLocalConfigDir = $dirConfigPools . $minerStock->getId() . '/';
-        $pathLocalConfigFile = $pathLocalConfigDir . static::DEFAULT_CONFIG_NAME;
+        $pathLocalConfigFile = $pathLocalConfigDir . $minerStock->getConfigName();
 
         $oldPools = $this->getOldPools($pathLocalConfigFile);
 
@@ -104,12 +102,14 @@ class UserMinerControlPoolCreateStrategy implements UserMinerControlPoolStrategy
         new SSH2AuthPubKey($connection, $minerStock->getUser(), $pathPublicKey, $pathPrivateKey);
 
         @mkdir($pathLocalConfigDir, 0777, true);
+        $pathConfigRemoteServer = static::PATH_CONFIG_REMOTE_SERVER . $minerStock->getConfigName();
+
         $scp = new SSH2SCP($connection);
-        $scp->fetch($pathLocalConfigFile, static::PATH_CONFIG_REMOTE_SERVER);
+        $scp->fetch($pathLocalConfigFile, $pathConfigRemoteServer);
 
         $this->changeLocalConfig($pathLocalConfigFile, $newPools);
 
-        $scp->send($pathLocalConfigFile, static::PATH_CONFIG_REMOTE_SERVER);
+        $scp->send($pathLocalConfigFile, $pathConfigRemoteServer);
 
         $this->cache->clear();
 
@@ -168,10 +168,25 @@ class UserMinerControlPoolCreateStrategy implements UserMinerControlPoolStrategy
     {
         $uniqueUrls = $this->getUniqueUrls($pools);
 
-        $getCountAllowedUrl = $this->allowedUrlRepository->getCountByValuesEnabledUrl($uniqueUrls);
+        $allowedUrls = $this->allowedUrlRepository->getByValuesEnabledUrl($uniqueUrls);
 
-        if ($getCountAllowedUrl != count($uniqueUrls)) {
-            throw new UserMinerNoValidUrlPoolException('No valid url');
+        $allowedUrlsValue = [];
+
+        if (count($allowedUrls) != count($uniqueUrls)) {
+            /** @var MinerAllowedUrl $allowedUrl */
+            foreach ($allowedUrls as $allowedUrl) {
+                $allowedUrlsValue[] = $allowedUrl->getValue();
+            }
+
+            $errors = [];
+
+            foreach ($pools as $position => $pool) {
+                if (false === in_array($pool['url'], $allowedUrlsValue)) {
+                    $errors['pools[' . $position . '][url]'] = ['No valid url'];
+                }
+            }
+
+            throw new UserMinerNoValidUrlPoolException($errors);
         }
     }
 

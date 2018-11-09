@@ -78,6 +78,19 @@ services:
 
     App\AddHash\System\Lib\MailSender\MailSenderInterface: '@addhash.mailer'
 
+    addhash.mail.send:
+      class: App\AddHash\System\Lib\Mail\MailSend
+      arguments: ['@addhash.mailer', '@twig']
+    App\AddHash\System\Lib\Mail\MailSend: '@addhash.mail.send'
+
+    App\AddHash\System\Lib\Mail\MailSendInterface: '@addhash.mail.send'
+
+    addhash.api_response_subscriber:
+        class: App\AddHash\System\Subscriber\ApiResponseSubscriber
+        tags:
+        - { name: kernel.event_subscriber }
+
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
@@ -111,6 +124,9 @@ services:
       class: App\AddHash\Authentication\Infrastructure\Auth\UserAuthProvider
       arguments: ['@addhash.user.repository', '@request_stack']
     App\AddHash\Authentication\Infrastructure\Auth\UserAuthProvider: '@addhash.user_provider'
+
+    addhash.queue.user.notification:
+      class: App\AddHash\AdminPanel\Infrastructure\Queue\User\Notification\QueueUserNotificationConsumer
 
 imports:
   - { resource: "../src/AddHash/Resources/config/services.yaml"}

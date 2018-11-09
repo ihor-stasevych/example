@@ -9,5 +9,7 @@ interface UserRepositoryInterface
 {
     public function getByEmail(Email $email): ?User;
 
+    public function getByIds(array $ids): array;
+
     public function save(User $user);
 }

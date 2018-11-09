@@ -5,14 +5,10 @@ namespace App\AddHash\AdminPanel\Application\Command\User\Miner\Pool;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\AddHash\AdminPanel\Domain\User\Command\Miner\Pool\UserMinerControlPoolCreateCommandInterface;
 
-class UserMinerControlPoolCreateCommand implements UserMinerControlPoolCreateCommandInterface
+final class UserMinerControlPoolCreateCommand implements UserMinerControlPoolCreateCommandInterface
 {
     const MAX_COUNT_POOLS = 3;
 
-    /**
-     * @var int
-     * @Assert\NotBlank()
-     */
     private $minerId;
 
     /**
@@ -29,8 +25,7 @@ class UserMinerControlPoolCreateCommand implements UserMinerControlPoolCreateCom
      *      fields = {
      *          "user" = @Assert\Required({@Assert\NotBlank()}),
      *          "url" = @Assert\Required({@Assert\NotBlank()}),
-     *          "password" = @Assert\Blank(),
-     *          "status" = @Assert\Required({@Assert\NotBlank()})
+     *          "password" = @Assert\Type("string")
      *      }
      *   )
      * })

@@ -8,18 +8,21 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolCommand;
+use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerPoolGetServiceInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Miner\Pool\UserMinerControlPoolContextInterface;
 use App\AddHash\AdminPanel\Application\Command\User\Miner\Pool\UserMinerControlPoolCreateCommand;
-use App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\Strategy\UserMinerControlPoolGetStrategy;
 use App\AddHash\AdminPanel\Infrastructure\Services\User\Miner\Pool\Strategy\UserMinerControlPoolCreateStrategy;
 
 class UserMinerControlPoolController extends BaseServiceController
 {
     private $contextPool;
 
-    public function __construct(UserMinerControlPoolContextInterface $contextPool)
+    private $getService;
+
+    public function __construct(UserMinerControlPoolContextInterface $contextPool, UserMinerPoolGetServiceInterface $getService)
     {
         $this->contextPool = $contextPool;
+        $this->getService = $getService;
     }
 
     /**
@@ -46,21 +49,7 @@ class UserMinerControlPoolController extends BaseServiceController
     {
         $command = new UserMinerControlPoolCommand($id);
 
-        if (!$this->commandIsValid($command)) {
-            return $this->json([
-                'errors' => $this->getLastValidationErrors(),
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        try {
-            $data = $this->contextPool->handle(UserMinerControlPoolGetStrategy::STRATEGY_ALIAS, $command);
-        } catch (\Exception $e) {
-            return $this->json([
-                'errors' => $e->getMessage(),
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        return $this->json($data);
+        return $this->json($this->getService->execute($command));
     }
 
     /**
@@ -105,20 +94,14 @@ class UserMinerControlPoolController extends BaseServiceController
     {
         $command = new UserMinerControlPoolCreateCommand($id, $request->get('pools'));
 
-        if (!$this->commandIsValid($command)) {
+        if (false === $this->commandIsValid($command)) {
             return $this->json([
                 'errors' => $this->getLastValidationErrors(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        try {
-            $data = $this->contextPool->handle(UserMinerControlPoolCreateStrategy::STRATEGY_ALIAS, $command);
-        } catch (\Exception $e) {
-            return $this->json([
-                'errors' => $e->getMessage(),
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        return $this->json($data);
+        return $this->json(
+            $this->contextPool->handle(UserMinerControlPoolCreateStrategy::STRATEGY_ALIAS, $command)
+        );
     }
 }

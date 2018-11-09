@@ -33,18 +33,12 @@ class UserMinerControlRigController extends BaseServiceController
     {
         $command = new UserMinerControlRigGetCommand($id);
 
-        if (!$this->commandIsValid($command)) {
-            return $this->json([
-                'errors' => $this->getLastValidationErrors(),
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
         try {
             $data = [];
         } catch (\Exception $e) {
             return $this->json([
                 'errors' => $e->getMessage(),
-            ], Response::HTTP_BAD_REQUEST);
+            ], $e->getCode());
         }
 
         return $this->json($data);

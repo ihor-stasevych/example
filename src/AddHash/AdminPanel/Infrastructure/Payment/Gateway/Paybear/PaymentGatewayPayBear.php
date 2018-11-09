@@ -3,6 +3,7 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Payment\Gateway\Paybear;
 
 use App\AddHash\AdminPanel\Domain\Store\Order\StoreOrder;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use App\AddHash\System\GlobalContext\ValueObject\CryptoPayment;
 use App\AddHash\AdminPanel\Domain\Payment\Gateway\PaymentGatewayInterface;
@@ -13,14 +14,22 @@ class PaymentGatewayPayBear implements PaymentGatewayInterface
 
     const API_KEY_SECRET_TEST = 'secaba806820dac7678dfbf72bf2d97aabf';
 
-    const API_HOST = 'http://dev.addhash.com';
-
 
     private $urlGenerator;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    private $requestStack;
+
+    private $host;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator, RequestStack $requestStack)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->requestStack = $requestStack;
+
+        $host = $this->requestStack->getCurrentRequest()->getHost();
+        $schema = $this->requestStack->getCurrentRequest()->getScheme();
+
+        $this->host = $schema . '://' . $host;
     }
 
 	/**
@@ -38,7 +47,7 @@ class PaymentGatewayPayBear implements PaymentGatewayInterface
 	        return null;
         }
 
-		$callbackUrl = static::API_HOST . $this->urlGenerator->generate('payments.crypto.callback', [
+		$callbackUrl = $this->host . $this->urlGenerator->generate('payments.crypto.callback', [
             'orderId' => $orderId,
         ]);
 
@@ -63,11 +72,11 @@ class PaymentGatewayPayBear implements PaymentGatewayInterface
 				$currencyData['rate'],
                 $currencyData['maxConfirmations'],
 				$coinValue,
-                static::API_HOST . $this->urlGenerator->generate('payments.crypto', [
+                $this->urlGenerator->generate('payments.crypto', [
                     'orderId'  => $orderId,
                     'currency' => $currency,
                 ]),
-				static::API_HOST . $this->urlGenerator->generate('payments.crypto.state', [
+                $this->urlGenerator->generate('payments.crypto.state', [
                     'orderId' => $orderId,
                 ])
 			);
@@ -94,7 +103,7 @@ class PaymentGatewayPayBear implements PaymentGatewayInterface
 		}
 
 		foreach ($response['data'] as $currency => &$data) {
-            $response['data'][$currency]['currencyUrl'] = static::API_HOST . $this->urlGenerator->generate('payments.crypto', [
+            $response['data'][$currency]['currencyUrl'] = $this->urlGenerator->generate('payments.crypto', [
                 'orderId'  => $orderId,
                 'currency' => $currency,
             ]);

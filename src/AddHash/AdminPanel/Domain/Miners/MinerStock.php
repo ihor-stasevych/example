@@ -29,6 +29,8 @@ class MinerStock
 
     private $user;
 
+    private $configName;
+
     /** @var Miner */
 	private $miner;
 
@@ -41,7 +43,7 @@ class MinerStock
 		self::STATE_RESERVED    => 'reserved',
 	];
 
-	public function __construct($priority, $ip, $port, $user = self::DEFAULT_USER, $id = null)
+	public function __construct($priority, $ip, $port, $configName, $user = self::DEFAULT_USER, $id = null)
 	{
 	    $this->id = $id;
 		$this->state = static::STATE_DEFAULT;
@@ -49,6 +51,7 @@ class MinerStock
 		$this->ip = $ip;
 		$this->port = $port;
         $this->user = $user;
+        $this->configName = $configName;
 	}
 
 	public function getId(): ?int
@@ -84,6 +87,11 @@ class MinerStock
     public function getUser()
     {
         return $this->user;
+    }
+
+    public function getConfigName()
+    {
+        return $this->configName;
     }
 
 	public function reserveMiner()

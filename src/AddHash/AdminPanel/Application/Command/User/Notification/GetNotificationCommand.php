@@ -4,7 +4,7 @@ namespace App\AddHash\AdminPanel\Application\Command\User\Notification;
 
 use App\AddHash\AdminPanel\Domain\User\Command\Notification\GetUserNotificationCommandInterface;
 
-class GetNotificationCommand implements GetUserNotificationCommandInterface
+final class GetNotificationCommand implements GetUserNotificationCommandInterface
 {
 	private $limit;
 
