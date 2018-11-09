@@ -65,7 +65,7 @@ class User implements UserInterface
 
     public function getRoles(): array
     {
-        return $this->roles;
+        return json_decode($this->roles);
     }
 
     public function getSalt(): string
