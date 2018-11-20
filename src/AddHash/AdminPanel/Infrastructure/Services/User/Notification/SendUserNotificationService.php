@@ -7,9 +7,7 @@ use App\AddHash\AdminPanel\Domain\User\User;
 use App\AddHash\AdminPanel\Domain\User\Notification\UserNotification;
 use App\AddHash\AdminPanel\Domain\User\Notification\UserNotificationRepositoryInterface;
 use App\AddHash\AdminPanel\Domain\User\Services\Notification\SendUserNotificationServiceInterface;
-use Enqueue\Client\ProducerInterface;
-use Enqueue\AmqpExt\AmqpContext;
-use Interop\Amqp\Impl\AmqpBind;
+use App\AddHash\System\GlobalContext\Common\QueueProducer;
 
 #use OldSound\RabbitMqBundle\RabbitMq\ProducerInterface;
 
@@ -20,7 +18,7 @@ class SendUserNotificationService implements SendUserNotificationServiceInterfac
 
 	public function __construct(
 		UserNotificationRepositoryInterface $notificationRepository,
-		AmqpContext $producer
+		QueueProducer $producer
 	)
 	{
 		$this->notificationRepository = $notificationRepository;
@@ -31,27 +29,20 @@ class SendUserNotificationService implements SendUserNotificationServiceInterfac
 	 * @param string $title
 	 * @param string $message
 	 * @param User $user
+	 * @throws \Interop\Queue\Exception
+	 * @throws \Interop\Queue\InvalidDestinationException
+	 * @throws \Interop\Queue\InvalidMessageException
 	 */
 	public function execute(string $title, string $message, User $user): void
 	{
 		$notification = new UserNotification($user, $title, $message);
 		$this->notificationRepository->save($notification);
-		//TODO::change it to normal
 		$notificationDTO = new UserNotificationDTO($notification);
-		//$this->producer->publish($notificationDTO->getJsonMessage(), 14);
 
-		$context = $this->producer;
-		$fooTopic = $this->producer->createTopic('user.notification.' . $user->getId());
-		$fooTopic->setType(AMQP_EX_TYPE_FANOUT);
-		$this->producer->declareTopic($fooTopic);
-
-		$fooQueue = $context->createQueue('user.notification');
-		$fooQueue->addFlag(AMQP_DURABLE);
-		$context->declareQueue($fooQueue);
-
-		$context->bind(new AmqpBind($fooTopic, $fooQueue));
-
-		$this->producer->createProducer()->send($fooTopic, $this->producer->createMessage($notificationDTO->getJsonMessage()));
+		$this->producer->createTopic('user.notification.' . $user->getId())
+			->createQueue('user.notification')
+			->prepareMessage($notificationDTO->getJsonMessage())
+			->send();
 
 		return;
 	}

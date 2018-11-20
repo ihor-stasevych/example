@@ -125,6 +125,10 @@ services:
       arguments: ['@addhash.user.repository', '@request_stack']
     App\AddHash\Authentication\Infrastructure\Auth\UserAuthProvider: '@addhash.user_provider'
 
+    addhash.queue.producer.service:
+      class: App\AddHash\System\GlobalContext\Common\QueueProducer
+      arguments: ['@enqueue.transport.default.context']
+
     addhash.queue.user.notification:
       class: App\AddHash\AdminPanel\Infrastructure\Queue\User\Notification\QueueUserNotificationConsumer
 
