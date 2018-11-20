@@ -176,7 +176,7 @@ services:
   addhash.user.notification.send.service:
     class: App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\SendUserNotificationService
     public: true
-    arguments: ['@addhash.user.notification.repository', '@old_sound_rabbit_mq.userNotification_producer']
+    arguments: ['@addhash.user.notification.repository', '@enqueue.transport.default.context']
   App\AddHash\AdminPanel\Infrastructure\Services\User\Notification\SendUserNotificationService: '@addhash.user.notification.send.service'
 
   App\AddHash\AdminPanel\Domain\User\Services\Notification\SendUserNotificationServiceInterface: '@addhash.user.notification.send.service'
