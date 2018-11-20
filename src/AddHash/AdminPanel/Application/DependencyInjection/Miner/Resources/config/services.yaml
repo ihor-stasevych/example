@@ -22,3 +22,11 @@ services:
     App\AddHash\AdminPanel\Infrastructure\Repository\Miner\MinerAllowedUrlRepository: '@addhash.miner.allowed.url.repository'
 
     App\AddHash\AdminPanel\Domain\Miners\Repository\MinerAllowedUrlRepositoryInterface: '@addhash.miner.allowed.url.repository'
+
+    addhash.miner.stock.pool.repository:
+      class: App\AddHash\AdminPanel\Infrastructure\Repository\Miner\MinerStockPoolRepository
+      public: true
+      arguments: ['@doctrine.orm.entity_manager']
+    App\AddHash\AdminPanel\Infrastructure\Repository\Miner\MinerStockPoolRepository: '@addhash.miner.stock.pool.repository'
+
+    App\AddHash\AdminPanel\Domain\Miners\Repository\MinerStockPoolRepositoryInterface: '@addhash.miner.stock.pool.repository'

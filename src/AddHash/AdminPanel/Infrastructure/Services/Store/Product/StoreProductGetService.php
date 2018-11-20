@@ -3,6 +3,7 @@
 namespace App\AddHash\AdminPanel\Infrastructure\Services\Store\Product;
 
 use App\AddHash\AdminPanel\Domain\Store\Product\StoreProductRepositoryInterface;
+use App\AddHash\AdminPanel\Infrastructure\Transformers\Store\Product\StoreProductGetTransform;
 use App\AddHash\AdminPanel\Domain\Store\Product\Command\StoreProductGetCommandInterface;
 use App\AddHash\AdminPanel\Domain\Store\Product\Services\StoreProductGetServiceInterface;
 
@@ -15,8 +16,10 @@ class StoreProductGetService implements StoreProductGetServiceInterface
 		$this->productRepository = $storeProductRepository;
 	}
 
-	public function execute(StoreProductGetCommandInterface $command)
+	public function execute(StoreProductGetCommandInterface $command): array
 	{
-        return $this->productRepository->findById($command->getId());
+        $product = $this->productRepository->findById($command->getId());
+
+        return (new StoreProductGetTransform())->transform($product);
 	}
 }

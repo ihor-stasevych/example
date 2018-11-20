@@ -10,14 +10,16 @@ use App\AddHash\AdminPanel\Domain\Miners\Exceptions\MinerSocketConnectionErrorEx
 
 class MinerSocket implements MinerInterface
 {
+    private const DEFAULT_SOCKET_PORT = 4028;
+
+
     private $ip;
 
-    private $port;
+    private $port = self::DEFAULT_SOCKET_PORT;
 
     public function __construct(MinerStock $minerStock)
     {
         $this->ip = $minerStock->getIp();
-        $this->port = $minerStock->getPort();
     }
 
     /**

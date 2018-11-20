@@ -19,7 +19,7 @@ App\AddHash\AdminPanel\Domain\User\Order\UserOrderMiner:
 
         details:
             column: details
-            type: json
+            type: text
 
     manyToOne:
           user:

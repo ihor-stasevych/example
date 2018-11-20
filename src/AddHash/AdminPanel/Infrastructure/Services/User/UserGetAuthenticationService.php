@@ -9,7 +9,7 @@ use App\AddHash\AdminPanel\Domain\User\Services\UserGetAuthenticationServiceInte
 use App\AddHash\AdminPanel\Domain\User\Exceptions\Authentication\UserAuthenticationNoAuthenticationIdException;
 use App\AddHash\AdminPanel\Domain\User\Exceptions\Authentication\UserAuthenticationInvalidAuthenticationUserException;
 
-class UserGetAuthenticationService implements UserGetAuthenticationServiceInterface
+final class UserGetAuthenticationService implements UserGetAuthenticationServiceInterface
 {
     private $authenticationAdapter;
 
