@@ -57,7 +57,7 @@ class QueueProducer
 	{
 		$this->message = $this->context->createMessage($message);
 		$this->context->declareTopic($this->topic);
-		$this->context->createQueue($this->queue);
+		$this->context->declareQueue($this->queue);
 
 		$this->context->bind(new AmqpBind($this->topic, $this->queue));
 		return $this;
