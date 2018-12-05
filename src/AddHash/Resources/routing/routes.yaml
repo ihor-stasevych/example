@@ -257,8 +257,6 @@ miner.panel.miner.update:
   controller: App\AddHash\MinerPanel\Application\Controller\MinerController::update
 
 miner.panel.miner.check.ip.address:
-  path: "/api/v1/miner/panel/ip/validate/{ip}"
-  requirements:
-    ip: '.+'
+  path: "/api/v1/miner/panel/ip/validate"
   methods: GET
   controller: App\AddHash\MinerPanel\Application\Controller\IpAddressController::check

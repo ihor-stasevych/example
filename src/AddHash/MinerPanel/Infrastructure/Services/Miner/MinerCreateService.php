@@ -70,7 +70,8 @@ final class MinerCreateService implements MinerCreateServiceInterface
         $errors = [];
 
         $ip = $command->getIp();
-        $ipAddressCheckCommand = new IpAddressCheckCommand($ip);
+        $port = $command->getPort();
+        $ipAddressCheckCommand = new IpAddressCheckCommand($ip, $port);
 
         try {
             $this->ipAddressCheckService->execute($ipAddressCheckCommand);
@@ -92,7 +93,7 @@ final class MinerCreateService implements MinerCreateServiceInterface
         $miner = new Miner(
             $title,
             $ip,
-            $command->getPort(),
+            $port,
             $minerType,
             $minerAlgorithm,
             $user

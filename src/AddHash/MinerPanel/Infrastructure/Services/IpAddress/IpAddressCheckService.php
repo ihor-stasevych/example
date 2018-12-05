@@ -2,14 +2,15 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\IpAddress;
 
-use JJG\Ping;
 use App\AddHash\MinerPanel\Domain\IpAddress\Command\IpAddressCheckCommandInterface;
 use App\AddHash\MinerPanel\Domain\IpAddress\Services\IpAddressCheckServiceInterface;
 use App\AddHash\MinerPanel\Domain\IpAddress\Exceptions\IpAddressCheckIpAddressUnavailableException;
 
 final class IpAddressCheckService implements IpAddressCheckServiceInterface
 {
-    private const PING_METHOD = 'fsockopen';
+    private const TIMEOUT = 10;
+
+    private const DEFAULT_PORT = 4028;
 
     /**
      * @param IpAddressCheckCommandInterface $command
@@ -17,12 +18,14 @@ final class IpAddressCheckService implements IpAddressCheckServiceInterface
      */
     public function execute(IpAddressCheckCommandInterface $command): void
     {
-        $ping = new Ping($command->getIp());
+        $port = $command->getPort() ?? self::DEFAULT_PORT;
 
-        $latency = $ping->ping(self::PING_METHOD);
+        $fp = @fsockopen($command->getIp(), $port, $errno, $errstr, self::TIMEOUT);
 
-        if (false === $latency) {
+        if (false === $fp) {
             throw new IpAddressCheckIpAddressUnavailableException(['ip' => ['Ip address unavailable']]);
         }
+
+        fclose($fp);
     }
 }

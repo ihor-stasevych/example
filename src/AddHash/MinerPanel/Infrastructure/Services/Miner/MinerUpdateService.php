@@ -77,7 +77,8 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
         $errors = [];
 
         $ip = $command->getIp();
-        $ipAddressCheckCommand = new IpAddressCheckCommand($ip);
+        $port = $command->getPort();
+        $ipAddressCheckCommand = new IpAddressCheckCommand($ip, $port);
 
         try {
             $this->ipAddressCheckService->execute($ipAddressCheckCommand);
@@ -98,7 +99,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
 
         $miner->setTitle($title);
         $miner->setIp($ip);
-        $miner->setPort($command->getPort());
+        $miner->setPort($port);
         $miner->setType($minerType);
         $miner->setAlgorithm($minerAlgorithm);
 

@@ -3,6 +3,7 @@
 namespace App\AddHash\MinerPanel\Application\Controller;
 
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\MinerPanel\Application\Command\IpAddress\IpAddressCheckCommand;
@@ -21,6 +22,21 @@ class IpAddressController extends BaseServiceController
     /**
      * Check ip address
      *
+     * @SWG\Parameter(
+     *     name="ip",
+     *     in="query",
+     *     type="string",
+     *     description="IP",
+     *     required=true,
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="port",
+     *     in="query",
+     *     type="integer",
+     *     description="Port (default 4028)",
+     * )
+     *
      * @SWG\Response(
      *     response=200,
      *     description="Returns success"
@@ -31,14 +47,17 @@ class IpAddressController extends BaseServiceController
      *     description="Returns validation errors"
      * )
      *
-     * @param string $ip
+     * @param Request $request
      * @return JsonResponse
      * @throws IpAddressCheckInvalidCommandException
      * @SWG\Tag(name="MinerPanel")
      */
-    public function check(string $ip)
+    public function check(Request $request)
     {
-        $command = new IpAddressCheckCommand($ip);
+        $command = new IpAddressCheckCommand(
+            $request->get('ip'),
+            $request->get('port')
+        );
 
         if (false === $this->commandIsValid($command)) {
             throw new IpAddressCheckInvalidCommandException(
