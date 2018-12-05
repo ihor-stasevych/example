@@ -230,3 +230,35 @@ public.information.re.captcha.key.get:
   path: "/api/v1/info/recaptcha"
   methods: GET
   controller: App\AddHash\AdminPanel\Application\Controller\PublicInformationController::getPublicKeyReCaptcha
+
+
+miner.panel.miner.index:
+  path: "/api/v1/miner/panel/miners"
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerController::index
+
+miner.panel.miner.get:
+  path: "/api/v1/miner/panel/miners/{id}"
+  requirements:
+      id: '\d+'
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerController::get
+
+miner.panel.miner.create:
+  path: "/api/v1/miner/panel/miners"
+  methods: POST
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerController::create
+
+miner.panel.miner.update:
+  path: "/api/v1/miner/panel/miners/{id}"
+  requirements:
+    id: '\d+'
+  methods: PUT
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerController::update
+
+miner.panel.miner.check.ip.address:
+  path: "/api/v1/miner/panel/ip/validate/{ip}"
+  requirements:
+    ip: '.+'
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\IpAddressController::check

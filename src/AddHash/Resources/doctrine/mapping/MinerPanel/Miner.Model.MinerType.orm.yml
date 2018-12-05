@@ -1,0 +1,11 @@
+App\AddHash\MinerPanel\Domain\Miner\Model\MinerType:
+    type: entity
+    table: Miner_Panel_Miner_Type
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        value:
+            type: string
+            length: 100

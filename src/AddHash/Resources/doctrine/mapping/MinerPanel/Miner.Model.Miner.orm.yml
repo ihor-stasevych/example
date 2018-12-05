@@ -1,0 +1,38 @@
+App\AddHash\MinerPanel\Domain\Miner\Model\Miner:
+    type: entity
+    table: Miner_Panel_Miner
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        title:
+            type: string
+            length: 100
+
+        ip:
+            type: string
+            length: 100
+
+        port:
+            type: integer
+
+    manyToOne:
+        user:
+            targetEntity: App\AddHash\MinerPanel\Domain\User\Model\User
+            inversedBy: miner
+            joinColumn:
+                name: userId
+                referencedColumnName: id
+
+        type:
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\Model\MinerType
+            joinColumn:
+                name: typeId
+                referencedColumnName: id
+
+        algorithm:
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\Model\MinerAlgorithm
+            joinColumn:
+                name: algorithmId
+                referencedColumnName: id

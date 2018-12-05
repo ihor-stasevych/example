@@ -1,0 +1,8 @@
+services:
+  addhash.miner.panel.ip.check.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\IpAddress\IpAddressCheckService
+    public: true
+    arguments: []
+  App\AddHash\MinerPanel\Infrastructure\Services\IpAddress\IpAddressCheckService: '@addhash.miner.panel.ip.check.service'
+
+  App\AddHash\MinerPanel\Domain\IpAddress\Services\IpAddressCheckServiceInterface: '@addhash.miner.panel.ip.check.service'

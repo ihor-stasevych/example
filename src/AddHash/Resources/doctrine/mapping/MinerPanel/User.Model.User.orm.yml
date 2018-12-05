@@ -1,0 +1,11 @@
+App\AddHash\MinerPanel\Domain\User\Model\User:
+    type: entity
+    table: Miner_Panel_User
+    id:
+        id:
+            type: integer
+
+    oneToMany:
+        miner:
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\Model\Miner
+            mappedBy: user

@@ -1,0 +1,56 @@
+services:
+  addhash.miner.panel.miner.list.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerListService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerListService: '@addhash.miner.panel.miner.list.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\Services\MinerListServiceInterface: '@addhash.miner.panel.miner.list.service'
+
+  addhash.miner.panel.miner.get.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerGetService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerGetService: '@addhash.miner.panel.miner.get.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\Services\MinerGetServiceInterface: '@addhash.miner.panel.miner.get.service'
+
+  addhash.miner.panel.miner.create.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerCreateService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.algorithm.repository', '@addhash.miner.panel.miner.type.repository', '@addhash.miner.panel.ip.check.service']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerCreateService: '@addhash.miner.panel.miner.create.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\Services\MinerCreateServiceInterface: '@addhash.miner.panel.miner.create.service'
+
+  addhash.miner.panel.miner.update.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerUpdateService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.algorithm.repository', '@addhash.miner.panel.miner.type.repository', '@addhash.miner.panel.ip.check.service']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerUpdateService: '@addhash.miner.panel.miner.update.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\Services\MinerUpdateServiceInterface: '@addhash.miner.panel.miner.update.service'
+
+  addhash.miner.panel.miner.repository:
+    class: App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerRepository: '@addhash.miner.panel.miner.repository'
+
+  App\AddHash\MinerPanel\Domain\Miner\Repository\MinerRepositoryInterface: '@addhash.miner.panel.miner.repository'
+
+  addhash.miner.panel.miner.algorithm.repository:
+    class: App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerAlgorithmRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerAlgorithmRepository: '@addhash.miner.panel.miner.algorithm.repository'
+
+  App\AddHash\MinerPanel\Domain\Miner\Repository\MinerAlgorithmRepositoryInterface: '@addhash.miner.panel.miner.algorithm.repository'
+
+  addhash.miner.panel.miner.type.repository:
+    class: App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerTypeRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerTypeRepository: '@addhash.miner.panel.miner.type.repository'
+
+  App\AddHash\MinerPanel\Domain\Miner\Repository\MinerTypeRepositoryInterface: '@addhash.miner.panel.miner.type.repository'
