@@ -2,23 +2,31 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner;
 
+use App\AddHash\MinerPanel\Domain\User\Model\User;
 use App\AddHash\MinerPanel\Domain\Miner\Model\Miner;
+use App\AddHash\MinerPanel\Infrastructure\Miner\Extender\MinerSocket;
+use App\AddHash\MinerPanel\Infrastructure\Miner\ApiCommand\MinerApiCommand;
+use App\AddHash\MinerPanel\Infrastructure\Miner\Parsers\MinerSummaryParser;
 use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Infrastructure\Transformers\Miner\MinerTransform;
 use App\AddHash\MinerPanel\Domain\Miner\Command\MinerCreateCommandInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerCreateServiceInterface;
 use App\AddHash\MinerPanel\Application\Command\IpAddress\IpAddressCheckCommand;
-use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerTypeRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateInvalidTypeException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateInvalidDataException;
 use App\AddHash\MinerPanel\Domain\IpAddress\Services\IpAddressCheckServiceInterface;
-use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerAlgorithmRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
+use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateMaxQtyFreeMinerException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateInvalidAlgorithmException;
+use App\AddHash\MinerPanel\Domain\Miner\MinerType\Repository\MinerTypeRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\IpAddress\Exceptions\IpAddressCheckIpAddressUnavailableException;
+use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Repository\MinerAlgorithmRepositoryInterface;
 
 final class MinerCreateService implements MinerCreateServiceInterface
 {
+    private const MAX_QTY_FREE_MINER = 50;
+
+
     private $authenticationAdapter;
 
     private $minerRepository;
@@ -50,9 +58,17 @@ final class MinerCreateService implements MinerCreateServiceInterface
      * @throws MinerCreateInvalidAlgorithmException
      * @throws MinerCreateInvalidDataException
      * @throws MinerCreateInvalidTypeException
+     * @throws MinerCreateMaxQtyFreeMinerException
      */
     public function execute(MinerCreateCommandInterface $command): array
     {
+        /** @var User $user */
+        $user = $this->authenticationAdapter->execute();
+
+        if (false === $this->checkAddFreeMiner($user)) {
+            throw new MinerCreateMaxQtyFreeMinerException('The limit of adding free miners is exceeded');
+        }
+
         $minerType = $this->minerTypeRepository->get($command->getTypeId());
 
         if (null === $minerType) {
@@ -64,8 +80,6 @@ final class MinerCreateService implements MinerCreateServiceInterface
         if (null === $minerAlgorithm) {
             throw new MinerCreateInvalidAlgorithmException('Invalid algorithm id');
         }
-
-        $user = $this->authenticationAdapter->execute();
 
         $errors = [];
 
@@ -101,6 +115,20 @@ final class MinerCreateService implements MinerCreateServiceInterface
 
         $this->minerRepository->save($miner);
 
-        return (new MinerTransform())->transform($miner);
+        $minerApiCommand = new MinerApiCommand(
+            new MinerSocket($miner),
+            new MinerSummaryParser()
+        );
+
+        $summary = $minerApiCommand->getSummary();
+
+        return (new MinerTransform())->transform($miner) + $summary;
+    }
+
+    private function checkAddFreeMiner(User $user): bool
+    {
+        $count = $this->minerRepository->getCountByUser($user);
+
+        return $count < self::MAX_QTY_FREE_MINER;
     }
 }

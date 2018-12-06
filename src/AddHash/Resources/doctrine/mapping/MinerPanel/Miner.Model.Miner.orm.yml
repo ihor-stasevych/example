@@ -26,13 +26,13 @@ App\AddHash\MinerPanel\Domain\Miner\Model\Miner:
                 referencedColumnName: id
 
         type:
-            targetEntity: App\AddHash\MinerPanel\Domain\Miner\Model\MinerType
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerType\Model\MinerType
             joinColumn:
                 name: typeId
                 referencedColumnName: id
 
         algorithm:
-            targetEntity: App\AddHash\MinerPanel\Domain\Miner\Model\MinerAlgorithm
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Model\MinerAlgorithm
             joinColumn:
                 name: algorithmId
                 referencedColumnName: id

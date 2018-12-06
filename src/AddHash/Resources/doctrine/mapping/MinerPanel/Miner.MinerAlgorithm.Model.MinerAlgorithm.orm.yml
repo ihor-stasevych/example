@@ -1,4 +1,4 @@
-App\AddHash\MinerPanel\Domain\Miner\Model\MinerAlgorithm:
+App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Model\MinerAlgorithm:
     type: entity
     table: Miner_Panel_Miner_Algorithm
     id:

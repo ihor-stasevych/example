@@ -3,9 +3,15 @@
 namespace App\AddHash\MinerPanel\Domain\Miner\Model;
 
 use App\AddHash\MinerPanel\Domain\User\Model\User;
+use App\AddHash\MinerPanel\Domain\Miner\MinerType\Model\MinerType;
+use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Model\MinerAlgorithm;
 
 class Miner
 {
+    const DEFAULT_PORT = 4028;
+
+    const MAX_PER_PAGE = 10;
+
     private $id;
 
     private $title;
@@ -23,7 +29,7 @@ class Miner
     public function __construct(
         string $title,
         string $ip,
-        int $port,
+        ?int $port,
         MinerType $type,
         MinerAlgorithm $algorithm,
         User $user,
@@ -33,7 +39,7 @@ class Miner
         $this->id = $id;
         $this->title = $title;
         $this->ip = $ip;
-        $this->port = $port;
+        $this->port = $port ?? self::DEFAULT_PORT;
         $this->type = $type;
         $this->algorithm = $algorithm;
         $this->user = $user;
@@ -84,9 +90,9 @@ class Miner
         $this->ip = $ip;
     }
 
-    public function setPort(int $port): void
+    public function setPort(?int $port): void
     {
-        $this->port = $port;
+        $this->port = $port ?? self::DEFAULT_PORT;
     }
 
     public function setType(MinerType $type): void

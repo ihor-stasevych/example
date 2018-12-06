@@ -2,9 +2,9 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Repository\Miner;
 
-use App\AddHash\MinerPanel\Domain\Miner\Model\MinerAlgorithm;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
-use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerAlgorithmRepositoryInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Model\MinerAlgorithm;
+use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Repository\MinerAlgorithmRepositoryInterface;
 
 class MinerAlgorithmRepository extends AbstractRepository implements MinerAlgorithmRepositoryInterface
 {
@@ -14,6 +14,11 @@ class MinerAlgorithmRepository extends AbstractRepository implements MinerAlgori
         $minerAlgorithm = $this->entityRepository->find($id);
 
         return $minerAlgorithm;
+    }
+
+    public function all(): array
+    {
+        return $this->entityRepository->findAll();
     }
 
     protected function getEntityName(): string

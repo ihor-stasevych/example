@@ -7,12 +7,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\MinerPanel\Application\Command\Miner\MinerGetCommand;
+use App\AddHash\MinerPanel\Application\Command\Miner\MinerListCommand;
+use App\AddHash\MinerPanel\Application\Command\Miner\MinerDeleteCommand;
 use App\AddHash\MinerPanel\Application\Command\Miner\MinerCreateCommand;
 use App\AddHash\MinerPanel\Application\Command\Miner\MinerUpdateCommand;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerGetServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerListServiceInterface;
+use App\AddHash\MinerPanel\Domain\Miner\Services\MinerDeleteServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerCreateServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerUpdateServiceInterface;
+use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerListInvalidCommandException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerUpdateInvalidCommandException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateInvalidCommandException;
 
@@ -26,21 +30,32 @@ class MinerController extends BaseServiceController
 
     private $updateService;
 
+    private $deleteService;
+
     public function __construct(
         MinerListServiceInterface $listService,
         MinerGetServiceInterface $getService,
         MinerCreateServiceInterface $createService,
-        MinerUpdateServiceInterface $updateService
+        MinerUpdateServiceInterface $updateService,
+        MinerDeleteServiceInterface $deleteService
     )
     {
         $this->listService = $listService;
         $this->getService = $getService;
         $this->createService = $createService;
         $this->updateService = $updateService;
+        $this->deleteService = $deleteService;
     }
 
     /**
      * Get miners
+     *
+     * @SWG\Parameter(
+     *     name="page",
+     *     in="query",
+     *     type="integer",
+     *     description="Page",
+     * )
      *
      * @SWG\Response(
      *     response=200,
@@ -58,14 +73,21 @@ class MinerController extends BaseServiceController
      *             )
      *     ),
      * )
-     *
+     * @param Request $request
      * @return JsonResponse
+     * @throws MinerListInvalidCommandException
      * @SWG\Tag(name="MinerPanel")
      */
-    public function index()
+    public function index(Request $request)
     {
+        $command = new MinerListCommand($request->get('page'));
+
+        if (false === $this->commandIsValid($command)) {
+            throw new MinerListInvalidCommandException('Invalid page');
+        }
+
         return $this->json(
-            $this->listService->execute()
+            $this->listService->execute($command)
         );
     }
 
@@ -285,5 +307,31 @@ class MinerController extends BaseServiceController
         return $this->json(
             $this->updateService->execute($command)
         );
+    }
+
+    /**
+     * Delete miner
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns success"
+     * )
+     *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Returns validation errors"
+     * )
+     *
+     * @param int $id
+     * @return JsonResponse
+     * @SWG\Tag(name="MinerPanel")
+     */
+    public function delete(int $id)
+    {
+        $command = new MinerDeleteCommand($id);
+
+        $this->deleteService->execute($command);
+
+        return $this->json([]);
     }
 }

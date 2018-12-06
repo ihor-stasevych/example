@@ -31,6 +31,30 @@ services:
 
   App\AddHash\MinerPanel\Domain\Miner\Services\MinerUpdateServiceInterface: '@addhash.miner.panel.miner.update.service'
 
+  addhash.miner.panel.miner.delete.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerDeleteService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerDeleteService: '@addhash.miner.panel.miner.delete.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\Services\MinerDeleteServiceInterface: '@addhash.miner.panel.miner.delete.service'
+
+  addhash.miner.panel.miner.algorithm.list.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerAlgorithmListService
+    public: true
+    arguments: ['@addhash.miner.panel.miner.algorithm.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerAlgorithmListService: '@addhash.miner.panel.miner.algorithm.list.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Services\MinerAlgorithmListServiceInterface: '@addhash.miner.panel.miner.algorithm.list.service'
+
+  addhash.miner.panel.miner.type.list.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerType\MinerTypeListService
+    public: true
+    arguments: ['@addhash.miner.panel.miner.type.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerType\MinerTypeListService: '@addhash.miner.panel.miner.type.list.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerType\Services\MinerTypeListServiceInterface: '@addhash.miner.panel.miner.type.list.service'
+
   addhash.miner.panel.miner.repository:
     class: App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerRepository
     public: true
@@ -45,7 +69,7 @@ services:
     arguments: ['@doctrine.orm.entity_manager']
   App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerAlgorithmRepository: '@addhash.miner.panel.miner.algorithm.repository'
 
-  App\AddHash\MinerPanel\Domain\Miner\Repository\MinerAlgorithmRepositoryInterface: '@addhash.miner.panel.miner.algorithm.repository'
+  App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Repository\MinerAlgorithmRepositoryInterface: '@addhash.miner.panel.miner.algorithm.repository'
 
   addhash.miner.panel.miner.type.repository:
     class: App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerTypeRepository
@@ -53,4 +77,4 @@ services:
     arguments: ['@doctrine.orm.entity_manager']
   App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerTypeRepository: '@addhash.miner.panel.miner.type.repository'
 
-  App\AddHash\MinerPanel\Domain\Miner\Repository\MinerTypeRepositoryInterface: '@addhash.miner.panel.miner.type.repository'
+  App\AddHash\MinerPanel\Domain\Miner\MinerType\Repository\MinerTypeRepositoryInterface: '@addhash.miner.panel.miner.type.repository'

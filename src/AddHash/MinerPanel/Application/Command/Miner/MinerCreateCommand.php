@@ -19,7 +19,6 @@ final class MinerCreateCommand implements MinerCreateCommandInterface
     private $ip;
 
     /**
-     * @Assert\NotBlank()
      * @Assert\Regex("/^\d+$/")
      */
     private $port;
@@ -55,7 +54,7 @@ final class MinerCreateCommand implements MinerCreateCommandInterface
         return $this->ip;
     }
 
-    public function getPort(): int
+    public function getPort(): ?int
     {
         return $this->port;
     }

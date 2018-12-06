@@ -2,8 +2,10 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Repository\Miner;
 
+use Pagerfanta\Pagerfanta;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Doctrine\ORM\NonUniqueResultException;
 use App\AddHash\MinerPanel\Domain\User\Model\User;
 use App\AddHash\MinerPanel\Domain\Miner\Model\Miner;
@@ -12,9 +14,9 @@ use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerRepositoryInterface;
 
 class MinerRepository extends AbstractRepository implements MinerRepositoryInterface
 {
-    public function getMinersByUser(User $user): array
+    public function getMinersByUser(User $user, ?int $currentPage): ?Pagerfanta
     {
-        return $this->entityManager
+        $result = $this->entityManager
             ->getRepository($this->getEntityName())
             ->createQueryBuilder('m')
             ->select('m', 't', 'a')
@@ -22,8 +24,16 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
             ->join('m.algorithm', 'a')
             ->where('m.user = :user')
             ->setParameter('user', $user)
-            ->getQuery()
-            ->getResult();
+            ->getQuery();
+
+        $pager = new Pagerfanta(
+            new DoctrineORMAdapter($result)
+        );
+
+        $pager->setMaxPerPage(Miner::MAX_PER_PAGE);
+        $pager->setCurrentPage($currentPage ?? 1);
+
+        return $pager;
     }
 
     /**
@@ -70,6 +80,23 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
             ->getOneOrNullResult();
     }
 
+    /**
+     * @param User $user
+     * @return int
+     * @throws NonUniqueResultException
+     */
+    public function getCountByUser(User $user): int
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('count(m.id)')
+            ->where('m.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function get(int $id): ?Miner
     {
         /** @var Miner $miner */
@@ -86,6 +113,17 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
     public function save(Miner $miner): void
     {
         $this->entityManager->persist($miner);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param Miner $miner
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function delete(Miner $miner): void
+    {
+        $this->entityManager->remove($miner);
         $this->entityManager->flush();
     }
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8c9f283fc11dbe76e0f43ea1a194f73a",
+    "content-hash": "c0273b6faf55292eb7d7ca7a457005d7",
     "packages": [
         {
             "name": "deployer/deployer",
@@ -1435,39 +1435,6 @@
                 "rest"
             ],
             "time": "2016-10-17T18:31:11+00:00"
-        },
-        {
-            "name": "geerlingguy/ping",
-            "version": "1.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/geerlingguy/Ping.git",
-                "reference": "b16248c0a59a6555437744db8b78c0589cfc32f9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/geerlingguy/Ping/zipball/b16248c0a59a6555437744db8b78c0589cfc32f9",
-                "reference": "b16248c0a59a6555437744db8b78c0589cfc32f9",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "JJG/Ping.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jeff Geerling",
-                    "email": "jeff@jeffgeerling.com"
-                }
-            ],
-            "description": "A PHP class to ping hosts.",
-            "time": "2017-02-02T15:38:40+00:00"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -6784,6 +6751,39 @@
                 "webdriver"
             ],
             "time": "2018-05-16T17:37:13+00:00"
+        },
+        {
+            "name": "geerlingguy/ping",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/geerlingguy/Ping.git",
+                "reference": "b16248c0a59a6555437744db8b78c0589cfc32f9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/geerlingguy/Ping/zipball/b16248c0a59a6555437744db8b78c0589cfc32f9",
+                "reference": "b16248c0a59a6555437744db8b78c0589cfc32f9",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "JJG/Ping.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeff Geerling",
+                    "email": "jeff@jeffgeerling.com"
+                }
+            ],
+            "description": "A PHP class to ping hosts.",
+            "time": "2017-02-02T15:38:40+00:00"
         },
         {
             "name": "nikic/php-parser",

@@ -10,7 +10,7 @@ interface MinerUpdateCommandInterface
 
     public function getIp(): string;
 
-    public function getPort(): int;
+    public function getPort(): ?int;
 
     public function getTypeId(): int;
 

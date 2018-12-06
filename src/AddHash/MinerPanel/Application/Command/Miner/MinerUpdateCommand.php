@@ -21,7 +21,6 @@ final class MinerUpdateCommand implements MinerUpdateCommandInterface
     private $ip;
 
     /**
-     * @Assert\NotBlank()
      * @Assert\Regex("/^\d+$/")
      */
     private $port;
@@ -63,7 +62,7 @@ final class MinerUpdateCommand implements MinerUpdateCommandInterface
         return $this->ip;
     }
 
-    public function getPort(): int
+    public function getPort(): ?int
     {
         return $this->port;
     }
