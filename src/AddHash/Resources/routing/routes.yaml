@@ -277,3 +277,10 @@ miner.panel.miner.type.list:
   path: "/api/v1/miner/panel/miners/type"
   methods: GET
   controller: App\AddHash\MinerPanel\Application\Controller\MinerTypeController::index
+
+miner.panel.miner.summary.get:
+  path: "/api/v1/miner/panel/miners/summary/{id}"
+  requirements:
+    id: '\d+'
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerSummaryController::get

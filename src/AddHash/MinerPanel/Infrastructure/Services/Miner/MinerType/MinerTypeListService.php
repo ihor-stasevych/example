@@ -5,7 +5,7 @@ namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerType;
 use App\AddHash\MinerPanel\Domain\Miner\MinerType\Services\MinerTypeListServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerType\Repository\MinerTypeRepositoryInterface;
 
-class MinerTypeListService implements MinerTypeListServiceInterface
+final class MinerTypeListService implements MinerTypeListServiceInterface
 {
     private $minerTypeRepository;
 

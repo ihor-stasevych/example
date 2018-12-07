@@ -105,6 +105,10 @@ class MinerController extends BaseServiceController
      *              @SWG\Property(property="port", type="integer"),
      *              @SWG\Property(property="type", type="string"),
      *              @SWG\Property(property="algorithm", type="string"),
+     *              @SWG\Property(property="accepted", type="string"),
+     *              @SWG\Property(property="rejected", type="string"),
+     *              @SWG\Property(property="speed", type="string"),
+     *              @SWG\Property(property="speedAverage", type="string"),
      *     )
      * )
      *
@@ -175,6 +179,10 @@ class MinerController extends BaseServiceController
      *              @SWG\Property(property="port", type="integer"),
      *              @SWG\Property(property="type", type="string"),
      *              @SWG\Property(property="algorithm", type="string"),
+     *              @SWG\Property(property="accepted", type="string"),
+     *              @SWG\Property(property="rejected", type="string"),
+     *              @SWG\Property(property="speed", type="string"),
+     *              @SWG\Property(property="speedAverage", type="string"),
      *     )
      * )
      *
@@ -268,6 +276,10 @@ class MinerController extends BaseServiceController
      *              @SWG\Property(property="port", type="integer"),
      *              @SWG\Property(property="type", type="string"),
      *              @SWG\Property(property="algorithm", type="string"),
+     *              @SWG\Property(property="accepted", type="string"),
+     *              @SWG\Property(property="rejected", type="string"),
+     *              @SWG\Property(property="speed", type="string"),
+     *              @SWG\Property(property="speedAverage", type="string"),
      *     )
      * )
      *

@@ -2,9 +2,7 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner;
 
-use App\AddHash\MinerPanel\Infrastructure\Miner\Extender\MinerSocket;
-use App\AddHash\MinerPanel\Infrastructure\Miner\ApiCommand\MinerApiCommand;
-use App\AddHash\MinerPanel\Infrastructure\Miner\Parsers\MinerSummaryParser;
+use App\AddHash\MinerPanel\Domain\Miner\Summary\SummaryGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Infrastructure\Transformers\Miner\MinerTransform;
 use App\AddHash\MinerPanel\Domain\Miner\Command\MinerUpdateCommandInterface;
@@ -32,12 +30,15 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
 
     private $ipAddressCheckService;
 
+    private $summaryGetHandler;
+
     public function __construct(
         UserAuthenticationGetServiceInterface $authenticationAdapter,
         MinerRepositoryInterface $minerRepository,
         MinerAlgorithmRepositoryInterface $minerAlgorithmRepository,
         MinerTypeRepositoryInterface $minerTypeRepository,
-        IpAddressCheckServiceInterface $ipAddressCheckService
+        IpAddressCheckServiceInterface $ipAddressCheckService,
+        SummaryGetHandlerInterface $summaryGetHandler
     )
     {
         $this->authenticationAdapter = $authenticationAdapter;
@@ -45,6 +46,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
         $this->minerAlgorithmRepository = $minerAlgorithmRepository;
         $this->minerTypeRepository = $minerTypeRepository;
         $this->ipAddressCheckService = $ipAddressCheckService;
+        $this->summaryGetHandler = $summaryGetHandler;
     }
 
     /**
@@ -108,12 +110,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
 
         $this->minerRepository->save($miner);
 
-        $minerApiCommand = new MinerApiCommand(
-            new MinerSocket($miner),
-            new MinerSummaryParser()
-        );
-
-        $summary = $minerApiCommand->getSummary();
+        $summary = $this->summaryGetHandler->handler($miner, true);
 
         return (new MinerTransform())->transform($miner) + $summary;
     }
