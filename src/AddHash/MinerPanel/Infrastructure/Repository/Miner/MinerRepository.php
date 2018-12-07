@@ -1,0 +1,134 @@
+<?php
+
+namespace App\AddHash\MinerPanel\Infrastructure\Repository\Miner;
+
+use Pagerfanta\Pagerfanta;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\OptimisticLockException;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Doctrine\ORM\NonUniqueResultException;
+use App\AddHash\MinerPanel\Domain\User\Model\User;
+use App\AddHash\MinerPanel\Domain\Miner\Model\Miner;
+use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
+use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerRepositoryInterface;
+
+class MinerRepository extends AbstractRepository implements MinerRepositoryInterface
+{
+    public function getMinersByUser(User $user, ?int $currentPage): ?Pagerfanta
+    {
+        $result = $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('m', 't', 'a')
+            ->join('m.type', 't')
+            ->join('m.algorithm', 'a')
+            ->where('m.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery();
+
+        $pager = new Pagerfanta(
+            new DoctrineORMAdapter($result)
+        );
+
+        $pager->setMaxPerPage(Miner::MAX_PER_PAGE);
+        $pager->setCurrentPage($currentPage ?? 1);
+
+        return $pager;
+    }
+
+    /**
+     * @param int $id
+     * @param User $user
+     * @return Miner
+     * @throws NonUniqueResultException
+     */
+    public function getMinerByIdAndUser(int $id, User $user): ?Miner
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('m', 't', 'a')
+            ->join('m.type', 't')
+            ->join('m.algorithm', 'a')
+            ->where('m.id = :id')
+            ->andWhere('m.user = :user')
+            ->setParameter('id', $id)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @param string $title
+     * @param User $user
+     * @return Miner|null
+     * @throws NonUniqueResultException
+     */
+    public function getMinerByTitleAndUser(string $title, User $user): ?Miner
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('m', 't', 'a')
+            ->join('m.type', 't')
+            ->join('m.algorithm', 'a')
+            ->where('m.title = :title')
+            ->andWhere('m.user = :user')
+            ->setParameter('title', $title)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @param User $user
+     * @return int
+     * @throws NonUniqueResultException
+     */
+    public function getCountByUser(User $user): int
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('count(m.id)')
+            ->where('m.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function get(int $id): ?Miner
+    {
+        /** @var Miner $miner */
+        $miner = $this->entityRepository->find($id);
+
+        return $miner;
+    }
+
+    /**
+     * @param Miner $miner
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function save(Miner $miner): void
+    {
+        $this->entityManager->persist($miner);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param Miner $miner
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function delete(Miner $miner): void
+    {
+        $this->entityManager->remove($miner);
+        $this->entityManager->flush();
+    }
+
+    protected function getEntityName(): string
+    {
+        return Miner::class;
+    }
+}

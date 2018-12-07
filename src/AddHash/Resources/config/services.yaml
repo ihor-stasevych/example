@@ -65,3 +65,12 @@ imports:
 
   ## AdminPanel OpenHost ##
   - { resource: "../../../AddHash/AdminPanel/Application/DependencyInjection/OpenHost/Resources/config/services.yaml"}
+
+
+  - { resource: "../../../AddHash/MinerPanel/Application/DependencyInjection/Miner/Resources/config/services.yaml"}
+
+  - { resource: "../../../AddHash/MinerPanel/Application/DependencyInjection/OpenHost/Resources/config/services.yaml"}
+
+  - { resource: "../../../AddHash/MinerPanel/Application/DependencyInjection/User/Resources/config/services.yaml"}
+
+  - { resource: "../../../AddHash/MinerPanel/Application/DependencyInjection/IpAddress/Resources/config/services.yaml"}
