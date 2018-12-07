@@ -36,7 +36,7 @@ class User implements UserInterface
         $this->id = $id;
         $this->email = $email;
         $this->password = $password;
-        $this->roles = $roles;
+        $this->roles = json_encode($roles);
 
         $this->token = Uuid::generate();
         $this->createdAt = new \DateTime();

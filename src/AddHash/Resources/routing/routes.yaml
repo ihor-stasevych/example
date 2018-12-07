@@ -284,3 +284,10 @@ miner.panel.miner.summary.get:
     id: '\d+'
   methods: GET
   controller: App\AddHash\MinerPanel\Application\Controller\MinerSummaryController::get
+
+miner.panel.miner.pools.get:
+  path: "/api/v1/miner/panel/miners/pools/{id}"
+  requirements:
+    id: '\d+'
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerPoolsController::get

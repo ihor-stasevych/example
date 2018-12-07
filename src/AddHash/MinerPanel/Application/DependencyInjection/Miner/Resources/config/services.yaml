@@ -10,7 +10,7 @@ services:
   addhash.miner.panel.miner.get.service:
     class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerGetService
     public: true
-    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.summary.get.handler']
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.summary.get.handler', '@addhash.miner.panel.miner.pool.get.handler']
   App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerGetService: '@addhash.miner.panel.miner.get.service'
 
   App\AddHash\MinerPanel\Domain\Miner\Services\MinerGetServiceInterface: '@addhash.miner.panel.miner.get.service'
@@ -18,7 +18,7 @@ services:
   addhash.miner.panel.miner.create.service:
     class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerCreateService
     public: true
-    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.algorithm.repository', '@addhash.miner.panel.miner.type.repository', '@addhash.miner.panel.ip.check.service', '@addhash.miner.panel.miner.summary.get.handler']
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.algorithm.repository', '@addhash.miner.panel.miner.type.repository', '@addhash.miner.panel.ip.check.service', '@addhash.miner.panel.miner.summary.get.handler', '@addhash.miner.panel.miner.pool.get.handler']
   App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerCreateService: '@addhash.miner.panel.miner.create.service'
 
   App\AddHash\MinerPanel\Domain\Miner\Services\MinerCreateServiceInterface: '@addhash.miner.panel.miner.create.service'
@@ -26,7 +26,7 @@ services:
   addhash.miner.panel.miner.update.service:
     class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerUpdateService
     public: true
-    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.algorithm.repository', '@addhash.miner.panel.miner.type.repository', '@addhash.miner.panel.ip.check.service', '@addhash.miner.panel.miner.summary.get.handler']
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.algorithm.repository', '@addhash.miner.panel.miner.type.repository', '@addhash.miner.panel.ip.check.service', '@addhash.miner.panel.miner.summary.get.handler', '@addhash.miner.panel.miner.pool.get.handler']
   App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerUpdateService: '@addhash.miner.panel.miner.update.service'
 
   App\AddHash\MinerPanel\Domain\Miner\Services\MinerUpdateServiceInterface: '@addhash.miner.panel.miner.update.service'
@@ -63,6 +63,14 @@ services:
 
   App\AddHash\MinerPanel\Domain\Miner\MinerSummary\Services\MinerSummaryGetServiceInterface: '@addhash.miner.panel.miner.summary.get.service'
 
+  addhash.miner.panel.miner.pools.get.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerPools\MinerPoolsGetService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.pool.get.handler']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerPools\MinerPoolsGetService: '@addhash.miner.panel.miner.pools.get.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerPools\Services\MinerPoolsGetServiceInterface: '@addhash.miner.panel.miner.pools.get.service'
+
   addhash.miner.panel.miner.repository:
     class: App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerRepository
     public: true
@@ -88,9 +96,17 @@ services:
   App\AddHash\MinerPanel\Domain\Miner\MinerType\Repository\MinerTypeRepositoryInterface: '@addhash.miner.panel.miner.type.repository'
 
   addhash.miner.panel.miner.summary.get.handler:
-    class: App\AddHash\MinerPanel\Infrastructure\Miner\Summary\SummaryGetHandler
+    class: App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo\MinerInfoSummaryGetHandler
     public: true
     arguments: ['@addhash.cache']
-  App\AddHash\MinerPanel\Infrastructure\Miner\Summary\SummaryGetHandler: '@addhash.miner.panel.miner.summary.get.handler'
+  App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo\MinerInfoSummaryGetHandler: '@addhash.miner.panel.miner.summary.get.handler'
 
-  App\AddHash\MinerPanel\Domain\Miner\Summary\SummaryGetHandlerInterface: '@addhash.miner.panel.miner.summary.get.handler'
+  App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoSummaryGetHandlerInterface: '@addhash.miner.panel.miner.summary.get.handler'
+
+  addhash.miner.panel.miner.pool.get.handler:
+    class: App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo\MinerInfoPoolsGetHandler
+    public: true
+    arguments: ['@addhash.cache']
+  App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo\MinerInfoPoolsGetHandler: '@addhash.miner.panel.miner.pool.get.handler'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolsGetHandlerInterface: '@addhash.miner.panel.miner.pool.get.handler'

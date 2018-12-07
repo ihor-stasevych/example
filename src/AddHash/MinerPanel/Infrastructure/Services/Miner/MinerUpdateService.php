@@ -2,7 +2,6 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner;
 
-use App\AddHash\MinerPanel\Domain\Miner\Summary\SummaryGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Infrastructure\Transformers\Miner\MinerTransform;
 use App\AddHash\MinerPanel\Domain\Miner\Command\MinerUpdateCommandInterface;
@@ -12,7 +11,9 @@ use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerUpdateInvalidTypeExcepti
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerUpdateInvalidDataException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerUpdateInvalidMinerException;
 use App\AddHash\MinerPanel\Domain\IpAddress\Services\IpAddressCheckServiceInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolsGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoSummaryGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerUpdateInvalidAlgorithmException;
 use App\AddHash\MinerPanel\Domain\Miner\MinerType\Repository\MinerTypeRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\IpAddress\Exceptions\IpAddressCheckIpAddressUnavailableException;
@@ -32,13 +33,16 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
 
     private $summaryGetHandler;
 
+    private $poolsGetHandler;
+
     public function __construct(
         UserAuthenticationGetServiceInterface $authenticationAdapter,
         MinerRepositoryInterface $minerRepository,
         MinerAlgorithmRepositoryInterface $minerAlgorithmRepository,
         MinerTypeRepositoryInterface $minerTypeRepository,
         IpAddressCheckServiceInterface $ipAddressCheckService,
-        SummaryGetHandlerInterface $summaryGetHandler
+        MinerInfoSummaryGetHandlerInterface $summaryGetHandler,
+        MinerInfoPoolsGetHandlerInterface $poolsGetHandler
     )
     {
         $this->authenticationAdapter = $authenticationAdapter;
@@ -47,6 +51,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
         $this->minerTypeRepository = $minerTypeRepository;
         $this->ipAddressCheckService = $ipAddressCheckService;
         $this->summaryGetHandler = $summaryGetHandler;
+        $this->poolsGetHandler = $poolsGetHandler;
     }
 
     /**
@@ -102,6 +107,8 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
             throw new MinerUpdateInvalidDataException($errors);
         }
 
+        $updateCache = ($miner->getIp() != $ip || $miner->getPort() != $port) ? true : false;
+
         $miner->setTitle($title);
         $miner->setIp($ip);
         $miner->setPort($port);
@@ -110,8 +117,10 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
 
         $this->minerRepository->save($miner);
 
-        $summary = $this->summaryGetHandler->handler($miner, true);
+        $summary = $this->summaryGetHandler->handler($miner, $updateCache);
 
-        return (new MinerTransform())->transform($miner) + $summary;
+        $pools = $this->poolsGetHandler->handler($miner, $updateCache);
+
+        return (new MinerTransform())->transform($miner) + $summary + $pools;
     }
 }

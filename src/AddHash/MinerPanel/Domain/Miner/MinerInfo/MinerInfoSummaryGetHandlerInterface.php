@@ -1,10 +1,10 @@
 <?php
 
-namespace App\AddHash\MinerPanel\Domain\Miner\Summary;
+namespace App\AddHash\MinerPanel\Domain\Miner\MinerInfo;
 
 use App\AddHash\MinerPanel\Domain\Miner\Model\Miner;
 
-interface SummaryGetHandlerInterface
+interface MinerInfoSummaryGetHandlerInterface
 {
     public function handler(Miner $miner, bool $updateCache = false): array;
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AddHash\MinerPanel\Domain\Miner\Command\MinerSummary;
+namespace App\AddHash\MinerPanel\Domain\Miner\MinerSummary\Command;
 
 interface MinerSummaryGetCommandInterface
 {

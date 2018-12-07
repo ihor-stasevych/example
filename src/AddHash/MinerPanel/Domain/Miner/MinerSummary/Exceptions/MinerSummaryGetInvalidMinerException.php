@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerSummary;
+namespace App\AddHash\MinerPanel\Domain\Miner\MinerSummary\Exceptions;
 
 class MinerSummaryGetInvalidMinerException extends \Exception
 {
