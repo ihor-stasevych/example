@@ -77,7 +77,7 @@ services:
     arguments: ['@doctrine.orm.entity_manager']
   App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerRepository: '@addhash.miner.panel.miner.repository'
 
-  App\AddHash\MinerPanel\Domain\Miner\Repository\MinerRepositoryInterface: '@addhash.miner.panel.miner.repository'
+  App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface: '@addhash.miner.panel.miner.repository'
 
   addhash.miner.panel.miner.algorithm.repository:
     class: App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerAlgorithmRepository
@@ -85,7 +85,7 @@ services:
     arguments: ['@doctrine.orm.entity_manager']
   App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerAlgorithmRepository: '@addhash.miner.panel.miner.algorithm.repository'
 
-  App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Repository\MinerAlgorithmRepositoryInterface: '@addhash.miner.panel.miner.algorithm.repository'
+  App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithmRepositoryInterface: '@addhash.miner.panel.miner.algorithm.repository'
 
   addhash.miner.panel.miner.type.repository:
     class: App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerTypeRepository
@@ -93,7 +93,7 @@ services:
     arguments: ['@doctrine.orm.entity_manager']
   App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerTypeRepository: '@addhash.miner.panel.miner.type.repository'
 
-  App\AddHash\MinerPanel\Domain\Miner\MinerType\Repository\MinerTypeRepositoryInterface: '@addhash.miner.panel.miner.type.repository'
+  App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerTypeRepositoryInterface: '@addhash.miner.panel.miner.type.repository'
 
   addhash.miner.panel.miner.summary.get.handler:
     class: App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo\MinerInfoSummaryGetHandler

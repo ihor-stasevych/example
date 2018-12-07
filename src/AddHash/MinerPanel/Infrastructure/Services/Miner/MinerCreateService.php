@@ -2,13 +2,14 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner;
 
-use App\AddHash\MinerPanel\Domain\User\Model\User;
-use App\AddHash\MinerPanel\Domain\Miner\Model\Miner;
-use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerRepositoryInterface;
+use App\AddHash\MinerPanel\Domain\User\User;
+use App\AddHash\MinerPanel\Domain\Miner\Miner;
+use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Infrastructure\Transformers\Miner\MinerTransform;
 use App\AddHash\MinerPanel\Domain\Miner\Command\MinerCreateCommandInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerCreateServiceInterface;
 use App\AddHash\MinerPanel\Application\Command\IpAddress\IpAddressCheckCommand;
+use App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerTypeRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateInvalidTypeException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateInvalidDataException;
 use App\AddHash\MinerPanel\Domain\IpAddress\Services\IpAddressCheckServiceInterface;
@@ -17,9 +18,8 @@ use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoSummaryGetHandlerInte
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateMaxQtyFreeMinerException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateInvalidAlgorithmException;
-use App\AddHash\MinerPanel\Domain\Miner\MinerType\Repository\MinerTypeRepositoryInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithmRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\IpAddress\Exceptions\IpAddressCheckIpAddressUnavailableException;
-use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Repository\MinerAlgorithmRepositoryInterface;
 
 final class MinerCreateService implements MinerCreateServiceInterface
 {
@@ -69,7 +69,6 @@ final class MinerCreateService implements MinerCreateServiceInterface
      */
     public function execute(MinerCreateCommandInterface $command): array
     {
-        /** @var User $user */
         $user = $this->authenticationAdapter->execute();
 
         if (false === $this->checkAddFreeMiner($user)) {

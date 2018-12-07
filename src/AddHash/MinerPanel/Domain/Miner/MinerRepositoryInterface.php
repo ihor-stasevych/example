@@ -1,10 +1,9 @@
 <?php
 
-namespace App\AddHash\MinerPanel\Domain\Miner\Repository;
+namespace App\AddHash\MinerPanel\Domain\Miner;
 
 use Pagerfanta\Pagerfanta;
-use App\AddHash\MinerPanel\Domain\User\Model\User;
-use App\AddHash\MinerPanel\Domain\Miner\Model\Miner;
+use App\AddHash\MinerPanel\Domain\User\User;
 
 interface MinerRepositoryInterface
 {

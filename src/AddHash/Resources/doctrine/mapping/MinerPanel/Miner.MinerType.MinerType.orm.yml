@@ -1,6 +1,6 @@
-App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Model\MinerAlgorithm:
+App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerType:
     type: entity
-    table: Miner_Panel_Miner_Algorithm
+    table: Miner_Panel_Miner_Type
     id:
         id:
             type: integer

@@ -12,4 +12,4 @@ services:
     arguments: ['@doctrine.orm.entity_manager']
   App\AddHash\MinerPanel\Infrastructure\Repository\User\UserRepository: '@addhash.miner.panel.user.repository'
 
-  App\AddHash\MinerPanel\Domain\User\Repository\UserRepositoryInterface: '@addhash.miner.panel.user.repository'
+  App\AddHash\MinerPanel\Domain\User\UserRepositoryInterface: '@addhash.miner.panel.user.repository'

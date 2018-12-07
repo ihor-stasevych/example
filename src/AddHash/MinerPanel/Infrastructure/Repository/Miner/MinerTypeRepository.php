@@ -2,9 +2,9 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Repository\Miner;
 
-use App\AddHash\MinerPanel\Domain\Miner\MinerType\Model\MinerType;
+use App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerType;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
-use App\AddHash\MinerPanel\Domain\Miner\MinerType\Repository\MinerTypeRepositoryInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerTypeRepositoryInterface;
 
 class MinerTypeRepository extends AbstractRepository implements MinerTypeRepositoryInterface
 {

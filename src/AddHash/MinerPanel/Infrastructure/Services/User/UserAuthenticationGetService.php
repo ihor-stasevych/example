@@ -2,8 +2,8 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\User;
 
-use App\AddHash\MinerPanel\Domain\User\Model\User;
-use App\AddHash\MinerPanel\Domain\User\Repository\UserRepositoryInterface;
+use App\AddHash\MinerPanel\Domain\User\User;
+use App\AddHash\MinerPanel\Domain\User\UserRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\AdapterOpenHost\AuthenticationAdapterInterface;
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
 

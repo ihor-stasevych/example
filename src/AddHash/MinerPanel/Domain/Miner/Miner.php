@@ -1,16 +1,17 @@
 <?php
 
-namespace App\AddHash\MinerPanel\Domain\Miner\Model;
+namespace App\AddHash\MinerPanel\Domain\Miner;
 
-use App\AddHash\MinerPanel\Domain\User\Model\User;
-use App\AddHash\MinerPanel\Domain\Miner\MinerType\Model\MinerType;
-use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Model\MinerAlgorithm;
+use App\AddHash\MinerPanel\Domain\User\User;
+use App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerType;
+use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithm;
 
 class Miner
 {
     const DEFAULT_PORT = 4028;
 
     const MAX_PER_PAGE = 10;
+
 
     private $id;
 

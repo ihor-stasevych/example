@@ -2,10 +2,10 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner;
 
+use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Command\MinerGetCommandInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerGetServiceInterface;
 use App\AddHash\MinerPanel\Infrastructure\Transformers\Miner\MinerTransform;
-use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerGetInvalidMinerException;
 use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolsGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoSummaryGetHandlerInterface;

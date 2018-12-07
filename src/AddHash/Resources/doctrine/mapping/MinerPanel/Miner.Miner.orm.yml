@@ -1,4 +1,4 @@
-App\AddHash\MinerPanel\Domain\Miner\Model\Miner:
+App\AddHash\MinerPanel\Domain\Miner\Miner:
     type: entity
     table: Miner_Panel_Miner
     id:
@@ -19,20 +19,20 @@ App\AddHash\MinerPanel\Domain\Miner\Model\Miner:
 
     manyToOne:
         user:
-            targetEntity: App\AddHash\MinerPanel\Domain\User\Model\User
+            targetEntity: App\AddHash\MinerPanel\Domain\User\User
             inversedBy: miner
             joinColumn:
                 name: userId
                 referencedColumnName: id
 
         type:
-            targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerType\Model\MinerType
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerType
             joinColumn:
                 name: typeId
                 referencedColumnName: id
 
         algorithm:
-            targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Model\MinerAlgorithm
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithm
             joinColumn:
                 name: algorithmId
                 referencedColumnName: id

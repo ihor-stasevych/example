@@ -7,10 +7,10 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Doctrine\ORM\NonUniqueResultException;
-use App\AddHash\MinerPanel\Domain\User\Model\User;
-use App\AddHash\MinerPanel\Domain\Miner\Model\Miner;
+use App\AddHash\MinerPanel\Domain\User\User;
+use App\AddHash\MinerPanel\Domain\Miner\Miner;
+use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
-use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerRepositoryInterface;
 
 class MinerRepository extends AbstractRepository implements MinerRepositoryInterface
 {

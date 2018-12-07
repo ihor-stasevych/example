@@ -2,7 +2,7 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerPools;
 
-use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerRepositoryInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolsGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerPools\Command\MinerPoolsGetCommandInterface;

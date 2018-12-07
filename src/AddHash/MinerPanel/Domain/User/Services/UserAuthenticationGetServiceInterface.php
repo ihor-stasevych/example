@@ -2,7 +2,7 @@
 
 namespace App\AddHash\MinerPanel\Domain\User\Services;
 
-use App\AddHash\MinerPanel\Domain\User\Model\User;
+use App\AddHash\MinerPanel\Domain\User\User;
 
 interface UserAuthenticationGetServiceInterface
 {

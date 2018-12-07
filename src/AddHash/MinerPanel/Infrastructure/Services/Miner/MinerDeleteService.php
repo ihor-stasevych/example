@@ -2,8 +2,8 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner;
 
+use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Command\MinerDeleteCommandInterface;
-use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerDeleteServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerDeleteInvalidMinerException;
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;

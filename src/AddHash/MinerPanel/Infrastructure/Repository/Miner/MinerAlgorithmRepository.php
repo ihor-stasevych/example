@@ -3,8 +3,8 @@
 namespace App\AddHash\MinerPanel\Infrastructure\Repository\Miner;
 
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
-use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Model\MinerAlgorithm;
-use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Repository\MinerAlgorithmRepositoryInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithm;
+use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithmRepositoryInterface;
 
 class MinerAlgorithmRepository extends AbstractRepository implements MinerAlgorithmRepositoryInterface
 {

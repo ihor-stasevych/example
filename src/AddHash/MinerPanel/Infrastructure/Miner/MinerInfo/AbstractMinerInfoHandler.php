@@ -2,8 +2,8 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo;
 
+use App\AddHash\MinerPanel\Domain\Miner\Miner;
 use App\AddHash\System\Lib\Cache\CacheInterface;
-use App\AddHash\MinerPanel\Domain\Miner\Model\Miner;
 use App\AddHash\MinerPanel\Infrastructure\Miner\Parsers\Parser;
 use App\AddHash\MinerPanel\Infrastructure\Miner\Extender\MinerSocket;
 use App\AddHash\MinerPanel\Infrastructure\Miner\ApiCommand\MinerApiCommand;

@@ -1,8 +1,6 @@
 <?php
 
-namespace App\AddHash\MinerPanel\Domain\User\Repository;
-
-use App\AddHash\MinerPanel\Domain\User\Model\User;
+namespace App\AddHash\MinerPanel\Domain\User;
 
 interface UserRepositoryInterface
 {

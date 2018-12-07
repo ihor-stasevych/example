@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AddHash\MinerPanel\Domain\Miner\MinerType\Model;
+namespace App\AddHash\MinerPanel\Domain\Miner\MinerType;
 
 class MinerType
 {

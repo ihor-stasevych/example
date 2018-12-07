@@ -1,4 +1,4 @@
-App\AddHash\MinerPanel\Domain\User\Model\User:
+App\AddHash\MinerPanel\Domain\User\User:
     type: entity
     table: Miner_Panel_User
     id:
@@ -7,5 +7,5 @@ App\AddHash\MinerPanel\Domain\User\Model\User:
 
     oneToMany:
         miner:
-            targetEntity: App\AddHash\MinerPanel\Domain\Miner\Model\Miner
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\Miner
             mappedBy: user

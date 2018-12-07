@@ -2,7 +2,7 @@
 
 namespace App\AddHash\MinerPanel\Domain\Miner\MinerInfo;
 
-use App\AddHash\MinerPanel\Domain\Miner\Model\Miner;
+use App\AddHash\MinerPanel\Domain\Miner\Miner;
 
 interface MinerInfoPoolsGetHandlerInterface
 {
