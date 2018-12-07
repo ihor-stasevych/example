@@ -2,9 +2,7 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Miner\Parsers;
 
-use App\AddHash\MinerPanel\Domain\Miner\Parsers\ParserInterface;
-
-class MinerSummaryParser extends Parser implements ParserInterface
+class MinerSummaryParser extends Parser
 {
     private const STATUS_SUCCESS = 'S';
 

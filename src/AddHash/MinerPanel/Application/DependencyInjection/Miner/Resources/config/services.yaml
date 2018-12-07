@@ -61,7 +61,7 @@ services:
     arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.summary.get.handler']
   App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerSummary\MinerSummaryGetService: '@addhash.miner.panel.miner.summary.get.service'
 
-  App\AddHash\MinerPanel\Domain\Miner\MinerSummary\MinerSummaryGetServiceInterface: '@addhash.miner.panel.miner.summary.get.service'
+  App\AddHash\MinerPanel\Domain\Miner\MinerSummary\Services\MinerSummaryGetServiceInterface: '@addhash.miner.panel.miner.summary.get.service'
 
   addhash.miner.panel.miner.repository:
     class: App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerRepository

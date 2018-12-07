@@ -4,8 +4,9 @@ namespace App\AddHash\MinerPanel\Infrastructure\Miner\ApiCommand;
 
 use App\AddHash\MinerPanel\Domain\Miner\Parsers\ParserInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Extender\MinerSocketInterface;
+use App\AddHash\MinerPanel\Domain\Miner\ApiCommand\AbstractMinerApiCommandInterface;
 
-abstract class AbstractMinerApiCommand
+abstract class AbstractMinerApiCommand implements AbstractMinerApiCommandInterface
 {
     protected $minerConnection;
 

@@ -4,7 +4,7 @@ namespace App\AddHash\MinerPanel\Infrastructure\Miner\ApiCommand;
 
 class MinerApiCommand extends AbstractMinerApiCommand
 {
-    public function request($cmd)
+    public function request(string $cmd)
     {
         return $this->parser->normalizeData($this->minerConnection->request($cmd));
     }

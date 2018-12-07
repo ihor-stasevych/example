@@ -5,8 +5,8 @@ namespace App\AddHash\MinerPanel\Application\Controller;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use App\AddHash\MinerPanel\Domain\Miner\MinerSummary\MinerSummaryGetServiceInterface;
 use App\AddHash\MinerPanel\Application\Command\Miner\MinerSummary\MinerSummaryGetCommand;
+use App\AddHash\MinerPanel\Domain\Miner\MinerSummary\Services\MinerSummaryGetServiceInterface;
 
 class MinerSummaryController extends BaseServiceController
 {

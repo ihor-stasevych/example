@@ -4,10 +4,10 @@ namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerSummary;
 
 use App\AddHash\MinerPanel\Domain\Miner\Summary\SummaryGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerRepositoryInterface;
-use App\AddHash\MinerPanel\Domain\Miner\MinerSummary\MinerSummaryGetServiceInterface;
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
-use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerSummaryGetInvalidMinerException;
 use App\AddHash\MinerPanel\Domain\Miner\Command\MinerSummary\MinerSummaryGetCommandInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerSummary\Services\MinerSummaryGetServiceInterface;
+use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerSummary\MinerSummaryGetInvalidMinerException;
 
 final class MinerSummaryGetService implements MinerSummaryGetServiceInterface
 {
