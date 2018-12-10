@@ -9,3 +9,8 @@ App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithm:
         value:
             type: string
             length: 100
+
+    oneToMany:
+        coin:
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\MinerCoin
+            mappedBy: algorithm
