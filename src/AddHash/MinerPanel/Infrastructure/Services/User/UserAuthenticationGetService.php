@@ -7,7 +7,7 @@ use App\AddHash\MinerPanel\Domain\User\UserRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\AdapterOpenHost\AuthenticationAdapterInterface;
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
 
-class UserAuthenticationGetService implements UserAuthenticationGetServiceInterface
+final class UserAuthenticationGetService implements UserAuthenticationGetServiceInterface
 {
     private $authenticationAdapter;
 

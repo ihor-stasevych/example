@@ -66,7 +66,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
     {
         $user = $this->authenticationAdapter->execute();
 
-        $miner = $this->minerRepository->getMinerByIdAndUser($command->getId(), $user);
+        $miner = $this->minerRepository->existMinerByIdAndUser($command->getId(), $user);
 
         if (null === $miner) {
             throw new MinerUpdateInvalidMinerException('Invalid miner');

@@ -265,28 +265,28 @@ miner.panel.miner.delete:
 
 miner.panel.miner.check.ip.address:
   path: "/api/v1/miner/panel/ip/validate"
-  methods: GET
+  methods: POST
   controller: App\AddHash\MinerPanel\Application\Controller\IpAddressController::check
 
 miner.panel.miner.algorithm.list:
-  path: "/api/v1/miner/panel/miners/algorithm"
+  path: "/api/v1/miner/panel/miners/algorithms"
   methods: GET
   controller: App\AddHash\MinerPanel\Application\Controller\MinerAlgorithmController::index
 
 miner.panel.miner.type.list:
-  path: "/api/v1/miner/panel/miners/type"
+  path: "/api/v1/miner/panel/miners/types"
   methods: GET
   controller: App\AddHash\MinerPanel\Application\Controller\MinerTypeController::index
 
 miner.panel.miner.summary.get:
-  path: "/api/v1/miner/panel/miners/summary/{id}"
+  path: "/api/v1/miner/panel/miners/{id}/summary/"
   requirements:
     id: '\d+'
   methods: GET
   controller: App\AddHash\MinerPanel\Application\Controller\MinerSummaryController::get
 
 miner.panel.miner.pools.get:
-  path: "/api/v1/miner/panel/miners/pools/{id}"
+  path: "/api/v1/miner/panel/miners/{id}/pools/"
   requirements:
     id: '\d+'
   methods: GET

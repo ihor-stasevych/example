@@ -28,9 +28,4 @@ class MinerCoin
     {
         return $this->value;
     }
-
-    public function getAlgorithm(): MinerAlgorithm
-    {
-        return $this->algorithm;
-    }
 }

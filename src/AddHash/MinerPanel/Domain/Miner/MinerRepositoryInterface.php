@@ -11,6 +11,8 @@ interface MinerRepositoryInterface
 
     public function getMinerByIdAndUser(int $id, User $user): ?Miner;
 
+    public function existMinerByIdAndUser(int $id, User $user): ?Miner;
+
     public function getMinerByTitleAndUser(string $title, User $user): ?Miner;
 
     public function getCountByUser(User $user): int;
