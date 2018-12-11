@@ -42,4 +42,11 @@ doctrine:
                 prefix: 'App\AddHash\System\GlobalContext\ValueObject'
                 alias: GlobalValueObject
 
+            MinerPanel:
+                is_bundle: false
+                type: yml
+                dir: '%kernel.project_dir%/src/AddHash/Resources/doctrine/mapping/MinerPanel'
+                prefix: 'App\AddHash\MinerPanel\Domain'
+                alias: MinerPanel
+
 

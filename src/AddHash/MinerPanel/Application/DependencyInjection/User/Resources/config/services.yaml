@@ -1,0 +1,15 @@
+services:
+  addhash.miner.panel.user.authentication.get:
+    class: App\AddHash\MinerPanel\Infrastructure\Services\User\UserAuthenticationGetService
+    arguments: ['@addhash.miner.panel.authentication.adapter.open.host', '@addhash.miner.panel.user.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\User\UserAuthenticationGetService: '@addhash.miner.panel.user.authentication.get'
+
+  App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface: '@addhash.miner.panel.user.authentication.get'
+
+  addhash.miner.panel.user.repository:
+    class: App\AddHash\MinerPanel\Infrastructure\Repository\User\UserRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\MinerPanel\Infrastructure\Repository\User\UserRepository: '@addhash.miner.panel.user.repository'
+
+  App\AddHash\MinerPanel\Domain\User\UserRepositoryInterface: '@addhash.miner.panel.user.repository'
