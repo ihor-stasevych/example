@@ -10,6 +10,8 @@ class User
 
     private $miner;
 
+    private $package;
+
     public function __construct(int $id)
     {
         $this->id = $id;

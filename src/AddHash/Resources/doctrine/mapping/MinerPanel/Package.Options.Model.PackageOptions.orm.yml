@@ -1,0 +1,18 @@
+App\AddHash\MinerPanel\Domain\Package\Options\Model\PackageOptions:
+    type: entity
+    table: Miner_Panel_Package_Options
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        maxAllowedMiners:
+            type: integer
+
+    manyToOne:
+        package:
+            targetEntity: App\AddHash\MinerPanel\Domain\Package\Model\Package
+            inversedBy: package
+            joinColumn:
+                name: packageId
+                referencedColumnName: id

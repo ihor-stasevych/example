@@ -9,3 +9,10 @@ App\AddHash\MinerPanel\Domain\User\Model\User:
         miner:
             targetEntity: App\AddHash\MinerPanel\Domain\Miner\Model\Miner
             mappedBy: user
+
+    oneToOne:
+        package:
+            targetEntity: App\AddHash\MinerPanel\Domain\Package\Model\Package
+            joinColumn:
+              name: packageId
+              referencedColumnName: id
