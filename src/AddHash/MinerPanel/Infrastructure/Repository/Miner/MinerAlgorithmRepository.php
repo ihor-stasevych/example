@@ -2,6 +2,8 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Repository\Miner;
 
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\NonUniqueResultException;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
 use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithm;
@@ -26,6 +28,23 @@ class MinerAlgorithmRepository extends AbstractRepository implements MinerAlgori
             ->getOneOrNullResult();
     }
 
+    /**
+     * @param string $value
+     * @return MinerAlgorithm|null
+     * @throws NonUniqueResultException
+     */
+    public function getByValue(string $value): ?MinerAlgorithm
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('a')
+            ->select('a')
+            ->where('a.value = :value')
+            ->setParameter('value', $value)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function all(): array
     {
         return $this->entityManager
@@ -34,6 +53,17 @@ class MinerAlgorithmRepository extends AbstractRepository implements MinerAlgori
             ->select('a')
             ->getQuery()
             ->getArrayResult();
+    }
+
+    /**
+     * @param MinerAlgorithm $algorithm
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function save(MinerAlgorithm $algorithm): void
+    {
+        $this->entityManager->persist($algorithm);
+        $this->entityManager->flush();
     }
 
     protected function getEntityName(): string

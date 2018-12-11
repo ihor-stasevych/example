@@ -6,9 +6,21 @@ App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\MinerCoin:
             type: integer
             generator: { strategy: AUTO }
     fields:
-        value:
+        name:
             type: string
             length: 100
+
+        tag:
+            type: string
+            length: 100
+
+        difficulty:
+            type: string
+            length: 255
+
+        reward:
+            type: string
+            length: 255
 
     manyToOne:
         algorithm:

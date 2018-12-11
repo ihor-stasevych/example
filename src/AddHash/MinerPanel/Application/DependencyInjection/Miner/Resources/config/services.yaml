@@ -71,6 +71,14 @@ services:
 
   App\AddHash\MinerPanel\Domain\Miner\MinerPools\Services\MinerPoolsGetServiceInterface: '@addhash.miner.panel.miner.pools.get.service'
 
+  addhash.miner.panel.miner.coin.info.get.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin\MinerCoinInfoGetService
+    public: true
+    arguments: ['@addhash.miner.panel.miner.algorithm.repository', '@addhash.miner.panel.miner.coin.repository', '%env(COINWARZ_API_KEY)%']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin\MinerCoinInfoGetService: '@addhash.miner.panel.miner.coin.info.get.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\Services\MinerCoinInfoGetServiceInterface: '@addhash.miner.panel.miner.coin.info.get.service'
+
   addhash.miner.panel.miner.repository:
     class: App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerRepository
     public: true
@@ -94,6 +102,14 @@ services:
   App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerTypeRepository: '@addhash.miner.panel.miner.type.repository'
 
   App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerTypeRepositoryInterface: '@addhash.miner.panel.miner.type.repository'
+
+  addhash.miner.panel.miner.coin.repository:
+    class: App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerCoinRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerCoinRepository: '@addhash.miner.panel.miner.coin.repository'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\MinerCoinRepositoryInterface: '@addhash.miner.panel.miner.coin.repository'
 
   addhash.miner.panel.miner.summary.get.handler:
     class: App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo\MinerInfoSummaryGetHandler
