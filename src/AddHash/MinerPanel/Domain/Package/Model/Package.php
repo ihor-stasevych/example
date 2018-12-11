@@ -14,12 +14,15 @@ class Package
 
     private $options;
 
+    private $isDefaultPackage;
+
     public function __construct(int $id, string $title, $price, string $description)
     {
         $this->id = $id;
         $this->title = $title;
         $this->price = $price;
 		$this->description = $description;
+		$this->isDefaultPackage = false;
     }
 
     public function getId(): int
@@ -39,6 +42,6 @@ class Package
 
     public function getOptions()
     {
-
+		return $this->options;
     }
 }

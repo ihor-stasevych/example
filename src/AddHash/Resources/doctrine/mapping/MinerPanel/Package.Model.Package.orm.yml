@@ -16,3 +16,7 @@ App\AddHash\MinerPanel\Domain\Package\Model\Package:
 
         price:
             type: float
+
+        isDefaultPackage:
+            type: smallint
+            nullable: true
