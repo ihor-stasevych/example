@@ -2,7 +2,7 @@
 
 namespace App\AddHash\MinerPanel\Application\Command\Miner\MinerSummary;
 
-use App\AddHash\MinerPanel\Domain\Miner\Command\MinerSummary\MinerSummaryGetCommandInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerSummary\Command\MinerSummaryGetCommandInterface;
 
 final class MinerSummaryGetCommand implements MinerSummaryGetCommandInterface
 {

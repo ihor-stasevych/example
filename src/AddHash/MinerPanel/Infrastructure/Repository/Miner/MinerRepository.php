@@ -7,10 +7,10 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Doctrine\ORM\NonUniqueResultException;
-use App\AddHash\MinerPanel\Domain\User\Model\User;
-use App\AddHash\MinerPanel\Domain\Miner\Model\Miner;
+use App\AddHash\MinerPanel\Domain\User\User;
+use App\AddHash\MinerPanel\Domain\Miner\Miner;
+use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
-use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerRepositoryInterface;
 
 class MinerRepository extends AbstractRepository implements MinerRepositoryInterface
 {
@@ -39,7 +39,7 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
     /**
      * @param int $id
      * @param User $user
-     * @return Miner
+     * @return Miner|null
      * @throws NonUniqueResultException
      */
     public function getMinerByIdAndUser(int $id, User $user): ?Miner
@@ -50,6 +50,26 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
             ->select('m', 't', 'a')
             ->join('m.type', 't')
             ->join('m.algorithm', 'a')
+            ->where('m.id = :id')
+            ->andWhere('m.user = :user')
+            ->setParameter('id', $id)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @param int $id
+     * @param User $user
+     * @return Miner|null
+     * @throws NonUniqueResultException
+     */
+    public function existMinerByIdAndUser(int $id, User $user): ?Miner
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('m')
             ->where('m.id = :id')
             ->andWhere('m.user = :user')
             ->setParameter('id', $id)
@@ -97,12 +117,21 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
             ->getSingleScalarResult();
     }
 
+    /**
+     * @param int $id
+     * @return Miner|null
+     * @throws NonUniqueResultException
+     */
     public function get(int $id): ?Miner
     {
-        /** @var Miner $miner */
-        $miner = $this->entityRepository->find($id);
-
-        return $miner;
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('m')
+            ->where('m.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**

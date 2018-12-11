@@ -2,7 +2,7 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\IpAddress;
 
-use App\AddHash\MinerPanel\Domain\Miner\Model\Miner;
+use App\AddHash\MinerPanel\Domain\Miner\Miner;
 use App\AddHash\MinerPanel\Domain\IpAddress\Command\IpAddressCheckCommandInterface;
 use App\AddHash\MinerPanel\Domain\IpAddress\Services\IpAddressCheckServiceInterface;
 use App\AddHash\MinerPanel\Domain\IpAddress\Exceptions\IpAddressCheckIpAddressUnavailableException;
