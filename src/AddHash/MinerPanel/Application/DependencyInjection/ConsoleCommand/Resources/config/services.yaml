@@ -1,0 +1,5 @@
+services:
+  App\AddHash\MinerPanel\Application\ConsoleCommand\MinerCoinInfoGetConsoleCommand:
+      public: false
+      arguments: ['@addhash.miner.panel.miner.coin.info.get.service']
+      tags: ['console.command']
