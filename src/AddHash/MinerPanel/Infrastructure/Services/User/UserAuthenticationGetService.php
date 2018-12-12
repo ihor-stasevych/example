@@ -2,6 +2,7 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\User;
 
+use App\AddHash\MinerPanel\Domain\Package\Repository\PackageRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\User\User;
 use App\AddHash\MinerPanel\Domain\User\UserRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\AdapterOpenHost\AuthenticationAdapterInterface;
@@ -13,13 +14,17 @@ final class UserAuthenticationGetService implements UserAuthenticationGetService
 
     private $userRepository;
 
+    private $packageRepository;
+
     public function __construct(
         AuthenticationAdapterInterface $authenticationAdapter,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+		PackageRepositoryInterface $packageRepository
     )
     {
         $this->authenticationAdapter = $authenticationAdapter;
         $this->userRepository = $userRepository;
+        $this->packageRepository = $packageRepository;
     }
 
     public function execute(): User
@@ -28,10 +33,14 @@ final class UserAuthenticationGetService implements UserAuthenticationGetService
 
         $user = $this->userRepository->get($id);
 
-        if (null === $user) {
-            $user = new User($id);
-            $this->userRepository->save($user);
+        if ($user) {
+        	return $user;
         }
+
+	    $pack = $this->packageRepository->getDefaultPackage();
+	    $user = new User($id);
+	    $user->setPackage($pack);
+	    $this->userRepository->save($user);
 
         return $user;
     }
