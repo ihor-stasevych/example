@@ -1,7 +1,7 @@
 services:
   addhash.miner.panel.user.authentication.get:
     class: App\AddHash\MinerPanel\Infrastructure\Services\User\UserAuthenticationGetService
-    arguments: ['@addhash.miner.panel.authentication.adapter.open.host', '@addhash.miner.panel.user.repository']
+    arguments: ['@addhash.miner.panel.authentication.adapter.open.host', '@addhash.miner.panel.user.repository', '@addhash.miner.panel.package.repository']
   App\AddHash\MinerPanel\Infrastructure\Services\User\UserAuthenticationGetService: '@addhash.miner.panel.user.authentication.get'
 
   App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface: '@addhash.miner.panel.user.authentication.get'
