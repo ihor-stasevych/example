@@ -4,9 +4,9 @@ namespace App\AddHash\MinerPanel\Infrastructure\Repository\User;
 
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
-use App\AddHash\MinerPanel\Domain\User\Model\User;
+use App\AddHash\MinerPanel\Domain\User\User;
+use App\AddHash\MinerPanel\Domain\User\UserRepositoryInterface;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
-use App\AddHash\MinerPanel\Domain\User\Repository\UserRepositoryInterface;
 
 class UserRepository extends AbstractRepository implements UserRepositoryInterface
 {

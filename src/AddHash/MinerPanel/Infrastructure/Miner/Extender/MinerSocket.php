@@ -2,7 +2,7 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Miner\Extender;
 
-use App\AddHash\MinerPanel\Domain\Miner\Model\Miner;
+use App\AddHash\MinerPanel\Domain\Miner\Miner;
 use App\AddHash\MinerPanel\Domain\Miner\Extender\MinerSocketInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerSocketCreateErrorException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerSocketConnectionErrorException;

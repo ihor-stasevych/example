@@ -2,11 +2,11 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner;
 
-use App\AddHash\MinerPanel\Domain\Miner\Model\Miner;
+use App\AddHash\MinerPanel\Domain\Miner\Miner;
 use App\AddHash\System\Response\ResponseListCollection;
+use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Command\MinerListCommandInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerListServiceInterface;
-use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Infrastructure\Transformers\Miner\MinerTransform;
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
 

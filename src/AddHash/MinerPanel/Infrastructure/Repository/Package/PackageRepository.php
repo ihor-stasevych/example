@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AddHash\MinerPanel\Infrastructure\Repository\User;
+namespace App\AddHash\MinerPanel\Infrastructure\Repository\Package;
 
 use App\AddHash\MinerPanel\Domain\Package\Model\Package;
 use App\AddHash\MinerPanel\Domain\Package\Repository\PackageRepositoryInterface;
@@ -39,9 +39,9 @@ class PackageRepository extends AbstractRepository implements PackageRepositoryI
 	 */
     public function getDefaultPackage()
     {
-	    return $this->entityRepository->createQueryBuilder('pack')
-		    ->select('pack')
-		    ->where('pack.isDefaultPackage = :default')
+	    return $this->entityRepository->createQueryBuilder('p')
+		    ->select('p')
+		    ->where('p.isDefaultPackage = :default')
 		    ->setParameter('default', true)
 		    ->getQuery()
 		    ->getOneOrNullResult();

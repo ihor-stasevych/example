@@ -18,5 +18,6 @@ App\AddHash\MinerPanel\Domain\Package\Model\Package:
             type: float
 
         isDefaultPackage:
+            column: isDefaultPackage
             type: smallint
             nullable: true

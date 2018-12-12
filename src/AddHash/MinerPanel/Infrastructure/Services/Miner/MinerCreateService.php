@@ -2,23 +2,24 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner;
 
-use App\AddHash\MinerPanel\Domain\User\Model\User;
-use App\AddHash\MinerPanel\Domain\Miner\Model\Miner;
-use App\AddHash\MinerPanel\Domain\Miner\Summary\SummaryGetHandlerInterface;
-use App\AddHash\MinerPanel\Domain\Miner\Repository\MinerRepositoryInterface;
+use App\AddHash\MinerPanel\Domain\User\User;
+use App\AddHash\MinerPanel\Domain\Miner\Miner;
+use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Infrastructure\Transformers\Miner\MinerTransform;
 use App\AddHash\MinerPanel\Domain\Miner\Command\MinerCreateCommandInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerCreateServiceInterface;
 use App\AddHash\MinerPanel\Application\Command\IpAddress\IpAddressCheckCommand;
+use App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerTypeRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateInvalidTypeException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateInvalidDataException;
 use App\AddHash\MinerPanel\Domain\IpAddress\Services\IpAddressCheckServiceInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolsGetHandlerInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoSummaryGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateMaxQtyFreeMinerException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateInvalidAlgorithmException;
-use App\AddHash\MinerPanel\Domain\Miner\MinerType\Repository\MinerTypeRepositoryInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithmRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\IpAddress\Exceptions\IpAddressCheckIpAddressUnavailableException;
-use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Repository\MinerAlgorithmRepositoryInterface;
 
 final class MinerCreateService implements MinerCreateServiceInterface
 {
@@ -37,13 +38,16 @@ final class MinerCreateService implements MinerCreateServiceInterface
 
     private $summaryGetHandler;
 
+    private $poolsGetHandler;
+
     public function __construct(
         UserAuthenticationGetServiceInterface $authenticationAdapter,
         MinerRepositoryInterface $minerRepository,
         MinerAlgorithmRepositoryInterface $minerAlgorithmRepository,
         MinerTypeRepositoryInterface $minerTypeRepository,
         IpAddressCheckServiceInterface $ipAddressCheckService,
-        SummaryGetHandlerInterface $summaryGetHandler
+        MinerInfoSummaryGetHandlerInterface $summaryGetHandler,
+        MinerInfoPoolsGetHandlerInterface $poolsGetHandler
     )
     {
         $this->authenticationAdapter = $authenticationAdapter;
@@ -52,6 +56,7 @@ final class MinerCreateService implements MinerCreateServiceInterface
         $this->minerTypeRepository = $minerTypeRepository;
         $this->ipAddressCheckService = $ipAddressCheckService;
         $this->summaryGetHandler = $summaryGetHandler;
+        $this->poolsGetHandler = $poolsGetHandler;
     }
 
     /**
@@ -64,7 +69,6 @@ final class MinerCreateService implements MinerCreateServiceInterface
      */
     public function execute(MinerCreateCommandInterface $command): array
     {
-        /** @var User $user */
         $user = $this->authenticationAdapter->execute();
 
         if (false === $this->checkAddFreeMiner($user)) {
@@ -119,7 +123,9 @@ final class MinerCreateService implements MinerCreateServiceInterface
 
         $summary = $this->summaryGetHandler->handler($miner);
 
-        return (new MinerTransform())->transform($miner) + $summary;
+        $pools = $this->poolsGetHandler->handler($miner);
+
+        return (new MinerTransform())->transform($miner) + $summary + $pools;
     }
 
     private function checkAddFreeMiner(User $user): bool

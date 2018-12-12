@@ -2,7 +2,7 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Transformers\Miner;
 
-use App\AddHash\MinerPanel\Domain\Miner\Model\Miner;
+use App\AddHash\MinerPanel\Domain\Miner\Miner;
 
 final class MinerTransform
 {

@@ -73,4 +73,6 @@ imports:
 
   - { resource: "../../../AddHash/MinerPanel/Application/DependencyInjection/User/Resources/config/services.yaml"}
 
+  - { resource: "../../../AddHash/MinerPanel/Application/DependencyInjection/Package/Resources/config/services.yaml"}
+
   - { resource: "../../../AddHash/MinerPanel/Application/DependencyInjection/IpAddress/Resources/config/services.yaml"}
