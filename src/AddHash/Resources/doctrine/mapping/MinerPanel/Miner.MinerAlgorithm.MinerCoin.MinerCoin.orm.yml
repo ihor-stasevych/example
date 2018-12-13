@@ -22,6 +22,11 @@ App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\MinerCoin:
             type: string
             length: 255
 
+        updatedAt:
+            column: updatedAt
+            type: datetime
+            nullable: true
+
     manyToOne:
         algorithm:
             targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithm

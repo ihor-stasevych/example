@@ -3,8 +3,8 @@
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner;
 
 use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
-use App\AddHash\MinerPanel\Infrastructure\Transformers\Miner\MinerTransform;
 use App\AddHash\MinerPanel\Domain\Miner\Command\MinerUpdateCommandInterface;
+use App\AddHash\MinerPanel\Infrastructure\Transformers\Miner\MinerTransform;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerUpdateServiceInterface;
 use App\AddHash\MinerPanel\Application\Command\IpAddress\IpAddressCheckCommand;
 use App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerTypeRepositoryInterface;
@@ -16,6 +16,7 @@ use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolsGetHandlerInterf
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoSummaryGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerUpdateInvalidAlgorithmException;
+use App\AddHash\MinerPanel\Domain\Miner\MinerCalcIncome\MinerCalcIncomeHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithmRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\IpAddress\Exceptions\IpAddressCheckIpAddressUnavailableException;
 
@@ -35,6 +36,8 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
 
     private $poolsGetHandler;
 
+    private $calcIncomeHandler;
+
     public function __construct(
         UserAuthenticationGetServiceInterface $authenticationAdapter,
         MinerRepositoryInterface $minerRepository,
@@ -42,7 +45,8 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
         MinerTypeRepositoryInterface $minerTypeRepository,
         IpAddressCheckServiceInterface $ipAddressCheckService,
         MinerInfoSummaryGetHandlerInterface $summaryGetHandler,
-        MinerInfoPoolsGetHandlerInterface $poolsGetHandler
+        MinerInfoPoolsGetHandlerInterface $poolsGetHandler,
+        MinerCalcIncomeHandlerInterface $calcIncomeHandler
     )
     {
         $this->authenticationAdapter = $authenticationAdapter;
@@ -52,6 +56,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
         $this->ipAddressCheckService = $ipAddressCheckService;
         $this->summaryGetHandler = $summaryGetHandler;
         $this->poolsGetHandler = $poolsGetHandler;
+        $this->calcIncomeHandler = $calcIncomeHandler;
     }
 
     /**
@@ -66,7 +71,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
     {
         $user = $this->authenticationAdapter->execute();
 
-        $miner = $this->minerRepository->existMinerByIdAndUser($command->getId(), $user);
+        $miner = $this->minerRepository->getMinerByIdAndUser($command->getId(), $user);
 
         if (null === $miner) {
             throw new MinerUpdateInvalidMinerException('Invalid miner');
@@ -107,7 +112,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
             throw new MinerUpdateInvalidDataException($errors);
         }
 
-        $updateCache = ($miner->getIp() != $ip || $miner->getPort() != $port) ? true : false;
+        $updateCache = ($miner->getIp() != $ip || $miner->getPort() != $port);
 
         $miner->setTitle($title);
         $miner->setIp($ip);
@@ -115,12 +120,18 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
         $miner->setType($minerType);
         $miner->setAlgorithm($minerAlgorithm);
 
-        $this->minerRepository->save($miner);
-
         $summary = $this->summaryGetHandler->handler($miner, $updateCache);
+
+        $hashRate = (false === empty($summary)) ? $summary['hashRateAverage']: 0;
+
+        $miner->setHashRate($hashRate);
+
+        $this->minerRepository->save($miner);
 
         $pools = $this->poolsGetHandler->handler($miner, $updateCache);
 
-        return (new MinerTransform())->transform($miner) + $summary + $pools;
+        $coins['coins'] = $this->calcIncomeHandler->handler($miner);
+
+        return (new MinerTransform())->transform($miner) + $summary + $pools + $coins;
     }
 }

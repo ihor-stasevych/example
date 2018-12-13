@@ -18,6 +18,7 @@ use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoSummaryGetHandlerInte
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateMaxQtyFreeMinerException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateInvalidAlgorithmException;
+use App\AddHash\MinerPanel\Domain\Miner\MinerCalcIncome\MinerCalcIncomeHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithmRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\IpAddress\Exceptions\IpAddressCheckIpAddressUnavailableException;
 
@@ -40,6 +41,8 @@ final class MinerCreateService implements MinerCreateServiceInterface
 
     private $poolsGetHandler;
 
+    private $calcIncomeHandler;
+
     public function __construct(
         UserAuthenticationGetServiceInterface $authenticationAdapter,
         MinerRepositoryInterface $minerRepository,
@@ -47,7 +50,8 @@ final class MinerCreateService implements MinerCreateServiceInterface
         MinerTypeRepositoryInterface $minerTypeRepository,
         IpAddressCheckServiceInterface $ipAddressCheckService,
         MinerInfoSummaryGetHandlerInterface $summaryGetHandler,
-        MinerInfoPoolsGetHandlerInterface $poolsGetHandler
+        MinerInfoPoolsGetHandlerInterface $poolsGetHandler,
+        MinerCalcIncomeHandlerInterface $calcIncomeHandler
     )
     {
         $this->authenticationAdapter = $authenticationAdapter;
@@ -57,6 +61,7 @@ final class MinerCreateService implements MinerCreateServiceInterface
         $this->ipAddressCheckService = $ipAddressCheckService;
         $this->summaryGetHandler = $summaryGetHandler;
         $this->poolsGetHandler = $poolsGetHandler;
+        $this->calcIncomeHandler = $calcIncomeHandler;
     }
 
     /**
@@ -114,18 +119,24 @@ final class MinerCreateService implements MinerCreateServiceInterface
             $title,
             $ip,
             $port,
+            0,
             $minerType,
             $minerAlgorithm,
             $user
         );
 
-        $this->minerRepository->save($miner);
-
         $summary = $this->summaryGetHandler->handler($miner);
+
+        $hashRate = (false === empty($summary)) ? $summary['hashRateAverage']: 0;
+        $miner->setHashRate($hashRate);
+
+        $this->minerRepository->save($miner);
 
         $pools = $this->poolsGetHandler->handler($miner);
 
-        return (new MinerTransform())->transform($miner) + $summary + $pools;
+        $coins['coins'] = $this->calcIncomeHandler->handler($miner);
+
+        return (new MinerTransform())->transform($miner) + $summary + $pools + $coins;
     }
 
     private function checkAddFreeMiner(User $user): bool

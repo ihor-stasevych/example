@@ -21,6 +21,8 @@ class Miner
 
     private $port;
 
+    private $hashRate;
+
     private $type;
 
     private $algorithm;
@@ -31,6 +33,7 @@ class Miner
         string $title,
         string $ip,
         ?int $port,
+        float $hashRate,
         MinerType $type,
         MinerAlgorithm $algorithm,
         User $user,
@@ -41,6 +44,7 @@ class Miner
         $this->title = $title;
         $this->ip = $ip;
         $this->port = $port ?? self::DEFAULT_PORT;
+        $this->hashRate = $hashRate;
         $this->type = $type;
         $this->algorithm = $algorithm;
         $this->user = $user;
@@ -64,6 +68,11 @@ class Miner
     public function getPort(): int
     {
         return $this->port;
+    }
+
+    public function getHashRate(): float
+    {
+        return $this->hashRate;
     }
 
     public function getType(): MinerType
@@ -94,6 +103,11 @@ class Miner
     public function setPort(?int $port): void
     {
         $this->port = $port ?? self::DEFAULT_PORT;
+    }
+
+    public function setHashRate(float $hashRate): void
+    {
+        $this->hashRate = $hashRate;
     }
 
     public function setType(MinerType $type): void

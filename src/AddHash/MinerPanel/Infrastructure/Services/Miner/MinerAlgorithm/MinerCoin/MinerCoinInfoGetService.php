@@ -75,6 +75,7 @@ final class MinerCoinInfoGetService implements MinerCoinInfoGetServiceInterface
             } else {
                 $minerCoin->setDifficulty($coinInfo['Difficulty']);
                 $minerCoin->setReward($coinInfo['BlockReward']);
+                $minerCoin->setUpdateAt();
             }
 
             $this->minerCoinRepository->save($minerCoin);
@@ -96,18 +97,13 @@ final class MinerCoinInfoGetService implements MinerCoinInfoGetServiceInterface
 
     private function isValidArrayCoinInfo($coinInfo): bool
     {
+        $requiredKeys = ['CoinName', 'CoinTag', 'Difficulty', 'BlockReward', 'Algorithm'];
+
         $isValid = false;
 
         if (is_array($coinInfo)) {
-            if (
-                true === isset($coinInfo['CoinName']) &&
-                true === isset($coinInfo['CoinTag']) &&
-                true === isset($coinInfo['Difficulty']) &&
-                true === isset($coinInfo['BlockReward']) &&
-                true === isset($coinInfo['Algorithm'])
-            ) {
-                $isValid = true;
-            }
+            $coinInfoKeys = array_keys($coinInfo);
+            $isValid = empty(array_diff($requiredKeys, $coinInfoKeys));
         }
 
         return $isValid;

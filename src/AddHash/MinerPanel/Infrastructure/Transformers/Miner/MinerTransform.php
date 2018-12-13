@@ -13,6 +13,7 @@ final class MinerTransform
             'title'     => $miner->getTitle(),
             'ip'        => $miner->getIp(),
             'port'      => $miner->getPort(),
+            'hashRate'  => $miner->getHashRate(),
             'type'      => $miner->getType()->getValue(),
             'algorithm' => $miner->getAlgorithm()->getValue()
         ];
