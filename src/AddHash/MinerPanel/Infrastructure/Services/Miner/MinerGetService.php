@@ -56,7 +56,7 @@ final class MinerGetService implements MinerGetServiceInterface
 
         $summary = $this->summaryGetHandler->handler($miner);
 
-        $pools = $this->poolsGetHandler->handler($miner);
+        $pools['pools'] = $this->poolsGetHandler->handler($miner);
 
         $coins['coins'] = $this->calcIncomeHandler->handler($miner);
 

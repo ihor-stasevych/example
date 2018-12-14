@@ -128,7 +128,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
 
         $this->minerRepository->save($miner);
 
-        $pools = $this->poolsGetHandler->handler($miner, $updateCache);
+        $pools['pools'] = $this->poolsGetHandler->handler($miner, $updateCache);
 
         $coins['coins'] = $this->calcIncomeHandler->handler($miner);
 

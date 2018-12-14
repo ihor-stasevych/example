@@ -40,3 +40,16 @@ App\AddHash\MinerPanel\Domain\Miner\Miner:
             joinColumn:
                 name: algorithmId
                 referencedColumnName: id
+
+    manyToMany:
+        rigs:
+            targetEntity: App\AddHash\MinerPanel\Domain\Rig\Rig
+            inversedBy: miners
+            joinTable:
+                name: Miner_Panel_Miner_Rig
+                joinColumns:
+                    minerId:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    rigId:
+                        referencedColumnName: id

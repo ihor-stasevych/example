@@ -30,7 +30,7 @@ App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\MinerCoin:
     manyToOne:
         algorithm:
             targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithm
-            inversedBy: coin
+            inversedBy: coins
             joinColumn:
                 name: algorithmId
                 referencedColumnName: id

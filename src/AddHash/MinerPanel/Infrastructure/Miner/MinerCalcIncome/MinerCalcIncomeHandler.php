@@ -14,7 +14,7 @@ final class MinerCalcIncomeHandler implements MinerCalcIncomeHandlerInterface
     public function handler(Miner $miner, int $time = 86400): array
     {
         $data = [];
-        $coins = $miner->getAlgorithm()->getCoin();
+        $coins = $miner->getAlgorithm()->getCoins();
 
         if ($coins->count() > 0) {
             $algorithm = $miner->getAlgorithm()->getValue();

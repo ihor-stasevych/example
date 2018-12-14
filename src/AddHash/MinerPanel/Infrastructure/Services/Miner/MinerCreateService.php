@@ -132,7 +132,7 @@ final class MinerCreateService implements MinerCreateServiceInterface
 
         $this->minerRepository->save($miner);
 
-        $pools = $this->poolsGetHandler->handler($miner);
+        $pools['pools'] = $this->poolsGetHandler->handler($miner);
 
         $coins['coins'] = $this->calcIncomeHandler->handler($miner);
 

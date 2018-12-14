@@ -3,6 +3,7 @@
 namespace App\AddHash\MinerPanel\Domain\Miner;
 
 use App\AddHash\MinerPanel\Domain\User\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerType;
 use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithm;
 
@@ -29,6 +30,8 @@ class Miner
 
     private $user;
 
+    private $rigs;
+
     public function __construct(
         string $title,
         string $ip,
@@ -48,6 +51,7 @@ class Miner
         $this->type = $type;
         $this->algorithm = $algorithm;
         $this->user = $user;
+        $this->rigs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -83,11 +87,6 @@ class Miner
     public function getAlgorithm(): MinerAlgorithm
     {
         return $this->algorithm;
-    }
-
-    public function getUser(): User
-    {
-        return $this->user;
     }
 
     public function setTitle(string $title): void

@@ -50,7 +50,7 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
             ->select('m', 't', 'a', 'c')
             ->join('m.type', 't')
             ->join('m.algorithm', 'a')
-            ->join('a.coin', 'c')
+            ->join('a.coins', 'c')
             ->where('m.id = :id')
             ->andWhere('m.user = :user')
             ->setParameter('id', $id)

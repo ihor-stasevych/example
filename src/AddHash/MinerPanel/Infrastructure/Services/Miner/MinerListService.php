@@ -31,11 +31,6 @@ final class MinerListService implements MinerListServiceInterface
 
         $miners = $this->minerRepository->getMinersByUser($user, $command->getPage());
 
-        $totalItems = $miners->getNbResults();
-        $totalPages = $miners->getNbPages();
-        $page = $miners->getCurrentPage();
-        $limit = $miners->getMaxPerPage();
-
         $data = [];
 
         if ($miners->count() > 0) {
@@ -43,10 +38,16 @@ final class MinerListService implements MinerListServiceInterface
 
             /** @var Miner $miner */
             foreach ($miners as $miner) {
-                $data[] = $transform->transform($miner);;
+                $data[] = $transform->transform($miner);
             }
         }
 
-        return new ResponseListCollection($data, $totalItems, $totalPages, $page, $limit);
+        return new ResponseListCollection(
+            $data,
+            $miners->getNbResults(),
+            $miners->getNbPages(),
+            $miners->getCurrentPage(),
+            $miners->getMaxPerPage()
+        );
     }
 }
