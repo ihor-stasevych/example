@@ -2,8 +2,8 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Miner\Extender;
 
-use App\AddHash\MinerPanel\Domain\Miner\Miner;
 use App\AddHash\MinerPanel\Domain\Miner\Extender\MinerSocketInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerCredential\MinerCredential;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerSocketCreateErrorException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerSocketConnectionErrorException;
 
@@ -13,10 +13,10 @@ class MinerSocket implements MinerSocketInterface
 
     private $port;
 
-    public function __construct(Miner $miner)
+    public function __construct(MinerCredential $minerCredential)
     {
-        $this->ip = $miner->getIp();
-        $this->port = $miner->getPort();
+        $this->ip = $minerCredential->getIp();
+        $this->port = $minerCredential->getPort();
     }
 
     /**

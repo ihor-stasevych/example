@@ -14,12 +14,13 @@ App\AddHash\MinerPanel\Domain\Miner\Miner:
             column: hashRate
             type: float
 
-        ip:
-            type: string
-            length: 100
-
-        port:
-            type: integer
+    oneToOne:
+        credential:
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerCredential\MinerCredential
+            cascade: ['persist']
+            joinColumn:
+                name: credentialId
+                referencedColumnName: id
 
     manyToOne:
         user:

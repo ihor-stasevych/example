@@ -18,8 +18,8 @@ final class RigTransform
                 $minersData[] = [
                     'id'        => $miner->getId(),
                     'title'     => $miner->getTitle(),
-                    'ip'        => $miner->getIp(),
-                    'port'      => $miner->getPort(),
+                    'ip'        => $miner->getCredential()->getIp(),
+                    'port'      => $miner->getCredential()->getPort(),
                     'hashRate'  => $miner->getHashRate(),
                     'type'      => $miner->getType()->getValue(),
                     'algorithm' => $miner->getAlgorithm()->getValue()

@@ -2,6 +2,7 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner;
 
+use App\AddHash\MinerPanel\Domain\Miner\MinerCredential\MinerCredential;
 use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Command\MinerUpdateCommandInterface;
 use App\AddHash\MinerPanel\Infrastructure\Transformers\Miner\MinerTransform;
@@ -92,7 +93,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
         $errors = [];
 
         $ip = $command->getIp();
-        $port = $command->getPort();
+        $port = $command->getPort() ?? MinerCredential::DEFAULT_PORT;
         $ipAddressCheckCommand = new IpAddressCheckCommand($ip, $port);
 
         try {
@@ -112,15 +113,19 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
             throw new MinerUpdateInvalidDataException($errors);
         }
 
-        $updateCache = ($miner->getIp() != $ip || $miner->getPort() != $port);
+        $minerCredential = $miner->getCredential();
+
+        $updateCache = ($minerCredential->getIp() != $ip || $minerCredential->getPort() != $port);
+
+        $minerCredential->setIp($ip);
+        $minerCredential->setPort($port);
 
         $miner->setTitle($title);
-        $miner->setIp($ip);
-        $miner->setPort($port);
         $miner->setType($minerType);
         $miner->setAlgorithm($minerAlgorithm);
+        $miner->setCredential($minerCredential);
 
-        $summary = $this->summaryGetHandler->handler($miner, $updateCache);
+        $summary = $this->summaryGetHandler->handler($minerCredential, $updateCache);
 
         $hashRate = (false === empty($summary)) ? $summary['hashRateAverage']: 0;
 
@@ -128,7 +133,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
 
         $this->minerRepository->save($miner);
 
-        $pools['pools'] = $this->poolsGetHandler->handler($miner, $updateCache);
+        $pools['pools'] = $this->poolsGetHandler->handler($minerCredential, $updateCache);
 
         $coins['coins'] = $this->calcIncomeHandler->handler($miner);
 

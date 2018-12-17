@@ -5,6 +5,7 @@ namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner;
 use App\AddHash\MinerPanel\Domain\User\User;
 use App\AddHash\MinerPanel\Domain\Miner\Miner;
 use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerCredential\MinerCredential;
 use App\AddHash\MinerPanel\Infrastructure\Transformers\Miner\MinerTransform;
 use App\AddHash\MinerPanel\Domain\Miner\Command\MinerCreateCommandInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerCreateServiceInterface;
@@ -115,24 +116,23 @@ final class MinerCreateService implements MinerCreateServiceInterface
             throw new MinerCreateInvalidDataException($errors);
         }
 
+        $minerCredential = new MinerCredential($ip, $port);
+
+        $summary = $this->summaryGetHandler->handler($minerCredential);
+        $hashRate = (false === empty($summary)) ? $summary['hashRateAverage']: 0;
+
         $miner = new Miner(
             $title,
-            $ip,
-            $port,
-            0,
+            $hashRate,
+            $minerCredential,
             $minerType,
             $minerAlgorithm,
             $user
         );
 
-        $summary = $this->summaryGetHandler->handler($miner);
-
-        $hashRate = (false === empty($summary)) ? $summary['hashRateAverage']: 0;
-        $miner->setHashRate($hashRate);
-
         $this->minerRepository->save($miner);
 
-        $pools['pools'] = $this->poolsGetHandler->handler($miner);
+        $pools['pools'] = $this->poolsGetHandler->handler($minerCredential);
 
         $coins['coins'] = $this->calcIncomeHandler->handler($miner);
 

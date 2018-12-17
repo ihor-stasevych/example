@@ -19,7 +19,8 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
         $result = $this->entityManager
             ->getRepository($this->getEntityName())
             ->createQueryBuilder('m')
-            ->select('m', 't', 'a')
+            ->select('m', 'cr', 't', 'a')
+            ->join('m.credential', 'cr')
             ->join('m.type', 't')
             ->join('m.algorithm', 'a')
             ->where('m.user = :user')
@@ -47,7 +48,8 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
         return $this->entityManager
             ->getRepository($this->getEntityName())
             ->createQueryBuilder('m')
-            ->select('m', 't', 'a', 'c')
+            ->select('m', 'cr', 't', 'a', 'c')
+            ->join('m.credential', 'cr')
             ->join('m.type', 't')
             ->join('m.algorithm', 'a')
             ->join('a.coins', 'c')
@@ -70,7 +72,8 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
         return $this->entityManager
             ->getRepository($this->getEntityName())
             ->createQueryBuilder('m')
-            ->select('m')
+            ->select('m', 'cr')
+            ->join('m.credential', 'cr')
             ->where('m.id = :id')
             ->andWhere('m.user = :user')
             ->setParameter('id', $id)
@@ -90,9 +93,11 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
         return $this->entityManager
             ->getRepository($this->getEntityName())
             ->createQueryBuilder('m')
-            ->select('m', 't', 'a')
+            ->select('m', 'cr', 't', 'a', 'c')
+            ->join('m.credential', 'cr')
             ->join('m.type', 't')
             ->join('m.algorithm', 'a')
+            ->join('a.coins', 'c')
             ->where('m.title = :title')
             ->andWhere('m.user = :user')
             ->setParameter('title', $title)

@@ -54,9 +54,11 @@ final class MinerGetService implements MinerGetServiceInterface
             throw new MinerGetInvalidMinerException('Invalid miner');
         }
 
-        $summary = $this->summaryGetHandler->handler($miner);
+        $minerCredential = $miner->getCredential();
 
-        $pools['pools'] = $this->poolsGetHandler->handler($miner);
+        $summary = $this->summaryGetHandler->handler($minerCredential);
+
+        $pools['pools'] = $this->poolsGetHandler->handler($minerCredential);
 
         $coins['coins'] = $this->calcIncomeHandler->handler($miner);
 

@@ -17,8 +17,9 @@ class RigRepository extends AbstractRepository implements RigRepositoryInterface
         $result = $this->entityManager
             ->getRepository($this->getEntityName())
             ->createQueryBuilder('r')
-            ->select('r', 'm', 'a', 't')
+            ->select('r', 'm', 'cr', 'a', 't')
             ->leftJoin('r.miners', 'm')
+            ->leftJoin('m.credential', 'cr')
             ->leftJoin('m.algorithm', 'a')
             ->leftJoin('m.type', 't')
             ->where('r.user = :user')
@@ -46,8 +47,9 @@ class RigRepository extends AbstractRepository implements RigRepositoryInterface
         return $this->entityManager
             ->getRepository($this->getEntityName())
             ->createQueryBuilder('r')
-            ->select('r', 'm', 'a', 't')
+            ->select('r', 'm', 'cr', 'a', 't')
             ->leftJoin('r.miners', 'm')
+            ->leftJoin('m.credential', 'cr')
             ->leftJoin('m.algorithm', 'a')
             ->leftJoin('m.type', 't')
             ->where('r.id = :id')
