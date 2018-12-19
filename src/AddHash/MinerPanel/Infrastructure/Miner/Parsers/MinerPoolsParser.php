@@ -8,13 +8,11 @@ class MinerPoolsParser extends Parser
     {
         $data = parent::normalizeData($line);
 
-        $result = [
-            'pools' => []
-        ];
+        $result = [];
 
         if (false === empty($data['POOL']) && true === is_array($data['POOL'])) {
             foreach ($data['POOL'] as $pool) {
-                $result['pools'][] = [
+                $result[] = [
                     'url'      => (false === empty($pool['URL'])) ? $pool['URL'] : '',
                     'user'     => (false === empty($pool['User'])) ? $pool['User'] : '',
                     'status'   => (false === empty($pool['Status'])) ? $pool['Status'] : '',

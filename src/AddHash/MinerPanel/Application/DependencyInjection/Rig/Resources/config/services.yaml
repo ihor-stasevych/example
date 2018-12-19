@@ -1,0 +1,21 @@
+services:
+  addhash.miner.panel.rig.list:
+    class: App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigListService
+    arguments: ['@addhash.miner.panel.user.authentication.get','@addhash.miner.panel.rig.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigListService: '@addhash.miner.panel.rig.list'
+
+  App\AddHash\MinerPanel\Domain\Rig\Services\RigListServiceInterface: '@addhash.miner.panel.rig.list'
+
+  addhash.miner.panel.rig.get:
+    class: App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigGetService
+    arguments: ['@addhash.miner.panel.user.authentication.get','@addhash.miner.panel.rig.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigGetService: '@addhash.miner.panel.rig.get'
+
+  App\AddHash\MinerPanel\Domain\Rig\Services\RigGetServiceInterface: '@addhash.miner.panel.rig.get'
+
+  addhash.miner.panel.rig.repository:
+    class: App\AddHash\MinerPanel\Infrastructure\Repository\Rig\RigRepository
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\MinerPanel\Infrastructure\Repository\Rig\RigRepository: '@addhash.miner.panel.rig.repository'
+
+  App\AddHash\MinerPanel\Domain\Rig\RigRepositoryInterface: '@addhash.miner.panel.rig.repository'

@@ -16,6 +16,8 @@ class MinerCoin
 
     private $reward;
 
+    private $updatedAt;
+
     private $algorithm;
 
     public function __construct(string $name, string $tag, string $difficulty, string $reward, MinerAlgorithm $algorithm, int $id = null)
@@ -25,6 +27,7 @@ class MinerCoin
         $this->tag = $tag;
         $this->difficulty = $difficulty;
         $this->reward = $reward;
+        $this->updatedAt = new \DateTime();
         $this->algorithm = $algorithm;
     }
 
@@ -66,5 +69,10 @@ class MinerCoin
     public function setReward(string $reward): void
     {
         $this->reward = $reward;
+    }
+
+    public function setUpdateAt(): void
+    {
+        $this->updatedAt = new \DateTime();
     }
 }

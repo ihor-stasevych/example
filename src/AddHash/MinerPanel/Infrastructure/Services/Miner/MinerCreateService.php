@@ -5,6 +5,7 @@ namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner;
 use App\AddHash\MinerPanel\Domain\User\User;
 use App\AddHash\MinerPanel\Domain\Miner\Miner;
 use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerCredential\MinerCredential;
 use App\AddHash\MinerPanel\Infrastructure\Transformers\Miner\MinerTransform;
 use App\AddHash\MinerPanel\Domain\Miner\Command\MinerCreateCommandInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerCreateServiceInterface;
@@ -18,6 +19,7 @@ use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoSummaryGetHandlerInte
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateMaxQtyFreeMinerException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateInvalidAlgorithmException;
+use App\AddHash\MinerPanel\Domain\Miner\MinerCalcIncome\MinerCalcIncomeHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithmRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\IpAddress\Exceptions\IpAddressCheckIpAddressUnavailableException;
 
@@ -40,6 +42,8 @@ final class MinerCreateService implements MinerCreateServiceInterface
 
     private $poolsGetHandler;
 
+    private $calcIncomeHandler;
+
     public function __construct(
         UserAuthenticationGetServiceInterface $authenticationAdapter,
         MinerRepositoryInterface $minerRepository,
@@ -47,7 +51,8 @@ final class MinerCreateService implements MinerCreateServiceInterface
         MinerTypeRepositoryInterface $minerTypeRepository,
         IpAddressCheckServiceInterface $ipAddressCheckService,
         MinerInfoSummaryGetHandlerInterface $summaryGetHandler,
-        MinerInfoPoolsGetHandlerInterface $poolsGetHandler
+        MinerInfoPoolsGetHandlerInterface $poolsGetHandler,
+        MinerCalcIncomeHandlerInterface $calcIncomeHandler
     )
     {
         $this->authenticationAdapter = $authenticationAdapter;
@@ -57,6 +62,7 @@ final class MinerCreateService implements MinerCreateServiceInterface
         $this->ipAddressCheckService = $ipAddressCheckService;
         $this->summaryGetHandler = $summaryGetHandler;
         $this->poolsGetHandler = $poolsGetHandler;
+        $this->calcIncomeHandler = $calcIncomeHandler;
     }
 
     /**
@@ -110,10 +116,15 @@ final class MinerCreateService implements MinerCreateServiceInterface
             throw new MinerCreateInvalidDataException($errors);
         }
 
+        $minerCredential = new MinerCredential($ip, $port);
+
+        $summary = $this->summaryGetHandler->handler($minerCredential);
+        $hashRate = (false === empty($summary)) ? $summary['hashRateAverage']: 0;
+
         $miner = new Miner(
             $title,
-            $ip,
-            $port,
+            $hashRate,
+            $minerCredential,
             $minerType,
             $minerAlgorithm,
             $user
@@ -121,11 +132,11 @@ final class MinerCreateService implements MinerCreateServiceInterface
 
         $this->minerRepository->save($miner);
 
-        $summary = $this->summaryGetHandler->handler($miner);
+        $pools['pools'] = $this->poolsGetHandler->handler($minerCredential);
 
-        $pools = $this->poolsGetHandler->handler($miner);
+        $coins['coins'] = $this->calcIncomeHandler->handler($miner);
 
-        return (new MinerTransform())->transform($miner) + $summary + $pools;
+        return (new MinerTransform())->transform($miner) + $summary + $pools + $coins;
     }
 
     private function checkAddFreeMiner(User $user): bool

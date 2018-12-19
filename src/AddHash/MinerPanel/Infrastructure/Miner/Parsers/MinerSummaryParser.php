@@ -21,9 +21,9 @@ class MinerSummaryParser extends Parser
 
         $result['rejected'] = (false === empty($data['SUMMARY']['Rejected'])) ? $data['SUMMARY']['Rejected'] : '';
 
-        $result['speed'] = (false === empty($data['SUMMARY']['GHS 5s'])) ? $data['SUMMARY']['GHS 5s'] : '';
+        $result['hashRate'] = (false === empty($data['SUMMARY']['GHS 5s'])) ? $data['SUMMARY']['GHS 5s'] : '';
 
-        $result['speedAverage'] = (false === empty($data['SUMMARY']['GHS av'])) ? $data['SUMMARY']['GHS av'] : '';
+        $result['hashRateAverage'] = (false === empty($data['SUMMARY']['GHS av'])) ? $data['SUMMARY']['GHS av'] : '';
 
         return $result;
     }

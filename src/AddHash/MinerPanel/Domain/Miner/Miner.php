@@ -3,13 +3,13 @@
 namespace App\AddHash\MinerPanel\Domain\Miner;
 
 use App\AddHash\MinerPanel\Domain\User\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerType;
 use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithm;
+use App\AddHash\MinerPanel\Domain\Miner\MinerCredential\MinerCredential;
 
 class Miner
 {
-    const DEFAULT_PORT = 4028;
-
     const MAX_PER_PAGE = 10;
 
 
@@ -17,9 +17,9 @@ class Miner
 
     private $title;
 
-    private $ip;
+    private $hashRate;
 
-    private $port;
+    private $credential;
 
     private $type;
 
@@ -27,10 +27,12 @@ class Miner
 
     private $user;
 
+    private $rigs;
+
     public function __construct(
         string $title,
-        string $ip,
-        ?int $port,
+        float $hashRate,
+        MinerCredential $credential,
         MinerType $type,
         MinerAlgorithm $algorithm,
         User $user,
@@ -39,11 +41,12 @@ class Miner
     {
         $this->id = $id;
         $this->title = $title;
-        $this->ip = $ip;
-        $this->port = $port ?? self::DEFAULT_PORT;
+        $this->credential = $credential;
+        $this->hashRate = $hashRate;
         $this->type = $type;
         $this->algorithm = $algorithm;
         $this->user = $user;
+        $this->rigs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -56,14 +59,14 @@ class Miner
         return $this->title;
     }
 
-    public function getIp(): string
+    public function getCredential(): MinerCredential
     {
-        return $this->ip;
+        return $this->credential;
     }
 
-    public function getPort(): int
+    public function getHashRate(): float
     {
-        return $this->port;
+        return $this->hashRate;
     }
 
     public function getType(): MinerType
@@ -76,24 +79,19 @@ class Miner
         return $this->algorithm;
     }
 
-    public function getUser(): User
-    {
-        return $this->user;
-    }
-
     public function setTitle(string $title): void
     {
         $this->title = $title;
     }
 
-    public function setIp(string $ip): void
+    public function setCredential(MinerCredential $credential): void
     {
-        $this->ip = $ip;
+        $this->credential = $credential;
     }
 
-    public function setPort(?int $port): void
+    public function setHashRate(float $hashRate): void
     {
-        $this->port = $port ?? self::DEFAULT_PORT;
+        $this->hashRate = $hashRate;
     }
 
     public function setType(MinerType $type): void

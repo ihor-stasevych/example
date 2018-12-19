@@ -6,12 +6,17 @@ App\AddHash\MinerPanel\Domain\User\User:
             type: integer
 
     oneToMany:
-        miner:
+        miners:
             targetEntity: App\AddHash\MinerPanel\Domain\Miner\Miner
             mappedBy: user
+
+        rigs:
+            targetEntity: App\AddHash\MinerPanel\Domain\Rig\Rig
+            mappedBy: user
+
     oneToOne:
         package:
             targetEntity: App\AddHash\MinerPanel\Domain\Package\Model\Package
             joinColumn:
-              name: packageId
-              referencedColumnName: id
+                name: packageId
+                referencedColumnName: id
