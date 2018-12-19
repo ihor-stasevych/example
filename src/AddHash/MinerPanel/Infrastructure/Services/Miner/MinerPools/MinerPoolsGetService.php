@@ -43,6 +43,6 @@ final class MinerPoolsGetService implements MinerPoolsGetServiceInterface
             throw new MinerPoolsGetInvalidMinerException('Invalid miner');
         }
 
-        return $this->poolsGetHandler->handler($miner);
+        return $this->poolsGetHandler->handler($miner->getCredential());
     }
 }

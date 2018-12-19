@@ -10,6 +10,7 @@ use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerGetInvalidMinerException
 use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolsGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoSummaryGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerCalcIncome\MinerCalcIncomeHandlerInterface;
 
 final class MinerGetService implements MinerGetServiceInterface
 {
@@ -21,17 +22,21 @@ final class MinerGetService implements MinerGetServiceInterface
 
     private $poolsGetHandler;
 
+    private $calcIncomeHandler;
+
     public function __construct(
         UserAuthenticationGetServiceInterface $authenticationAdapter,
         MinerRepositoryInterface $minerRepository,
         MinerInfoSummaryGetHandlerInterface $summaryGetHandler,
-        MinerInfoPoolsGetHandlerInterface $poolsGetHandler
+        MinerInfoPoolsGetHandlerInterface $poolsGetHandler,
+        MinerCalcIncomeHandlerInterface $calcIncomeHandler
     )
     {
         $this->authenticationAdapter = $authenticationAdapter;
         $this->minerRepository = $minerRepository;
         $this->summaryGetHandler = $summaryGetHandler;
         $this->poolsGetHandler = $poolsGetHandler;
+        $this->calcIncomeHandler = $calcIncomeHandler;
     }
 
     /**
@@ -49,10 +54,14 @@ final class MinerGetService implements MinerGetServiceInterface
             throw new MinerGetInvalidMinerException('Invalid miner');
         }
 
-        $summary = $this->summaryGetHandler->handler($miner);
+        $minerCredential = $miner->getCredential();
 
-        $pools = $this->poolsGetHandler->handler($miner);
+        $summary = $this->summaryGetHandler->handler($minerCredential);
 
-        return (new MinerTransform())->transform($miner) + $summary + $pools;
+        $pools['pools'] = $this->poolsGetHandler->handler($minerCredential);
+
+        $coins['coins'] = $this->calcIncomeHandler->handler($miner);
+
+        return (new MinerTransform())->transform($miner) + $summary + $pools + $coins;
     }
 }

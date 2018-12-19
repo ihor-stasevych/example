@@ -10,12 +10,17 @@ App\AddHash\MinerPanel\Domain\Miner\Miner:
             type: string
             length: 100
 
-        ip:
-            type: string
-            length: 100
+        hashRate:
+            column: hashRate
+            type: float
 
-        port:
-            type: integer
+    oneToOne:
+        credential:
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerCredential\MinerCredential
+            cascade: ['persist']
+            joinColumn:
+                name: credentialId
+                referencedColumnName: id
 
     manyToOne:
         user:
@@ -36,3 +41,16 @@ App\AddHash\MinerPanel\Domain\Miner\Miner:
             joinColumn:
                 name: algorithmId
                 referencedColumnName: id
+
+    manyToMany:
+        rigs:
+            targetEntity: App\AddHash\MinerPanel\Domain\Rig\Rig
+            inversedBy: miners
+            joinTable:
+                name: Miner_Panel_Miner_Rig
+                joinColumns:
+                    minerId:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    rigId:
+                        referencedColumnName: id

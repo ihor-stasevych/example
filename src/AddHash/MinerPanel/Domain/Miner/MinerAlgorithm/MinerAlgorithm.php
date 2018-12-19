@@ -11,13 +11,13 @@ class MinerAlgorithm
 
     private $value;
 
-    private $coin;
+    private $coins;
 
     public function __construct(string $value, int $id = null)
     {
         $this->id = $id;
         $this->value = $value;
-        $this->coin = new ArrayCollection();
+        $this->coins = new ArrayCollection();
 
     }
 
@@ -31,11 +31,11 @@ class MinerAlgorithm
         return $this->value;
     }
 
-    public function getCoin(): PersistentCollection
+    public function getCoins(): PersistentCollection
     {
-        /** @var PersistentCollection $coin */
-        $coin = $this->coin;
+        /** @var PersistentCollection $coins */
+        $coins = $this->coins;
 
-        return $coin;
+        return $coins;
     }
 }

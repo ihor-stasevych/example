@@ -2,9 +2,10 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner;
 
+use App\AddHash\MinerPanel\Domain\Miner\MinerCredential\MinerCredential;
 use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
-use App\AddHash\MinerPanel\Infrastructure\Transformers\Miner\MinerTransform;
 use App\AddHash\MinerPanel\Domain\Miner\Command\MinerUpdateCommandInterface;
+use App\AddHash\MinerPanel\Infrastructure\Transformers\Miner\MinerTransform;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerUpdateServiceInterface;
 use App\AddHash\MinerPanel\Application\Command\IpAddress\IpAddressCheckCommand;
 use App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerTypeRepositoryInterface;
@@ -16,6 +17,7 @@ use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolsGetHandlerInterf
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoSummaryGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerUpdateInvalidAlgorithmException;
+use App\AddHash\MinerPanel\Domain\Miner\MinerCalcIncome\MinerCalcIncomeHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithmRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\IpAddress\Exceptions\IpAddressCheckIpAddressUnavailableException;
 
@@ -35,6 +37,8 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
 
     private $poolsGetHandler;
 
+    private $calcIncomeHandler;
+
     public function __construct(
         UserAuthenticationGetServiceInterface $authenticationAdapter,
         MinerRepositoryInterface $minerRepository,
@@ -42,7 +46,8 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
         MinerTypeRepositoryInterface $minerTypeRepository,
         IpAddressCheckServiceInterface $ipAddressCheckService,
         MinerInfoSummaryGetHandlerInterface $summaryGetHandler,
-        MinerInfoPoolsGetHandlerInterface $poolsGetHandler
+        MinerInfoPoolsGetHandlerInterface $poolsGetHandler,
+        MinerCalcIncomeHandlerInterface $calcIncomeHandler
     )
     {
         $this->authenticationAdapter = $authenticationAdapter;
@@ -52,6 +57,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
         $this->ipAddressCheckService = $ipAddressCheckService;
         $this->summaryGetHandler = $summaryGetHandler;
         $this->poolsGetHandler = $poolsGetHandler;
+        $this->calcIncomeHandler = $calcIncomeHandler;
     }
 
     /**
@@ -66,7 +72,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
     {
         $user = $this->authenticationAdapter->execute();
 
-        $miner = $this->minerRepository->existMinerByIdAndUser($command->getId(), $user);
+        $miner = $this->minerRepository->getMinerByIdAndUser($command->getId(), $user);
 
         if (null === $miner) {
             throw new MinerUpdateInvalidMinerException('Invalid miner');
@@ -87,7 +93,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
         $errors = [];
 
         $ip = $command->getIp();
-        $port = $command->getPort();
+        $port = $command->getPort() ?? MinerCredential::DEFAULT_PORT;
         $ipAddressCheckCommand = new IpAddressCheckCommand($ip, $port);
 
         try {
@@ -107,20 +113,30 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
             throw new MinerUpdateInvalidDataException($errors);
         }
 
-        $updateCache = ($miner->getIp() != $ip || $miner->getPort() != $port) ? true : false;
+        $minerCredential = $miner->getCredential();
+
+        $updateCache = ($minerCredential->getIp() != $ip || $minerCredential->getPort() != $port);
+
+        $minerCredential->setIp($ip);
+        $minerCredential->setPort($port);
 
         $miner->setTitle($title);
-        $miner->setIp($ip);
-        $miner->setPort($port);
         $miner->setType($minerType);
         $miner->setAlgorithm($minerAlgorithm);
+        $miner->setCredential($minerCredential);
+
+        $summary = $this->summaryGetHandler->handler($minerCredential, $updateCache);
+
+        $hashRate = (false === empty($summary)) ? $summary['hashRateAverage']: 0;
+
+        $miner->setHashRate($hashRate);
 
         $this->minerRepository->save($miner);
 
-        $summary = $this->summaryGetHandler->handler($miner, $updateCache);
+        $pools['pools'] = $this->poolsGetHandler->handler($minerCredential, $updateCache);
 
-        $pools = $this->poolsGetHandler->handler($miner, $updateCache);
+        $coins['coins'] = $this->calcIncomeHandler->handler($miner);
 
-        return (new MinerTransform())->transform($miner) + $summary + $pools;
+        return (new MinerTransform())->transform($miner) + $summary + $pools + $coins;
     }
 }

@@ -43,6 +43,6 @@ final class MinerSummaryGetService implements MinerSummaryGetServiceInterface
             throw new MinerSummaryGetInvalidMinerException('Invalid miner');
         }
 
-        return $this->summaryGetHandler->handler($miner);
+        return $this->summaryGetHandler->handler($miner->getCredential());
     }
 }

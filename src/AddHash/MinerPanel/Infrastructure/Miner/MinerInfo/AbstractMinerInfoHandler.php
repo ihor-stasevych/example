@@ -2,10 +2,10 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo;
 
-use App\AddHash\MinerPanel\Domain\Miner\Miner;
 use App\AddHash\System\Lib\Cache\CacheInterface;
 use App\AddHash\MinerPanel\Infrastructure\Miner\Parsers\Parser;
 use App\AddHash\MinerPanel\Infrastructure\Miner\Extender\MinerSocket;
+use App\AddHash\MinerPanel\Domain\Miner\MinerCredential\MinerCredential;
 use App\AddHash\MinerPanel\Infrastructure\Miner\ApiCommand\MinerApiCommand;
 use App\AddHash\MinerPanel\Domain\Miner\ApiCommand\AbstractMinerApiCommandInterface;
 
@@ -18,14 +18,14 @@ abstract class AbstractMinerInfoHandler
         $this->cache = $cache;
     }
 
-    public function handler(Miner $miner, bool $updateCache = false): array
+    public function handler(MinerCredential $minerCredential, bool $updateCache = false): array
     {
-        $key = static::MINER_INFO_KEY . $miner->getId();
+        $key = static::MINER_INFO_KEY . $minerCredential->getId();
 
         if (false === $this->cache->keyExists($key) || true === $updateCache) {
 
             $minerApiCommand = new MinerApiCommand(
-                new MinerSocket($miner),
+                new MinerSocket($minerCredential),
                 $this->getParser()
             );
 
