@@ -5,15 +5,6 @@ App\AddHash\MinerPanel\Domain\User\User:
         id:
             type: integer
 
-    oneToMany:
-        miners:
-            targetEntity: App\AddHash\MinerPanel\Domain\Miner\Miner
-            mappedBy: user
-
-        rigs:
-            targetEntity: App\AddHash\MinerPanel\Domain\Rig\Rig
-            mappedBy: user
-
     oneToOne:
         package:
             targetEntity: App\AddHash\MinerPanel\Domain\Package\Model\Package

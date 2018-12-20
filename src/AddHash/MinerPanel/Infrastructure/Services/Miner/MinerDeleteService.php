@@ -31,7 +31,7 @@ final class MinerDeleteService implements MinerDeleteServiceInterface
     {
         $user = $this->authenticationAdapter->execute();
 
-        $miner = $this->minerRepository->existMinerByIdAndUser($command->getId(), $user);
+        $miner = $this->minerRepository->existMinerByIdAndUserForDelete($command->getId(), $user);
 
         if (null === $miner) {
             throw new MinerDeleteInvalidMinerException('Invalid miner');

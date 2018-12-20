@@ -13,4 +13,6 @@ interface MinerCreateCommandInterface
     public function getTypeId(): int;
 
     public function getAlgorithmId(): int;
+
+    public function getRigId(): ?int;
 }

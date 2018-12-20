@@ -15,7 +15,8 @@ final class MinerTransform
             'port'      => $miner->getCredential()->getPort(),
             'hashRate'  => $miner->getHashRate(),
             'type'      => $miner->getType()->getValue(),
-            'algorithm' => $miner->getAlgorithm()->getValue()
+            'algorithm' => $miner->getAlgorithm()->getValue(),
+            'rig'       => (false !== $miner->infoRigs()->first()) ? $miner->infoRigs()->first()->getTitle() : '',
         ];
     }
 }

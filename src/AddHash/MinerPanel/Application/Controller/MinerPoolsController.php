@@ -16,24 +16,37 @@ class MinerPoolsController extends BaseServiceController
     {
         $this->getService = $getService;
     }
+
     /**
-     * Get pools
+     * Get miner pools
+     *
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="path",
+     *     type="integer",
+     *     description="ID",
+     *     required=true,
+     * )
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns pools",
+     *     description="Return miner pools",
      *     @SWG\Schema(
-     *              type="object",
-     *              @SWG\Property(property="accepted", type="string"),
-     *              @SWG\Property(property="rejected", type="string"),
-     *              @SWG\Property(property="speed", type="string"),
-     *              @SWG\Property(property="speedAverage", type="string"),
+     *          type="object",
+     *          @SWG\Property(property="url", type="string"),
+     *          @SWG\Property(property="user", type="string"),
+     *          @SWG\Property(property="status", type="string"),
      *     )
+     * )
+     *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Return validation errors"
      * )
      *
      * @param int $id
      * @return JsonResponse
-     * @SWG\Tag(name="MinerPanel")
+     * @SWG\Tag(name="MinerPanel_MinerPools")
      */
     public function get(int $id)
     {

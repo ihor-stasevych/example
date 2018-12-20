@@ -34,23 +34,29 @@ class IpAddressController extends BaseServiceController
      *     name="port",
      *     in="query",
      *     type="integer",
-     *     description="Port (default 4028)",
+     *     description="Port",
+     *     default="4028"
      * )
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns success"
+     *     description="Return success"
+     * )
+     *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Return validation errors"
      * )
      *
      * @SWG\Response(
      *     response=406,
-     *     description="Returns validation errors"
+     *     description="Return validation errors"
      * )
      *
      * @param Request $request
      * @return JsonResponse
      * @throws IpAddressCheckInvalidCommandException
-     * @SWG\Tag(name="MinerPanel")
+     * @SWG\Tag(name="MinerPanel_Validation")
      */
     public function check(Request $request)
     {

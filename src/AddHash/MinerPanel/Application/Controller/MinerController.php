@@ -11,6 +11,7 @@ use App\AddHash\MinerPanel\Application\Command\Miner\MinerListCommand;
 use App\AddHash\MinerPanel\Application\Command\Miner\MinerDeleteCommand;
 use App\AddHash\MinerPanel\Application\Command\Miner\MinerCreateCommand;
 use App\AddHash\MinerPanel\Application\Command\Miner\MinerUpdateCommand;
+use App\AddHash\MinerPanel\Domain\Miner\Services\MinerAllServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerGetServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerListServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerDeleteServiceInterface;
@@ -32,12 +33,15 @@ class MinerController extends BaseServiceController
 
     private $deleteService;
 
+    private $allService;
+
     public function __construct(
         MinerListServiceInterface $listService,
         MinerGetServiceInterface $getService,
         MinerCreateServiceInterface $createService,
         MinerUpdateServiceInterface $updateService,
-        MinerDeleteServiceInterface $deleteService
+        MinerDeleteServiceInterface $deleteService,
+        MinerAllServiceInterface $allService
     )
     {
         $this->listService = $listService;
@@ -45,6 +49,7 @@ class MinerController extends BaseServiceController
         $this->createService = $createService;
         $this->updateService = $updateService;
         $this->deleteService = $deleteService;
+        $this->allService = $allService;
     }
 
     /**
@@ -59,24 +64,40 @@ class MinerController extends BaseServiceController
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns miners",
+     *     description="Return miners",
      *     @SWG\Schema(
-     *             type="array",
-     *             @SWG\Items(
-     *                 type="object",
-     *                 @SWG\Property(property="id", type="integer"),
-     *                 @SWG\Property(property="title", type="string"),
-     *                 @SWG\Property(property="ip", type="string"),
-     *                 @SWG\Property(property="port", type="integer"),
-     *                 @SWG\Property(property="type", type="string"),
-     *                 @SWG\Property(property="algorithm", type="string"),
-     *             )
+     *          type="object",
+     *          @SWG\Property(
+     *              property="items",
+     *              type="array",
+     *              @SWG\Items(
+     *                  type="object",
+     *                  @SWG\Property(property="id", type="integer"),
+     *                  @SWG\Property(property="title", type="string"),
+     *                  @SWG\Property(property="ip", type="string"),
+     *                  @SWG\Property(property="port", type="integer"),
+     *                  @SWG\Property(property="hashRate", type="number"),
+     *                  @SWG\Property(property="type", type="string"),
+     *                  @SWG\Property(property="algorithm", type="string"),
+     *                  @SWG\Property(property="rig", type="string"),
+     *              ),
+     *          ),
+     *          @SWG\Property(property="totalItems", type="integer"),
+     *          @SWG\Property(property="totalPages", type="integer"),
+     *          @SWG\Property(property="page", type="integer"),
+     *          @SWG\Property(property="limit", type="integer"),
      *     ),
      * )
+     *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Return validation errors"
+     * )
+     *
      * @param Request $request
      * @return JsonResponse
      * @throws MinerListInvalidCommandException
-     * @SWG\Tag(name="MinerPanel")
+     * @SWG\Tag(name="MinerPanel_Miner")
      */
     public function index(Request $request)
     {
@@ -94,27 +115,67 @@ class MinerController extends BaseServiceController
     /**
      * Get miner
      *
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="path",
+     *     type="integer",
+     *     description="ID",
+     *     required=true,
+     * )
+     *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns miner",
+     *     description="Return miner",
      *     @SWG\Schema(
+     *          type="object",
+     *          @SWG\Property(property="id", type="integer"),
+     *          @SWG\Property(property="title", type="string"),
+     *          @SWG\Property(property="ip", type="string"),
+     *          @SWG\Property(property="port", type="integer"),
+     *          @SWG\Property(property="hashRate", type="number"),
+     *          @SWG\Property(property="type", type="string"),
+     *          @SWG\Property(property="algorithm", type="string"),
+     *          @SWG\Property(property="rig", type="string"),
+     *          @SWG\Property(
+     *              property="summary",
      *              type="object",
-     *              @SWG\Property(property="id", type="integer"),
-     *              @SWG\Property(property="title", type="string"),
-     *              @SWG\Property(property="ip", type="string"),
-     *              @SWG\Property(property="port", type="integer"),
-     *              @SWG\Property(property="type", type="string"),
-     *              @SWG\Property(property="algorithm", type="string"),
-     *              @SWG\Property(property="accepted", type="string"),
-     *              @SWG\Property(property="rejected", type="string"),
-     *              @SWG\Property(property="speed", type="string"),
-     *              @SWG\Property(property="speedAverage", type="string"),
-     *     )
+     *              @SWG\Property(property="status", type="string"),
+     *              @SWG\Property(property="accepted", type="number"),
+     *              @SWG\Property(property="rejected", type="number"),
+     *              @SWG\Property(property="hashRate", type="number"),
+     *              @SWG\Property(property="hashRateAverage", type="number"),
+     *          ),
+     *          @SWG\Property(
+     *              property="pools",
+     *              type="array",
+     *              @SWG\Items(
+     *                  type="object",
+     *                  @SWG\Property(property="url", type="string"),
+     *                  @SWG\Property(property="user", type="string"),
+     *                  @SWG\Property(property="status", type="integer"),
+     *              ),
+     *          ),
+     *          @SWG\Property(
+     *              property="coins",
+     *              type="array",
+     *              @SWG\Items(
+     *                  type="object",
+     *                  @SWG\Property(property="name", type="string"),
+     *                  @SWG\Property(property="tag", type="string"),
+     *                  @SWG\Property(property="income", type="string"),
+     *              ),
+     *          ),
+     *     ),
+     * )
+     *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Return validation errors"
      * )
      *
      * @param int $id
      * @return JsonResponse
-     * @SWG\Tag(name="MinerPanel")
+     * @SWG\Tag(name="MinerPanel_Miner")
      */
     public function get(int $id)
     {
@@ -149,14 +210,13 @@ class MinerController extends BaseServiceController
      *     in="query",
      *     type="integer",
      *     description="Port",
-     *     required=true,
      * )
      *
      * @SWG\Parameter(
      *     name="typeId",
      *     in="query",
      *     type="integer",
-     *     description="Type Id",
+     *     description="Type ID",
      *     required=true,
      * )
      *
@@ -164,42 +224,76 @@ class MinerController extends BaseServiceController
      *     name="algorithmId",
      *     in="query",
      *     type="integer",
-     *     description="Algorithm Id",
+     *     description="Algorithm ID",
      *     required=true,
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="rigId",
+     *     in="query",
+     *     type="integer",
+     *     description="Rig ID",
      * )
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns miner",
+     *     description="Return miner",
      *     @SWG\Schema(
+     *          type="object",
+     *          @SWG\Property(property="id", type="integer"),
+     *          @SWG\Property(property="title", type="string"),
+     *          @SWG\Property(property="ip", type="string"),
+     *          @SWG\Property(property="port", type="integer"),
+     *          @SWG\Property(property="hashRate", type="number"),
+     *          @SWG\Property(property="type", type="string"),
+     *          @SWG\Property(property="algorithm", type="string"),
+     *          @SWG\Property(property="rig", type="string"),
+     *          @SWG\Property(
+     *              property="summary",
      *              type="object",
-     *              @SWG\Property(property="id", type="integer"),
-     *              @SWG\Property(property="title", type="string"),
-     *              @SWG\Property(property="ip", type="string"),
-     *              @SWG\Property(property="port", type="integer"),
-     *              @SWG\Property(property="type", type="string"),
-     *              @SWG\Property(property="algorithm", type="string"),
-     *              @SWG\Property(property="accepted", type="string"),
-     *              @SWG\Property(property="rejected", type="string"),
-     *              @SWG\Property(property="speed", type="string"),
-     *              @SWG\Property(property="speedAverage", type="string"),
-     *     )
+     *              @SWG\Property(property="status", type="string"),
+     *              @SWG\Property(property="accepted", type="number"),
+     *              @SWG\Property(property="rejected", type="number"),
+     *              @SWG\Property(property="hashRate", type="number"),
+     *              @SWG\Property(property="hashRateAverage", type="number"),
+     *          ),
+     *          @SWG\Property(
+     *              property="pools",
+     *              type="array",
+     *              @SWG\Items(
+     *                  type="object",
+     *                  @SWG\Property(property="url", type="string"),
+     *                  @SWG\Property(property="user", type="string"),
+     *                  @SWG\Property(property="status", type="integer"),
+     *              ),
+     *          ),
+     *          @SWG\Property(
+     *              property="coins",
+     *              type="array",
+     *              @SWG\Items(
+     *                  type="object",
+     *                  @SWG\Property(property="name", type="string"),
+     *                  @SWG\Property(property="tag", type="string"),
+     *                  @SWG\Property(property="income", type="string"),
+     *              ),
+     *          ),
+     *     ),
      * )
      *
      * @SWG\Response(
      *     response=406,
-     *     description="Returns validation errors"
+     *     description="Return validation errors"
      * )
      *
      * @SWG\Response(
      *     response=400,
-     *     description="Returns validation errors"
+     *     description="Return validation errors"
      * )
      *
      * @param Request $request
      * @return JsonResponse
      * @throws MinerCreateInvalidCommandException
-     * @SWG\Tag(name="MinerPanel")
+     * @SWG\Tag(name="MinerPanel_Miner")
      */
     public function create(Request $request)
     {
@@ -208,7 +302,8 @@ class MinerController extends BaseServiceController
             $request->get('ip'),
             $request->get('port'),
             $request->get('typeId'),
-            $request->get('algorithmId')
+            $request->get('algorithmId'),
+            $request->get('rigId')
         );
 
         if (false === $this->commandIsValid($command)) {
@@ -224,6 +319,14 @@ class MinerController extends BaseServiceController
 
     /**
      * Update miner
+     *
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="path",
+     *     type="integer",
+     *     description="ID",
+     *     required=true,
+     * )
      *
      * @SWG\Parameter(
      *     name="title",
@@ -265,39 +368,73 @@ class MinerController extends BaseServiceController
      *     required=true,
      * )
      *
+     * @SWG\Parameter(
+     *     name="rigId",
+     *     in="query",
+     *     type="integer",
+     *     description="Rig ID",
+     * )
+     *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns miner",
+     *     description="Return update miner",
      *     @SWG\Schema(
+     *          type="object",
+     *          @SWG\Property(property="id", type="integer"),
+     *          @SWG\Property(property="title", type="string"),
+     *          @SWG\Property(property="ip", type="string"),
+     *          @SWG\Property(property="port", type="integer"),
+     *          @SWG\Property(property="hashRate", type="number"),
+     *          @SWG\Property(property="type", type="string"),
+     *          @SWG\Property(property="algorithm", type="string"),
+     *          @SWG\Property(property="rig", type="string"),
+     *          @SWG\Property(
+     *              property="summary",
      *              type="object",
-     *              @SWG\Property(property="id", type="integer"),
-     *              @SWG\Property(property="title", type="string"),
-     *              @SWG\Property(property="ip", type="string"),
-     *              @SWG\Property(property="port", type="integer"),
-     *              @SWG\Property(property="type", type="string"),
-     *              @SWG\Property(property="algorithm", type="string"),
-     *              @SWG\Property(property="accepted", type="string"),
-     *              @SWG\Property(property="rejected", type="string"),
-     *              @SWG\Property(property="speed", type="string"),
-     *              @SWG\Property(property="speedAverage", type="string"),
-     *     )
+     *              @SWG\Property(property="status", type="string"),
+     *              @SWG\Property(property="accepted", type="number"),
+     *              @SWG\Property(property="rejected", type="number"),
+     *              @SWG\Property(property="hashRate", type="number"),
+     *              @SWG\Property(property="hashRateAverage", type="number"),
+     *          ),
+     *          @SWG\Property(
+     *              property="pools",
+     *              type="array",
+     *              @SWG\Items(
+     *                  type="object",
+     *                  @SWG\Property(property="url", type="string"),
+     *                  @SWG\Property(property="user", type="string"),
+     *                  @SWG\Property(property="status", type="integer"),
+     *              ),
+     *          ),
+     *          @SWG\Property(
+     *              property="coins",
+     *              type="array",
+     *              @SWG\Items(
+     *                  type="object",
+     *                  @SWG\Property(property="name", type="string"),
+     *                  @SWG\Property(property="tag", type="string"),
+     *                  @SWG\Property(property="income", type="string"),
+     *              ),
+     *          ),
+     *     ),
      * )
      *
      * @SWG\Response(
      *     response=406,
-     *     description="Returns validation errors"
+     *     description="Return validation errors"
      * )
      *
      * @SWG\Response(
      *     response=400,
-     *     description="Returns validation errors"
+     *     description="Return validation errors"
      * )
      *
      * @param int $id
      * @param Request $request
      * @return JsonResponse
      * @throws MinerUpdateInvalidCommandException
-     * @SWG\Tag(name="MinerPanel")
+     * @SWG\Tag(name="MinerPanel_Miner")
      */
     public function update(int $id, Request $request)
     {
@@ -307,7 +444,8 @@ class MinerController extends BaseServiceController
             $request->get('ip'),
             $request->get('port'),
             $request->get('typeId'),
-            $request->get('algorithmId')
+            $request->get('algorithmId'),
+            $request->get('rigId')
         );
 
         if (false === $this->commandIsValid($command)) {
@@ -324,19 +462,27 @@ class MinerController extends BaseServiceController
     /**
      * Delete miner
      *
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="path",
+     *     type="integer",
+     *     description="ID",
+     *     required=true,
+     * )
+     *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns success"
+     *     description="Return success"
      * )
      *
      * @SWG\Response(
      *     response=400,
-     *     description="Returns validation errors"
+     *     description="Return validation errors"
      * )
      *
      * @param int $id
      * @return JsonResponse
-     * @SWG\Tag(name="MinerPanel")
+     * @SWG\Tag(name="MinerPanel_Miner")
      */
     public function delete(int $id)
     {
@@ -345,5 +491,36 @@ class MinerController extends BaseServiceController
         $this->deleteService->execute($command);
 
         return $this->json([]);
+    }
+
+    /**
+     * Get miners
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Return miners",
+     *     @SWG\Schema(
+     *          type="array",
+     *          @SWG\Items(
+     *              type="object",
+     *              @SWG\Property(property="id", type="integer"),
+     *              @SWG\Property(property="title", type="string"),
+     *          ),
+     *     ),
+     * )
+     *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Return validation errors"
+     * )
+     *
+     * @return JsonResponse
+     * @SWG\Tag(name="MinerPanel_Miner")
+     */
+    public function all()
+    {
+        return $this->json(
+            $this->allService->execute()
+        );
     }
 }

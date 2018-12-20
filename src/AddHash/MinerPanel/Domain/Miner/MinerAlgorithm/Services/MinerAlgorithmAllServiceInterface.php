@@ -2,7 +2,7 @@
 
 namespace App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Services;
 
-interface MinerAlgorithmListServiceInterface
+interface MinerAlgorithmAllServiceInterface
 {
     public function execute(): array;
 }

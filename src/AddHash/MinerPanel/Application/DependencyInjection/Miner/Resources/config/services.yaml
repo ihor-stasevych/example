@@ -18,7 +18,7 @@ services:
   addhash.miner.panel.miner.create.service:
     class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerCreateService
     public: true
-    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.algorithm.repository', '@addhash.miner.panel.miner.type.repository', '@addhash.miner.panel.ip.check.service', '@addhash.miner.panel.miner.summary.get.handler', '@addhash.miner.panel.miner.pool.get.handler', '@addhash.miner.panel.miner.calc.income.handler']
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.algorithm.repository', '@addhash.miner.panel.miner.type.repository', '@addhash.miner.panel.rig.repository', '@addhash.miner.panel.ip.check.service', '@addhash.miner.panel.miner.summary.get.handler', '@addhash.miner.panel.miner.pool.get.handler', '@addhash.miner.panel.miner.calc.income.handler']
   App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerCreateService: '@addhash.miner.panel.miner.create.service'
 
   App\AddHash\MinerPanel\Domain\Miner\Services\MinerCreateServiceInterface: '@addhash.miner.panel.miner.create.service'
@@ -26,7 +26,7 @@ services:
   addhash.miner.panel.miner.update.service:
     class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerUpdateService
     public: true
-    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.algorithm.repository', '@addhash.miner.panel.miner.type.repository', '@addhash.miner.panel.ip.check.service', '@addhash.miner.panel.miner.summary.get.handler', '@addhash.miner.panel.miner.pool.get.handler', '@addhash.miner.panel.miner.calc.income.handler']
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.algorithm.repository', '@addhash.miner.panel.miner.type.repository', '@addhash.miner.panel.rig.repository', '@addhash.miner.panel.ip.check.service', '@addhash.miner.panel.miner.summary.get.handler', '@addhash.miner.panel.miner.pool.get.handler', '@addhash.miner.panel.miner.calc.income.handler']
   App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerUpdateService: '@addhash.miner.panel.miner.update.service'
 
   App\AddHash\MinerPanel\Domain\Miner\Services\MinerUpdateServiceInterface: '@addhash.miner.panel.miner.update.service'
@@ -39,21 +39,29 @@ services:
 
   App\AddHash\MinerPanel\Domain\Miner\Services\MinerDeleteServiceInterface: '@addhash.miner.panel.miner.delete.service'
 
-  addhash.miner.panel.miner.algorithm.list.service:
-    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerAlgorithmListService
+  addhash.miner.panel.miner.all.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAllService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAllService: '@addhash.miner.panel.miner.all.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\Services\MinerAllServiceInterface: '@addhash.miner.panel.miner.all.service'
+
+  addhash.miner.panel.miner.algorithm.all.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerAlgorithmAllService
     public: true
     arguments: ['@addhash.miner.panel.miner.algorithm.repository']
-  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerAlgorithmListService: '@addhash.miner.panel.miner.algorithm.list.service'
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerAlgorithmAllService: '@addhash.miner.panel.miner.algorithm.all.service'
 
-  App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Services\MinerAlgorithmListServiceInterface: '@addhash.miner.panel.miner.algorithm.list.service'
+  App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Services\MinerAlgorithmAllServiceInterface: '@addhash.miner.panel.miner.algorithm.all.service'
 
-  addhash.miner.panel.miner.type.list.service:
-    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerType\MinerTypeListService
+  addhash.miner.panel.miner.type.all.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerType\MinerTypeAllService
     public: true
     arguments: ['@addhash.miner.panel.miner.type.repository']
-  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerType\MinerTypeListService: '@addhash.miner.panel.miner.type.list.service'
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerType\MinerTypeAllService: '@addhash.miner.panel.miner.type.all.service'
 
-  App\AddHash\MinerPanel\Domain\Miner\MinerType\Services\MinerTypeListServiceInterface: '@addhash.miner.panel.miner.type.list.service'
+  App\AddHash\MinerPanel\Domain\Miner\MinerType\Services\MinerTypeAllServiceInterface: '@addhash.miner.panel.miner.type.all.service'
 
   addhash.miner.panel.miner.summary.get.service:
     class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerSummary\MinerSummaryGetService

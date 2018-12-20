@@ -29,7 +29,7 @@ final class MinerListService implements MinerListServiceInterface
     {
         $user = $this->authenticationAdapter->execute();
 
-        $miners = $this->minerRepository->getMinersByUser($user, $command->getPage());
+        $miners = $this->minerRepository->getMinersByUserWithPagination($user, $command->getPage());
 
         $data = [];
 
