@@ -79,6 +79,14 @@ services:
 
   App\AddHash\MinerPanel\Domain\Miner\MinerPools\Services\MinerPoolsGetServiceInterface: '@addhash.miner.panel.miner.pools.get.service'
 
+  addhash.miner.panel.miner.coin.get.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin\MinerCoinGetService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.calc.income.handler']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin\MinerCoinGetService: '@addhash.miner.panel.miner.coin.get.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\Services\MinerCoinGetServiceInterface: '@addhash.miner.panel.miner.coin.get.service'
+
   addhash.miner.panel.miner.coin.info.get.service:
     class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin\MinerCoinInfoGetService
     public: true
