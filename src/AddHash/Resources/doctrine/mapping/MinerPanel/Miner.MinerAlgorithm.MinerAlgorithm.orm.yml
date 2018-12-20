@@ -11,6 +11,6 @@ App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithm:
             length: 100
 
     oneToMany:
-        coin:
+        coins:
             targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\MinerCoin
             mappedBy: algorithm
