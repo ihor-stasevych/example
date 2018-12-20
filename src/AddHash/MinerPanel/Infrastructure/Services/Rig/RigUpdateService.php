@@ -2,7 +2,6 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Rig;
 
-use App\AddHash\MinerPanel\Domain\Rig\Rig;
 use App\AddHash\MinerPanel\Domain\Miner\Miner;
 use App\AddHash\MinerPanel\Domain\Rig\RigRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
@@ -102,12 +101,13 @@ final class RigUpdateService implements RigUpdateServiceInterface
 
         /** @var Miner $miner */
         foreach ($miners as $miner) {
-            /** @var Rig $rig */
-            foreach ($miner->infoRigs() as $rig) {
-                $miner->removeRig($rig);
-            }
+            $rig = $miner->infoRigs()->first();
 
-            $changeMiners[] = $miner;
+            if (false !== $rig) {
+                $miner->removeRig($rig);
+
+                $changeMiners[] = $miner;
+            }
         }
 
         $this->minerRepository->saveAll($changeMiners);

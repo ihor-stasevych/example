@@ -2,7 +2,6 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner;
 
-use App\AddHash\MinerPanel\Domain\Miner\Miner;
 use App\AddHash\System\Response\ResponseListCollection;
 use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Command\MinerListCommandInterface;
@@ -36,7 +35,6 @@ final class MinerListService implements MinerListServiceInterface
         if ($miners->count() > 0) {
             $transform = new MinerTransform();
 
-            /** @var Miner $miner */
             foreach ($miners as $miner) {
                 $data[] = $transform->transform($miner);
             }
