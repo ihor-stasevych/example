@@ -14,7 +14,7 @@ App\AddHash\MinerPanel\Domain\User\User:
             targetEntity: App\AddHash\MinerPanel\Domain\Rig\Rig
             mappedBy: user
 
-    oneToOne:
+    manyToOne:
         package:
             targetEntity: App\AddHash\MinerPanel\Domain\Package\Model\Package
             joinColumn:
