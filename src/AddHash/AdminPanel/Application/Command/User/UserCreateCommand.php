@@ -2,6 +2,7 @@
 
 namespace App\AddHash\AdminPanel\Application\Command\User;
 
+use App\AddHash\System\GlobalContext\ValueObject\Phone;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\AddHash\System\GlobalContext\ValueObject\Email;
 use App\AddHash\AdminPanel\Domain\User\Command\UserCreateCommandInterface;
@@ -14,6 +15,24 @@ final class UserCreateCommand implements UserCreateCommandInterface
      * @Assert\Email()
      */
     private $email;
+
+	/**
+	 * @var string
+	 * @Assert\NotBlank()
+	 */
+	private $firstName;
+
+	/**
+	 * @var string
+	 * @Assert\NotBlank()
+	 */
+	private $lastName;
+
+
+	/**
+	 * @var string
+	 */
+	private $phone;
 
     /**
      * @var string
@@ -29,12 +48,33 @@ final class UserCreateCommand implements UserCreateCommandInterface
 
     private $captcha;
 
-    public function __construct($email, $password, $captcha = null)
+    public function __construct(
+    	$email, $firstName, $lastName,
+	    $password, $phone = null, $captcha = null
+    )
     {
         $this->email = $email;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
         $this->password = $password;
+        $this->phone = $phone;
         $this->captcha = $captcha;
     }
+
+    public function getFirstName(): string
+    {
+    	return $this->firstName;
+    }
+
+	public function getLastName(): string
+	{
+		return $this->firstName;
+	}
+
+	public function getPhone(): Phone
+	{
+		return new Phone($this->phone);
+	}
 
     public function getEmail(): Email
     {

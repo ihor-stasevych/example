@@ -13,7 +13,7 @@ class Phone
 	 * Phone constructor.
 	 * @param string $phone
 	 */
-	public function __construct(string $phone)
+	public function __construct(?string $phone)
 	{
 		$this->setPhone($phone);
 	}
@@ -29,7 +29,7 @@ class Phone
 	/**
 	 * @param string $phone
 	 */
-	private function setPhone(string $phone)
+	private function setPhone(?string $phone)
 	{
 		$this->phone = $phone;
 	}
