@@ -6,13 +6,19 @@ class MinerCalcIncomeAlgorithmEtHash extends MinerCalcIncomeAlgorithm
 {
 	/**
 	 * @param float $hashRate
-	 * @param string $difficulty
-	 * @param string $reward
+	 * @param float $difficulty
+	 * @param float $reward
 	 * @param int $time
-	 * @return string
+	 * @return float
 	 */
-	public function calculate(float $hashRate, string $difficulty, string $reward, int $time): string
+	public function calculate(float $hashRate, float $difficulty, float $reward, int $time): float
 	{
-		return ($hashRate / $difficulty) * $reward * pow(10, 12) * $time;
+	    $result = 0;
+
+	    if ($difficulty != 0) {
+	        $result = ($hashRate / $difficulty) * $reward * pow(10, 12) * $time;
+        }
+
+		return $result;
 	}
 }

@@ -8,10 +8,10 @@ abstract class MinerCalcIncomeAlgorithm implements MinerCalcIncomeAlgorithmInter
 {
 	/**
 	 * @param float $hashRate
-	 * @param string $difficulty
-	 * @param string $reward
+	 * @param float $difficulty
+	 * @param float $reward
 	 * @param int $time
-	 * @return string
+	 * @return float
 	 */
-   abstract public function calculate(float $hashRate, string $difficulty, string $reward, int $time): string;
+   abstract public function calculate(float $hashRate, float $difficulty, float $reward, int $time): float;
 }
