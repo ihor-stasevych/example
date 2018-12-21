@@ -53,7 +53,7 @@ final class RigCreateService implements RigCreateServiceInterface
         $miners = [];
 
         if (null !== $minersId) {
-            $miners = $this->minerRepository->getMinersByIdsAndUserAndNoRig($minersId, $user);
+            $miners = $this->minerRepository->getMinersWithoutRigs($minersId, $user);
 
             if (count($minersId) != count($miners)) {
                 throw new RigCreateInvalidMinersIdException('Invalid miners id');

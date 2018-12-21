@@ -21,7 +21,7 @@ interface MinerRepositoryInterface
 
     public function getCountByUser(User $user): int;
 
-    public function getMinersByIdsAndUserAndNoRig(array $ids, User $user): array;
+    public function getMinersWithoutRigs(array $ids, User $user): array;
 
     public function getMinersByIdsAndUser(array $ids, User $user): array;
 

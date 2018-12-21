@@ -153,7 +153,7 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
             ->getSingleScalarResult();
     }
 
-    public function getMinersByIdsAndUserAndNoRig(array $ids, User $user): array
+    public function getMinersWithoutRigs(array $ids, User $user): array
     {
         return $this->entityManager
             ->getRepository($this->getEntityName())
