@@ -17,7 +17,7 @@ final class MinerCalcIncomeStrategy implements MinerCalcIncomeStrategyInterface
 
     public function execute(float $hashRate, int $time, MinerCoin $coin): array
     {
-        $income = $this->algorithm->execute($hashRate, $coin->getDifficulty(), $coin->getReward(), $time);
+        $income = $this->algorithm->calculate($hashRate, $coin->getDifficulty(), $coin->getReward(), $time);
 
         return [
             'name'   => $coin->getName(),
