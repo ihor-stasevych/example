@@ -46,12 +46,12 @@ class MinerCoin
         return $this->tag;
     }
 
-    public function getDifficulty(): string
+    public function getDifficulty(): float
     {
         return $this->difficulty;
     }
 
-    public function getReward(): string
+    public function getReward(): float
     {
         return $this->reward;
     }

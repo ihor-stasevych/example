@@ -15,12 +15,16 @@ App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\MinerCoin:
             length: 100
 
         difficulty:
-            type: string
-            length: 255
+            type: float
+            nullable: false
+            options:
+                default: 0.00
 
         reward:
-            type: string
-            length: 255
+            type: float
+            nullable: false
+            options:
+                default: 0.00
 
         updatedAt:
             column: updatedAt

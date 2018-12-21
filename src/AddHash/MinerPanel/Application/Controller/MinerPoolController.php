@@ -3,16 +3,17 @@
 namespace App\AddHash\MinerPanel\Application\Controller;
 
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use App\AddHash\MinerPanel\Application\Command\Miner\MinerPools\MinerPoolsGetCommand;
-use App\AddHash\MinerPanel\Domain\Miner\MinerPools\Services\MinerPoolsGetServiceInterface;
+use App\AddHash\MinerPanel\Application\Command\Miner\MinerPool\MinerPoolGetCommand;
+use App\AddHash\MinerPanel\Domain\Miner\MinerPool\Services\MinerPoolGetServiceInterface;
 
-class MinerPoolsController extends BaseServiceController
+class MinerPoolController extends BaseServiceController
 {
     private $getService;
 
-    public function __construct(MinerPoolsGetServiceInterface $getService)
+    public function __construct(MinerPoolGetServiceInterface $getService)
     {
         $this->getService = $getService;
     }
@@ -53,7 +54,7 @@ class MinerPoolsController extends BaseServiceController
      */
     public function get(int $id)
     {
-        $command = new MinerPoolsGetCommand($id);
+        $command = new MinerPoolGetCommand($id);
 
         return $this->json(
             $this->getService->execute($command)
