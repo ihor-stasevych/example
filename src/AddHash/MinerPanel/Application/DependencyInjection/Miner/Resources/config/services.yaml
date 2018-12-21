@@ -72,12 +72,12 @@ services:
   App\AddHash\MinerPanel\Domain\Miner\MinerSummary\Services\MinerSummaryGetServiceInterface: '@addhash.miner.panel.miner.summary.get.service'
 
   addhash.miner.panel.miner.pools.get.service:
-    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerPools\MinerPoolsGetService
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerPool\MinerPoolGetService
     public: true
     arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.pool.get.handler']
-  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerPools\MinerPoolsGetService: '@addhash.miner.panel.miner.pools.get.service'
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerPool\MinerPoolGetService: '@addhash.miner.panel.miner.pools.get.service'
 
-  App\AddHash\MinerPanel\Domain\Miner\MinerPools\Services\MinerPoolsGetServiceInterface: '@addhash.miner.panel.miner.pools.get.service'
+  App\AddHash\MinerPanel\Domain\Miner\MinerPool\Services\MinerPoolGetServiceInterface: '@addhash.miner.panel.miner.pools.get.service'
 
   addhash.miner.panel.miner.coin.get.service:
     class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin\MinerCoinGetService
@@ -136,12 +136,12 @@ services:
   App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoSummaryGetHandlerInterface: '@addhash.miner.panel.miner.summary.get.handler'
 
   addhash.miner.panel.miner.pool.get.handler:
-    class: App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo\MinerInfoPoolsGetHandler
+    class: App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo\MinerInfoPoolGetHandler
     public: true
     arguments: ['@addhash.cache']
-  App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo\MinerInfoPoolsGetHandler: '@addhash.miner.panel.miner.pool.get.handler'
+  App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo\MinerInfoPoolGetHandler: '@addhash.miner.panel.miner.pool.get.handler'
 
-  App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolsGetHandlerInterface: '@addhash.miner.panel.miner.pool.get.handler'
+  App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolGetHandlerInterface: '@addhash.miner.panel.miner.pool.get.handler'
 
   addhash.miner.panel.miner.calc.income.handler:
     class: App\AddHash\MinerPanel\Infrastructure\Miner\MinerCalcIncome\MinerCalcIncomeHandler

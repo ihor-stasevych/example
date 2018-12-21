@@ -14,9 +14,9 @@ use App\AddHash\MinerPanel\Application\Command\IpAddress\IpAddressCheckCommand;
 use App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerTypeRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateInvalidRigException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateInvalidTypeException;
+use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateInvalidDataException;
 use App\AddHash\MinerPanel\Domain\IpAddress\Services\IpAddressCheckServiceInterface;
-use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolsGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoSummaryGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerCreateMaxQtyFreeMinerException;
@@ -44,7 +44,7 @@ final class MinerCreateService implements MinerCreateServiceInterface
 
     private $summaryGetHandler;
 
-    private $poolsGetHandler;
+    private $poolGetHandler;
 
     private $calcIncomeHandler;
 
@@ -56,7 +56,7 @@ final class MinerCreateService implements MinerCreateServiceInterface
         RigRepositoryInterface $rigRepository,
         IpAddressCheckServiceInterface $ipAddressCheckService,
         MinerInfoSummaryGetHandlerInterface $summaryGetHandler,
-        MinerInfoPoolsGetHandlerInterface $poolsGetHandler,
+        MinerInfoPoolGetHandlerInterface $poolGetHandler,
         MinerCalcIncomeHandlerInterface $calcIncomeHandler
     )
     {
@@ -67,7 +67,7 @@ final class MinerCreateService implements MinerCreateServiceInterface
         $this->rigRepository = $rigRepository;
         $this->ipAddressCheckService = $ipAddressCheckService;
         $this->summaryGetHandler = $summaryGetHandler;
-        $this->poolsGetHandler = $poolsGetHandler;
+        $this->poolGetHandler = $poolGetHandler;
         $this->calcIncomeHandler = $calcIncomeHandler;
     }
 
@@ -160,7 +160,7 @@ final class MinerCreateService implements MinerCreateServiceInterface
 
         $minerInfo = [
             'summary' => $summary,
-            'pools'   => $this->poolsGetHandler->handler($minerCredential),
+            'pools'   => $this->poolGetHandler->handler($minerCredential),
             'coins'   => $this->calcIncomeHandler->handler($miner),
         ];
 

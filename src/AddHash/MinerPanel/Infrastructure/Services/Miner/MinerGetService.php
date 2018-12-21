@@ -7,7 +7,7 @@ use App\AddHash\MinerPanel\Domain\Miner\Command\MinerGetCommandInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Services\MinerGetServiceInterface;
 use App\AddHash\MinerPanel\Infrastructure\Transformers\Miner\MinerTransform;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerGetInvalidMinerException;
-use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolsGetHandlerInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoSummaryGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerCalcIncome\MinerCalcIncomeHandlerInterface;
@@ -20,7 +20,7 @@ final class MinerGetService implements MinerGetServiceInterface
 
     private $summaryGetHandler;
 
-    private $poolsGetHandler;
+    private $poolGetHandler;
 
     private $calcIncomeHandler;
 
@@ -28,14 +28,14 @@ final class MinerGetService implements MinerGetServiceInterface
         UserAuthenticationGetServiceInterface $authenticationAdapter,
         MinerRepositoryInterface $minerRepository,
         MinerInfoSummaryGetHandlerInterface $summaryGetHandler,
-        MinerInfoPoolsGetHandlerInterface $poolsGetHandler,
+        MinerInfoPoolGetHandlerInterface $poolGetHandler,
         MinerCalcIncomeHandlerInterface $calcIncomeHandler
     )
     {
         $this->authenticationAdapter = $authenticationAdapter;
         $this->minerRepository = $minerRepository;
         $this->summaryGetHandler = $summaryGetHandler;
-        $this->poolsGetHandler = $poolsGetHandler;
+        $this->poolGetHandler = $poolGetHandler;
         $this->calcIncomeHandler = $calcIncomeHandler;
     }
 
@@ -58,7 +58,7 @@ final class MinerGetService implements MinerGetServiceInterface
 
         $minerInfo = [
             'summary' => $this->summaryGetHandler->handler($minerCredential),
-            'pools'   => $this->poolsGetHandler->handler($minerCredential),
+            'pools'   => $this->poolGetHandler->handler($minerCredential),
             'coins'   => $this->calcIncomeHandler->handler($miner),
         ];
 

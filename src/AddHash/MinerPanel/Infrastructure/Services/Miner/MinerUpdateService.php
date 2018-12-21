@@ -11,11 +11,11 @@ use App\AddHash\MinerPanel\Domain\Miner\Services\MinerUpdateServiceInterface;
 use App\AddHash\MinerPanel\Application\Command\IpAddress\IpAddressCheckCommand;
 use App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerTypeRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerUpdateInvalidRigException;
+use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerUpdateInvalidTypeException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerUpdateInvalidDataException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerUpdateInvalidMinerException;
 use App\AddHash\MinerPanel\Domain\IpAddress\Services\IpAddressCheckServiceInterface;
-use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolsGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoSummaryGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerUpdateInvalidAlgorithmException;
@@ -39,7 +39,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
 
     private $summaryGetHandler;
 
-    private $poolsGetHandler;
+    private $poolGetHandler;
 
     private $calcIncomeHandler;
 
@@ -51,7 +51,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
         RigRepositoryInterface $rigRepository,
         IpAddressCheckServiceInterface $ipAddressCheckService,
         MinerInfoSummaryGetHandlerInterface $summaryGetHandler,
-        MinerInfoPoolsGetHandlerInterface $poolsGetHandler,
+        MinerInfoPoolGetHandlerInterface $poolGetHandler,
         MinerCalcIncomeHandlerInterface $calcIncomeHandler
     )
     {
@@ -62,7 +62,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
         $this->rigRepository = $rigRepository;
         $this->ipAddressCheckService = $ipAddressCheckService;
         $this->summaryGetHandler = $summaryGetHandler;
-        $this->poolsGetHandler = $poolsGetHandler;
+        $this->poolGetHandler = $poolGetHandler;
         $this->calcIncomeHandler = $calcIncomeHandler;
     }
 
@@ -167,7 +167,7 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
 
         $minerInfo = [
             'summary' => $summary,
-            'pools'   => $this->poolsGetHandler->handler($minerCredential),
+            'pools'   => $this->poolGetHandler->handler($minerCredential),
             'coins'   => $this->calcIncomeHandler->handler($miner),
         ];
 

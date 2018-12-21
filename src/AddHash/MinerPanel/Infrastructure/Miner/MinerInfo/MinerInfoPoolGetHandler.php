@@ -4,12 +4,12 @@ namespace App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo;
 
 use App\AddHash\MinerPanel\Infrastructure\Miner\Parsers\Parser;
 use App\AddHash\MinerPanel\Infrastructure\Miner\Parsers\MinerPoolsParser;
+use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolGetHandlerInterface;
 use App\AddHash\MinerPanel\Domain\Miner\ApiCommand\AbstractMinerApiCommandInterface;
-use App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolsGetHandlerInterface;
 
-final class MinerInfoPoolsGetHandler extends AbstractMinerInfoHandler implements MinerInfoPoolsGetHandlerInterface
+final class MinerInfoPoolGetHandler extends AbstractMinerInfoHandler implements MinerInfoPoolGetHandlerInterface
 {
-    protected const MINER_INFO_KEY = 'miner_pools_';
+    protected const MINER_INFO_KEY = 'miner_pool_';
 
     protected const EXPIRATION = 180;
 
