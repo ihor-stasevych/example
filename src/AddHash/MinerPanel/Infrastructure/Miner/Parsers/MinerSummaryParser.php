@@ -4,18 +4,13 @@ namespace App\AddHash\MinerPanel\Infrastructure\Miner\Parsers;
 
 class MinerSummaryParser extends Parser
 {
-    private const STATUS_SUCCESS = 'S';
-
     public function normalizeData(string $line): array
     {
         $data = parent::normalizeData($line);
 
         $result = [];
 
-        $result['status'] = (
-            false === empty($data['STATUS']['STATUS']) &&
-            $data['STATUS']['STATUS'] == self::STATUS_SUCCESS
-        ) ? true : false;
+        $result['status'] = (false === empty($data['STATUS']['STATUS'])) ? $data['STATUS']['STATUS'] : '';
 
         $result['accepted'] = (false === empty($data['SUMMARY']['Accepted'])) ? $data['SUMMARY']['Accepted'] : '';
 

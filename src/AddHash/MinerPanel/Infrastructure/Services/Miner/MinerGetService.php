@@ -56,12 +56,12 @@ final class MinerGetService implements MinerGetServiceInterface
 
         $minerCredential = $miner->getCredential();
 
-        $summary = $this->summaryGetHandler->handler($minerCredential);
+        $minerInfo = [
+            'summary' => $this->summaryGetHandler->handler($minerCredential),
+            'pools'   => $this->poolsGetHandler->handler($minerCredential),
+            'coins'   => $this->calcIncomeHandler->handler($miner),
+        ];
 
-        $pools['pools'] = $this->poolsGetHandler->handler($minerCredential);
-
-        $coins['coins'] = $this->calcIncomeHandler->handler($miner);
-
-        return (new MinerTransform())->transform($miner) + $summary + $pools + $coins;
+        return (new MinerTransform())->transform($miner) + $minerInfo;
     }
 }

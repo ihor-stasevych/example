@@ -1,17 +1,45 @@
 services:
   addhash.miner.panel.rig.list:
     class: App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigListService
-    arguments: ['@addhash.miner.panel.user.authentication.get','@addhash.miner.panel.rig.repository']
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.rig.repository']
   App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigListService: '@addhash.miner.panel.rig.list'
 
   App\AddHash\MinerPanel\Domain\Rig\Services\RigListServiceInterface: '@addhash.miner.panel.rig.list'
 
   addhash.miner.panel.rig.get:
     class: App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigGetService
-    arguments: ['@addhash.miner.panel.user.authentication.get','@addhash.miner.panel.rig.repository']
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.rig.repository']
   App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigGetService: '@addhash.miner.panel.rig.get'
 
   App\AddHash\MinerPanel\Domain\Rig\Services\RigGetServiceInterface: '@addhash.miner.panel.rig.get'
+
+  addhash.miner.panel.rig.create:
+    class: App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigCreateService
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.rig.repository', '@addhash.miner.panel.miner.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigCreateService: '@addhash.miner.panel.rig.create'
+
+  App\AddHash\MinerPanel\Domain\Rig\Services\RigCreateServiceInterface: '@addhash.miner.panel.rig.create'
+
+  addhash.miner.panel.rig.update:
+    class: App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigUpdateService
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.rig.repository', '@addhash.miner.panel.miner.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigUpdateService: '@addhash.miner.panel.rig.update'
+
+  App\AddHash\MinerPanel\Domain\Rig\Services\RigUpdateServiceInterface: '@addhash.miner.panel.rig.update'
+
+  addhash.miner.panel.rig.delete:
+    class: App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigDeleteService
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.rig.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigDeleteService: '@addhash.miner.panel.rig.delete'
+
+  App\AddHash\MinerPanel\Domain\Rig\Services\RigDeleteServiceInterface: '@addhash.miner.panel.rig.delete'
+
+  addhash.miner.panel.rig.all:
+    class: App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigAllService
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.rig.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigAllService: '@addhash.miner.panel.rig.all'
+
+  App\AddHash\MinerPanel\Domain\Rig\Services\RigAllServiceInterface: '@addhash.miner.panel.rig.all'
 
   addhash.miner.panel.rig.repository:
     class: App\AddHash\MinerPanel\Infrastructure\Repository\Rig\RigRepository

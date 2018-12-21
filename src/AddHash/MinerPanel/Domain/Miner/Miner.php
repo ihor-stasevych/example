@@ -2,6 +2,8 @@
 
 namespace App\AddHash\MinerPanel\Domain\Miner;
 
+use Doctrine\ORM\PersistentCollection;
+use App\AddHash\MinerPanel\Domain\Rig\Rig;
 use App\AddHash\MinerPanel\Domain\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerType;
@@ -79,6 +81,14 @@ class Miner
         return $this->algorithm;
     }
 
+    public function infoRigs(): PersistentCollection
+    {
+        /** @var PersistentCollection $rigs */
+        $rigs = $this->rigs;
+
+        return $rigs;
+    }
+
     public function setTitle(string $title): void
     {
         $this->title = $title;
@@ -102,5 +112,21 @@ class Miner
     public function setAlgorithm(MinerAlgorithm $algorithm): void
     {
         $this->algorithm = $algorithm;
+    }
+
+    public function setRig(Rig $rig): void
+    {
+        if (false === $this->rigs->contains($rig)) {
+            $this->rigs->add($rig);
+            $rig->setMiner($this);
+        }
+    }
+
+    public function removeRig(Rig $rig): void
+    {
+        if (true === $this->rigs->contains($rig)) {
+            $this->rigs->removeElement($rig);
+            $rig->removeMiner($this);
+        }
     }
 }

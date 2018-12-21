@@ -14,15 +14,16 @@ use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
 
 class MinerRepository extends AbstractRepository implements MinerRepositoryInterface
 {
-    public function getMinersByUser(User $user, ?int $currentPage): ?Pagerfanta
+    public function getMinersByUserWithPagination(User $user, ?int $currentPage): Pagerfanta
     {
         $result = $this->entityManager
             ->getRepository($this->getEntityName())
             ->createQueryBuilder('m')
-            ->select('m', 'cr', 't', 'a')
+            ->select('m', 'cr', 't', 'a', 'r')
             ->join('m.credential', 'cr')
             ->join('m.type', 't')
             ->join('m.algorithm', 'a')
+            ->leftJoin('m.rigs', 'r')
             ->where('m.user = :user')
             ->setParameter('user', $user)
             ->getQuery();
@@ -37,6 +38,18 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
         return $pager;
     }
 
+    public function getMinersByUser(User $user): array
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('m')
+            ->where('m.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @param int $id
      * @param User $user
@@ -48,11 +61,12 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
         return $this->entityManager
             ->getRepository($this->getEntityName())
             ->createQueryBuilder('m')
-            ->select('m', 'cr', 't', 'a', 'c')
+            ->select('m', 'cr', 't', 'a', 'c', 'r')
             ->join('m.credential', 'cr')
             ->join('m.type', 't')
             ->join('m.algorithm', 'a')
-            ->join('a.coins', 'c')
+            ->leftJoin('a.coins', 'c')
+            ->leftJoin('m.rigs', 'r')
             ->where('m.id = :id')
             ->andWhere('m.user = :user')
             ->setParameter('id', $id)
@@ -68,6 +82,26 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
      * @throws NonUniqueResultException
      */
     public function existMinerByIdAndUser(int $id, User $user): ?Miner
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('m')
+            ->where('m.id = :id')
+            ->andWhere('m.user = :user')
+            ->setParameter('id', $id)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @param int $id
+     * @param User $user
+     * @return Miner|null
+     * @throws NonUniqueResultException
+     */
+    public function existMinerByIdAndUserForDelete(int $id, User $user): ?Miner
     {
         return $this->entityManager
             ->getRepository($this->getEntityName())
@@ -93,11 +127,7 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
         return $this->entityManager
             ->getRepository($this->getEntityName())
             ->createQueryBuilder('m')
-            ->select('m', 'cr', 't', 'a', 'c')
-            ->join('m.credential', 'cr')
-            ->join('m.type', 't')
-            ->join('m.algorithm', 'a')
-            ->join('a.coins', 'c')
+            ->select('m')
             ->where('m.title = :title')
             ->andWhere('m.user = :user')
             ->setParameter('title', $title)
@@ -121,6 +151,37 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
             ->setParameter('user', $user)
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function getMinersWithoutRigs(array $ids, User $user): array
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('m', 'r')
+            ->leftJoin('m.rigs', 'r')
+            ->where('m.id IN (:ids)')
+            ->andWhere('m.user = :user')
+            ->andWhere('r.id IS NULL')
+            ->setParameter('ids', $ids)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getMinersByIdsAndUser(array $ids, User $user): array
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('m', 'r')
+            ->leftJoin('m.rigs', 'r')
+            ->where('m.id IN (:ids)')
+            ->andWhere('m.user = :user')
+            ->setParameter('ids', $ids)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
     }
 
     /**
@@ -149,6 +210,22 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
     {
         $this->entityManager->persist($miner);
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param array $miners
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function saveAll(array $miners): void
+    {
+        if (count($miners) > 0) {
+            foreach ($miners as $miner) {
+                $this->entityManager->persist($miner);
+            }
+
+            $this->entityManager->flush();
+        }
     }
 
     /**

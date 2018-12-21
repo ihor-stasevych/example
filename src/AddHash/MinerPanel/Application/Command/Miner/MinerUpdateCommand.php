@@ -37,7 +37,12 @@ final class MinerUpdateCommand implements MinerUpdateCommandInterface
      */
     private $algorithmId;
 
-    public function __construct($id, $title, $ip, $port, $typeId, $algorithmId)
+    /**
+     * @Assert\Regex("/^\d+$/")
+     */
+    private $rigId;
+
+    public function __construct($id, $title, $ip, $port, $typeId, $algorithmId, $rigId)
     {
         $this->id = $id;
         $this->title = $title;
@@ -45,6 +50,7 @@ final class MinerUpdateCommand implements MinerUpdateCommandInterface
         $this->port = $port;
         $this->typeId = $typeId;
         $this->algorithmId = $algorithmId;
+        $this->rigId = $rigId;
     }
 
     public function getId(): int
@@ -75,5 +81,10 @@ final class MinerUpdateCommand implements MinerUpdateCommandInterface
     public function getAlgorithmId(): int
     {
         return $this->algorithmId;
+    }
+
+    public function getRigId(): ?int
+    {
+        return $this->rigId;
     }
 }

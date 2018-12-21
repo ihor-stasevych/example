@@ -5,15 +5,15 @@ namespace App\AddHash\MinerPanel\Application\Controller;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Services\MinerAlgorithmListServiceInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Services\MinerAlgorithmAllServiceInterface;
 
 class MinerAlgorithmController extends BaseServiceController
 {
-    private $listService;
+    private $allService;
 
-    public function __construct(MinerAlgorithmListServiceInterface $listService)
+    public function __construct(MinerAlgorithmAllServiceInterface $allService)
     {
-        $this->listService = $listService;
+        $this->allService = $allService;
     }
 
     /**
@@ -21,24 +21,29 @@ class MinerAlgorithmController extends BaseServiceController
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns miners algorithm",
+     *     description="Return miners algorithm",
      *     @SWG\Schema(
-     *             type="array",
-     *             @SWG\Items(
-     *                 type="object",
-     *                 @SWG\Property(property="id", type="integer"),
-     *                 @SWG\Property(property="value", type="string"),
-     *             )
+     *          type="array",
+     *          @SWG\Items(
+     *              type="object",
+     *              @SWG\Property(property="id", type="integer"),
+     *              @SWG\Property(property="value", type="string"),
+     *          )
      *     ),
      * )
      *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Return validation errors"
+     * )
+     *
      * @return JsonResponse
-     * @SWG\Tag(name="MinerPanel")
+     * @SWG\Tag(name="MinerPanel_MinerAlgorithm")
      */
-    public function index()
+    public function all()
     {
         return $this->json(
-            $this->listService->execute()
+            $this->allService->execute()
         );
     }
 }
