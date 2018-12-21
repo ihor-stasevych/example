@@ -8,6 +8,7 @@ use App\AddHash\MinerPanel\Domain\Rig\Command\RigListCommandInterface;
 final class RigListCommand implements RigListCommandInterface
 {
     /**
+     * @Assert\Type("numeric")
      * @Assert\Regex("/^[1-9]+[0-9]*$/")
      */
     private $page;
