@@ -19,6 +19,7 @@ final class MinerCreateCommand implements MinerCreateCommandInterface
     private $ip;
 
     /**
+     * @Assert\Type("numeric")
      * @Assert\Regex("/^\d+$/")
      */
     private $port;
@@ -36,6 +37,7 @@ final class MinerCreateCommand implements MinerCreateCommandInterface
     private $algorithmId;
 
     /**
+     * @Assert\Type("numeric")
      * @Assert\Regex("/^\d+$/")
      */
     private $rigId;
