@@ -16,8 +16,6 @@ class MinerPoolsParser extends Parser
                     'url'      => (false === empty($pool['URL'])) ? $pool['URL'] : '',
                     'user'     => (false === empty($pool['User'])) ? $pool['User'] : '',
                     'status'   => (false === empty($pool['Status'])) ? $pool['Status'] : '',
-                    'accepted' => (false === empty($pool['Accepted'])) ? $pool['Accepted'] : '',
-                    'rejected' => (false === empty($pool['Rejected'])) ? $pool['Rejected'] : '',
                 ];
             }
         }

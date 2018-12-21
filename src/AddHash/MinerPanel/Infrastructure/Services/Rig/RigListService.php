@@ -2,7 +2,6 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Rig;
 
-use App\AddHash\MinerPanel\Domain\Rig\Rig;
 use App\AddHash\System\Response\ResponseListCollection;
 use App\AddHash\MinerPanel\Domain\Rig\RigRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Rig\Command\RigListCommandInterface;
@@ -29,14 +28,13 @@ final class RigListService implements RigListServiceInterface
     {
         $user = $this->authenticationAdapter->execute();
 
-        $rigs = $this->rigRepository->getRigsByUser($user, $command->getPage());
+        $rigs = $this->rigRepository->getRigsByUserWithPagination($user, $command->getPage());
 
         $data = [];
 
         if ($rigs->count() > 0) {
             $transform = new RigTransform();
 
-            /** @var Rig $rig */
             foreach ($rigs as $rig) {
                 $data[] = $transform->transform($rig);
             }

@@ -35,13 +35,19 @@ final class MinerCreateCommand implements MinerCreateCommandInterface
      */
     private $algorithmId;
 
-    public function __construct($title, $ip, $port, $typeId, $algorithmId)
+    /**
+     * @Assert\Regex("/^\d+$/")
+     */
+    private $rigId;
+
+    public function __construct($title, $ip, $port, $typeId, $algorithmId, $rigId)
     {
         $this->title = $title;
         $this->ip = $ip;
         $this->port = $port;
         $this->typeId = $typeId;
         $this->algorithmId = $algorithmId;
+        $this->rigId = $rigId;
     }
 
     public function getTitle(): string
@@ -67,5 +73,10 @@ final class MinerCreateCommand implements MinerCreateCommandInterface
     public function getAlgorithmId(): int
     {
         return $this->algorithmId;
+    }
+
+    public function getRigId(): ?int
+    {
+        return $this->rigId;
     }
 }

@@ -5,15 +5,15 @@ namespace App\AddHash\MinerPanel\Application\Controller;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
-use App\AddHash\MinerPanel\Domain\Miner\MinerType\Services\MinerTypeListServiceInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerType\Services\MinerTypeAllServiceInterface;
 
 class MinerTypeController extends BaseServiceController
 {
-    private $listService;
+    private $allService;
 
-    public function __construct(MinerTypeListServiceInterface $listService)
+    public function __construct(MinerTypeAllServiceInterface $allService)
     {
-        $this->listService = $listService;
+        $this->allService = $allService;
     }
 
     /**
@@ -21,24 +21,29 @@ class MinerTypeController extends BaseServiceController
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns miners type",
+     *     description="Return miners type",
      *     @SWG\Schema(
-     *             type="array",
-     *             @SWG\Items(
-     *                 type="object",
-     *                 @SWG\Property(property="id", type="integer"),
-     *                 @SWG\Property(property="value", type="string"),
-     *             )
+     *          type="array",
+     *          @SWG\Items(
+     *              type="object",
+     *              @SWG\Property(property="id", type="integer"),
+     *              @SWG\Property(property="value", type="string"),
+     *          )
      *     ),
+     * )
+     *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Return validation errors"
      * )
      *
      * @return JsonResponse
      * @SWG\Tag(name="MinerPanel")
      */
-    public function index()
+    public function all()
     {
         return $this->json(
-            $this->listService->execute()
+            $this->allService->execute()
         );
     }
 }

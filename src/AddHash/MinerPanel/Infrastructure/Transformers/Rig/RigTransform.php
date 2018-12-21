@@ -12,19 +12,17 @@ final class RigTransform
         $miners = $rig->getMiners();
         $minersData = [];
 
-        if ($miners->count() > 0) {
-            /** @var Miner $miner */
-            foreach ($miners as $miner) {
-                $minersData[] = [
-                    'id'        => $miner->getId(),
-                    'title'     => $miner->getTitle(),
-                    'ip'        => $miner->getCredential()->getIp(),
-                    'port'      => $miner->getCredential()->getPort(),
-                    'hashRate'  => $miner->getHashRate(),
-                    'type'      => $miner->getType()->getValue(),
-                    'algorithm' => $miner->getAlgorithm()->getValue()
-                ];
-            }
+        /** @var Miner $miner */
+        foreach ($miners as $miner) {
+            $minersData[] = [
+                'id'          => $miner->getId(),
+                'title'       => $miner->getTitle(),
+                'ip'          => $miner->getCredential()->getIp(),
+                'port'        => $miner->getCredential()->getPort(),
+                'hashRate'    => $miner->getHashRate(),
+                'typeId'      => $miner->getType()->getId(),
+                'algorithmId' => $miner->getAlgorithm()->getId(),
+            ];
         }
 
         return [

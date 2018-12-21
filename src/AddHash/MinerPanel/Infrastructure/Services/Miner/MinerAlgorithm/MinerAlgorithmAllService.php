@@ -3,9 +3,9 @@
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm;
 
 use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithmRepositoryInterface;
-use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Services\MinerAlgorithmListServiceInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Services\MinerAlgorithmAllServiceInterface;
 
-final class MinerAlgorithmListService implements MinerAlgorithmListServiceInterface
+final class MinerAlgorithmAllService implements MinerAlgorithmAllServiceInterface
 {
     private $minerAlgorithmRepository;
 

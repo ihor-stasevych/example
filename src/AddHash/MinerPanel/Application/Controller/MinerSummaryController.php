@@ -16,24 +16,38 @@ class MinerSummaryController extends BaseServiceController
     {
         $this->getService = $getService;
     }
+
     /**
-     * Get summary
+     * Get miner summary
+     *
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="path",
+     *     type="integer",
+     *     description="ID",
+     *     required=true,
+     * )
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns summary",
+     *     description="Return miner summary",
      *     @SWG\Schema(
-     *              type="object",
-     *              @SWG\Property(property="accepted", type="string"),
-     *              @SWG\Property(property="rejected", type="string"),
-     *              @SWG\Property(property="speed", type="string"),
-     *              @SWG\Property(property="speedAverage", type="string"),
+     *          type="object",
+     *          @SWG\Property(property="accepted", type="string"),
+     *          @SWG\Property(property="rejected", type="string"),
+     *          @SWG\Property(property="hashRate", type="string"),
+     *          @SWG\Property(property="hashRateAverage", type="string"),
      *     )
+     * )
+     *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Return validation errors"
      * )
      *
      * @param int $id
      * @return JsonResponse
-     * @SWG\Tag(name="MinerPanel")
+     * @SWG\Tag(name="MinerPanel_MinerSummary")
      */
     public function get(int $id)
     {
