@@ -5,37 +5,54 @@ namespace App\AddHash\MinerPanel\Infrastructure\Miner\MinerCalcIncome;
 use App\AddHash\MinerPanel\Domain\Miner\Miner;
 use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\MinerCoin;
 use App\AddHash\MinerPanel\Domain\Miner\MinerCalcIncome\MinerCalcIncomeHandlerInterface;
-use App\AddHash\MinerPanel\Infrastructure\Miner\MinerCalcIncome\Algorithms\MinerCalcIncomeAlgorithmEtHash;
-use App\AddHash\MinerPanel\Infrastructure\Miner\MinerCalcIncome\Algorithms\MinerCalcIncomeAlgorithmSHA256;
-use App\AddHash\MinerPanel\Infrastructure\Miner\MinerCalcIncome\Algorithms\MinerCalcIncomeAlgorithmDefault;
+
 
 final class MinerCalcIncomeHandler implements MinerCalcIncomeHandlerInterface
 {
+	/**
+	 * Key part of class name => Coin name
+	 * @var array
+	 */
+	protected $algorithmObjectTypes = [
+		'SHA256' => ['SHA-256', 'Scrypt', 'X11'],
+		'EtHash' => ['EtHash']
+	];
+
+	/**
+	 * @param Miner $miner
+	 * @param int $time
+	 * @return array
+	 * @throws \Exception
+	 */
     public function handler(Miner $miner, int $time = 86400): array
     {
         $data = [];
         $coins = $miner->getAlgorithm()->getCoins();
 
-        if ($coins->count() > 0) {
-            $algorithm = $miner->getAlgorithm()->getValue();
+        if (empty($coins->count())) {
+        	return $data;
+        }
 
-            /** @var MinerCoin $coin */
-            foreach ($coins as $coin) {
-                switch ($algorithm) {
-                    case 'SHA-256':
-                    case 'Scrypt':
-                    case 'X11':
-                        $algorithmCalc = new MinerCalcIncomeAlgorithmSHA256();
-                        break;
-                    case 'EtHash':
-                        $algorithmCalc = new MinerCalcIncomeAlgorithmEtHash();
-                        break;
-                    default:
-                        $algorithmCalc = new MinerCalcIncomeAlgorithmDefault();
-                }
+        $algorithmType = $miner->getAlgorithm()->getValue();
+        $algorithmObjName = false;
 
-                $data[] = (new MinerCalcIncomeStrategy($algorithmCalc))->execute($miner->getHashRate(), $time, $coin);
-            }
+	    /**
+	     * Search part of class name by algorithm type
+	     */
+	    array_walk($this->algorithmObjectTypes, function ($value, $key) use ($algorithmType, &$algorithmObjName) {
+			if (in_array($algorithmType, $value)) {
+				$algorithmObjName = $key;
+			}
+        });
+
+        if ($algorithmObjName){
+        	$class = __NAMESPACE__ .'\\Algorithms\\MinerCalcIncomeAlgorithm' . $algorithmObjName;
+	        $algorithm = new $class;
+
+	        /** @var MinerCoin $coin */
+	        foreach ($coins as $coin) {
+		        $data[] = (new MinerCalcIncomeStrategy($algorithm))->execute($miner->getHashRate(), $time, $coin);
+	        }
         }
 
         return $data;
