@@ -2,12 +2,17 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Miner\MinerCalcIncome\Algorithms;
 
-use App\AddHash\MinerPanel\Domain\Miner\MinerCalcIncome\Algorithms\MinerCalcIncomeAlgorithmInterface;
-
-final class MinerCalcIncomeAlgorithmEtHash implements MinerCalcIncomeAlgorithmInterface
+class MinerCalcIncomeAlgorithmEtHash extends MinerCalcIncomeAlgorithm
 {
-    public function execute(float $hashRate, string $difficulty, string $reward, int $time): string
-    {
-        return ($hashRate / $difficulty) * $reward * pow(10, 12) * $time;
-    }
+	/**
+	 * @param float $hashRate
+	 * @param string $difficulty
+	 * @param string $reward
+	 * @param int $time
+	 * @return string
+	 */
+	public function calculate(float $hashRate, string $difficulty, string $reward, int $time): string
+	{
+		return ($hashRate / $difficulty) * $reward * pow(10, 12) * $time;
+	}
 }
