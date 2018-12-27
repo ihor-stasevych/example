@@ -175,3 +175,18 @@
 2018-12-03 08:48:20,621 INFO supervisord started with pid 1
 2018-12-03 08:48:21,624 INFO spawned: 'php7-fpm' with pid 9
 2018-12-03 08:48:22,694 INFO success: php7-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2018-12-25 15:17:26,557 CRIT Supervisor running as root (no user in config file)
+2018-12-25 15:17:26,572 INFO supervisord started with pid 1
+2018-12-25 15:17:27,574 INFO spawned: 'php7-fpm' with pid 9
+2018-12-25 15:17:28,642 INFO success: php7-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2018-12-25 16:01:17,212 WARN received SIGTERM indicating exit request
+2018-12-25 16:01:17,216 INFO waiting for php7-fpm to die
+2018-12-25 16:01:17,223 INFO stopped: php7-fpm (exit status 0)
+2018-12-25 16:02:27,129 CRIT Supervisor running as root (no user in config file)
+2018-12-25 16:02:27,136 INFO supervisord started with pid 1
+2018-12-25 16:02:28,138 INFO spawned: 'php7-fpm' with pid 9
+2018-12-25 16:02:29,207 INFO success: php7-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2018-12-27 08:55:09,631 CRIT Supervisor running as root (no user in config file)
+2018-12-27 08:55:09,636 INFO supervisord started with pid 1
+2018-12-27 08:55:10,639 INFO spawned: 'php7-fpm' with pid 9
+2018-12-27 08:55:11,640 INFO success: php7-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
