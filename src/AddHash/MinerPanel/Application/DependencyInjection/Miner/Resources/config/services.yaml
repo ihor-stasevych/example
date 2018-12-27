@@ -90,7 +90,7 @@ services:
   addhash.miner.panel.miner.coin.info.get.service:
     class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin\MinerCoinInfoGetService
     public: true
-    arguments: ['@addhash.miner.panel.miner.algorithm.repository', '@addhash.miner.panel.miner.coin.repository', '%env(COINWARZ_API_KEY)%']
+    arguments: ['@addhash.miner.panel.miner.algorithm.repository', '@addhash.miner.panel.miner.coin.repository', '%env(COINWARZ_API_KEY)%', '%kernel.root_dir%']
   App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin\MinerCoinInfoGetService: '@addhash.miner.panel.miner.coin.info.get.service'
 
   App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\Services\MinerCoinInfoGetServiceInterface: '@addhash.miner.panel.miner.coin.info.get.service'
