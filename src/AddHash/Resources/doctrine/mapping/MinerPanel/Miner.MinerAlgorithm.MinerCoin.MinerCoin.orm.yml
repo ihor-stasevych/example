@@ -1,0 +1,40 @@
+App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\MinerCoin:
+    type: entity
+    table: Miner_Panel_Miner_Coin
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        name:
+            type: string
+            length: 100
+
+        tag:
+            type: string
+            length: 100
+
+        difficulty:
+            type: float
+            nullable: false
+            options:
+                default: 0.00
+
+        reward:
+            type: float
+            nullable: false
+            options:
+                default: 0.00
+
+        updatedAt:
+            column: updatedAt
+            type: datetime
+            nullable: true
+
+    manyToOne:
+        algorithm:
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithm
+            inversedBy: coins
+            joinColumn:
+                name: algorithmId
+                referencedColumnName: id

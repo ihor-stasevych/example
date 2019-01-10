@@ -1,0 +1,7 @@
+services:
+  addhash.miner.panel.authentication.adapter.open.host:
+    class: App\AddHash\MinerPanel\Infrastructure\AdapterOpenHost\AuthenticationAdapter
+    arguments: ['@addhash.authentication.open.host']
+  App\AddHash\MinerPanel\Infrastructure\AdapterOpenHost\AuthenticationAdapter: '@addhash.miner.panel.authentication.adapter.open.host'
+
+  App\AddHash\MinerPanel\Domain\AdapterOpenHost\AuthenticationAdapterInterface: '@addhash.miner.panel.authentication.adapter.open.host'

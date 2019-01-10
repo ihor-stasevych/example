@@ -1,0 +1,151 @@
+services:
+  addhash.miner.panel.miner.list.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerListService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerListService: '@addhash.miner.panel.miner.list.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\Services\MinerListServiceInterface: '@addhash.miner.panel.miner.list.service'
+
+  addhash.miner.panel.miner.get.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerGetService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.summary.get.handler', '@addhash.miner.panel.miner.pool.get.handler', '@addhash.miner.panel.miner.calc.income.handler']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerGetService: '@addhash.miner.panel.miner.get.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\Services\MinerGetServiceInterface: '@addhash.miner.panel.miner.get.service'
+
+  addhash.miner.panel.miner.create.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerCreateService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.algorithm.repository', '@addhash.miner.panel.miner.type.repository', '@addhash.miner.panel.rig.repository', '@addhash.miner.panel.ip.check.service', '@addhash.miner.panel.miner.summary.get.handler', '@addhash.miner.panel.miner.pool.get.handler', '@addhash.miner.panel.miner.calc.income.handler']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerCreateService: '@addhash.miner.panel.miner.create.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\Services\MinerCreateServiceInterface: '@addhash.miner.panel.miner.create.service'
+
+  addhash.miner.panel.miner.update.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerUpdateService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.algorithm.repository', '@addhash.miner.panel.miner.type.repository', '@addhash.miner.panel.rig.repository', '@addhash.miner.panel.ip.check.service', '@addhash.miner.panel.miner.summary.get.handler', '@addhash.miner.panel.miner.pool.get.handler', '@addhash.miner.panel.miner.calc.income.handler']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerUpdateService: '@addhash.miner.panel.miner.update.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\Services\MinerUpdateServiceInterface: '@addhash.miner.panel.miner.update.service'
+
+  addhash.miner.panel.miner.delete.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerDeleteService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerDeleteService: '@addhash.miner.panel.miner.delete.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\Services\MinerDeleteServiceInterface: '@addhash.miner.panel.miner.delete.service'
+
+  addhash.miner.panel.miner.all.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAllService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAllService: '@addhash.miner.panel.miner.all.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\Services\MinerAllServiceInterface: '@addhash.miner.panel.miner.all.service'
+
+  addhash.miner.panel.miner.algorithm.all.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerAlgorithmAllService
+    public: true
+    arguments: ['@addhash.miner.panel.miner.algorithm.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerAlgorithmAllService: '@addhash.miner.panel.miner.algorithm.all.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\Services\MinerAlgorithmAllServiceInterface: '@addhash.miner.panel.miner.algorithm.all.service'
+
+  addhash.miner.panel.miner.type.all.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerType\MinerTypeAllService
+    public: true
+    arguments: ['@addhash.miner.panel.miner.type.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerType\MinerTypeAllService: '@addhash.miner.panel.miner.type.all.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerType\Services\MinerTypeAllServiceInterface: '@addhash.miner.panel.miner.type.all.service'
+
+  addhash.miner.panel.miner.summary.get.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerSummary\MinerSummaryGetService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.summary.get.handler']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerSummary\MinerSummaryGetService: '@addhash.miner.panel.miner.summary.get.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerSummary\Services\MinerSummaryGetServiceInterface: '@addhash.miner.panel.miner.summary.get.service'
+
+  addhash.miner.panel.miner.pools.get.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerPool\MinerPoolGetService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.pool.get.handler']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerPool\MinerPoolGetService: '@addhash.miner.panel.miner.pools.get.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerPool\Services\MinerPoolGetServiceInterface: '@addhash.miner.panel.miner.pools.get.service'
+
+  addhash.miner.panel.miner.coin.get.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin\MinerCoinGetService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.calc.income.handler']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin\MinerCoinGetService: '@addhash.miner.panel.miner.coin.get.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\Services\MinerCoinGetServiceInterface: '@addhash.miner.panel.miner.coin.get.service'
+
+  addhash.miner.panel.miner.coin.info.get.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin\MinerCoinInfoGetService
+    public: true
+    arguments: ['@addhash.miner.panel.miner.algorithm.repository', '@addhash.miner.panel.miner.coin.repository', '%env(COINWARZ_API_KEY)%']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin\MinerCoinInfoGetService: '@addhash.miner.panel.miner.coin.info.get.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\Services\MinerCoinInfoGetServiceInterface: '@addhash.miner.panel.miner.coin.info.get.service'
+
+  addhash.miner.panel.miner.repository:
+    class: App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerRepository: '@addhash.miner.panel.miner.repository'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface: '@addhash.miner.panel.miner.repository'
+
+  addhash.miner.panel.miner.algorithm.repository:
+    class: App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerAlgorithmRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerAlgorithmRepository: '@addhash.miner.panel.miner.algorithm.repository'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithmRepositoryInterface: '@addhash.miner.panel.miner.algorithm.repository'
+
+  addhash.miner.panel.miner.type.repository:
+    class: App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerTypeRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerTypeRepository: '@addhash.miner.panel.miner.type.repository'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerTypeRepositoryInterface: '@addhash.miner.panel.miner.type.repository'
+
+  addhash.miner.panel.miner.coin.repository:
+    class: App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerCoinRepository
+    public: true
+    arguments: ['@doctrine.orm.entity_manager']
+  App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerCoinRepository: '@addhash.miner.panel.miner.coin.repository'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\MinerCoinRepositoryInterface: '@addhash.miner.panel.miner.coin.repository'
+
+  addhash.miner.panel.miner.summary.get.handler:
+    class: App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo\MinerInfoSummaryGetHandler
+    public: true
+    arguments: ['@addhash.cache']
+  App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo\MinerInfoSummaryGetHandler: '@addhash.miner.panel.miner.summary.get.handler'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoSummaryGetHandlerInterface: '@addhash.miner.panel.miner.summary.get.handler'
+
+  addhash.miner.panel.miner.pool.get.handler:
+    class: App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo\MinerInfoPoolGetHandler
+    public: true
+    arguments: ['@addhash.cache']
+  App\AddHash\MinerPanel\Infrastructure\Miner\MinerInfo\MinerInfoPoolGetHandler: '@addhash.miner.panel.miner.pool.get.handler'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerInfo\MinerInfoPoolGetHandlerInterface: '@addhash.miner.panel.miner.pool.get.handler'
+
+  addhash.miner.panel.miner.calc.income.handler:
+    class: App\AddHash\MinerPanel\Infrastructure\Miner\MinerCalcIncome\MinerCalcIncomeHandler
+    public: true
+  App\AddHash\MinerPanel\Infrastructure\Miner\MinerCalcIncome\MinerCalcIncomeHandler: '@addhash.miner.panel.miner.calc.income.handler'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerCalcIncome\MinerCalcIncomeHandlerInterface: '@addhash.miner.panel.miner.calc.income.handler'

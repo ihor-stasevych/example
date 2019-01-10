@@ -1,0 +1,13 @@
+App\AddHash\MinerPanel\Domain\User\User:
+    type: entity
+    table: Miner_Panel_User
+    id:
+        id:
+            type: integer
+
+    manyToOne:
+      package:
+        targetEntity: App\AddHash\MinerPanel\Domain\Package\Model\Package
+        joinColumn:
+          name: packageId
+          referencedColumnName: id

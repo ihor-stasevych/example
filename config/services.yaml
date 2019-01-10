@@ -1,7 +1,6 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: 'en'
 
 services:
     # default configuration for services in *this* file
@@ -59,6 +58,14 @@ services:
 
     App\AddHash\Authentication\Application\Controller\:
         resource: '../src/AddHash/Authentication/Application/Controller'
+        parent: addhash.service_controller
+        autowire: true
+        autoconfigure: false
+        public: true
+        tags: ['controller.service_arguments']
+
+    App\AddHash\MinerPanel\Application\Controller\:
+        resource: '../src/AddHash/MinerPanel/Application/Controller'
         parent: addhash.service_controller
         autowire: true
         autoconfigure: false

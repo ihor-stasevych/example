@@ -94,7 +94,10 @@ class UserController extends BaseServiceController
     {
         $command = new UserCreateCommand(
             $request->get('email'),
+            $request->get('firstName'),
+	        $request->get('lastName'),
             $request->get('password'),
+	        $request->get('phone'),
             $request->get('g-recaptcha-response')
         );
 

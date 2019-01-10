@@ -1,0 +1,30 @@
+<?php
+
+namespace App\AddHash\MinerPanel\Domain\Miner\ApiCommand;
+
+use App\AddHash\MinerPanel\Domain\Miner\Parsers\ParserInterface;
+
+interface AbstractMinerApiCommandInterface
+{
+    public function setParser(ParserInterface $parser): void;
+
+    public function request(string $cmd);
+
+    public function getConfig();
+
+    public function getSummary();
+
+    public function getPools();
+
+    public function getState();
+
+    public function addPool(string $url, string $user, string $password);
+
+    public function removePool(int $id);
+
+    public function disablePool(int $id);
+
+    public function enablePool(int $id);
+
+    public function restart();
+}

@@ -1,0 +1,44 @@
+App\AddHash\MinerPanel\Domain\Rig\Rig:
+    type: entity
+    table: Miner_Panel_Rig
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        title:
+            type: string
+            length: 255
+
+        worker:
+            type: string
+            length: 255
+
+        url:
+            type: string
+            length: 255
+
+        password:
+            type: string
+            length: 255
+
+    manyToOne:
+        user:
+            targetEntity: App\AddHash\MinerPanel\Domain\User\User
+            joinColumn:
+                name: userId
+                referencedColumnName: id
+
+    manyToMany:
+        miners:
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\Miner
+            cascade: ['persist']
+            mappedBy: rigs
+            joinTable:
+                name: Miner_Panel_Miner_Rig
+                joinColumns:
+                    rigId:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    minerId:
+                        referencedColumnName: id

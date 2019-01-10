@@ -230,3 +230,112 @@ public.information.re.captcha.key.get:
   path: "/api/v1/info/recaptcha"
   methods: GET
   controller: App\AddHash\AdminPanel\Application\Controller\PublicInformationController::getPublicKeyReCaptcha
+
+
+miner.panel.miner.index:
+  path: "/api/v1/miner/panel/miners"
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerController::index
+
+miner.panel.miner.get:
+  path: "/api/v1/miner/panel/miners/{id}"
+  requirements:
+      id: '\d+'
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerController::get
+
+miner.panel.miner.create:
+  path: "/api/v1/miner/panel/miners"
+  methods: POST
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerController::create
+
+miner.panel.miner.update:
+  path: "/api/v1/miner/panel/miners/{id}"
+  requirements:
+    id: '\d+'
+  methods: PUT
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerController::update
+
+miner.panel.miner.delete:
+  path: "/api/v1/miner/panel/miners/{id}"
+  requirements:
+    id: '\d+'
+  methods: DELETE
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerController::delete
+
+miner.panel.miner.all:
+  path: "/api/v1/miner/panel/miners/list"
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerController::all
+
+miner.panel.miner.check.ip.address:
+  path: "/api/v1/miner/panel/ip/validate"
+  methods: POST
+  controller: App\AddHash\MinerPanel\Application\Controller\IpAddressController::check
+
+miner.panel.miner.algorithm.all:
+  path: "/api/v1/miner/panel/miners/algorithms/list"
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerAlgorithmController::all
+
+miner.panel.miner.type.all:
+  path: "/api/v1/miner/panel/miners/types/list"
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerTypeController::all
+
+miner.panel.miner.summary.get:
+  path: "/api/v1/miner/panel/miners/{id}/summary/"
+  requirements:
+    id: '\d+'
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerSummaryController::get
+
+miner.panel.miner.pool.get:
+  path: "/api/v1/miner/panel/miners/{id}/pools/"
+  requirements:
+    id: '\d+'
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerPoolController::get
+
+miner.panel.miner.coin.get:
+  path: "/api/v1/miner/panel/miners/{id}/coins/"
+  requirements:
+    id: '\d+'
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerCoinController::get
+
+miner.panel.rig.index:
+  path: "/api/v1/miner/panel/rigs"
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\RigController::index
+
+miner.panel.rig.get:
+  path: "/api/v1/miner/panel/rigs/{id}"
+  requirements:
+    id: '\d+'
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\RigController::get
+
+miner.panel.rig.create:
+  path: "/api/v1/miner/panel/rigs"
+  methods: POST
+  controller: App\AddHash\MinerPanel\Application\Controller\RigController::create
+
+miner.panel.rig.update:
+  path: "/api/v1/miner/panel/rigs/{id}"
+  requirements:
+    id: '\d+'
+  methods: PUT
+  controller: App\AddHash\MinerPanel\Application\Controller\RigController::update
+
+miner.panel.rig.delete:
+  path: "/api/v1/miner/panel/rigs/{id}"
+  requirements:
+    id: '\d+'
+  methods: DELETE
+  controller: App\AddHash\MinerPanel\Application\Controller\RigController::delete
+
+miner.panel.rig.all:
+  path: "/api/v1/miner/panel/rigs/list"
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\RigController::all
