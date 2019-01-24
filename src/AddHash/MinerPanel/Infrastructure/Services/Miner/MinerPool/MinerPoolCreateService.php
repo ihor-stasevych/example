@@ -19,6 +19,7 @@ use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerPoolCreateInvalidSCPFetc
 use App\AddHash\MinerPanel\Domain\Miner\MinerPool\Services\MinerPoolCreateServiceInterface;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerPoolCreateInvalidCredentialSSHException;
 use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerPoolCreateInvalidSSHConnectionException;
+use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerPoolCreateNoCreatedDirConfigPoolsException;
 
 final class MinerPoolCreateService implements MinerPoolCreateServiceInterface
 {
@@ -48,6 +49,7 @@ final class MinerPoolCreateService implements MinerPoolCreateServiceInterface
      * @throws MinerPoolCreateInvalidSCPSendException
      * @throws MinerPoolCreateInvalidSSHAuthException
      * @throws MinerPoolCreateInvalidSSHConnectionException
+     * @throws MinerPoolCreateNoCreatedDirConfigPoolsException
      */
     public function execute(MinerPoolCreateCommandInterface $command): void
     {
@@ -94,7 +96,11 @@ final class MinerPoolCreateService implements MinerPoolCreateServiceInterface
         $configName = $miner->getConfig()->getName();
 
         $remotePath = static::REMOTE_DIR_CONFIG . $configName;
-        $localPath = '../config/config_pools/' . $minerId . '/' . $configName;
+        $localDir = '../config_pools/' . $minerId . '/';
+
+        $this->checkExistsDirTempConfig($localDir);
+
+        $localPath = $localDir . $configName;
 
         $isScpFetch = @ssh2_scp_recv($connection, $remotePath, $localPath);
 
@@ -198,5 +204,15 @@ final class MinerPoolCreateService implements MinerPoolCreateServiceInterface
         );
 
         $minerApiCommand->restart();
+    }
+
+    private function checkExistsDirTempConfig(string $dir): void
+    {
+        if (false === is_dir($dir)) {
+
+            if (false === @mkdir($dir, 0777, true)) {
+                throw new MinerPoolCreateNoCreatedDirConfigPoolsException('No created dir config pools');
+            }
+        }
     }
 }
