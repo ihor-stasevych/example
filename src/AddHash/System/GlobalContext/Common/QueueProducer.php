@@ -49,17 +49,18 @@ class QueueProducer
 		return $this;
 	}
 
-	/**
-	 * @param $message
-	 * @return $this
-	 */
-	public function prepareMessage($message)
+    /**
+     * @param $message
+     * @param $routingKey
+     * @return $this
+     */
+	public function prepareMessage($message, $routingKey = null)
 	{
 		$this->message = $this->context->createMessage($message);
 		$this->context->declareTopic($this->topic);
 		$this->context->declareQueue($this->queue);
 
-		$this->context->bind(new AmqpBind($this->topic, $this->queue));
+		$this->context->bind(new AmqpBind($this->topic, $this->queue, $routingKey));
 		return $this;
 	}
 

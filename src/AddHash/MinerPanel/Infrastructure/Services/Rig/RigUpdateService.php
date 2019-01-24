@@ -3,6 +3,7 @@
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Rig;
 
 use App\AddHash\MinerPanel\Domain\Miner\Miner;
+use App\AddHash\MinerPanel\Domain\Miner\MinerPool\Services\MinerPoolCreateServiceInterface;
 use App\AddHash\MinerPanel\Domain\Rig\RigRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Rig\Command\RigUpdateCommandInterface;
@@ -12,6 +13,7 @@ use App\AddHash\MinerPanel\Domain\Rig\Exceptions\RigCreateTitleExistsException;
 use App\AddHash\MinerPanel\Domain\Rig\Exceptions\RigUpdateInvalidMinerException;
 use App\AddHash\MinerPanel\Domain\Rig\Exceptions\RigUpdateInvalidMinersIdException;
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
+use App\AddHash\System\GlobalContext\Common\QueueProducer;
 
 final class RigUpdateService implements RigUpdateServiceInterface
 {
@@ -21,15 +23,23 @@ final class RigUpdateService implements RigUpdateServiceInterface
 
     private $minerRepository;
 
+    private $producer;
+
+    private $minerPoolCreateService;
+
     public function __construct(
         UserAuthenticationGetServiceInterface $authenticationAdapter,
         RigRepositoryInterface $rigRepository,
-        MinerRepositoryInterface $minerRepository
+        MinerRepositoryInterface $minerRepository,
+        QueueProducer $producer,
+        MinerPoolCreateServiceInterface $minerPoolCreateService
     )
     {
         $this->authenticationAdapter = $authenticationAdapter;
         $this->rigRepository = $rigRepository;
         $this->minerRepository = $minerRepository;
+        $this->producer = $producer;
+        $this->minerPoolCreateService = $minerPoolCreateService;
     }
 
     /**
@@ -38,6 +48,9 @@ final class RigUpdateService implements RigUpdateServiceInterface
      * @throws RigCreateTitleExistsException
      * @throws RigUpdateInvalidMinerException
      * @throws RigUpdateInvalidMinersIdException
+     * @throws \Interop\Queue\Exception
+     * @throws \Interop\Queue\InvalidDestinationException
+     * @throws \Interop\Queue\InvalidMessageException
      */
     public function execute(RigUpdateCommandInterface $command): array
     {
@@ -73,10 +86,14 @@ final class RigUpdateService implements RigUpdateServiceInterface
             $this->deleteOldMinerRig($miners);
         }
 
+        $worker = $command->getWorker();
+        $url = $command->getUrl();
+        $password = $command->getPassword();
+
         $rig->setTitle($title);
-        $rig->setWorker($command->getWorker());
-        $rig->setUrl($command->getUrl());
-        $rig->setPassword($command->getPassword());
+        $rig->setWorker($worker);
+        $rig->setUrl($url);
+        $rig->setPassword($password);
 
         foreach ($rig->getMiners() as $oldMiner) {
             $rig->removeMiner($oldMiner);
@@ -90,7 +107,25 @@ final class RigUpdateService implements RigUpdateServiceInterface
 
         $rig = $this->rigRepository->getRigById($rig->getId());
 
-        #ToDo change pools miners
+        if (null !== $minersId) {
+            foreach ($minersId as $minerId) {
+                $data = [
+                    'minerId'  => $minerId,
+                    'pools'    => [
+                        [
+                            'url'      => $url,
+                            'worker'   => $worker,
+                            'password' => $password,
+                        ],
+                    ],
+                ];
+
+                $this->producer->createTopic('pool.create')
+                    ->createQueue('pool.create')
+                    ->prepareMessage(json_encode($data), $minerId)
+                    ->send();
+            }
+        }
 
         return (new RigTransform())->transform($rig);
     }

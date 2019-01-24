@@ -56,9 +56,9 @@ final class RigCreateCommand implements RigCreateCommandInterface
         return $this->url;
     }
 
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
-        return $this->password;
+        return $this->password ?? '';
     }
 
     public function getMinersId(): ?array
