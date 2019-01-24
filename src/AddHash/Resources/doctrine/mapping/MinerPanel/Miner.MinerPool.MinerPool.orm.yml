@@ -1,0 +1,24 @@
+App\AddHash\MinerPanel\Domain\Miner\MinerPool\MinerPool:
+    type: entity
+    table: Miner_Panel_Miner_Pool
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        worker:
+            type: string
+
+        url:
+            type: string
+
+        password:
+            type: string
+
+    manyToOne:
+        miner:
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\Miner
+            inversedBy: pools
+            joinColumn:
+                name: minerId
+                referencedColumnName: id

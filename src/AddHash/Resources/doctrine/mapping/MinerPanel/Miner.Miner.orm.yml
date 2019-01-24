@@ -14,6 +14,10 @@ App\AddHash\MinerPanel\Domain\Miner\Miner:
             column: hashRate
             type: float
 
+        statusPool:
+            column: statusPool
+            type: smallint
+
     oneToOne:
         credential:
             targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerCredential\MinerCredential
@@ -41,6 +45,12 @@ App\AddHash\MinerPanel\Domain\Miner\Miner:
                 name: algorithmId
                 referencedColumnName: id
 
+        config:
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerConfig\MinerConfig
+            joinColumn:
+                name: configId
+                referencedColumnName: id
+
     manyToMany:
         rigs:
             targetEntity: App\AddHash\MinerPanel\Domain\Rig\Rig
@@ -53,3 +63,8 @@ App\AddHash\MinerPanel\Domain\Miner\Miner:
                 inverseJoinColumns:
                     rigId:
                         referencedColumnName: id
+
+    oneToMany:
+        pools:
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerPool\MinerPool
+            mappedBy: miner

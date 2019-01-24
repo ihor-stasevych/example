@@ -27,6 +27,8 @@ interface MinerRepositoryInterface
 
     public function get(int $id): ?Miner;
 
+    public function getMinerAndPools(int $id): ?Miner;
+
     public function save(Miner $miner): void;
 
     public function saveAll(array $miners): void;

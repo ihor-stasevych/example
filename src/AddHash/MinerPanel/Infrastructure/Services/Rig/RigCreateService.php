@@ -3,6 +3,7 @@
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Rig;
 
 use App\AddHash\MinerPanel\Domain\Rig\Rig;
+use App\AddHash\System\GlobalContext\Common\QueueProducer;
 use App\AddHash\MinerPanel\Domain\Rig\RigRepositoryInterface;
 use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Infrastructure\Transformers\Rig\RigTransform;
@@ -11,6 +12,7 @@ use App\AddHash\MinerPanel\Domain\Rig\Services\RigCreateServiceInterface;
 use App\AddHash\MinerPanel\Domain\Rig\Exceptions\RigCreateTitleExistsException;
 use App\AddHash\MinerPanel\Domain\Rig\Exceptions\RigCreateInvalidMinersIdException;
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
+use App\AddHash\MinerPanel\Domain\Miner\MinerPool\Services\MinerPoolCreateServiceInterface;
 
 final class RigCreateService implements RigCreateServiceInterface
 {
@@ -19,16 +21,24 @@ final class RigCreateService implements RigCreateServiceInterface
     private $rigRepository;
 
     private $minerRepository;
+    
+    private $producer;
+
+    private $minerPoolCreateService;
 
     public function __construct(
         UserAuthenticationGetServiceInterface $authenticationAdapter,
         RigRepositoryInterface $rigRepository,
-        MinerRepositoryInterface $minerRepository
+        MinerRepositoryInterface $minerRepository,
+        QueueProducer $producer,
+        MinerPoolCreateServiceInterface $minerPoolCreateService
     )
     {
         $this->authenticationAdapter = $authenticationAdapter;
         $this->rigRepository = $rigRepository;
         $this->minerRepository = $minerRepository;
+        $this->producer = $producer;
+        $this->minerPoolCreateService = $minerPoolCreateService;
     }
 
     /**
@@ -36,6 +46,9 @@ final class RigCreateService implements RigCreateServiceInterface
      * @return array
      * @throws RigCreateInvalidMinersIdException
      * @throws RigCreateTitleExistsException
+     * @throws \Interop\Queue\Exception
+     * @throws \Interop\Queue\InvalidDestinationException
+     * @throws \Interop\Queue\InvalidMessageException
      */
     public function execute(RigCreateCommandInterface $command): array
     {
@@ -60,11 +73,15 @@ final class RigCreateService implements RigCreateServiceInterface
             }
         }
 
+        $worker = $command->getWorker();
+        $url = $command->getUrl();
+        $password = $command->getPassword();
+
         $rig = new Rig(
             $title,
-            $command->getWorker(),
-            $command->getUrl(),
-            $command->getPassword(),
+            $worker,
+            $url,
+            $password,
             $user
         );
 
@@ -76,7 +93,26 @@ final class RigCreateService implements RigCreateServiceInterface
 
         $rig = $this->rigRepository->getRigById($rig->getId());
 
-        #ToDo change pools miners
+
+        if (null !== $minersId) {
+            foreach ($minersId as $minerId) {
+                $data = [
+                    'minerId'  => $minerId,
+                    'pools'    => [
+                        [
+                            'url'      => $url,
+                            'worker'   => $worker,
+                            'password' => $password,
+                        ],
+                    ],
+                ];
+
+                $this->producer->createTopic('pool.create')
+                    ->createQueue('pool.create')
+                    ->prepareMessage(json_encode($data), $minerId)
+                    ->send();
+            }
+        }
 
         return (new RigTransform())->transform($rig);
     }
