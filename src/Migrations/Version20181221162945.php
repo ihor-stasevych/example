@@ -22,7 +22,7 @@ final class Version20181221162945 extends AbstractMigration
 
     }
 
-    public function preUp(Schema $schema)
+    public function preUp(Schema $schema): void
     {
         $this->connection->insert('Scheduler_Task', [
             'name'            => 'Get miner coin info',

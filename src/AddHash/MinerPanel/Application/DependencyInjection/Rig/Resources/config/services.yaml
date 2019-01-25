@@ -15,14 +15,14 @@ services:
 
   addhash.miner.panel.rig.create:
     class: App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigCreateService
-    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.rig.repository', '@addhash.miner.panel.miner.repository']
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.rig.repository', '@addhash.miner.panel.miner.repository', '@addhash.queue.producer.service', '@addhash.miner.panel.miner.pool.create.service']
   App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigCreateService: '@addhash.miner.panel.rig.create'
 
   App\AddHash\MinerPanel\Domain\Rig\Services\RigCreateServiceInterface: '@addhash.miner.panel.rig.create'
 
   addhash.miner.panel.rig.update:
     class: App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigUpdateService
-    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.rig.repository', '@addhash.miner.panel.miner.repository']
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.rig.repository', '@addhash.miner.panel.miner.repository', '@addhash.queue.producer.service', '@addhash.miner.panel.miner.pool.create.service']
   App\AddHash\MinerPanel\Infrastructure\Services\Rig\RigUpdateService: '@addhash.miner.panel.rig.update'
 
   App\AddHash\MinerPanel\Domain\Rig\Services\RigUpdateServiceInterface: '@addhash.miner.panel.rig.update'

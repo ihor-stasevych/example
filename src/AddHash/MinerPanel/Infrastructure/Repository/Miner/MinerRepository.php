@@ -202,6 +202,26 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
     }
 
     /**
+     * @param int $id
+     * @return Miner|null
+     * @throws NonUniqueResultException
+     */
+    public function getMinerAndPools(int $id): ?Miner
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('m', 'cr', 'p', 'c')
+            ->join('m.credential', 'cr')
+            ->leftJoin('m.pools', 'p')
+            ->leftJoin('m.config', 'c')
+            ->where('m.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
      * @param Miner $miner
      * @throws ORMException
      * @throws OptimisticLockException

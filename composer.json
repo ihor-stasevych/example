@@ -9,6 +9,8 @@
         "doctrine/dbal": "^2.8",
         "doctrine/doctrine-bundle": "^1.9",
         "doctrine/orm": "^2.6",
+        "enqueue/amqp-ext": "^0.8.40",
+        "enqueue/enqueue-bundle": "^0.8.40",
         "league/fractal": "^0.17.0",
         "lexik/jwt-authentication-bundle": "^2.5",
         "mtdowling/cron-expression": "^1.2",
