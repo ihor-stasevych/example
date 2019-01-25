@@ -6,6 +6,8 @@ use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithm;
 
 class MinerCoin
 {
+    const MAX_PER_PAGE = 10;
+
     private $id;
 
     private $name;
