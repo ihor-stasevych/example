@@ -3,7 +3,6 @@
 namespace App\AddHash\MinerPanel\Application\Controller;
 
 use Swagger\Annotations as SWG;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\AddHash\System\GlobalContext\Common\BaseServiceController;
 use App\AddHash\MinerPanel\Application\Command\Miner\MinerPool\MinerPoolGetCommand;

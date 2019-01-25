@@ -304,6 +304,11 @@ miner.panel.miner.coin.get:
   methods: GET
   controller: App\AddHash\MinerPanel\Application\Controller\MinerCoinController::get
 
+miner.panel.miner.coin.index:
+  path: "/api/v1/miner/panel/miners/coins/"
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerCoinController::index
+
 miner.panel.rig.index:
   path: "/api/v1/miner/panel/rigs"
   methods: GET

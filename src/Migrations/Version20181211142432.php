@@ -37,7 +37,7 @@ final class Version20181211142432 extends AbstractMigration
         $this->addSql('ALTER TABLE Miner_Panel_User DROP packageId');
     }
 
-    public function postUp(Schema $schema)
+    public function postUp(Schema $schema): void
     {
 	    $this->connection->insert('Miner_Panel_Package', [
 		    'title' => 'Free package',

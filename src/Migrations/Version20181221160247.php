@@ -26,7 +26,7 @@ final class Version20181221160247 extends AbstractMigration
         $this->addSql('ALTER TABLE Miner_Panel_Miner_Coin CHANGE difficulty difficulty VARCHAR(255) DEFAULT \'0\' NOT NULL COLLATE utf8mb4_unicode_ci, CHANGE reward reward VARCHAR(255) DEFAULT \'0\' NOT NULL COLLATE utf8mb4_unicode_ci');
     }
 
-    public function preUp(Schema $schema)
+    public function preUp(Schema $schema): void
     {
         $coins = $this->connection->fetchAll('SELECT id, difficulty, reward FROM Miner_Panel_Miner_Coin');
 

@@ -68,7 +68,7 @@ final class Version20181108122615 extends AbstractMigration
         $this->addSql('ALTER TABLE Miner_Stock ADD port INT NOT NULL, ADD user VARCHAR(255) NOT NULL COLLATE utf8mb4_unicode_ci, ADD configName VARCHAR(255) NOT NULL COLLATE utf8mb4_unicode_ci, DROP configId');
     }
 
-    public function postUp(Schema $schema)
+    public function postUp(Schema $schema): void
     {
         foreach ($this->miners as $miner) {
             if ($miner['algorithm']) {
@@ -102,7 +102,7 @@ final class Version20181108122615 extends AbstractMigration
         }
     }
 
-    public function postDown(Schema $schema)
+    public function postDown(Schema $schema): void
     {
         foreach ($this->minersAlgorithm as $minerAlgorithm) {
             if ($minerAlgorithm['value']) {
