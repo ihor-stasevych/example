@@ -2,12 +2,12 @@
 
 namespace App\AddHash\MinerPanel\Domain\Miner;
 
-use App\AddHash\MinerPanel\Domain\Miner\MinerConfig\MinerConfig;
 use Doctrine\ORM\PersistentCollection;
 use App\AddHash\MinerPanel\Domain\Rig\Rig;
 use App\AddHash\MinerPanel\Domain\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerType;
+use App\AddHash\MinerPanel\Domain\Miner\MinerConfig\MinerConfig;
 use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithm;
 use App\AddHash\MinerPanel\Domain\Miner\MinerCredential\MinerCredential;
 
@@ -115,6 +115,11 @@ class Miner
     public function getConfig(): MinerConfig
     {
         return $this->config;
+    }
+
+    public function getStatusPool(): int
+    {
+        return $this->statusPool;
     }
 
     public function setTitle(string $title): void
