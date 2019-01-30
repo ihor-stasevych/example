@@ -3,3 +3,8 @@ services:
       public: false
       arguments: ['@addhash.miner.panel.miner.coin.info.get.service']
       tags: ['console.command']
+
+  App\AddHash\MinerPanel\Application\ConsoleCommand\MinerPoolStatusUpdateConsoleCommand:
+      public: false
+      arguments: ['@addhash.miner.panel.miner.pool.status.update.service']
+      tags: ['console.command']

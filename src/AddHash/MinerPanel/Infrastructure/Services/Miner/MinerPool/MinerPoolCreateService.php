@@ -32,13 +32,17 @@ final class MinerPoolCreateService implements MinerPoolCreateServiceInterface
 
     private $minerPoolRepository;
 
+    private $dirConfigPools;
+
     public function __construct(
         MinerRepositoryInterface $minerRepository,
-        MinerPoolRepositoryInterface $minerPoolRepository
+        MinerPoolRepositoryInterface $minerPoolRepository,
+        string $dirConfigPools
     )
     {
         $this->minerRepository = $minerRepository;
         $this->minerPoolRepository = $minerPoolRepository;
+        $this->dirConfigPools = $dirConfigPools;
     }
 
     /**
@@ -64,61 +68,65 @@ final class MinerPoolCreateService implements MinerPoolCreateServiceInterface
         $oldPools = $miner->getPools();
         $newPools = $command->getPools();
 
-        if (true === $this->isIdentityPools($oldPools, $newPools)) {
-            return;
+        if (false === $this->isIdentityPools($oldPools, $newPools)) {
+            $miner->setStatusPoolOff();
+            $this->minerRepository->save($miner);
+
+            $loginSsh = $miner->getCredential()->getLoginSsh();
+
+            if (null === $loginSsh) {
+                throw new MinerPoolCreateInvalidCredentialSSHException('Invalid credential SSH');
+            }
+
+            $connection = @ssh2_connect(
+                $miner->getCredential()->getIp(),
+                $miner->getCredential()->getPortSsh()
+            );
+
+            if (false === $connection) {
+                throw new MinerPoolCreateInvalidSSHConnectionException('Invalid SSH connection');
+            }
+
+            $auth = @ssh2_auth_password(
+                $connection,
+                $loginSsh,
+                $miner->getCredential()->getPasswordSsh()
+            );
+
+            if (false === $auth) {
+                throw new MinerPoolCreateInvalidSSHAuthException('Invalid SSH auth');
+            }
+
+            $configName = $miner->getConfig()->getName();
+
+            $remotePathFile = static::REMOTE_DIR_CONFIG . $configName;
+            $localDir = $this->dirConfigPools . $minerId . '/';
+
+            $this->checkExistsDirTempConfig($localDir);
+
+            $localPathFile = $localDir . $configName;
+
+            $isScpFetch = @ssh2_scp_recv($connection, $remotePathFile, $localPathFile);
+
+            if (false === $isScpFetch) {
+                throw new MinerPoolCreateInvalidSCPFetchException('Invalid SCP fetch');
+            }
+
+            $this->changeLocalTempConfig($localPathFile, $newPools);
+
+            $isScpSend = @ssh2_scp_send($connection, $localPathFile, $remotePathFile);
+
+            if (false === $isScpSend) {
+                throw new MinerPoolCreateInvalidSCPSendException('Invalid SCP send');
+            }
+
+            $this->saveNewPools($miner, $newPools);
+
+            @unlink($localPathFile);
+            @rmdir($localDir);
+
+            $this->minerRestart($miner->getCredential());
         }
-
-        $loginSsh = $miner->getCredential()->getLoginSsh();
-
-        if (null === $loginSsh) {
-            throw new MinerPoolCreateInvalidCredentialSSHException('Invalid credential SSH');
-        }
-
-        $connection = @ssh2_connect(
-            $miner->getCredential()->getIp(),
-            $miner->getCredential()->getPortSsh()
-        );
-
-        if (false === $connection) {
-            throw new MinerPoolCreateInvalidSSHConnectionException('Invalid SSH connection');
-        }
-
-        $auth = @ssh2_auth_password(
-            $connection,
-            $loginSsh,
-            $miner->getCredential()->getPasswordSsh()
-        );
-
-        if (false === $auth) {
-            throw new MinerPoolCreateInvalidSSHAuthException('Invalid SSH auth');
-        }
-
-        $configName = $miner->getConfig()->getName();
-
-        $remotePath = static::REMOTE_DIR_CONFIG . $configName;
-        $localDir = '../config_pools/' . $minerId . '/';
-
-        $this->checkExistsDirTempConfig($localDir);
-
-        $localPath = $localDir . $configName;
-
-        $isScpFetch = @ssh2_scp_recv($connection, $remotePath, $localPath);
-
-        if (false === $isScpFetch) {
-            throw new MinerPoolCreateInvalidSCPFetchException('Invalid SCP fetch');
-        }
-
-        $this->changeLocalTempConfig($localPath, $newPools);
-
-        $isScpSend = @ssh2_scp_send($connection, $localPath, $remotePath);
-
-        if (false === $isScpSend) {
-            throw new MinerPoolCreateInvalidSCPSendException('Invalid SCP send');
-        }
-
-        $this->saveNewPools($miner, $newPools);
-
-        $this->minerRestart($miner->getCredential());
     }
 
     private function isIdentityPools(PersistentCollection $oldPools, array $newPools): bool
