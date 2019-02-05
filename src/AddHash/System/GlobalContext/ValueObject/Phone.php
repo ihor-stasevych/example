@@ -21,7 +21,7 @@ class Phone
 	/**
 	 * @return string
 	 */
-	public function getPhone(): string
+	public function getPhone(): ?string
 	{
 		return $this->phone;
 	}
