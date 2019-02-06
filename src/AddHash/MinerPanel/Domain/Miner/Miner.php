@@ -7,12 +7,19 @@ use App\AddHash\MinerPanel\Domain\Rig\Rig;
 use App\AddHash\MinerPanel\Domain\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\AddHash\MinerPanel\Domain\Miner\MinerType\MinerType;
+use App\AddHash\MinerPanel\Domain\Miner\MinerConfig\MinerConfig;
 use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithm;
 use App\AddHash\MinerPanel\Domain\Miner\MinerCredential\MinerCredential;
 
 class Miner
 {
     const MAX_PER_PAGE = 10;
+
+    const STATUS_POOL_ON = 1;
+
+    const STATUS_POOL_OFF = 0;
+
+    const STATUS_POOL_DEFAULT = self::STATUS_POOL_OFF;
 
 
     private $id;
@@ -31,6 +38,12 @@ class Miner
 
     private $rigs;
 
+    private $statusPool;
+
+    private $pools;
+
+    private $config;
+
     public function __construct(
         string $title,
         float $hashRate,
@@ -46,9 +59,11 @@ class Miner
         $this->credential = $credential;
         $this->hashRate = $hashRate;
         $this->type = $type;
+        $this->statusPool = static::STATUS_POOL_DEFAULT;
         $this->algorithm = $algorithm;
         $this->user = $user;
         $this->rigs = new ArrayCollection();
+        $this->pools = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -89,6 +104,24 @@ class Miner
         return $rigs;
     }
 
+    public function getPools(): PersistentCollection
+    {
+        /** @var PersistentCollection $pools */
+        $pools = $this->pools;
+
+        return $pools;
+    }
+
+    public function getConfig(): MinerConfig
+    {
+        return $this->config;
+    }
+
+    public function getStatusPool(): int
+    {
+        return $this->statusPool;
+    }
+
     public function setTitle(string $title): void
     {
         $this->title = $title;
@@ -112,6 +145,16 @@ class Miner
     public function setAlgorithm(MinerAlgorithm $algorithm): void
     {
         $this->algorithm = $algorithm;
+    }
+
+    public function setStatusPoolOn(): void
+    {
+        $this->statusPool = static::STATUS_POOL_ON;
+    }
+
+    public function setStatusPoolOff(): void
+    {
+        $this->statusPool = static::STATUS_POOL_OFF;
     }
 
     public function setRig(Rig $rig): void

@@ -2,21 +2,23 @@
 
 namespace App\AddHash\MinerPanel\Application\Command\Miner\MinerPool;
 
-final class MinerPoolCreateCommand
+use App\AddHash\MinerPanel\Domain\Miner\MinerPool\Command\MinerPoolCreateCommandInterface;
+
+final class MinerPoolCreateCommand implements MinerPoolCreateCommandInterface
 {
-    private $id;
+    private $minerId;
 
     private $pools;
 
-    public function __construct(int $id, $pools)
+    public function __construct(int $minerId, $pools)
     {
-        $this->id = $id;
+        $this->minerId = $minerId;
         $this->pools = $pools;
     }
 
-    public function getId(): int
+    public function getMinerId(): int
     {
-        return $this->id;
+        return $this->minerId;
     }
 
     public function getPools(): array

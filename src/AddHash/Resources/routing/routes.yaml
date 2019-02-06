@@ -297,12 +297,22 @@ miner.panel.miner.pool.get:
   methods: GET
   controller: App\AddHash\MinerPanel\Application\Controller\MinerPoolController::get
 
+miner.panel.miner.pool.status.index:
+  path: "/api/v1/miner/panel/miners/pools/status"
+  methods: POST
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerPoolStatusController::index
+
 miner.panel.miner.coin.get:
   path: "/api/v1/miner/panel/miners/{id}/coins/"
   requirements:
     id: '\d+'
   methods: GET
   controller: App\AddHash\MinerPanel\Application\Controller\MinerCoinController::get
+
+miner.panel.miner.coin.index:
+  path: "/api/v1/miner/panel/miners/coins/"
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerCoinController::index
 
 miner.panel.rig.index:
   path: "/api/v1/miner/panel/rigs"

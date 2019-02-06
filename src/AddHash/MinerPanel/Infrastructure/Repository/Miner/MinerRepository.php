@@ -184,6 +184,31 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
             ->getResult();
     }
 
+    public function getMinersStatusByIdsAndUser(array $ids, User $user): array
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('m')
+            ->where('m.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getMinerByStatusPool(int $statusPool): array
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('m', 'cr')
+            ->join('m.credential', 'cr')
+            ->where('m.statusPool = :statusPool')
+            ->setParameter('statusPool', $statusPool)
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @param int $id
      * @return Miner|null
@@ -195,6 +220,26 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
             ->getRepository($this->getEntityName())
             ->createQueryBuilder('m')
             ->select('m')
+            ->where('m.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @param int $id
+     * @return Miner|null
+     * @throws NonUniqueResultException
+     */
+    public function getMinerAndPools(int $id): ?Miner
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('m', 'cr', 'p', 'c')
+            ->join('m.credential', 'cr')
+            ->leftJoin('m.pools', 'p')
+            ->leftJoin('m.config', 'c')
             ->where('m.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
