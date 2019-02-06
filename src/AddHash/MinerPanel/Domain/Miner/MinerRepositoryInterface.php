@@ -7,9 +7,17 @@ use App\AddHash\MinerPanel\Domain\User\User;
 
 interface MinerRepositoryInterface
 {
+    public function getAll(): array;
+
     public function getMinersByUserWithPagination(User $user, ?int $currentPage): Pagerfanta;
 
     public function getMinersByUser(User $user): array;
+
+    public function getCountMinersByUserGroupByType(User $user): array;
+
+    public function getCountAndAvgHashRateActiveMinersByUserGroupByType(User $user): array;
+
+    public function getAvgHashRateActiveMinersByUserGroupByAlgorithm(User $user): array;
 
     public function getMinerByIdAndUser(int $id, User $user): ?Miner;
 

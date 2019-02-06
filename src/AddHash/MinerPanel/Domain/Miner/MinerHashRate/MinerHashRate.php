@@ -2,8 +2,7 @@
 
 namespace App\AddHash\MinerPanel\Domain\Miner\MinerHashRate;
 
-use App\AddHash\MinerPanel\Domain\User\User;
-use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerAlgorithm;
+use App\AddHash\MinerPanel\Domain\Miner\Miner;
 
 class MinerHashRate
 {
@@ -13,17 +12,14 @@ class MinerHashRate
 
     private $createdAt;
 
-    private $algorithm;
+    private $miner;
 
-    private $user;
-
-    public function __construct(float $value, MinerAlgorithm $algorithm, User $user, int $id = null)
+    public function __construct(float $value, Miner $miner, int $id = null)
     {
         $this->id = $id;
         $this->value = $value;
         $this->createdAt = new \DateTime();
-        $this->algorithm = $algorithm;
-        $this->user = $user;
+        $this->miner = $miner;
     }
 
     public function getId(): ?int
@@ -36,8 +32,8 @@ class MinerHashRate
         return $this->value;
     }
 
-    public function getAlgorithm(): MinerAlgorithm
+    public function getMiner(): Miner
     {
-        return $this->algorithm;
+        return $this->miner;
     }
 }

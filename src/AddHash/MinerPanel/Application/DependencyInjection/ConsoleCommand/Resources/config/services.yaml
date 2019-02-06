@@ -3,3 +3,13 @@ services:
       public: false
       arguments: ['@addhash.miner.panel.miner.coin.info.get.service']
       tags: ['console.command']
+
+  App\AddHash\MinerPanel\Application\ConsoleCommand\MinerInfoGetConsoleCommand:
+      public: false
+      arguments: ['@addhash.miner.panel.miner.info.get.service']
+      tags: ['console.command']
+
+  App\AddHash\MinerPanel\Application\ConsoleCommand\MinerCalcHashRateAverageConsoleCommand:
+      public: false
+      arguments: ['@addhash.miner.panel.miner.calc.hash.rate.average.service']
+      tags: ['console.command']

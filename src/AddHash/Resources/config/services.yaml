@@ -82,3 +82,5 @@ imports:
   - { resource: "../../../AddHash/MinerPanel/Application/DependencyInjection/Rig/Resources/config/services.yaml"}
 
   - { resource: "../../../AddHash/MinerPanel/Application/DependencyInjection/Queue/Resources/config/services.yaml"}
+
+  - { resource: "../../../AddHash/MinerPanel/Application/DependencyInjection/Dashboard/Resources/config/services.yaml"}

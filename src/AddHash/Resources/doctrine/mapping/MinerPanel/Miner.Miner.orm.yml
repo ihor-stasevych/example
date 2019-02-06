@@ -18,6 +18,10 @@ App\AddHash\MinerPanel\Domain\Miner\Miner:
             column: statusPool
             type: smallint
 
+        isActive:
+            column: isActive
+            type: smallint
+
     oneToOne:
         credential:
             targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerCredential\MinerCredential

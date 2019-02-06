@@ -344,3 +344,8 @@ miner.panel.rig.all:
   path: "/api/v1/miner/panel/rigs/list"
   methods: GET
   controller: App\AddHash\MinerPanel\Application\Controller\RigController::all
+
+miner.panel.dashboard.index:
+  path: "/api/v1/miner/panel/dashboard"
+  methods: GET
+  controller: App\AddHash\MinerPanel\Application\Controller\DashboardController::index

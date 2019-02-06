@@ -1,0 +1,8 @@
+services:
+  addhash.miner.dashboard.index.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Dashboard\DashboardListService
+    public: true
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Dashboard\DashboardListService: '@addhash.miner.dashboard.index.service'
+
+  App\AddHash\MinerPanel\Domain\Dashboard\Services\DashboardListServiceInterface: '@addhash.miner.dashboard.index.service'

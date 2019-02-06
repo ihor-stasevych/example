@@ -98,7 +98,7 @@ services:
   addhash.miner.panel.miner.coin.list.service:
     class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin\MinerCoinListService
     public: true
-    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.calc.income.handler', '@addhash.miner.panel.miner.coin.repository', '@addhash.info.currencies.service', '@addhash.miner.panel.miner.hash.rate.repository']
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.calc.income.handler', '@addhash.miner.panel.miner.coin.repository', '@addhash.info.currencies.service', '@addhash.miner.panel.miner.hash.rate.repository', '@addhash.miner.panel.miner.repository']
   App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin\MinerCoinListService: '@addhash.miner.panel.miner.coin.list.service'
 
   App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\Services\MinerCoinListServiceInterface: '@addhash.miner.panel.miner.coin.list.service'
@@ -125,7 +125,7 @@ services:
     arguments: ['@doctrine.orm.entity_manager']
   App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerHashRateRepository: '@addhash.miner.panel.miner.hash.rate.repository'
 
-  App\AddHash\MinerPanel\Domain\Miner\HashRate\MinerHashRateRepositoryInterface: '@addhash.miner.panel.miner.hash.rate.repository'
+  App\AddHash\MinerPanel\Domain\Miner\MinerHashRate\MinerHashRateRepositoryInterface: '@addhash.miner.panel.miner.hash.rate.repository'
 
   addhash.miner.panel.miner.algorithm.repository:
     class: App\AddHash\MinerPanel\Infrastructure\Repository\Miner\MinerAlgorithmRepository
@@ -181,3 +181,19 @@ services:
   App\AddHash\MinerPanel\Infrastructure\Miner\MinerCalcIncome\MinerCalcIncomeHandler: '@addhash.miner.panel.miner.calc.income.handler'
 
   App\AddHash\MinerPanel\Domain\Miner\MinerCalcIncome\MinerCalcIncomeHandlerInterface: '@addhash.miner.panel.miner.calc.income.handler'
+
+  addhash.miner.panel.miner.info.get.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerInfoGetService
+    public: true
+    arguments: ['@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.hash.rate.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerInfoGetService: '@addhash.miner.panel.miner.info.get.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\Services\MinerInfoGetServiceInterface: '@addhash.miner.panel.miner.info.get.service'
+
+  addhash.miner.panel.miner.calc.hash.rate.average.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerCalcHashRateAverageService
+    public: true
+    arguments: ['@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.hash.rate.repository']
+  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerCalcHashRateAverageService: '@addhash.miner.panel.miner.calc.hash.rate.average.service'
+
+  App\AddHash\MinerPanel\Domain\Miner\Services\MinerCalcHashRateAverageServiceInterface: '@addhash.miner.panel.miner.calc.hash.rate.average.service'
