@@ -47,7 +47,7 @@ final class UserCreateService implements UserCreateServiceInterface
         $user = new User($data['id']);
         $user->setFirstName($command->getFirstName());
         $user->setLastName($command->getLastName());
-        $user->setPhoneNumber($command->getPhone());
+       // $user->setPhoneNumber($command->getPhone());
 
         $this->userRepository->create($user);
 

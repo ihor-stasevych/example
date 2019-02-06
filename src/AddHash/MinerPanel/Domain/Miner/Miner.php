@@ -133,6 +133,11 @@ class Miner
         return $this->isActive;
     }
 
+    public function getStatusPool(): int
+    {
+        return $this->statusPool;
+    }
+
     public function setTitle(string $title): void
     {
         $this->title = $title;

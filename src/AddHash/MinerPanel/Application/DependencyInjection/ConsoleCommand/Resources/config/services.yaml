@@ -13,3 +13,8 @@ services:
       public: false
       arguments: ['@addhash.miner.panel.miner.calc.hash.rate.average.service']
       tags: ['console.command']
+
+  App\AddHash\MinerPanel\Application\ConsoleCommand\MinerPoolStatusUpdateConsoleCommand:
+      public: false
+      arguments: ['@addhash.miner.panel.miner.pool.status.update.service']
+      tags: ['console.command']

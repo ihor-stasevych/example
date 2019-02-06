@@ -297,6 +297,11 @@ miner.panel.miner.pool.get:
   methods: GET
   controller: App\AddHash\MinerPanel\Application\Controller\MinerPoolController::get
 
+miner.panel.miner.pool.status.index:
+  path: "/api/v1/miner/panel/miners/pools/status"
+  methods: POST
+  controller: App\AddHash\MinerPanel\Application\Controller\MinerPoolStatusController::index
+
 miner.panel.miner.coin.get:
   path: "/api/v1/miner/panel/miners/{id}/coins/"
   requirements:

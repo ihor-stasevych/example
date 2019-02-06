@@ -5,13 +5,13 @@ namespace App\AddHash\System\GlobalContext\ValueObject;
 class Phone
 {
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $phone;
 
 	/**
 	 * Phone constructor.
-	 * @param string $phone
+	 * @param string|null $phone
 	 */
 	public function __construct(?string $phone)
 	{
@@ -19,9 +19,9 @@ class Phone
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getPhone(): string
+	public function getPhone(): ?string
 	{
 		return $this->phone;
 	}
@@ -36,6 +36,6 @@ class Phone
 
 	public function __toString()
 	{
-		return $this->getPhone();
+		return $this->phone;
 	}
 }

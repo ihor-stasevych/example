@@ -33,6 +33,10 @@ interface MinerRepositoryInterface
 
     public function getMinersByIdsAndUser(array $ids, User $user): array;
 
+    public function getMinersStatusByIdsAndUser(array $ids, User $user): array;
+
+    public function getMinerByStatusPool(int $statusPool): array;
+
     public function get(int $id): ?Miner;
 
     public function getMinerAndPools(int $id): ?Miner;
