@@ -15,11 +15,19 @@ class Miner
 {
     const MAX_PER_PAGE = 10;
 
+
     const STATUS_POOL_ON = 1;
 
     const STATUS_POOL_OFF = 0;
 
     const STATUS_POOL_DEFAULT = self::STATUS_POOL_OFF;
+
+
+    const STATUS_ACTIVE = 1;
+
+    const STATUS_NO_ACTIVE = 0;
+
+    const STATUS_ACTIVE_DEFAULT = self::STATUS_ACTIVE;
 
 
     private $id;
@@ -44,6 +52,8 @@ class Miner
 
     private $config;
 
+    private $isActive;
+
     public function __construct(
         string $title,
         float $hashRate,
@@ -59,11 +69,12 @@ class Miner
         $this->credential = $credential;
         $this->hashRate = $hashRate;
         $this->type = $type;
-        $this->statusPool = static::STATUS_POOL_DEFAULT;
+        $this->statusPool = self::STATUS_POOL_DEFAULT;
         $this->algorithm = $algorithm;
         $this->user = $user;
         $this->rigs = new ArrayCollection();
         $this->pools = new ArrayCollection();
+        $this->isActive = self::STATUS_ACTIVE_DEFAULT;
     }
 
     public function getId(): ?int
@@ -117,6 +128,11 @@ class Miner
         return $this->config;
     }
 
+    public function isActive(): int
+    {
+        return $this->isActive;
+    }
+
     public function getStatusPool(): int
     {
         return $this->statusPool;
@@ -149,12 +165,22 @@ class Miner
 
     public function setStatusPoolOn(): void
     {
-        $this->statusPool = static::STATUS_POOL_ON;
+        $this->statusPool = self::STATUS_POOL_ON;
     }
 
     public function setStatusPoolOff(): void
     {
-        $this->statusPool = static::STATUS_POOL_OFF;
+        $this->statusPool = self::STATUS_POOL_OFF;
+    }
+
+    public function setStatusActive(): void
+    {
+        $this->isActive = self::STATUS_ACTIVE;
+    }
+
+    public function setStatusNoActive(): void
+    {
+        $this->isActive = self::STATUS_NO_ACTIVE;
     }
 
     public function setRig(Rig $rig): void

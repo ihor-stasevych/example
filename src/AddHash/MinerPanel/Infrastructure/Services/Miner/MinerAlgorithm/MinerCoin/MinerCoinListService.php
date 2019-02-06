@@ -3,6 +3,7 @@
 namespace App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin;
 
 use App\AddHash\System\Response\ResponseListCollection;
+use App\AddHash\MinerPanel\Domain\Miner\MinerRepositoryInterface;
 use App\AddHash\MinerPanel\Infrastructure\Transformers\Coin\CoinTransform;
 use App\AddHash\AdminPanel\Domain\Info\Services\GetCryptoCurrenciesServiceInterface;
 use App\AddHash\MinerPanel\Domain\User\Services\UserAuthenticationGetServiceInterface;
@@ -24,6 +25,8 @@ final class MinerCoinListService implements MinerCoinListServiceInterface
 
     private $hashRateRepository;
 
+    private $minerRepository;
+
     private $cryptoToUsd = [];
 
     private $hashRate = [];
@@ -33,7 +36,8 @@ final class MinerCoinListService implements MinerCoinListServiceInterface
         MinerCalcIncomeHandlerInterface $calcIncomeHandler,
         MinerCoinRepositoryInterface $coinRepository,
         GetCryptoCurrenciesServiceInterface $getCryptoCurrenciesService,
-        MinerHashRateRepositoryInterface $hashRateRepository
+        MinerHashRateRepositoryInterface $hashRateRepository,
+        MinerRepositoryInterface $minerRepository
     )
     {
         $this->authenticationAdapter = $authenticationAdapter;
@@ -41,6 +45,7 @@ final class MinerCoinListService implements MinerCoinListServiceInterface
         $this->coinRepository = $coinRepository;
         $this->getCryptoCurrenciesService = $getCryptoCurrenciesService;
         $this->hashRateRepository = $hashRateRepository;
+        $this->minerRepository = $minerRepository;
     }
 
     public function execute(MinerCoinListCommandInterface $command): ResponseListCollection
@@ -58,7 +63,7 @@ final class MinerCoinListService implements MinerCoinListServiceInterface
 
                 $data[] = $result + [
                     'cryptoToUsd' => $cryptoToUsd,
-                    'hashRate'    => $this->getHashRate($coin->infoAlgorithm()->getValue()),
+                    'hashRate'    => $this->getHashRate($coin->infoAlgorithm()->getId()),
                 ];
             }
         }
@@ -86,18 +91,18 @@ final class MinerCoinListService implements MinerCoinListServiceInterface
         return true === isset($this->cryptoToUsd[$tag]) ? $this->cryptoToUsd[$tag] : '';
     }
 
-    private function getHashRate(string $algorithm): string
+    private function getHashRate(int $algorithmId): string
     {
         if (true === empty($this->hashRate)) {
             $user = $this->authenticationAdapter->execute();
 
-            $items = $this->hashRateRepository->getAverageValuesByUser($user);
+            $items = $this->minerRepository->getAvgHashRateActiveMinersByUserGroupByAlgorithm($user);
 
             foreach ($items as $item) {
-                $this->hashRate[$item[0]->getAlgorithm()->getValue()] = $item['hashRate'];
+                $this->hashRate[$item['miner']->getAlgorithm()->getId()] = $item['hashRateAvg'];
             }
         }
 
-        return true === isset($this->hashRate[$algorithm]) ? $this->hashRate[$algorithm] : '';
+        return true === isset($this->hashRate[$algorithmId]) ? $this->hashRate[$algorithmId] : '';
     }
 }

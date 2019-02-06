@@ -2,6 +2,8 @@
 
 namespace App\AddHash\MinerPanel\Infrastructure\Repository\Miner;
 
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use App\AddHash\MinerPanel\Domain\User\User;
 use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
 use App\AddHash\MinerPanel\Domain\Miner\MinerHashRate\MinerHashRate;
@@ -20,6 +22,22 @@ class MinerHashRateRepository extends AbstractRepository implements MinerHashRat
             ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param array $hashRates
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function saveAll(array $hashRates): void
+    {
+        if (count($hashRates) > 0) {
+            foreach ($hashRates as $hashRate) {
+                $this->entityManager->persist($hashRate);
+            }
+
+            $this->entityManager->flush();
+        }
     }
 
     protected function getEntityName(): string

@@ -14,6 +14,17 @@ use App\AddHash\System\GlobalContext\Repository\AbstractRepository;
 
 class MinerRepository extends AbstractRepository implements MinerRepositoryInterface
 {
+    public function getAll(): array
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('m', 'cr')
+            ->join('m.credential', 'cr')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function getMinersByUserWithPagination(User $user, ?int $currentPage): Pagerfanta
     {
         $result = $this->entityManager
@@ -46,6 +57,52 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
             ->select('m')
             ->where('m.user = :user')
             ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getCountMinersByUserGroupByType(User $user): array
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('count(m.id) AS count', 'm AS miner', 't')
+            ->join('m.type', 't')
+            ->where('m.user = :user')
+            ->groupBy('m.type')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getCountAndAvgHashRateActiveMinersByUserGroupByType(User $user): array
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('count(m.id) AS count', 'avg(m.hashRate) AS hashRateAvg','m AS miner', 't')
+            ->join('m.type', 't')
+            ->where('m.user = :user')
+            ->andWhere('m.isActive = :active')
+            ->groupBy('m.type')
+            ->setParameter('user', $user)
+            ->setParameter('active', Miner::STATUS_ACTIVE)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getAvgHashRateActiveMinersByUserGroupByAlgorithm(User $user): array
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('avg(m.hashRate) AS hashRateAvg', 'm AS miner', 'a')
+            ->join('m.algorithm', 'a')
+            ->where('m.user = :user')
+            ->andWhere('m.isActive = :active')
+            ->groupBy('m.algorithm')
+            ->setParameter('user', $user)
+            ->setParameter('active', Miner::STATUS_ACTIVE)
             ->getQuery()
             ->getResult();
     }
