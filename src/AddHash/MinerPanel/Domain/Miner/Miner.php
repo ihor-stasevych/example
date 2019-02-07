@@ -54,6 +54,8 @@ class Miner
 
     private $isActive;
 
+    private $hashRates;
+
     public function __construct(
         string $title,
         float $hashRate,
@@ -74,6 +76,7 @@ class Miner
         $this->user = $user;
         $this->rigs = new ArrayCollection();
         $this->pools = new ArrayCollection();
+        $this->hashRates = new ArrayCollection();
         $this->isActive = self::STATUS_ACTIVE_DEFAULT;
     }
 
@@ -136,6 +139,14 @@ class Miner
     public function getStatusPool(): int
     {
         return $this->statusPool;
+    }
+
+    public function getHashRates(): PersistentCollection
+    {
+        /** @var PersistentCollection $hashRates */
+        $hashRates = $this->hashRates;
+        
+        return $hashRates;
     }
 
     public function setTitle(string $title): void

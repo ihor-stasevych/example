@@ -1,0 +1,8 @@
+services:
+  addhash.miner.crypto.currency.get.service:
+    class:  App\AddHash\MinerPanel\Infrastructure\Services\Currency\CryptoCurrencyGetService
+    public: true
+    arguments: ['@addhash.cache', '%env(COIN_MARKET_CAP_API_KEY)%']
+  App\AddHash\MinerPanel\Infrastructure\Services\Currency\CryptoCurrencyGetService: '@addhash.miner.crypto.currency.get.service'
+
+  App\AddHash\MinerPanel\Domain\Currency\Services\CryptoCurrencyGetServiceInterface: '@addhash.miner.crypto.currency.get.service'

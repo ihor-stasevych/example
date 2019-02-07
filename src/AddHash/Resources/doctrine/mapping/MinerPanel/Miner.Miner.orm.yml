@@ -72,3 +72,7 @@ App\AddHash\MinerPanel\Domain\Miner\Miner:
         pools:
             targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerPool\MinerPool
             mappedBy: miner
+
+        hashRates:
+            targetEntity: App\AddHash\MinerPanel\Domain\Miner\MinerHashRate\MinerHashRate
+            mappedBy: miner
