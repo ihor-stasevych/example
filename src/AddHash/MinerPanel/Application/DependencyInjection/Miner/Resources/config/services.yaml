@@ -106,7 +106,7 @@ services:
   addhash.miner.panel.miner.coin.list.service:
     class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin\MinerCoinListService
     public: true
-    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.calc.income.handler', '@addhash.miner.panel.miner.coin.repository', '@addhash.miner.crypto.currency.get.service', '@addhash.miner.panel.miner.hash.rate.repository', '@addhash.miner.panel.miner.repository']
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.calc.income.handler', '@addhash.miner.panel.miner.coin.repository', '@addhash.miner.crypto.currency.get.service', '@addhash.miner.panel.miner.hash.rate.repository', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.calc.coin.income.handler', '@request_stack']
   App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerAlgorithm\MinerCoin\MinerCoinListService: '@addhash.miner.panel.miner.coin.list.service'
 
   App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\Services\MinerCoinListServiceInterface: '@addhash.miner.panel.miner.coin.list.service'
@@ -197,6 +197,13 @@ services:
   App\AddHash\MinerPanel\Infrastructure\Miner\MinerCalcIncome\MinerCalcIncomeHandler: '@addhash.miner.panel.miner.calc.income.handler'
 
   App\AddHash\MinerPanel\Domain\Miner\MinerCalcIncome\MinerCalcIncomeHandlerInterface: '@addhash.miner.panel.miner.calc.income.handler'
+
+  addhash.miner.panel.calc.coin.income.handler:
+    class: App\AddHash\MinerPanel\Infrastructure\Miner\MinerCalcIncome\CoinCalcIncomeHandler
+    public: true
+  App\AddHash\MinerPanel\Infrastructure\Miner\MinerCalcIncome\CoinCalcIncomeHandler: '@addhash.miner.panel.calc.coin.income.handler'
+
+  App\AddHash\MinerPanel\Domain\Miner\MinerCalcIncome\CoinCalcIncomeHandlerInterface: '@addhash.miner.panel.calc.coin.income.handler'
 
   addhash.miner.panel.miner.info.get.service:
     class:  App\AddHash\MinerPanel\Infrastructure\Services\Miner\MinerInfoGetService
