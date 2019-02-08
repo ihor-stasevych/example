@@ -107,6 +107,20 @@ class MinerRepository extends AbstractRepository implements MinerRepositoryInter
             ->getResult();
     }
 
+    public function getAvgHashRatesMiners(\DateTime $date): array
+    {
+        return $this->entityManager
+            ->getRepository($this->getEntityName())
+            ->createQueryBuilder('m')
+            ->select('avg(h.value) AS hashRateAvg', 'm AS miner')
+            ->join('m.hashRates', 'h')
+            ->where('h.createdAt > :date')
+            ->setParameter('date', $date)
+            ->groupBy('h.miner')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @param int $id
      * @param User $user

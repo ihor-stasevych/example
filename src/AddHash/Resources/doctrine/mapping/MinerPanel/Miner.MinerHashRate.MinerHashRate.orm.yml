@@ -17,6 +17,7 @@ App\AddHash\MinerPanel\Domain\Miner\MinerHashRate\MinerHashRate:
     manyToOne:
         miner:
             targetEntity: App\AddHash\MinerPanel\Domain\Miner\Miner
+            inversedBy: hashRates
             joinColumn:
                 name: minerId
                 referencedColumnName: id

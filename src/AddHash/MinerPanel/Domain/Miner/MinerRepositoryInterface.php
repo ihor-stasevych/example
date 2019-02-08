@@ -19,6 +19,8 @@ interface MinerRepositoryInterface
 
     public function getAvgHashRateActiveMinersByUserGroupByAlgorithm(User $user): array;
 
+    public function getAvgHashRatesMiners(\DateTime $date): array;
+
     public function getMinerByIdAndUser(int $id, User $user): ?Miner;
 
     public function existMinerByIdAndUser(int $id, User $user): ?Miner;

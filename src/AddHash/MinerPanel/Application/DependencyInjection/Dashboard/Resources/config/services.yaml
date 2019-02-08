@@ -2,7 +2,7 @@ services:
   addhash.miner.dashboard.index.service:
     class:  App\AddHash\MinerPanel\Infrastructure\Services\Dashboard\DashboardListService
     public: true
-    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository']
+    arguments: ['@addhash.miner.panel.user.authentication.get', '@addhash.miner.panel.miner.repository', '@addhash.miner.panel.miner.coin.repository', '@addhash.miner.crypto.currency.get.service']
   App\AddHash\MinerPanel\Infrastructure\Services\Dashboard\DashboardListService: '@addhash.miner.dashboard.index.service'
 
   App\AddHash\MinerPanel\Domain\Dashboard\Services\DashboardListServiceInterface: '@addhash.miner.dashboard.index.service'

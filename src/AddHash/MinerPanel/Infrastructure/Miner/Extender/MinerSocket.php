@@ -9,6 +9,9 @@ use App\AddHash\MinerPanel\Domain\Miner\Exceptions\MinerSocketConnectionErrorExc
 
 class MinerSocket implements MinerSocketInterface
 {
+    private const TIMEOUT_SOCKET_CONNECTION = 5;
+
+
     private $ip;
 
     private $port;
@@ -52,6 +55,16 @@ class MinerSocket implements MinerSocketInterface
             $error = socket_strerror(socket_last_error());
             throw new MinerSocketCreateErrorException("ERR: socket create(TCP) failed " . $error);
         }
+
+        socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, [
+            'sec'  => self::TIMEOUT_SOCKET_CONNECTION,
+            'usec' => 0,
+        ]);
+
+        socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, [
+            'sec'  => self::TIMEOUT_SOCKET_CONNECTION,
+            'usec' => 0,
+        ]);
 
         $connection = @socket_connect($socket, $address, $port);
 
