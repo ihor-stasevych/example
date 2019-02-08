@@ -6,7 +6,9 @@ use App\AddHash\MinerPanel\Domain\Miner\MinerAlgorithm\MinerCoin\MinerCoin;
 
 final class CoinTransform
 {
-    public function transform(MinerCoin $minerCoin): array
+    private const ICON_PATH = '/images/icon/coins/';
+
+    public function transform(MinerCoin $minerCoin, string $hostName): array
     {
         return [
             'id'         => $minerCoin->getId(),
@@ -15,7 +17,7 @@ final class CoinTransform
             'algorithm'  => $minerCoin->infoAlgorithm()->getValue(),
             'reward'     => $minerCoin->getReward(),
             'difficulty' => $minerCoin->getDifficulty(),
-            'icon'       => $minerCoin->getIcon(),
+            'icon'       => $hostName . self::ICON_PATH . $minerCoin->getIcon(),
         ];
     }
 }
