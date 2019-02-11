@@ -30,7 +30,8 @@ final class RigUpdateCommand implements RigUpdateCommandInterface
      * @Assert\Count(
      *      min = 1,
      *      minMessage = "Miners should not be empty",
-     * )
+     * ),
+     * @Assert\Type("array")
      */
     private $minersId;
 

@@ -16,7 +16,7 @@ class MinerCalcIncomeAlgorithmSHA256 extends MinerCalcIncomeAlgorithm
         $result = 0;
 
 	    if ($difficulty != 0) {
-            $result = ($time * $reward * pow(10, 12) * $hashRate) / ($difficulty * pow(2, 32));
+            $result = ($time * $reward * $hashRate * self::ONE_GHASH) / ($difficulty * pow(2, 32));
         }
 
 		return $result;
