@@ -6,6 +6,8 @@ use App\AddHash\MinerPanel\Domain\Miner\MinerCalcIncome\Algorithms\MinerCalcInco
 
 abstract class MinerCalcIncomeAlgorithm implements MinerCalcIncomeAlgorithmInterface
 {
+    protected const ONE_GHASH = 1000000000;
+
 	/**
 	 * @param float $hashRate
 	 * @param float $difficulty

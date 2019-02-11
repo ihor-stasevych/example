@@ -79,11 +79,18 @@ final class DashboardListService implements DashboardListServiceInterface
         }
 
         $minersActive = $this->minerRepository->getCountAndAvgHashRateActiveMinersByUserGroupByType($user);
+        $hashRateBtc = 0;
+        $countBtc = 0;
 
         foreach ($minersActive as $ma) {
             /** @var  $miner Miner */
             $miner = $ma['miner'];
             $typeId = $miner->getType()->getId();
+
+            if ($miner->getType()->getValue() == 'ASIC') {
+                $hashRateBtc = $ma['hashRateAvg'];
+                $countBtc = $ma['count'];
+            }
 
             $data['active'] += $ma['count'];
             $data['hashRate'] += $ma['hashRateAvg'];
@@ -92,13 +99,14 @@ final class DashboardListService implements DashboardListServiceInterface
             $data['type'][$typeId]['hashRate'] = $ma['hashRateAvg'];
         }
 
-        $data['hashRate'] = $data['hashRate'] != 0 ? $data['hashRate'] / $data['active'] : 0;
-        $data['currenciesIncome'] = $this->calcIncome($data['hashRate']);
+        $data['hashRate'] = $data['hashRate'] != 0 ? $data['hashRate'] / count($minersActive) : 0;
+
+        $data['currenciesIncome'] = $this->calcIncome($hashRateBtc, $countBtc);
 
         return $data;
     }
 
-    private function calcIncome(string $hashRate): array
+    private function calcIncome(string $hashRate, int $count): array
     {
         try {
             $currencies = $this->cryptoCurrencyGetService->execute();
@@ -113,7 +121,7 @@ final class DashboardListService implements DashboardListServiceInterface
         $data = [];
 
         foreach (self::DAYS_INCOME as $name => $number) {
-            $crypto = $minerCalc->execute($hashRate, self::ONE_DAY_IN_SECONDS * $number, $coinBtc)['income'];
+            $crypto = $minerCalc->execute($hashRate, self::ONE_DAY_IN_SECONDS * $number, $coinBtc)['income'] * $count;
             $data['Bitcoin'][$name]['crypto'] = $crypto;
             $data['Bitcoin'][$name]['usd'] =
                 false === empty($currencies[self::DEFAULT_COIN]['quote']['USD']['price']) ?

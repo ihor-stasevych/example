@@ -16,7 +16,7 @@ class MinerCalcIncomeAlgorithmEtHash extends MinerCalcIncomeAlgorithm
 	    $result = 0;
 
 	    if ($difficulty != 0) {
-	        $result = ($hashRate / $difficulty) * $reward * pow(10, 12) * $time;
+	        $result = ($hashRate * self::ONE_GHASH / $difficulty) * $reward * $time;
         }
 
 		return $result;
