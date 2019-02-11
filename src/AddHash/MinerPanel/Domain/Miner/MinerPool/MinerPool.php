@@ -19,7 +19,7 @@ class MinerPool
     public function __construct(
         string $worker,
         string $url,
-        string $password,
+        ?string $password,
         Miner $miner,
         $id = null
     )
@@ -27,7 +27,7 @@ class MinerPool
         $this->id = $id;
         $this->worker = $worker;
         $this->url = $url;
-        $this->password = $password;
+        $this->password = $password ?? '';
         $this->miner = $miner;
     }
 
@@ -46,7 +46,7 @@ class MinerPool
         return $this->url;
     }
 
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }

@@ -213,6 +213,27 @@ class MinerController extends BaseServiceController
      * )
      *
      * @SWG\Parameter(
+     *     name="sshPort",
+     *     in="query",
+     *     type="integer",
+     *     description="Port SSH",
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="sshLogin",
+     *     in="query",
+     *     type="string",
+     *     description="Login SSH",
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="sshPassword",
+     *     in="query",
+     *     type="string",
+     *     description="Password SSH",
+     * )
+     *
+     * @SWG\Parameter(
      *     name="typeId",
      *     in="query",
      *     type="integer",
@@ -244,6 +265,8 @@ class MinerController extends BaseServiceController
      *          @SWG\Property(property="title", type="string"),
      *          @SWG\Property(property="ip", type="string"),
      *          @SWG\Property(property="port", type="integer"),
+     *          @SWG\Property(property="sshPort", type="integer"),
+     *          @SWG\Property(property="sshLogin", type="string"),
      *          @SWG\Property(property="hashRate", type="number"),
      *          @SWG\Property(property="type", type="string"),
      *          @SWG\Property(property="algorithm", type="string"),
@@ -301,6 +324,9 @@ class MinerController extends BaseServiceController
             $request->get('title'),
             $request->get('ip'),
             $request->get('port'),
+            $request->get('sshPort'),
+            $request->get('sshLogin'),
+            $request->get('sshPassword'),
             $request->get('typeId'),
             $request->get('algorithmId'),
             $request->get('rigId')
@@ -353,6 +379,27 @@ class MinerController extends BaseServiceController
      * )
      *
      * @SWG\Parameter(
+     *     name="sshPort",
+     *     in="query",
+     *     type="integer",
+     *     description="Port SSH",
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="sshLogin",
+     *     in="query",
+     *     type="string",
+     *     description="Login SSH",
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="sshPassword",
+     *     in="query",
+     *     type="string",
+     *     description="Password SSH",
+     * )
+     *
+     * @SWG\Parameter(
      *     name="typeId",
      *     in="query",
      *     type="integer",
@@ -384,6 +431,8 @@ class MinerController extends BaseServiceController
      *          @SWG\Property(property="title", type="string"),
      *          @SWG\Property(property="ip", type="string"),
      *          @SWG\Property(property="port", type="integer"),
+     *          @SWG\Property(property="sshPort", type="integer"),
+     *          @SWG\Property(property="sshLogin", type="string"),
      *          @SWG\Property(property="hashRate", type="number"),
      *          @SWG\Property(property="type", type="string"),
      *          @SWG\Property(property="algorithm", type="string"),
@@ -443,6 +492,9 @@ class MinerController extends BaseServiceController
             $request->get('title'),
             $request->get('ip'),
             $request->get('port'),
+            $request->get('sshPort'),
+            $request->get('sshLogin'),
+            $request->get('sshPassword'),
             $request->get('typeId'),
             $request->get('algorithmId'),
             $request->get('rigId')

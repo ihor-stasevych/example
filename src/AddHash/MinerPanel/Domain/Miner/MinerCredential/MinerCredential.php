@@ -66,17 +66,17 @@ class MinerCredential
         $this->port = $port ?? static::DEFAULT_PORT;
     }
 
-    public function setPortSsh(int $portSsh): void
+    public function setPortSsh(?int $portSsh): void
     {
         $this->portSsh = $portSsh;
     }
 
-    public function setLoginSsh(string $loginSsh): void
+    public function setLoginSsh(?string $loginSsh): void
     {
         $this->loginSsh = $loginSsh;
     }
 
-    public function setPasswordSsh(string $passwordSsh): void
+    public function setPasswordSsh(?string $passwordSsh): void
     {
         $this->passwordSsh = $passwordSsh;
     }
