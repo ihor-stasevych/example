@@ -191,16 +191,16 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
         return (new MinerTransform())->transform($miner) + $minerInfo;
     }
 
-    private function checkValidIdAndPort(string $ip, int $port): string
+    private function checkValidIdAndPort(string $ip, int $port): ?array
     {
         $ipAddressCheckCommand = new IpAddressCheckCommand($ip, $port);
 
-        $errors = '';
+        $errors = null;
 
         try {
             $this->ipAddressCheckService->execute($ipAddressCheckCommand);
         } catch (IpAddressCheckIpAddressUnavailableException $e) {
-            $errors = $e->getMessage();
+            $errors = $e->getMessage()['ip'];
         }
 
         return $errors;

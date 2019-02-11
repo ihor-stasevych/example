@@ -188,16 +188,16 @@ final class MinerCreateService implements MinerCreateServiceInterface
         return $count < self::MAX_QTY_FREE_MINER;
     }
 
-    private function checkValidIdAndPort(string $ip, int $port): string
+    private function checkValidIdAndPort(string $ip, int $port): ?array
     {
         $ipAddressCheckCommand = new IpAddressCheckCommand($ip, $port);
 
-        $errors = '';
+        $errors = null;
 
         try {
             $this->ipAddressCheckService->execute($ipAddressCheckCommand);
         } catch (IpAddressCheckIpAddressUnavailableException $e) {
-            $errors = $e->getMessage();
+            $errors = $e->getMessage()['ip'];
         }
 
         return $errors;
