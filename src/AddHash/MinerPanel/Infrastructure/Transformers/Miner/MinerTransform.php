@@ -17,6 +17,8 @@ final class MinerTransform
             'title'       => $miner->getTitle(),
             'ip'          => $miner->getCredential()->getIp(),
             'port'        => $miner->getCredential()->getPort(),
+            'sshPort'     => $miner->getCredential()->getPortSsh(),
+            'sshLogin'    => $miner->getCredential()->getLoginSsh(),
             'hashRate'    => $miner->getHashRate(),
             'typeId'      => $miner->getType()->getId(),
             'algorithmId' => $miner->getAlgorithm()->getId(),

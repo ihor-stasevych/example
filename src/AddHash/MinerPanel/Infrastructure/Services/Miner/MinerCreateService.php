@@ -115,12 +115,20 @@ final class MinerCreateService implements MinerCreateServiceInterface
 
         $ip = $command->getIp();
         $port = $command->getPort();
-        $ipAddressCheckCommand = new IpAddressCheckCommand($ip, $port);
+        $portSsh = $command->getPortSsh();
 
-        try {
-            $this->ipAddressCheckService->execute($ipAddressCheckCommand);
-        } catch (IpAddressCheckIpAddressUnavailableException $e) {
-            $errors = $e->getMessage();
+        $portError = $this->checkValidIdAndPort($ip, $port);
+
+        if (false === empty($portError)) {
+            $errors['port'] = $portError;
+        }
+
+        if (null !== $portSsh) {
+            $portSshError = $this->checkValidIdAndPort($ip, $portSsh);
+
+            if (false === empty($portSshError)) {
+                $errors['portSsh'] = $portSshError;
+            }
         }
 
         $title = $command->getTitle();
@@ -135,6 +143,12 @@ final class MinerCreateService implements MinerCreateServiceInterface
         }
 
         $minerCredential = new MinerCredential($ip, $port);
+
+        if (null !== $portSsh) {
+            $minerCredential->setPortSsh($portSsh);
+            $minerCredential->setLoginSsh($command->getLoginSsh());
+            $minerCredential->setPasswordSsh($command->getPasswordSsh());
+        }
 
         $summary = $this->summaryGetHandler->handler($minerCredential);
         $hashRate = (false === empty($summary)) ? $summary['hashRateAverage']: 0;
@@ -172,5 +186,20 @@ final class MinerCreateService implements MinerCreateServiceInterface
         $count = $this->minerRepository->getCountByUser($user);
 
         return $count < self::MAX_QTY_FREE_MINER;
+    }
+
+    private function checkValidIdAndPort(string $ip, int $port): string
+    {
+        $ipAddressCheckCommand = new IpAddressCheckCommand($ip, $port);
+
+        $errors = '';
+
+        try {
+            $this->ipAddressCheckService->execute($ipAddressCheckCommand);
+        } catch (IpAddressCheckIpAddressUnavailableException $e) {
+            $errors = $e->getMessage();
+        }
+
+        return $errors;
     }
 }

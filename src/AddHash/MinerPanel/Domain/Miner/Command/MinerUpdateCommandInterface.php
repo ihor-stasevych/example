@@ -12,6 +12,12 @@ interface MinerUpdateCommandInterface
 
     public function getPort(): ?int;
 
+    public function getPortSsh(): ?int;
+
+    public function getLoginSsh(): ?string;
+
+    public function getPasswordSsh(): ?string;
+
     public function getTypeId(): int;
 
     public function getAlgorithmId(): int;

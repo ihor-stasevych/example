@@ -179,7 +179,7 @@ final class MinerPoolCreateService implements MinerPoolCreateServiceInterface
             $newFormatPools[] = [
                 'url'  => $pool['url'],
                 'user' => $pool['worker'],
-                'pass' => $pool['password'],
+                'pass' => $pool['password'] ?? '',
             ];
         }
 

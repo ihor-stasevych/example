@@ -22,7 +22,7 @@ final class IpAddressCheckService implements IpAddressCheckServiceInterface
         $fp = @fsockopen($command->getIp(), $port, $errno, $errstr, self::TIMEOUT);
 
         if (false === $fp) {
-            throw new IpAddressCheckIpAddressUnavailableException(['ip' => ['Ip address unavailable']]);
+            throw new IpAddressCheckIpAddressUnavailableException(['ip' => ['Ip address or port invalid']]);
         }
 
         fclose($fp);

@@ -112,12 +112,20 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
 
         $ip = $command->getIp();
         $port = $command->getPort();
-        $ipAddressCheckCommand = new IpAddressCheckCommand($ip, $port);
+        $portSsh = $command->getPortSsh();
 
-        try {
-            $this->ipAddressCheckService->execute($ipAddressCheckCommand);
-        } catch (IpAddressCheckIpAddressUnavailableException $e) {
-            $errors = $e->getMessage();
+        $portError = $this->checkValidIdAndPort($ip, $port);
+
+        if (false === empty($portError)) {
+            $errors['port'] = $portError;
+        }
+
+        if (null !== $portSsh) {
+            $portSshError = $this->checkValidIdAndPort($ip, $portSsh);
+
+            if (false === empty($portSshError)) {
+                $errors['portSsh'] = $portSshError;
+            }
         }
 
         $title = $command->getTitle();
@@ -137,6 +145,15 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
 
         $minerCredential->setIp($ip);
         $minerCredential->setPort($port);
+        $minerCredential->setPortSsh(null);
+        $minerCredential->setLoginSsh(null);
+        $minerCredential->setPasswordSsh(null);
+
+        if (null !== $portSsh) {
+            $minerCredential->setPortSsh($portSsh);
+            $minerCredential->setLoginSsh($command->getLoginSsh());
+            $minerCredential->setPasswordSsh($command->getPasswordSsh());
+        }
 
         $miner->setTitle($title);
         $miner->setType($minerType);
@@ -172,5 +189,20 @@ final class MinerUpdateService implements MinerUpdateServiceInterface
         ];
 
         return (new MinerTransform())->transform($miner) + $minerInfo;
+    }
+
+    private function checkValidIdAndPort(string $ip, int $port): string
+    {
+        $ipAddressCheckCommand = new IpAddressCheckCommand($ip, $port);
+
+        $errors = '';
+
+        try {
+            $this->ipAddressCheckService->execute($ipAddressCheckCommand);
+        } catch (IpAddressCheckIpAddressUnavailableException $e) {
+            $errors = $e->getMessage();
+        }
+
+        return $errors;
     }
 }
