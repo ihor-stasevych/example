@@ -59,6 +59,8 @@ final class MinerPoolCreateService implements MinerPoolCreateServiceInterface
     {
         $minerId = $command->getMinerId();
 
+        var_dump('Start pool create');
+
         $miner = $this->minerRepository->getMinerAndPools($minerId);
 
         if (null === $miner) {
@@ -68,7 +70,7 @@ final class MinerPoolCreateService implements MinerPoolCreateServiceInterface
         $oldPools = $miner->getPools();
         $newPools = $command->getPools();
 
-        if (false === $this->isIdentityPools($oldPools, $newPools)) {
+        //if (false === $this->isIdentityPools($oldPools, $newPools)) {
             $miner->setStatusPoolOff();
             $this->minerRepository->save($miner);
 
@@ -120,13 +122,15 @@ final class MinerPoolCreateService implements MinerPoolCreateServiceInterface
                 throw new MinerPoolCreateInvalidSCPSendException('Invalid SCP send');
             }
 
-            $this->saveNewPools($miner, $newPools);
+            //$this->saveNewPools($miner, $newPools);
 
             @unlink($localPathFile);
             @rmdir($localDir);
 
             $this->minerRestart($miner->getCredential());
-        }
+
+            var_dump('End pool create');
+        //}
     }
 
     private function isIdentityPools(PersistentCollection $oldPools, array $newPools): bool
