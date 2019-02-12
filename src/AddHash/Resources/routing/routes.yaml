@@ -303,14 +303,14 @@ miner.panel.miner.pool.status.index:
   controller: App\AddHash\MinerPanel\Application\Controller\MinerPoolStatusController::index
 
 miner.panel.miner.coin.get:
-  path: "/api/v1/miner/panel/miners/{id}/coins/"
+  path: "/api/v1/miner/panel/miners/{id}/coins"
   requirements:
     id: '\d+'
   methods: GET
   controller: App\AddHash\MinerPanel\Application\Controller\MinerCoinController::get
 
 miner.panel.miner.coin.index:
-  path: "/api/v1/miner/panel/miners/coins/"
+  path: "/api/v1/miner/panel/miners/coins"
   methods: GET
   controller: App\AddHash\MinerPanel\Application\Controller\MinerCoinController::index
 
