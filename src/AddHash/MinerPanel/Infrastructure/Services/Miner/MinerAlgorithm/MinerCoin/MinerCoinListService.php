@@ -81,7 +81,7 @@ final class MinerCoinListService implements MinerCoinListServiceInterface
                 $hashRate = $this->getHashRate($coin->infoAlgorithm()->getId());
 
                 if ($coin->getTag() === 'BTC') {
-                    if (false === empty($hashRate)) {
+                    if (true === empty($hashRate)) {
                         $hashRate = 0;
                     }
 
