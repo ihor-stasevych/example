@@ -85,6 +85,10 @@ final class MinerCoinListService implements MinerCoinListServiceInterface
                         $hashRate = 0;
                     }
 
+                    if (false === is_numeric($hashRate)) {
+                        $hashRate = (int) $hashRate;
+                    }
+
                     $this->calcCoinIncomeHandler->handle($coin, $hashRate);
                 }
                 $revenue = false === empty($hashRate) ?
