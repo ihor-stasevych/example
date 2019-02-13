@@ -22,6 +22,11 @@ class MinerPoolCreateQueueSubscriber implements PsrProcessor, QueueSubscriberInt
     {
         $data = json_decode($message->getBody(), true);
 
+        if (!$data) {
+        	echo 'Incorrect json format message: '. var_dump($message->getBody());
+        	return self::REJECT;
+        }
+
         $status = self::ACK;
 
         try {
