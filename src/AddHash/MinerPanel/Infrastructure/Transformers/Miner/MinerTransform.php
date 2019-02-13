@@ -3,12 +3,15 @@
 namespace App\AddHash\MinerPanel\Infrastructure\Transformers\Miner;
 
 use App\AddHash\MinerPanel\Domain\Miner\Miner;
+use App\AddHash\MinerPanel\Domain\Rig\Rig;
+use App\AddHash\MinerPanel\Infrastructure\Transformers\Rig\RigTransform;
 
 final class MinerTransform
 {
     public function transform(Miner $miner): array
     {
-        $rig = !empty($miner->infoRigs()->first()) ? $miner->infoRigs()->first() : null;
+    	/** @var Rig $rig */
+        $rig = !empty($miner->infoRigs()->first()) ? new RigTransform($miner->infoRigs()->first()) : null;
 
         return [
             'id'          => $miner->getId(),
