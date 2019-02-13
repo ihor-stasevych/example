@@ -10,8 +10,19 @@ final class MinerTransform
 {
     public function transform(Miner $miner): array
     {
-    	/** @var Rig $rig */
-        $rig = !empty($miner->infoRigs()->first()) ? new RigTransform($miner->infoRigs()->first()) : null;
+    	$rig = null;
+
+	    /** @var $rigObject Rig */
+	    if (!empty($rigObject = $miner->infoRigs()->first())) {
+		    $rig = [
+				'id' => $rigObject->getId(),
+			    'title' => $rigObject->getTitle(),
+			    'url' => $rigObject->getUrl(),
+			    'worker' => $rigObject->getWorker()
+		    ];
+
+		    unset($rigObject);
+	    }
 
         return [
             'id'          => $miner->getId(),
@@ -23,7 +34,7 @@ final class MinerTransform
             'hashRate'    => $miner->getHashRate(),
             'typeId'      => $miner->getType()->getId(),
             'algorithmId' => $miner->getAlgorithm()->getId(),
-            'rig'       => $rig,
+            'rig'         => $rig
         ];
     }
 }
