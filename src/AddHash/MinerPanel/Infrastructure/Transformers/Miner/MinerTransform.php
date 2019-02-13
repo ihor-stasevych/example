@@ -8,9 +8,7 @@ final class MinerTransform
 {
     public function transform(Miner $miner): array
     {
-        $rig = (false !== $miner->infoRigs()->first()) ?
-            $miner->infoRigs()->first()->getId() :
-            null;
+        $rig = !empty($miner->infoRigs()->first()) ? $miner->infoRigs()->first() : null;
 
         return [
             'id'          => $miner->getId(),
@@ -22,7 +20,7 @@ final class MinerTransform
             'hashRate'    => $miner->getHashRate(),
             'typeId'      => $miner->getType()->getId(),
             'algorithmId' => $miner->getAlgorithm()->getId(),
-            'rigId'       => $rig,
+            'rig'       => $rig,
         ];
     }
 }
