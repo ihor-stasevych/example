@@ -1,5 +1,5 @@
 services:
   addhash.queue.pool.create:
     class: App\AddHash\MinerPanel\Infrastructure\Queue\Miner\MinerPool\MinerPoolCreateQueueSubscriber
-    arguments: ['@addhash.miner.panel.miner.pool.create.service', '@monolog.logger.db'']
+    arguments: ['@addhash.miner.panel.miner.pool.create.service', '@monolog.logger.db']
     public: true
