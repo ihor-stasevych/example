@@ -28,12 +28,12 @@ class MinerPoolCreateQueueSubscriber implements PsrProcessor, QueueSubscriberInt
     public function process(PsrMessage $message, PsrContext $context)
     {
 
-    	$this->logger->debug('PoolCreateQueue income message: ' . var_export($message));
+    	$this->logger->debug('PoolCreateQueue income message', var_export($message));
 
         $data = json_decode($message->getBody(), true);
 
         if (!$data) {
-	        $this->logger->error('PoolCreateQueue error message: ' . var_export($message));
+	        $this->logger->error('PoolCreateQueue error message', var_export($message));
         	echo 'Incorrect json format message: '. var_dump($message->getBody());
         	return self::REJECT;
         }
@@ -47,6 +47,7 @@ class MinerPoolCreateQueueSubscriber implements PsrProcessor, QueueSubscriberInt
         } catch (\Exception $e) {
             $status = self::REJECT;
             var_dump('Exception' . $e->getMessage());
+	        $this->logger->error('PoolCreateQueue result error message', $e->getMessage());
         }
 
         return $status;
