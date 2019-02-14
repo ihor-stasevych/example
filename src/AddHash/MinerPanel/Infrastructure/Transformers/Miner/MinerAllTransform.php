@@ -9,8 +9,10 @@ final class MinerAllTransform
     public function transform(Miner $miner): array
     {
         return [
-            'id'    => $miner->getId(),
+            'id' => $miner->getId(),
             'title' => $miner->getTitle(),
+	        'type' => $miner->getType(),
+	        'status' => $miner->getStatusPool()
         ];
     }
 }
