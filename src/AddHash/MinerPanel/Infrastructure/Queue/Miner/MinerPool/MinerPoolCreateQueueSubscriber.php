@@ -47,7 +47,7 @@ class MinerPoolCreateQueueSubscriber implements PsrProcessor, QueueSubscriberInt
         } catch (\Exception $e) {
             $status = self::REJECT;
             var_dump('Exception' . $e->getMessage());
-	        $this->logger->error('PoolCreateQueue result error message', $e->getMessage());
+	        $this->logger->error('PoolCreateQueue result error message', [$e->getMessage()]);
         }
 
         return $status;
